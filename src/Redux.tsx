@@ -29,7 +29,7 @@ class Redux extends React.Component<IReduxProps> {
         <p>用户名：{this.props.user?.name}</p>
         <button
           onClick={() => {
-            setUser({ name: "杨军龙" });
+            setUser({ name: "Redux" });
           }}
         >
           设置用户

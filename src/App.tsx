@@ -3,12 +3,14 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import Redux from "./Redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IStoreState } from "./store/reducers";
+import * as actionCreator from "./store/actions/app";
 
 function App() {
   const [count, setCount] = useState(0);
   const { user } = useSelector((state: IStoreState) => state.app);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -29,6 +31,13 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
         <p>用户名：{user.name}</p>
+        <button
+          onClick={() => {
+            dispatch(actionCreator.setUser({ name: "Vite + React" }));
+          }}
+        >
+          设置用户
+        </button>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
