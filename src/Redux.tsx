@@ -25,7 +25,7 @@ class Redux extends React.Component<IReduxProps> {
     const { setUser } = this.props;
     return (
       <div className="Redux">
-        <h2>Redux</h2>
+        <h1>Redux</h1>
         <p>用户名：{this.props.user?.name}</p>
         <button
           onClick={() => {

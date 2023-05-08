@@ -1,11 +1,14 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Redux from './Redux'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import Redux from "./Redux";
+import { useSelector } from "react-redux";
+import { IStoreState } from "./store/reducers";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const { user } = useSelector((state: IStoreState) => state.app);
 
   return (
     <>
@@ -25,6 +28,7 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
+        <p>用户名：{user.name}</p>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
@@ -32,7 +36,7 @@ function App() {
 
       <Redux />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
