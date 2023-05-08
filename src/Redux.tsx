@@ -14,11 +14,21 @@ import * as actionCreator from "./store/actions/app";
 
 type IReduxProps = {
   user?: User;
-} & typeof actionCreator
+} & typeof actionCreator;
 
-class Redux extends React.Component<IReduxProps> {
+type IReduxState = {
+  user?: User;
+};
+
+class Redux extends React.PureComponent<IReduxProps, IReduxState> {
   componentDidMount() {
-    console.log(this);
+    console1.log(this);
+  }
+
+  componentDidUpdate(prevProps: Readonly<IReduxProps>, prevState: Readonly<IReduxState>, snapshot?: any): void {
+    console.log('prevProps', prevProps);
+    console.log('prevState', prevState);
+    console.log('snapshot', snapshot);
   }
 
   render() {
