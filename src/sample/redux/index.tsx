@@ -6,11 +6,11 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import { IStoreState } from "./store/reducers";
-import { User } from "./store/reducers/app";
+import { IStoreState } from "../../store/reducers";
+import { User } from "../../store/reducers/app";
 import { bindActionCreators } from "redux";
 
-import * as actionCreator from "./store/actions/app";
+import * as actionCreator from "../../store/actions/app";
 
 type IReduxProps = {
   user?: User;
@@ -20,9 +20,9 @@ type IReduxState = {
   user?: User;
 };
 
-class Redux extends React.PureComponent<IReduxProps, IReduxState> {
+class ReduxSample extends React.PureComponent<IReduxProps, IReduxState> {
   componentDidMount() {
-    console1.log(this);
+    console.log(this);
   }
 
   componentDidUpdate(prevProps: Readonly<IReduxProps>, prevState: Readonly<IReduxState>, snapshot?: any): void {
@@ -34,8 +34,8 @@ class Redux extends React.PureComponent<IReduxProps, IReduxState> {
   render() {
     const { setUser } = this.props;
     return (
-      <div className="Redux">
-        <h1>Redux</h1>
+      <div className="redux">
+        <h2>Redux</h2>
         <p>用户名：{this.props.user?.name}</p>
         <button
           onClick={() => {
@@ -55,4 +55,4 @@ const mapStateToProps = (state: IStoreState) => {
 const mapDispatchToProps = (dispatch: never) =>
   bindActionCreators(actionCreator, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Redux);
+export default connect(mapStateToProps, mapDispatchToProps)(ReduxSample);

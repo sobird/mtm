@@ -42,7 +42,7 @@ class ErrorBoundary extends React.Component<
     return { error };
   }
 
-  // 将错误上报给服务器
+  // 将错误信息上报给服务器
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.log(error, errorInfo);
   }

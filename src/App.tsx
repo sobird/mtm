@@ -2,7 +2,7 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import Redux from "./Redux";
+import Sample from "./sample";
 import { useDispatch, useSelector } from "react-redux";
 import { IStoreState } from "./store/reducers";
 import * as actionCreator from "./store/actions/app";
@@ -43,7 +43,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
 
-      <Redux />
+      <Sample></Sample>
     </>
   );
 }
