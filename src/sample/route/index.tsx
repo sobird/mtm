@@ -16,11 +16,12 @@ class RouteSample extends React.Component {
           <div>
             <h2>Router</h2>
             <nav>
-              <Link to="/">Home</Link> | <Link to="/about">About</Link> | <Link to="/users">Users</Link> | <Link to="/post/123">Post</Link> | <Link to="/topics">Topics</Link> | <Link to="/protected">Protected</Link>
+              <Link to="/">Home</Link> | <Link to="/about">About</Link> | <Link to="/users">Users</Link> | <Link to="/post/123">Post</Link> | <Link to="/topics">Topics</Link> | <Link to="/protected">Protected</Link> | <Link to="/not-match">Not Match</Link>
             </nav>
             <hr />
             <AuthButton />
             <Switch>
+              <Route exact path="/"><Home/></Route>
               <Route path="/post/:id" children={<Post />} />
               <Route path="/about"><About /></Route>
               <Route path="/users"><Users /></Route>
@@ -29,7 +30,9 @@ class RouteSample extends React.Component {
               <Route path="/login">
                 <Login />
               </Route>
-              <Route path="/"><Home/></Route>
+              <Route path="*">
+                <NoMatch />
+              </Route>
             </Switch>
             
           </div>
@@ -156,6 +159,18 @@ function Login() {
     <div>
       <p>You must log in to view the page at {from.pathname}</p>
       <button onClick={login}>Log in</button>
+    </div>
+  );
+}
+
+function NoMatch() {
+  const location = useLocation();
+
+  return (
+    <div>
+      <h3>
+        No match for <code>{location.pathname}</code>
+      </h3>
     </div>
   );
 }
