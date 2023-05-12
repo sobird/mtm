@@ -5,30 +5,55 @@
  */
 
 import React from "react";
-import { BrowserRouter, Link, Route, Switch, useParams, useRouteMatch } from "react-router-dom";
+import { BrowserRouter, Link, Redirect, Route, Switch, useHistory, useLocation, useParams, useRouteMatch } from "react-router-dom";
+import { ProvideAuth, useAuth } from "../hooks/useAuth";
 
 class RouteSample extends React.Component {
   render(): React.ReactNode {
     return (
-      <BrowserRouter>
-        <div>
-          <h2>Router</h2>
-          <nav>
-            <Link to="/">Home</Link> | <Link to="/about">About</Link> | <Link to="/users">Users</Link> | <Link to="/post/123">Post</Link> | <Link to="/topics">Topics</Link>
-          </nav>
-          <hr />
-          <Switch>
-            <Route path="/post/:id" children={<Post />} />
-            <Route path="/about"><About/></Route>
-            <Route path="/users"><Users/></Route>
-            <Route path="/topics"><Topics /></Route>
-            <Route path="/"><Home/></Route>
-          </Switch>
-          
-        </div>
-      </BrowserRouter>
+      <ProvideAuth>
+        <BrowserRouter>
+          <div>
+            <h2>Router</h2>
+            <nav>
+              <Link to="/">Home</Link> | <Link to="/about">About</Link> | <Link to="/users">Users</Link> | <Link to="/post/123">Post</Link> | <Link to="/topics">Topics</Link> | <Link to="/protected">Protected</Link>
+            </nav>
+            <hr />
+            <AuthButton />
+            <Switch>
+              <Route path="/post/:id" children={<Post />} />
+              <Route path="/about"><About /></Route>
+              <Route path="/users"><Users /></Route>
+              <Route path="/topics"><Topics /></Route>
+              <PrivateRoute path="/protected"><Protected /></PrivateRoute>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/"><Home/></Route>
+            </Switch>
+            
+          </div>
+        </BrowserRouter>
+      </ProvideAuth>
     );
   }
+}
+
+function PrivateRoute({ children, ...rest}) {
+  const auth = useAuth();
+
+  return (
+    <Route {...rest} render={({location}) => 
+      auth.user ? (
+        children
+      ) : (
+        <Redirect to={{
+          pathname: "/login",
+          state: { from: location }
+        }}></Redirect>
+      )
+    }></Route>
+  );
 }
 
 function Home() {
@@ -81,6 +106,50 @@ function Topic() {
   return (
     <div>
       <h3>{topicId}</h3>
+    </div>
+  );
+}
+
+function Protected() {
+  return <h3>Protected</h3>;
+}
+
+function AuthButton() {
+  const history = useHistory();
+  const auth = useAuth();
+
+  return auth.user ? (
+    <p>
+      Welcome!{" "}
+      <button
+        onClick={() => {
+          auth.signout(() => history.push("/"));
+        }}
+      >
+        Sign out
+      </button>
+    </p>
+  ) : (
+    <p>You are not logged in.</p>
+  );
+}
+
+function Login() {
+  const history = useHistory();
+  const location = useLocation();
+  const auth = useAuth();
+
+  const { from } = location.state || { from: { pathname: "/" } };
+  const login = () => {
+    auth.signin(() => {
+      history.replace(from);
+    });
+  };
+
+  return (
+    <div>
+      <p>You must log in to view the page at {from.pathname}</p>
+      <button onClick={login}>Log in</button>
     </div>
   );
 }
