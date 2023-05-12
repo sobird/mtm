@@ -5,7 +5,7 @@
  */
 
 import React from "react";
-import { BrowserRouter, Link, Redirect, Route, Switch, useHistory, useLocation, useParams, useRouteMatch } from "react-router-dom";
+import { BrowserRouter, Link, Prompt, Redirect, Route, Switch, useHistory, useLocation, useParams, useRouteMatch } from "react-router-dom";
 import { ProvideAuth, useAuth } from "../hooks/useAuth";
 
 class RouteSample extends React.Component {
@@ -75,7 +75,6 @@ function Post() {
 
 function Topics() {
   const match = useRouteMatch();
-  console.log('match', match)
   return (
     <div>
       <h3>topics</h3>
@@ -96,6 +95,13 @@ function Topics() {
       <Route path={`${match.path}/:topicId`}>
         <Topic />
       </Route>
+
+      <Prompt
+        when={true}
+        message={location =>
+          `Are you sure you want to go to ${location.pathname}`
+        }
+      />
     </div>
   )
 }

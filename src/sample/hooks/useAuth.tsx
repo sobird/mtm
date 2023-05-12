@@ -7,6 +7,7 @@
  */
 
 import React, { useContext, createContext, useState } from "react";
+import Cookies from 'js-cookie';
 
 const fakeAuth = {
   isAuthenticated: false,
@@ -23,15 +24,17 @@ const fakeAuth = {
 
 
 export function useProvideAuth() {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<string | undefined>(Cookies.get("user"));
 
   const signin = (cb: () => void) => fakeAuth.signin(() => {
-    setUser("user");
+    setUser("sobird");
+    Cookies.set('user', 'sobird', { expires: 7 });
     cb();
   });
 
   const signout = (cb: () => void) => fakeAuth.signout(() => {
-    setUser(null);
+    setUser(undefined);
+    Cookies.remove('user');
     cb();
   });
 
