@@ -4,9 +4,11 @@
  * sobird<i@sobird.me> at 2023/05/09 2:36:42 created.
  */
 
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Link, Prompt, Redirect, Route, Switch, useHistory, useLocation, useParams, useRouteMatch } from "react-router-dom";
 import { ProvideAuth, useAuth } from "../hooks/useAuth";
+import { useSelector } from "react-redux";
+import { IStoreState } from "../../store/reducers";
 
 class RouteSample extends React.Component {
   render(): React.ReactNode {
@@ -59,8 +61,75 @@ function PrivateRoute({ children, ...rest}) {
   );
 }
 
+let lastFn = null;
+
 function Home() {
-  return <h3>Home</h3>;
+  const [count, setCount] = useState(0);
+  const { user } = useSelector((state: IStoreState) => state.app);
+
+  let homeName = 'Home';
+  
+  // useEffect(() => {
+    
+  //   const timer = setInterval(() => {
+  //     setCount( c => c + 1);
+  //   }, 1000);
+
+  //   return () => {
+  //     console.log('home unload');
+
+  //     clearInterval(timer);
+  //   }
+  // }, [user.name]);
+
+  useMemo(() => {
+    console.log('home memo')
+    homeName = 'Home Memo'
+  }, [user.name]);
+
+
+  const fn1 = () => {
+    console.log('useMemo')
+    return <p style={{color: 'red'}}>{count}</p>
+  };
+
+  const fn2 = () => {
+    console.log('useCallback')
+    return <p style={{color: 'red'}}>{count}</p>
+  };
+
+
+  const newCount = useMemo(fn1, [count]);
+
+  const cb = useCallback(fn2, [count])
+  
+
+   console.log('lastFn', cb == fn2)
+
+  lastFn = cb;
+
+
+  const factorial = useCallback((n) => {
+    if(n === 0) {
+      return 1;
+    }
+
+    console.log('n', n);
+    const res = factorial(n - 1);
+    console.log('res', res);
+
+    return n * res;
+  }, []);
+  
+  return (
+    <>
+      <h3>{homeName}, {user.name}</h3>
+      <p>{count}</p>
+      {newCount}
+      {cb()}
+      {factorial(5)}
+    </>
+  );
 }
 
 function About() {
