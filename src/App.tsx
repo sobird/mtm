@@ -4,8 +4,8 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import Sample from "./sample";
 import { useDispatch, useSelector } from "react-redux";
-import { IStoreState } from "./store/reducers";
-import * as actionCreator from "./store/actions/app";
+import { IStoreState } from "@/store/reducers";
+import * as actionCreator from "@/store/actions/app";
 
 function App() {
   const [count, setCount] = useState(0);
