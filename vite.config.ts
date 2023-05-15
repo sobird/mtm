@@ -13,5 +13,16 @@ export default defineConfig({
     alias: {
       '@': '/src'
     }
+  },
+
+  css: {
+    preprocessorOptions: {
+      less: {
+        modifyVars: {
+          '@primary-color': '#4377FE',//设置antd主题色
+          '@ant-prefix': 'mtm',
+        },
+      }
+    }
   }
 })

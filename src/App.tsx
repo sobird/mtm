@@ -10,7 +10,7 @@ import * as actionCreator from "@/store/actions/app";
 function App() {
   const [count, setCount] = useState(0);
   const { user } = useSelector((state: IStoreState) => state.app);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch1();
 
   return (
     <>
