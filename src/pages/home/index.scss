@@ -1,0 +1,14 @@
+.home {
+  text-align: center;
+  color: #b8bec5;
+  padding-top: 50px;
+  .welcome {
+    font-size: 2rem;
+    text-shadow: 0 2px #f9f9f9;
+    z-index: -1;
+    user-select: none;
+    p {
+      font-size: 14px;
+    }
+  }
+}

@@ -1,0 +1,73 @@
+/**
+ * 带布局的全局样式
+ * 
+ * sobird<i@sobird.me> at 2021/07/02 15:02:44 created.
+ */
+
+ .app-container {
+  height: 100%;
+}
+
+.aside-collapsed {
+  .header-brand {
+    width: 64px;
+    .logo {
+      display: inline-block;
+    }
+    .text {
+      display: none;
+    }
+  }
+  .app-body {
+    aside {
+      width: 64px;
+    }
+  }
+  
+  // .main {
+  //   margin-left: 64px;
+  // }
+  .hamburger {
+    .iconfont {
+      transform: rotateZ(-90deg);
+    }
+  }
+}
+
+.app-body {
+  display: flex;
+  flex: 1 1;
+  height: calc(100% - 48px);
+  aside {
+    width: 200px;
+    background-color: #f9f9f9;
+    box-shadow: 2px 0 6px rgb(0 0 0 / 15%);
+  }
+  main {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: overlay;
+  }
+}
+
+// 全局滚动条样式
+// ::-webkit-scrollbar {
+//   width: 6px;
+//   background-color: transparent;
+//   &:horizontal{
+//     height: 6px;
+//   }
+// }
+// ::-webkit-scrollbar-track-piece {
+//   background-color: transparent;
+// }
+// :hover::-webkit-scrollbar {
+//   background-color: transparent;
+// }
+// :hover::-webkit-scrollbar-track {
+//   background-color: transparent;
+// }
+// :hover::-webkit-scrollbar-thumb {
+//   border-radius: 4px;
+//   background-color: rgba(144, 147, 153, 0.3);
+// }

@@ -24,7 +24,7 @@ interface EntryProps {
 
 function Entry(props: EntryProps) {
   return (
-    <ConfigProvider locale={zhCN}>
+    <ConfigProvider locale={zhCN} prefixCls='mtm'>
       <Provider store={store}>
         <BrowserRouter>
           {props.children}

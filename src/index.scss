@@ -1,3 +1,9 @@
+/**
+ * 全局样式
+ * 
+ * sobird<i@sobird.me> at 2021/06/23 11:49:28 created.
+ */
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -14,6 +20,16 @@
   -webkit-text-size-adjust: 100%;
 }
 
+html,
+body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -24,11 +40,11 @@ a:hover {
 }
 
 body {
+  line-height: 1.15;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
@@ -36,24 +52,7 @@ h1 {
   line-height: 1.1;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -66,4 +65,20 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+
+// button
+.mtm-btn {
+  .iconfont+span {
+    margin-left: 5px;
+  }
+  & + .mtm-btn {
+    margin-left: 10px;
+  }
+}
+
+.mtm-btn-link {
+  height: auto;
+  padding: 0 10px;
 }

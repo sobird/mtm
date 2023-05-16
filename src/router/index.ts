@@ -6,12 +6,23 @@
 
 import React from "react";
 
-export interface RouteProps {
+export interface RouteModel {
   path: string; // Any valid URL path or array of paths
   search?: string; // A string representation of query parameters
   title?: string;
   icon?: string;
   hidden?: boolean;
   component?: React.ComponentType;
-  children?: RouteProps[];
+  children?: RouteModel[];
 }
+
+export const routes: RouteModel[] = [
+  {
+    title: '首页',
+    path: `/`,
+  },
+  {
+    title: '关于',
+    path: `/about`,
+  },
+];

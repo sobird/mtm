@@ -3,23 +3,25 @@
  * 
  * sobird<i@sobird.me> at 2023/05/08 20:52:39 created.
  */
-
+import Cookies from 'js-cookie';
 import { IAction } from '../actions';
-import { SET_USER } from '../constants/app';
+import { SET_USER, TOGGLE_ASIDE } from '../constants/app';
 
 export type User = {
   name: string,
 }
 
 export interface IAppState {
-  user: User
+  user: User,
+  collapsed: boolean;
 }
 
 // defaultState
 const initialState = {
   user: {
     name: 'sobird'
-  }
+  },
+  collapsed: Cookies.get(TOGGLE_ASIDE) === '1',
 };
 
 export default function (state: IAppState = initialState, action: IAction) {
@@ -29,6 +31,26 @@ export default function (state: IAppState = initialState, action: IAction) {
         ...state,
         user: action.payload,
       };
+    case 'TOGGLE_ASIDE':
+        if (state.collapsed) {
+          Cookies.set(TOGGLE_ASIDE, '0', {
+            path: '/',
+          });
+        } else {
+          Cookies.set(TOGGLE_ASIDE, '1', {
+            path: '/',
+          });
+        }
+  
+        // 主动触发window.resize事件
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 300);
+  
+        return {
+          ...state,
+          collapsed: !state.collapsed,
+        };
     default:
       return state;
   }

@@ -1,0 +1,49 @@
+/**
+ * 侧边栏导航组件样式文件
+ * 
+ * sobird<i@sobird.me> at 2021/06/23 21:17:21 created.
+ */
+
+ aside {
+  height: 100%;
+  width: 200px;
+  transition: width 0.3s;
+
+  .menu-container {
+    overflow-x: hidden;
+    overflow-y: overlay;
+    height: calc(100% - 32px);
+
+    .canal-menu {
+      background-color: #f9f9f9;
+      border-right: none;
+
+      &.canal-menu-inline-collapsed {
+        width: 64px;
+      }
+
+      .canal-menu-item {
+        .iconfont {
+          font-size: 1.1em;
+        }
+      }
+    }
+  }
+
+  .hamburger {
+    height: 32px;
+    line-height: 32px;
+    padding: 0 15px;
+    color: #aaa !important;
+    width: 100%;
+    text-align: left;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.025);
+    }
+    .iconfont {
+      font-size: 20px;
+      display: inline-block;
+      transition: transform 0.3s;
+    }
+  }
+}

@@ -5,33 +5,27 @@
  */
 
 import React from "react";
-import { Redirect, Route } from "react-router-dom";
-import { Location } from 'history';
-import { RouteProps } from '@/router';
+import { Redirect, Route, RouteProps } from "react-router-dom";
+import { RouteModel } from '@/router';
 
-
-interface GuardsProps {
-  routes: RouteProps[];
-  location: Location
+export interface GuardsProps extends RouteProps {
+  routes: RouteModel[];
 }
 
 class Guards extends React.Component<GuardsProps> {
   shouldComponentUpdate(nextProps: Readonly<GuardsProps>): boolean {
     const {
-      location: { 
-        pathname: nextPathname,
-      },
+      location: nextLocation,
     } = nextProps;
 
     const {
-      location: { 
-        pathname 
-      },
+      location,
       routes,
     } = this.props;
 
+
     // 判断跳转路由不等于当前路由
-    if (nextPathname !== pathname || routes.length === 0) {
+    if (nextLocation?.pathname !== location?.pathname || routes.length === 0) {
       return true;
     }
     
@@ -55,7 +49,7 @@ class Guards extends React.Component<GuardsProps> {
     const { location, routes } = this.props;
     const { pathname } = location;
 
-    const targetRouterConfig = routes.find((item: any) => {
+    const targetRoute = routes.find((item: RouteModel) => {
       const { path } = item;
       if (path.includes(':')) {
         const reg = new RegExp(`^${item.path.replace(/(:\w+)/g, '(.+)')}$`);
@@ -65,8 +59,8 @@ class Guards extends React.Component<GuardsProps> {
       return Guards.switchRoute(item.path.replace(/\s*/g, ''), pathname);
     });
 
-    if (targetRouterConfig) {
-      return <Route exact path={targetRouterConfig.path} component={targetRouterConfig.component} />;
+    if (targetRoute) {
+      return <Route exact path={targetRoute.path} component={targetRoute.component} />;
     }
 
     return <Redirect to="/" />;

@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
-import "./App.css";
+import "./App.scss";
 import Sample from "./sample";
 import { useDispatch, useSelector } from "react-redux";
 import { IStoreState } from "@/store/reducers";
 import * as actionCreator from "@/store/actions/app";
+import { Result, Button } from "antd";
 
 function App() {
   const [count, setCount] = useState(0);
   const { user } = useSelector((state: IStoreState) => state.app);
-  const dispatch = useDispatch1();
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -24,9 +25,9 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <Button onClick={() => setCount((count) => count + 1)} type="primary" >
           count is {count}
-        </button>
+        </Button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>

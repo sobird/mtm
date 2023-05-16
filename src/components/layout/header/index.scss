@@ -1,0 +1,150 @@
+/*
+ * 通用头部样式
+ * 
+ * sobird<i@sobird.me> at 2021/07/02 14:57:17 created.
+ */
+
+ .header {
+  background-color: #042866;
+  color: #fff;
+  z-index: 100;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 1%), 0 3px 6px 3px rgb(0 0 0 / 1%),
+    0 2px 6px 0 rgb(0 0 0 / 3%);
+
+  padding: 0 20px;
+  display: flex;
+  flex-direction: row;
+  flex-basis: auto;
+  box-sizing: border-box;
+
+  .logo {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background: url('../../../assets/logo.png') no-repeat center;
+    background-size: contain;
+    vertical-align: middle;
+    display: inline-block;
+    margin-right: 10px;
+    .icon-check-circle-s {
+      position: absolute;
+      color: #52c41a;
+      right: 1px;
+      bottom: 1px;
+      line-height: 14px;
+      background: #fff;
+      font-size: 14px;
+      display: inline-block;
+      border-radius: 50%;
+    }
+  }
+
+  .header-brand {
+    height: 48px;
+    line-height: 48px;
+    margin-left: -20px;
+    width: 200px;
+    overflow: hidden;
+    padding-left: 16px;
+    color: #fff;
+    transition: width 0.3s;
+    font-size: 16px;
+    box-sizing: border-box;
+    a {
+      color: #fff;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    .text {
+      font-size: 16px;
+    }
+  }
+
+  .header-bread {
+    flex: 1;
+    flex-basis: auto;
+    height: 48px;
+    line-height: 48px;
+    display: flex;
+
+    .header-bar {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .header-nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    & > div {
+      margin-left: 10px;
+    }
+
+    a {
+      color: rgba(255, 255, 255, 0.7);
+      height: 48px;
+      display: inline-block;
+      padding: 0 10px;
+
+      &:hover {
+        color: #eee;
+        background-color: rgba(0, 0, 0, 0.25);
+      }
+    }
+
+    .avatar {
+      img {
+        width: 32px;
+        height: 32px;
+        display: inline-block;
+        border-radius: 50%;
+        line-height: 36px;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+        vertical-align: middle;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.avatar-popover {
+  .canal-popover-inner {
+    border-radius: 4px;
+  }
+  .canal-popover-inner-content {
+    padding: 4px 0;
+    ul {
+      margin: 4px 0;
+      padding: 0;
+
+      list-style-type: none;
+      li {
+        padding: 8px 16px;
+        cursor: pointer;
+        a {
+          display: block;
+          text-decoration: none;
+          color: #333;
+        }
+        &:hover {
+          background: #f5f5f5;
+        }
+
+        &.divided {
+          padding: 0;
+          margin: 4px 0;
+          border-top: 1px solid #e5e5e5;
+        }
+        .pull-right {
+          float: right;
+        }
+      }
+    }
+  }
+}
