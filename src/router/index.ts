@@ -5,6 +5,7 @@
  */
 
 import React from "react";
+import Home from "@/pages/home";
 
 export interface RouteModel {
   path: string; // Any valid URL path or array of paths
@@ -20,6 +21,7 @@ export const routes: RouteModel[] = [
   {
     title: '首页',
     path: `/`,
+    component: Home,
   },
   {
     title: '关于',

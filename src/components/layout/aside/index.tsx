@@ -25,13 +25,15 @@ export default function Aside() {
     [dispatch],
   );
 
+  console.log('location', location)
+
   return (
     <aside>
       <div className="menu-container">
         <Menu
           mode="inline"
           inlineCollapsed={collapsed}
-          selectedKeys={[location.pathname]}
+          defaultSelectedKeys={[location.pathname]}
         >
           <Menu.Item key="/" icon={<i className="iconfont icon-tags-s" />}>
             <Link to="/">

@@ -14,15 +14,15 @@
     overflow-y: overlay;
     height: calc(100% - 32px);
 
-    .canal-menu {
+    .mtm-menu {
       background-color: #f9f9f9;
       border-right: none;
 
-      &.canal-menu-inline-collapsed {
+      &.mtm-menu-inline-collapsed {
         width: 64px;
       }
 
-      .canal-menu-item {
+      .mtm-menu-item {
         .iconfont {
           font-size: 1.1em;
         }

@@ -15,7 +15,7 @@ class Environment extends React.PureComponent<any, any> {
     this.state = {
       env: {
         value: 'local',
-        label: '本地环境',
+        label: '本地',
       },
     };
   }
@@ -24,17 +24,17 @@ class Environment extends React.PureComponent<any, any> {
     {
       value: 'prod',
       label: '线上',
-      url: '//canal.sankuai.com/',
+      url: '//mtm.example.com/',
     },
     {
       value: 'staging',
-      label: '线上',
-      url: '//canal.thh.st.sankuai.com/',
+      label: '备机',
+      url: '//mtm.st.example.com/',
     },
     {
       value: 'test',
       label: '线下',
-      url: '//canal.thh.test.sankuai.com/',
+      url: '//mtm.test.example.com/',
     },
   ];
 

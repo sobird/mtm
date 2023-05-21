@@ -49,6 +49,8 @@ class Guards extends React.Component<GuardsProps> {
     const { location, routes } = this.props;
     const { pathname } = location;
 
+    
+
     const targetRoute = routes.find((item: RouteModel) => {
       const { path } = item;
       if (path.includes(':')) {
@@ -62,7 +64,7 @@ class Guards extends React.Component<GuardsProps> {
     if (targetRoute) {
       return <Route exact path={targetRoute.path} component={targetRoute.component} />;
     }
-
+    
     return <Redirect to="/" />;
   }
 }

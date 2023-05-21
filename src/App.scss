@@ -1,26 +1,39 @@
+.micro-view {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
 
-
-
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 400;
+    color: #1f2f3d;
+    margin: 15px 0;
   }
 }
 
-.card {
-  padding: 2em;
+.micro-body {
+  position: relative;
+  min-height: calc(100% - 62px);
 }
 
-.read-the-docs {
-  color: #888;
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+  p {
+    margin: 0;
+  }
+}
+
+.text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
 }

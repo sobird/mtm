@@ -51,7 +51,7 @@ class Header extends React.Component<any, any> {
           </div>
           <nav className="header-nav">
             <div>
-              <a href="https://km.sankuai.com/page/847012387" target="_blank">
+              <a href="#" target="_blank">
                 使用说明
               </a>
             </div>
@@ -75,7 +75,7 @@ class Header extends React.Component<any, any> {
                 placement="bottomRight"
               >
                 <img
-                  src={`https://serverless.sankuai.com/dx-avatar/?type=img&mis=${userInfo.mis}`}
+                  src={`https://serverless.example.com/dx-avatar/?type=img&mis=${userInfo.mis}`}
                 />
               </Popover>
             </div> */}
