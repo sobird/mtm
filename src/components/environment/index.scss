@@ -11,6 +11,7 @@
   }
   .env-tag {
     display: inline-block;
+    margin-right: 5px;
   }
   .env-tag-cn {
     border-radius: 1px 0 0 1px;
@@ -31,34 +32,9 @@
   }
 }
 
-.popover-env {
-  padding-top: 0;
-  font-size: 12px;
-  .mtm-popover-arrow {
-    display: none;
-  }
-  .mtm-popover-inner {
-    border-radius: 4px;
-  }
-  .mtm-popover-inner-content {
-    padding: 4px 0;
-    ul {
-      margin: 4px 0;
-      padding: 0;
-
-      list-style-type: none;
-      li {
-        padding: 8px 16px;
-        cursor: pointer;
-        a {
-          display: block;
-          text-decoration: none;
-          color: #333;
-        }
-        &:hover {
-          background: #f5f5f5;
-        }
-      }
-    }
+.mtm-dropdown.dropdown-env {
+  
+  .mtm-dropdown-menu-item {
+    font-size: 12px;
   }
 }

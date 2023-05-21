@@ -4,79 +4,84 @@
  * sobird<i@sobird.me> at 2021/06/23 17:55:10 created.
  */
 
-import React from 'react';
-import { Popover } from 'antd';
+import React from "react";
+import { Dropdown, MenuProps } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 
-import './index.scss';
+import "./index.scss";
 
 class Environment extends React.PureComponent<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
       env: {
-        value: 'local',
-        label: '本地',
+        value: "local",
+        label: "本地",
       },
+      envs: [],
     };
   }
 
-  envs = [
+  items = [
     {
       value: 'prod',
       label: '线上',
-      url: '//mtm.example.com/',
+      url: '//mtm.example.com',
     },
     {
       value: 'staging',
       label: '备机',
-      url: '//mtm.st.example.com/',
+      url: '//mtm.st.example.com',
     },
     {
       value: 'test',
       label: '线下',
-      url: '//mtm.test.example.com/',
+      url: '//mtm.test.example.com',
     },
   ];
 
+  
+
   componentDidMount() {
     const href = window.location.href;
+    const { items }  = this;
 
     const _envs: any = [];
-    this.envs.forEach((item) => {
+
+    items.forEach((item) => {
+      const _item = {
+        key: item.url,
+        label: (
+          <a href={item.url}>{ item.label }/{ item.value }</a>
+        )
+      };
       if (href.indexOf(item.url) > -1) {
         this.setState({
           env: item,
         });
       } else {
-        _envs.push(item);
+        _envs.push(_item);
       }
     });
 
-    this.envs = _envs;
+    this.setState({
+      envs: _envs,
+    });
   }
 
   render() {
-    const { env } = this.state;
+    const { env, envs } = this.state;
 
     return (
-      <Popover
-        overlayClassName="popover-env"
-        content={(
-          <ul>
-            {this.envs.map((item) => (
-              <li key={item.value}><a href={item.url}>{ item.label }/{ item.value }</a></li>
-            ))}
-          </ul>
-        )} placement="bottomLeft"
-      >
+      <Dropdown menu={{ items: envs }} overlayClassName="dropdown-env">
         <div className="environment">
           <div className="env-tag">
-            <span className="env-tag-cn">{ env.label }</span>
-            <span className="env-tag-en">{ env.value }</span>
+            <span className="env-tag-cn">{env.label}</span>
+            <span className="env-tag-en">{env.value}</span>
           </div>
-          <i className="el-icon-arrow-down el-icon--right" />
+          <DownOutlined />
         </div>
-      </Popover>
+      </Dropdown>
     );
   }
 }
