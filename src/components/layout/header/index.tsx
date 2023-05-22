@@ -47,16 +47,13 @@ class Header extends React.Component<any, any> {
         <div className="header-bread">
           <div className="header-bar">
             <Environmen />
-            <Fullscreen />
           </div>
           <nav className="header-nav">
             <div>
-              <a href="#" target="_blank">
-                使用说明
-              </a>
+            <Fullscreen />
             </div>
 
-            {/* <div className="avatar">
+            <div className="avatar">
               <Popover
                 overlayClassName="avatar-popover"
                 trigger="click"
@@ -65,7 +62,7 @@ class Header extends React.Component<any, any> {
                     <li>{userInfo.name} / {userInfo.mis}</li>
                     <li className="divided" />
                     <li>
-                      <a href="/sso/logout">
+                      <a href="/logout">
                         退出
                         <i className="iconfont icon-sign-out pull-right" />
                       </a>
@@ -75,10 +72,10 @@ class Header extends React.Component<any, any> {
                 placement="bottomRight"
               >
                 <img
-                  src={`https://serverless.example.com/dx-avatar/?type=img&mis=${userInfo.mis}`}
+                  src={`https://gravatar.sobird.me/avatar/b5c9ccc6a294ab482e9709d4f6c0eb40?s=64&d=mm&r=g`}
                 />
               </Popover>
-            </div> */}
+            </div>
           </nav>
         </div>
       </header>
