@@ -1,5 +1,35 @@
 # my-react-app
-:toc: macro
+:toc:
 
 ## webpack5 配置
 本文档从零开始配置 `react + typescript` 项目。
+
+## 安装webpack
+* webpack webpack 打包工具
+* webpack-cli webpack 命令行接口
+* webpack-dev-server 在本地启动一个http服务，运行应用
+
+```sh
+yarn add -D webpack webpack-cli webpack-dev-server
+```
+
+### webpack.config.js
+在项目根目录创建 `webpack.config.js` 配置文件，基本结构如下：
+
+```js
+const isProduction = process.env.NODE_ENV === 'production';
+
+const config = {
+  // webpack config
+};
+
+module.exports = () => {
+  if (isProduction) {
+    config.mode = 'production';
+
+  } else {
+    config.mode = 'development';
+  }
+  return config;
+}
+```
