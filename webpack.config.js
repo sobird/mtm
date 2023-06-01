@@ -26,6 +26,7 @@ const config = {
     filename: '[name].[contenthash].js',
     chunkFilename: '[name].[contenthash].chunk.js',
     publicPath: '/',
+    clean: true,
   },
   devServer: {
     open: true,

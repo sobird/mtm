@@ -117,6 +117,18 @@ const config = {
 }
 ```
 
+### clean-webpack-plugin
+webpack 5.20.0+ 版本中通过如下配置，可替换 clean-webpack-plugin 插件功能。
+
+```
+module.exports = {
+  //...
+  output: {
+    clean: true, // 在生成文件之前清空 output 目录
+  },
+};
+```
+
 ### mini-css-extract-plugin
 将CSS提取到单独的CSS文件中，通过 `yarn add -D mini-css-extract-plugin` 安装，基本配置如下：
 
