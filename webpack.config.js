@@ -8,6 +8,7 @@
  * sobird<i@sobird.me> at 2019-11-06 16:53:47 build.
  */
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const isProduction = process.env.NODE_ENV === 'production';
 
 const config = {
@@ -31,6 +32,15 @@ const config = {
     hot: true,
     historyApiFallback: true,
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve('public/index.html'),
+      filename: 'index.html',
+      minify: true,
+      inject: true,
+      title: 'Webpack App',
+    }),
+  ]
 };
 
 module.exports = (env) => {

@@ -73,7 +73,7 @@ module.exports = () => {
 
 ## 插件
 ### html-webpack-plugin
-创建应用入口html，同时自动添加 `bundle.js` 文件，基本配置如下：
+创建应用入口html，同时自动添加 `bundle.js` 文件，通过 `yarn add -D html-webpack-plugin`命令安装，基本配置如下：
 
 ```js
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -86,6 +86,32 @@ const config = {
       minify: true,
       inject: true,
       title: 'Webpack App',
+    }),
+  ]
+}
+```
+
+### dotenv-webpack
+为项目添加 `process.env` 环境变量，通过 `yarn add -D dotenv-webpack` 命令安装，基本配置如下：
+
+```js
+const Dotenv = require('dotenv-webpack');
+
+const config = {
+  plugins: [
+    new Dotenv({
+      path: path.join(__dirname, `.env.${process.env.NODE_ENV}`),
+      safe: true,
+      // hide any errors
+      silent: true,
+      // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
+      systemvars: true,
+      // Allows your variables to be "expanded" for reusability within your .env file.
+      expand: true,
+      // allow empty variables (e.g. `FOO=`) (treat it as empty string, rather than missing)
+      allowEmptyValues: true,
+      // load '.env.defaults' as the default values if empty.
+      defaults: path.join(__dirname, '.env.defaults'),
     }),
   ]
 }
