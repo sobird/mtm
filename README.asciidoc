@@ -1,19 +1,18 @@
-# my-react-app
+# webpack5 配置
 :toc:
 
-## webpack5 配置
 本文档从零开始配置 `react + typescript` 项目。
 
 ## 安装webpack
-* webpack webpack 打包工具
-* webpack-cli webpack 命令行接口
-* webpack-dev-server 在本地启动一个http服务，运行应用
+* *webpack* webpack 打包工具
+* *webpack-cli* webpack 命令行接口
+* *webpack-dev-server* 在本地启动一个http服务，运行应用
 
 ```sh
 yarn add -D webpack webpack-cli webpack-dev-server
 ```
 
-### webpack.config.js
+## webpack.config.js
 在项目根目录创建 `webpack.config.js` 配置文件，基本结构如下：
 
 ```js
@@ -33,3 +32,18 @@ module.exports = () => {
   return config;
 }
 ```
+
+## scripts
+配置 `package.json` 中的scripts字段，添加start、build、lint等命令
+
+```json
+  "scripts": {
+    "start": "NODE_ENV=development webpack serve",
+    "build": "webpack --mode=production --node-env=production",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+  },
+```
+
+## 插件
+### html-webpack-plugin
+创建应用入口html，同时自动添加 `bundle.js` 文件
