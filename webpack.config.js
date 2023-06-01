@@ -11,6 +11,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const isProduction = process.env.NODE_ENV === 'production';
+const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
 const config = {
   devtool: isProduction ? false : 'inline-source-map',
@@ -32,6 +33,9 @@ const config = {
     port: 3000,
     hot: true,
     historyApiFallback: true,
+    static: {
+      directory: path.join(__dirname, 'public')
+    }
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -41,7 +45,51 @@ const config = {
       inject: true,
       title: 'Webpack App',
     }),
-  ]
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.(ts|tsx)$/i,
+        use: [{
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+          },
+        }],
+        exclude: ['/node_modules/'],
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [stylesHandler, 'css-loader', 'sass-loader', 'postcss-loader'],
+      },
+      {
+        test: /\.less$/,
+        use: [stylesHandler, 'css-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              lessOptions: {
+                modifyVars: {
+                  'primary-color': '#0080FF',
+                },
+                javascriptEnabled: true,
+                math: 'always',
+              },
+            },
+          },
+          'postcss-loader'
+        ],
+      },
+      {
+        test: /\.css$/i,
+        use: [stylesHandler, 'css-loader', 'postcss-loader'],
+      },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+        type: 'asset',
+      },
+    ]
+  }
 };
 
 module.exports = (env) => {

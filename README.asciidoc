@@ -71,7 +71,7 @@ module.exports = () => {
   },
 ```
 
-## 插件
+## plugin
 ### html-webpack-plugin
 创建应用入口html，同时自动添加 `bundle.js` 文件，通过 `yarn add -D html-webpack-plugin` 命令安装，基本配置如下：
 
@@ -136,4 +136,103 @@ module.exports = () => {
   }
   return config;
 };
+```
+
+## loader
+
+### ts-loader
+将 `TypeScript` 转化为 `JavaScript`，通过 `yarn add -D ts-loader` 安装，基本配置如下：
+
+```js
+const config = {
+  module: {
+    rules: [
+      {
+        // test: /\.ts(x?)$/,
+        test: /\.(ts|tsx)$/i,
+        use: [{
+          loader: 'ts-loader',
+          options: {
+            // 跳过ts类型检查
+            transpileOnly: true,
+          },
+        }],
+        exclude: ['/node_modules/'],
+      },
+    ]
+  }
+}
+```
+
+### CSS
+
+* *style-loader* 将JS文件中引入的CSS插入到HTML模板文件
+* *mini-css-extract-plugin*  和 `style-loader` 功能一样，只是打包后会单独生成 CSS 文件而非直接写在 HTML 文件中，用于生产环境，开发环境不需要另外生成文件
+* *css-loader* 让JS文件可以通过 `import` 或 `require` 等命令导入CSS
+* *sass-loader* 将sass代码转换为css代码
+* *less-loader* 将less代码转换为css代码
+* *postcss-loader* 处理css代码，因为是处理css，所以postcss-loader要放在 css-loader sass-loader等之后，可以在 `webpack.config.js` 中直接进行配置，或在 `postcss.config.js` 中进行配置，postcss-loader会自动加载该配置文件。
+
+通过下面命令批量安装所需的css相关loader
+```js
+yarn add -D style-loader css-loader sass-loader less-loader postcss-loader
+```
+
+```js
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const isProduction = process.env.NODE_ENV === 'production';
+const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
+
+const config = {
+  module: {
+    rules: [
+      {
+        test: /\.s[ac]ss$/i,
+        use: [stylesHandler, 'css-loader', 'sass-loader', 'postcss-loader'],
+      },
+      {
+        test: /\.less$/,
+        use: [stylesHandler, 'css-loader', 
+          {
+            loader: 'less-loader',
+            options: {
+              lessOptions: {
+                modifyVars: {
+                  'primary-color': '#0080FF',
+                },
+                javascriptEnabled: true,
+                math: 'always',
+              },
+            },
+          },
+          'postcss-loader'
+        ],
+      },
+      {
+        test: /\.css$/i,
+        use: [stylesHandler, 'css-loader', 'postcss-loader'],
+      },
+    ]
+  }
+}
+```
+
+### https://webpack.docschina.org/guides/asset-modules/[asset module]
+在 webpack 5 之前，通常使用：
+
+* *raw-loader* 将文件导入为字符串
+* *url-loader* 将文件作为 data URI 内联到 bundle 中
+* *file-loader* 将文件发送到输出目录
+
+```js
+const config = {
+  module: {
+    rules: [
+      {
+        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+        type: 'asset',
+      },
+    ]
+  }
+}
 ```
