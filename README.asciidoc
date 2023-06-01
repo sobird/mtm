@@ -173,11 +173,27 @@ const config = {
 * *less-loader* 将less代码转换为css代码
 * *postcss-loader* 处理css代码，因为是处理css，所以postcss-loader要放在 css-loader sass-loader等之后，可以在 `webpack.config.js` 中直接进行配置，或在 `postcss.config.js` 中进行配置，postcss-loader会自动加载该配置文件。
 
-通过下面命令批量安装所需的css相关loader
+*postcss.config.js*
+
 ```js
-yarn add -D style-loader css-loader sass-loader less-loader postcss-loader
+module.exports = {
+  plugins: [
+    [
+      "postcss-preset-env",
+      {
+        // Options
+      },
+    ],
+  ],
+};
 ```
 
+通过下面命令批量安装所需的css相关loader
+```js
+yarn add -D style-loader css-loader sass-loader less-loader postcss-loader postcss-preset-env
+```
+
+css 相关loader配置如下：
 ```js
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const isProduction = process.env.NODE_ENV === 'production';
