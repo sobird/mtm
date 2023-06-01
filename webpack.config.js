@@ -7,14 +7,34 @@
  *
  * sobird<i@sobird.me> at 2019-11-06 16:53:47 build.
  */
+const path = require('path');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
 const config = {
-  // webpack config
+  devtool: isProduction ? false : 'inline-source-map',
+  entry: {
+    app: [
+      './src/index.tsx',
+    ],
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    // pathinfo: true,
+    filename: '[name].[contenthash].js',
+    chunkFilename: '[name].[contenthash].chunk.js',
+    publicPath: '/',
+  },
+  devServer: {
+    open: true,
+    host: 'localhost',
+    port: 3000,
+    hot: true,
+    historyApiFallback: true,
+  },
 };
 
-export default (env) => {
+module.exports = (env) => {
   console.log('env', env, process.env.NODE_ENV)
   if (isProduction) {
     config.mode = 'production';

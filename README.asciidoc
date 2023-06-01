@@ -33,6 +33,33 @@ module.exports = () => {
 }
 ```
 
+## 公共配置
+配置entry、output、devtool和devServer
+```js
+{
+  devtool: isProduction ? false : 'inline-source-map',
+  entry: {
+    app: [
+      './src/index.tsx',
+    ],
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    // pathinfo: true,
+    filename: '[name].[contenthash].js',
+    chunkFilename: '[name].[contenthash].chunk.js',
+    publicPath: '/',
+  },
+  devServer: {
+    open: true,
+    host: 'localhost',
+    port: 3000,
+    hot: true,
+    historyApiFallback: true,
+  },
+}
+```
+
 ## scripts
 配置 `package.json` 中的scripts字段，添加start、build、lint等命令
 
@@ -46,4 +73,20 @@ module.exports = () => {
 
 ## 插件
 ### html-webpack-plugin
-创建应用入口html，同时自动添加 `bundle.js` 文件
+创建应用入口html，同时自动添加 `bundle.js` 文件，基本配置如下：
+
+```js
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const config = {
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve('public/index.html'),
+      filename: 'index.html',
+      minify: true,
+      inject: true,
+      title: 'Webpack App',
+    }),
+  ]
+}
+```
