@@ -150,6 +150,9 @@ module.exports = () => {
 };
 ```
 
+### terser-webpack-plugin
+
+
 ## loader
 
 ### ts-loader
@@ -261,6 +264,22 @@ const config = {
         type: 'asset',
       },
     ]
+  }
+}
+```
+
+## cache
+缓存生成的 webpack 模块和 chunk，来改善构建速度。cache 会在开发 模式被设置成 type: 'memory' 而且在 生产 模式 中被禁用。
+
+```js
+const config = {
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      // This makes all dependencies of this file - build dependencies
+      config: [__filename],
+      // 默认情况下 webpack 与 loader 是构建依赖。
+    },
   }
 }
 ```

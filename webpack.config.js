@@ -90,6 +90,12 @@ const config = {
         type: 'asset',
       },
     ]
+  },
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      config: [__filename],
+    },
   }
 };
 
