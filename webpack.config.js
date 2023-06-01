@@ -8,7 +8,6 @@
  * sobird<i@sobird.me> at 2019-11-06 16:53:47 build.
  */
 const path = require('path');
-
 const isProduction = process.env.NODE_ENV === 'production';
 
 const config = {
