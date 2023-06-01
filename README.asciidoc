@@ -34,7 +34,7 @@ module.exports = () => {
 ```
 
 ## 公共配置
-配置entry、output、devtool和devServer
+配置 `entry`、`output`、`devtool` 和 `devServer`
 ```js
 {
   devtool: isProduction ? false : 'inline-source-map',
@@ -61,7 +61,7 @@ module.exports = () => {
 ```
 
 ## scripts
-配置 `package.json` 中的scripts字段，添加start、build、lint等命令
+配置 `package.json` 中的 `scripts` 字段，添加start、build、lint等命令
 
 ```json
   "scripts": {
@@ -73,7 +73,7 @@ module.exports = () => {
 
 ## 插件
 ### html-webpack-plugin
-创建应用入口html，同时自动添加 `bundle.js` 文件，通过 `yarn add -D html-webpack-plugin`命令安装，基本配置如下：
+创建应用入口html，同时自动添加 `bundle.js` 文件，通过 `yarn add -D html-webpack-plugin` 命令安装，基本配置如下：
 
 ```js
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -115,4 +115,25 @@ const config = {
     }),
   ]
 }
+```
+
+### mini-css-extract-plugin
+将CSS提取到单独的CSS文件中，通过 `yarn add -D mini-css-extract-plugin` 安装，基本配置如下：
+
+```js
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+...
+module.exports = () => {
+  if (isProduction) {
+    config.mode = 'production';
+
+    config.plugins.push(new MiniCssExtractPlugin({
+      filename: '[name].[contenthash].css',
+      chunkFilename: '[id].[contenthash].css',
+    }));
+  } else {
+    config.mode = 'development';
+  }
+  return config;
+};
 ```
