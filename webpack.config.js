@@ -8,6 +8,7 @@
  * sobird<i@sobird.me> at 2019-11-06 16:53:47 build.
  */
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const isProduction = process.env.NODE_ENV === 'production';
@@ -46,6 +47,9 @@ const config = {
       inject: true,
       title: 'Webpack App',
     }),
+    new webpack.ProgressPlugin({
+      activeModules: true,
+    })
   ],
   module: {
     rules: [

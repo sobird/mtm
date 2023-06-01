@@ -152,6 +152,32 @@ module.exports = () => {
 
 ### terser-webpack-plugin
 
+### webpack.ProgressPlugin
+在打包构建过程中输出当前的进度信息
+
+```js
+const webpack = require('webpack');
+
+const config = {
+  plugins: [
+    new webpack.ProgressPlugin({
+      activeModules: false,
+      entries: true,
+      handler(percentage, message, ...args) {
+        // custom logic
+      },
+      modules: true,
+      modulesCount: 5000,
+      profile: false,
+      dependencies: true,
+      dependenciesCount: 10000,
+      percentBy: null,
+    })
+  ]
+}
+```
+
+
 
 ## loader
 
