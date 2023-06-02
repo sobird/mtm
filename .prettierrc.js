@@ -1,6 +1,6 @@
 module.exports = {
   // 每行代码长度 默认80
-  printWidth: 100,
+  printWidth: 120,
   // 每个tab相当于多少个空格 默认2
   tabWidth: 2,
   // 是否使用tab进行缩进 默认false
@@ -54,7 +54,7 @@ module.exports = {
   rangeStart: 0,
   rangeEnd: Infinity,
   // 格式化的解析器，默认值为babylon(until v1.13.0)
-  parser: 'babylon',
+  // parser: 'babylon',
   /**
    * 指定要使用的文件名，以推断要使用哪个解析器。
    * 该选项仅在CLI和API中有用。在配置文件中使用它没有意义。
