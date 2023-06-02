@@ -11,6 +11,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const Dotenv = require('dotenv-webpack');
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
@@ -46,6 +47,15 @@ const config = {
       minify: true,
       inject: true,
       title: 'Webpack App',
+    }),
+    new Dotenv({
+      path: path.join(__dirname, `.env.${process.env.NODE_ENV}`),
+      safe: true,
+      silent: true,
+      systemvars: true,
+      expand: true,
+      allowEmptyValues: true,
+      defaults: path.join(__dirname, '.env.defaults'),
     }),
     new webpack.ProgressPlugin({
       activeModules: true,
@@ -94,6 +104,9 @@ const config = {
         type: 'asset',
       },
     ]
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
   },
   cache: {
     type: 'filesystem',
