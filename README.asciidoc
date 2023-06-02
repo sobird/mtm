@@ -151,6 +151,22 @@ module.exports = () => {
 ```
 
 ### terser-webpack-plugin
+`terser-webpack-plugin` 内部封装了 `terser` 库，用于处理 `js` 的压缩和混淆，通过 `webpack plugin` 的方式对代码进行处理。
+
+`webpack v5` 开箱即带有最新版本的 `terser-webpack-plugin`。如果你使用的是 `webpack v5` 或更高版本，同时希望自定义配置，那么仍需要安装 `terser-webpack-plugin`。如果使用 `webpack v4`，则必须安装 `terser-webpack-plugin v4` 的版本。
+
+```js
+const TerserPlugin = require("terser-webpack-plugin");
+
+module.exports = {
+  optimization: {
+    // 告知 webpack 使用 TerserPlugin 或其它在 optimization.minimizer定义的插件压缩 bundle。
+    minimize: true,
+    // 允许你通过提供一个或多个定制过的 TerserPlugin 实例，覆盖默认压缩工具(minimizer)。
+    minimizer: [new TerserPlugin()],
+  },
+};
+```
 
 ### webpack.ProgressPlugin
 在打包构建过程中输出当前的进度信息
@@ -317,13 +333,13 @@ const config = {
 ```sh
 root = true
 
-[*]
-charset = utf-8
-indent_style = space
-indent_size = 2
-end_of_line = lf
-insert_final_newline = true
-trim_trailing_whitespace = true
+[*] # 匹配全部文件
+charset = utf-8 # 设置字符集
+indent_style = space # 缩进风格，可选 space、tab
+indent_size = 2 # 缩进的空格数
+end_of_line = lf # 结尾换行符，可选 lf、cr、crlf
+insert_final_newline = true # 在文件结尾插入新行
+trim_trailing_whitespace = true # 删除一行中的前后空格
 
 [*.md]
 trim_trailing_whitespace = false
@@ -332,15 +348,11 @@ trim_trailing_whitespace = false
 indent_style = tab
 ```
 
-## .browserslistrc
-在不同的前端工具之间共用目标浏览器和 `Node` 版本的配置文件。它主要被以下工具使用：
+### Prettier
 
-* Autoprefixer
-* Babel
-* post-preset-env
-* eslint-plugin-compat
-* stylelint-unsupported-browser-features
-* postcss-normalize
+
+## .browserslistrc
+在不同的前端工具之间共用目标浏览器和 `Node` 版本的配置文件。它主要被以下工具使用：*Autoprefixer*，*Babel*，*post-preset-env*，*eslint-plugin-compat*，*stylelint-unsupported-browser-features*，*postcss-normalize* 。
 
 在 `package.json` 中配置：
 
@@ -361,10 +373,12 @@ indent_style = tab
 在 `.browserslistrc` 中配置：
 
 ```sh
-> 0.25%
+# 默认值
+
+> 0.5%
+last 2 versions
+Firefox ESR
 not dead
-ie 10
-chrome 45
-ios 9
-android 4.4
 ```
+
+## eslint

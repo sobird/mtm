@@ -108,6 +108,9 @@ const config = {
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
   },
+  // optimization: {
+  //   minimize: true,
+  // },
   cache: {
     type: 'filesystem',
     buildDependencies: {
@@ -116,8 +119,8 @@ const config = {
   }
 };
 
-module.exports = (env) => {
-  console.log('env', env, process.env.NODE_ENV)
+module.exports = (conf) => {
+  console.log('conf', conf, process.env.NODE_ENV)
   if (isProduction) {
     config.mode = 'production';
 
