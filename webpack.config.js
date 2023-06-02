@@ -107,6 +107,9 @@ const config = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
+    alias: {
+      '@': path.join(__dirname, 'src'),
+    },
   },
   // optimization: {
   //   minimize: true,
