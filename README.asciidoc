@@ -244,6 +244,26 @@ const config = {
 }
 ```
 
+### esbuild-loader
+`esbuild-loader` 是一个构建在 esbuild 上的 webpack loader，且可以替代 `babel-loader` 或 `ts-loader` 来提高构建速度
+
+```js
+const config  = {
+  module: {
+    rules: [
+      {
+        // Match js, jsx, ts & tsx files
+        test: /\.[jt]sx?$/,
+        loader: 'esbuild-loader',
+        options: {
+          // JavaScript version to compile to
+          target: 'es2015'
+        }
+      },
+    ],
+  },
+}
+```
 ### css
 
 * *style-loader* 将js文件中引入的css插入到html模板文件

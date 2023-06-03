@@ -67,9 +67,9 @@ const config = {
       {
         test: /\.(ts|tsx)$/i,
         use: [{
-          loader: 'ts-loader',
+          loader: 'esbuild-loader',
           options: {
-            transpileOnly: true,
+            target: 'es2015'
           },
         }],
         exclude: ['/node_modules/'],
