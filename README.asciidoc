@@ -264,6 +264,23 @@ const config  = {
   },
 }
 ```
+
+`esbuild-loader` 可替换 TerserPlugin 和 CssMinimizerPlugin
+
+```js
+const { EsbuildPlugin } = require('esbuild-loader')
+
+const config = {
+  optimization: {
+    minimizer: [
+      new EsbuildPlugin({
+        target: 'es2015'  // Syntax to compile to (see options below for possible values)
+      })
+    ]
+  },
+}
+```
+
 ### css
 
 * *style-loader* 将js文件中引入的css插入到html模板文件

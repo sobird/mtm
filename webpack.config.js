@@ -12,6 +12,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const { ESbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
@@ -117,7 +118,16 @@ const config = {
     minimizer: [
       // 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
       // `...`,
-      new CssMinimizerPlugin(),
+      // new CssMinimizerPlugin(),
+      ESbuildPlugin({
+        target: 'es2015',
+        css: true, // 优化CSS
+        minify: false, // 压缩JS
+        minifyWhitespace: true, // 去掉空格
+        minifyIdentifiers: true, // 缩短标识符
+        minifySyntax: true, // 缩短语法
+        legalComments: 'none', // 去掉注释
+      })
     ],
   },
   cache: {
