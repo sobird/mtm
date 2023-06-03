@@ -11,6 +11,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const Dotenv = require('dotenv-webpack');
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
@@ -111,9 +112,14 @@ const config = {
       '@': path.join(__dirname, 'src'),
     },
   },
-  // optimization: {
-  //   minimize: true,
-  // },
+  optimization: {
+    // minimize: true,
+    minimizer: [
+      // 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
+      // `...`,
+      new CssMinimizerPlugin(),
+    ],
+  },
   cache: {
     type: 'filesystem',
     buildDependencies: {
