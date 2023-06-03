@@ -156,6 +156,23 @@ module.exports = () => {
 };
 ```
 
+### css-minimizer-webpack-plugin
+css压缩优化，通过 `yarn add -D css-minimizer-webpack-plugin` 安装，基本配置如下：
+
+```js
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+
+const config = {
+  optimization: {
+    minimizer: [
+      // 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
+      // `...`,
+      new CssMinimizerPlugin(),
+    ],
+  },
+};
+```
+
 ### terser-webpack-plugin
 `terser-webpack-plugin` 内部封装了 `terser` 库，用于处理 `js` 的压缩和混淆，通过 `webpack plugin` 的方式对代码进行处理。
 

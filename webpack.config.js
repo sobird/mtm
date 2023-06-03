@@ -35,7 +35,7 @@ const config = {
     open: true,
     host: 'localhost',
     port: 3000,
-    hot: true,
+    hot: true, // 开启HMR功能
     historyApiFallback: true,
     static: {
       directory: path.join(__dirname, 'public')
