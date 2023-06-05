@@ -10,7 +10,7 @@ function App() {
     <>
       <div>
         <a href='https://webpack.js.org' target='_blank'>
-          <img src={webpackLogo} className='logo' alt='Vite logo' />
+          <img src={webpackLogo} className='logo' alt='Webpack logo' />
         </a>
         <a href='https://react.dev' target='_blank'>
           <img src={reactLogo} className='logo react' alt='React logo' />
