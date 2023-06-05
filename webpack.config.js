@@ -12,8 +12,10 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const { ESbuildPlugin } = require('esbuild-loader');
+const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
+const package = require('./package.json');
+
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
@@ -31,6 +33,10 @@ const config = {
     chunkFilename: '[name].[contenthash].chunk.js',
     publicPath: '/',
     clean: true,
+    // library: `${package.name}`,
+    // libraryTarget: 'umd',
+    // chunkLoadingGlobal: `webpackJsonp_${package.name}`,
+    // globalObject: 'window',
   },
   devServer: {
     open: true,
@@ -114,12 +120,12 @@ const config = {
     },
   },
   optimization: {
-    // minimize: true,
+    minimize: false,
     minimizer: [
       // 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
       // `...`,
-      // new CssMinimizerPlugin(),
-      ESbuildPlugin({
+      new CssMinimizerPlugin(),
+      new EsbuildPlugin({
         target: 'es2015',
         css: true, // 优化CSS
         minify: false, // 压缩JS
@@ -134,6 +140,13 @@ const config = {
     type: 'filesystem',
     buildDependencies: {
       config: [__filename],
+    },
+  },
+  externals: {
+    react: {
+      commonjs: ['mix', 'React'],
+      commonjs2: ['mix', 'React'],
+      root: ['mix', 'React'],
     },
   }
 };

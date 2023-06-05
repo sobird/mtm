@@ -387,6 +387,9 @@ const config = {
 }
 ```
 
+## externals
+`externals` 配置项提供了阻止将某些 import 的包(package)打包到 `bundle` 中的功能，在运行时(runtime)再从外部获取这些扩展依赖(external dependencies)
+
 ## 编码风格
 ### EditorConfig
 
@@ -559,3 +562,13 @@ not dead
 ```
 
 ## eslint
+
+当保存代码时，按照eslint设置的规则自动修复代码，配置如下：
+
+```json
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+}
+```
