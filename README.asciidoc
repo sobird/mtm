@@ -562,6 +562,19 @@ not dead
 ```
 
 ## eslint
+需要安装的依赖包如下：
+
+* eslint
+* eslint-config-airbnb
+* @typescript-eslint/eslint-plugin
+* @typescript-eslint/parser
+* eslint-plugin-react-hooks
+* eslint-plugin-react-refresh
+
+在项目根目录下新建 `.eslintrc.js` 文件
+
+```
+```
 
 当保存代码时，按照eslint设置的规则自动修复代码，配置如下：
 
@@ -572,3 +585,4 @@ not dead
   },
 }
 ```
+
