@@ -571,7 +571,7 @@ not dead
 * eslint-plugin-react-hooks
 * eslint-plugin-react-refresh
 
-在项目根目录下新建 `.eslintrc.js` 文件
+在项目根目录下新建 `.eslintrc.cjs` 文件
 
 ```
 ```
