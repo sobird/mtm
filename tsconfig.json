@@ -33,7 +33,11 @@
     // 若有未使用的参数则抛错
     "noUnusedParameters": true,
     //检查switch中是否含有case没有使用break跳出
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
   },
   // 指定被编译文件所在的目录</span>
   "include": ["src"]
