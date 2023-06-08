@@ -561,19 +561,49 @@ Firefox ESR
 not dead
 ```
 
-## eslint
-需要安装的依赖包如下：
+## eslint (以配置airbnb规则为例)
+
+### 安装airbnb基础规则
+
+```sh
+npx install-peerdeps --dev eslint-config-airbnb
+# 等同于运行下面命令
+yarn add eslint-config-airbnb@19.0.4 eslint@^8.2.0 eslint-plugin-import@^2.25.3 eslint-plugin-jsx-a11y@^6.5.1 eslint-plugin-react@^7.28.0 eslint-plugin-react-hooks@^4.3.0 --dev
+```
+
+### 安装airbnb-typescript规则
+```sh
+yarn add eslint-config-airbnb-typescript @typescript-eslint/eslint-plugin @typescript-eslint/parser --dev
+```
 
 * eslint
 * eslint-config-airbnb
+* eslint-plugin-import
+* eslint-plugin-jsx-a11y
+* eslint-plugin-react
+* eslint-plugin-react-hooks
 * @typescript-eslint/eslint-plugin
 * @typescript-eslint/parser
-* eslint-plugin-react-hooks
-* eslint-plugin-react-refresh
 
 在项目根目录下新建 `.eslintrc.cjs` 文件
 
-```
+```js
+module.exports = {
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
+  ],
+  env: { browser: true, es2020: true, node: true, },
+  parser: '@typescript-eslint/parser',
+  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+  plugins: ['react-refresh'],
+  rules: {
+    // 使用2个空格缩进
+    'indent': ['error', 2, { SwitchCase: 1 }],
+  },
+}
+
 ```
 
 当保存代码时，按照eslint设置的规则自动修复代码，配置如下：

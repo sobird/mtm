@@ -29,9 +29,9 @@ module.exports = {
     // eslint-plugin-react-refresh
     'react-refresh/only-export-components': 'warn',
     // jsx缩进
-    'react/jsx-indent': ['error', 2],
+    // 'react/jsx-indent': ['error', 2],
     // jsx props 缩进
-    'react/jsx-indent-props': ['error', 2],
+    // 'react/jsx-indent-props': ['error', 2],
     // 当prop的值显式为true时，省略该值
     'react/jsx-boolean-value': 'off',
     // jsx props 不允许使用扩展运算符
