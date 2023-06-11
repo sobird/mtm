@@ -9,12 +9,15 @@
  */
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
 const package = require('./package.json');
+
+console.log('first', path.resolve(__dirname, './public'))
 
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
@@ -49,12 +52,32 @@ const config = {
     }
   },
   plugins: [
-    new HtmlWebpackPlugin({
+    new HtmlPlugin({
       template: path.resolve('public/index.html'),
       filename: 'index.html',
+      cache: false,
       minify: true,
       inject: true,
       title: 'Webpack App',
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          context: path.resolve(__dirname, './public'),
+          from: '*',
+          to: path.resolve(__dirname, './dist'),
+          toType: 'dir',
+          globOptions: {
+            dot: false,
+            gitignore: false,
+            // https://github.com/webpack-contrib/copy-webpack-plugin/issues/689
+            // ignore: ['**/index.html'],
+          },
+          filter:(filepath) => {
+            return !/public\/.*\.html$/.test(filepath);
+          }
+        },
+      ],
     }),
     new Dotenv({
       path: path.join(__dirname, `.env.${process.env.NODE_ENV}`),
@@ -67,7 +90,7 @@ const config = {
     }),
     new webpack.ProgressPlugin({
       activeModules: true,
-    })
+    }),
   ],
   module: {
     rules: [
