@@ -10,10 +10,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
-
     steps:
     - name: Checkout 🛎️
       uses: actions/checkout@v3
@@ -33,4 +29,4 @@ jobs:
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         branch: gh-pages
-        folder: dist # The folder the action should deploy.
+        folder: dist
