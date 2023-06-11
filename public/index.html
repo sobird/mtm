@@ -1,25 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="theme-color" content="#000000">
-    
-    <title><%= htmlWebpackPlugin.options.title %></title>
-    <link rel="shortcut icon" href="/logo.png">
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+  <title>
+    <%= htmlWebpackPlugin.options.title %>
+  </title>
+  <link rel="shortcut icon" href="/logo.png">
+
+  <!-- 网站slogan -->
+  <style>
+    .first-screen {
+      z-index: -1;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: block;
+      padding-top: 200px;
+      background: #f5f6fa;
+      color: #b8bec5;
+      text-align: center;
+      font-family: "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, "PingFang SC", "microsoft yahei", "STXihei", sans-serif;
+      line-height: 1.4;
+    }
+
+    .slogan {
+      font-size: 2rem;
+      text-shadow: 0 2px white;
+      z-index: -1;
+      user-select: none;
+    }
+
+    .slogan-english {
+      margin: 6px 0 40px;
+      font-size: 16px;
+    }
+
+    @media (max-width: 350px) {
+      .first-screen {
+        padding-top: 120px;
+      }
+
+      .slogan {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+  <!--ie tip box-->
+  <style>
+    #ie-tips-box {
+      display: none;
+    }
+    #ie-tips-box .ie-tips-mask {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      background-color:rgba(0, 0, 0, 0.5);
+      filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#7f000000, endcolorstr=#7f000000);
+      background-color: #000;
+      filter: alpha(opacity = 50);
+      opacity: 0.5;
+      *zoom: 1;
+    }
+    #ie-tips-box .ie-tips-content {
+      background-color: #FFFFFF;
+      width: 550px;
+      max-width: 550px;
+      padding: 30px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+
+      transform: translate(-50%,-80%);
+      z-index: 10000;
+      border-radius: 4px;
+    }
+    #ie-tips-box .ie-tips-content .ie-tips-title {
+      font-weight: 600;
+      font-size: 20px;
+      text-align: left;
+      margin-bottom: 5px;
+    }
+    #ie-tips-box .ie-tips-content .ie-tips-text {
+      line-height: 25px;
+      margin-bottom: 20px;
+    }
+    #ie-tips-box .ie-tips-content .ie-tips-button .ie-btn {
+      display: inline-block;
+      cursor: pointer;
+      color: #fff;
+      background-color: #1967d2;
+      font-weight: 400;
+      text-align: center;
+      vertical-align: middle;
+      user-select: none;
+      border: 1px solid transparent;
+      padding: 0 16.1px;
+      font-size: 14px;
+      line-height: 34px;
+      border-radius: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-right: 10px;
+      border-radius: 4px;
+    }
+    #ie-tips-box .ie-tips-content .ie-tips-button .ie-btn-normal {
+      background-color: #fff;
+      color: #3F4156;
+      border-color: rgba(63, 65, 86, 0.3);
+    }
+    #ie-tips-box .ie-tips-content .ie-tips-button .down-chrome-btn {
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root">
+    <div class="first-screen">
+      <div class="slogan">美团电商商家管理后台</div>
+      <div class="slogan-english">Meituan Tuanhaohuo Seller Manage Center</div>
+    </div>
+  </div>
+  <div id="ie-tips-box">
+    <div class='ie-tips-content'>
+      <div class='ie-tips-title'>提示</div>
+      <div class='ie-tips-text'>
+        <span>我们检测到您的浏览器不是谷歌浏览器，
+          <b>可能导致页面无法正常显示</b>，为了不影响您的正常使用，建议您使用谷歌浏览器打开网站。</span>
+      </div>
+      <div class='ie-tips-button'>
+        <button type="button" id='ie-close-btn' class='ie-btn ie-btn-normal'>继续使用</button>
+        <a href="https://www.google.cn/chrome/" target='_blank' class='ie-btn down-chrome-btn'>下载谷歌浏览器</a>
+      </div>
+    </div>
+    <div class='ie-tips-mask'></div>
+  </div>
+  <!--ie tip box-->
+  <script>
+    function addEventLoad(callback){
+      var oldOnload = window.onload;
+      if (typeof window.onload != 'function') {
+        window.onload = callback;
+      } else {
+        window.onload = function(){
+          oldOnload();
+          callback();
+        }
+      }
+    }
+    function testIEVersion() {
+      var userAgent = navigator.userAgent;
+      var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1; // 判断是否IE<11浏览器
+      var isEdge = userAgent.indexOf("Edge") > -1 && !isIE; // 判断是否IE的Edge浏览器
+      var isIE11 = userAgent.indexOf('Trident') > -1 && userAgent.indexOf("rv:11.0") > -1;
+      if(isIE) {
+        var reIE = new RegExp("MSIE (\\d+\\.\\d+);");
+        reIE.test(userAgent);
+        var fIEVersion = parseFloat(RegExp["$1"]);
+        if(fIEVersion == 7) {
+          return 7;
+        } else if(fIEVersion == 8) {
+          return 8;
+        } else if(fIEVersion == 9) {
+          return 9;
+        } else if(fIEVersion == 10) {
+          return 10;
+        } else {
+          return 6;// IE版本<=7
+        }
+      } else if(isEdge) {
+        return 12; // edge
+      } else if(isIE11) {
+        return 11; // IE11
+      }else{
+        return -1; // 不是ie浏览器
+      }
+    }
+    function handleIETips() {
+      var version = testIEVersion();
+      // 如果是IE就需要展示遮罩
+      if(version !== -1){
+        var btnDom = document.getElementById('ie-close-btn');
+        if(btnDom){
+          if(version <= 10 && version > 0){
+            btnDom.style.display = 'none';
+          }else{
+            btnDom.onclick = function() {
+              handleIEMask('none');
+            };
+          }
+        }
+        handleIEMask('block');
+      }
+    }
+    function handleIEMask(key) {
+      var tipsDom = document.getElementById('ie-tips-box');
+      if (tipsDom) {
+        tipsDom.style.display = key;
+      }
+    }
+    addEventLoad(handleIETips);
+  </script>
+</body>
+
 </html>
