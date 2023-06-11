@@ -10,3 +10,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 )
 
 console.log('HOST', process.env.HOST);
+
+module?.hot?.accept();
