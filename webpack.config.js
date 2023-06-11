@@ -143,11 +143,11 @@ const config = {
     },
   },
   externals: {
-    react: {
-      commonjs: ['mix', 'React'],
-      commonjs2: ['mix', 'React'],
-      root: ['mix', 'React'],
-    },
+    // react: {
+    //   commonjs: ['mix', 'React'],
+    //   commonjs2: ['mix', 'React'],
+    //   root: ['mix', 'React'],
+    // },
   }
 };
 
