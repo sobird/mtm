@@ -60,7 +60,7 @@ const config = {
       template: path.resolve('public/index.html'),
       filename: 'index.html',
       cache: false,
-      // minify: true,
+      minify: isProduction,
       inject: true,
       title: package.description,
     }),
