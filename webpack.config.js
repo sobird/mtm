@@ -8,16 +8,17 @@
  * sobird<i@sobird.me> at 2019-11-06 16:53:47 build.
  */
 const path = require('path');
+const glob = require('glob');
 const webpack = require('webpack');
 const HtmlPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
 const package = require('./package.json');
-
-console.log('first', path.resolve(__dirname, './public'))
 
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
@@ -36,20 +37,23 @@ const config = {
     chunkFilename: '[name].[contenthash].chunk.js',
     publicPath: '/',
     clean: true,
-    // library: `${package.name}`,
-    // libraryTarget: 'umd',
-    // chunkLoadingGlobal: `webpackJsonp_${package.name}`,
-    // globalObject: 'window',
+    library: `${package.name}`,
+    libraryTarget: 'umd',
+    chunkLoadingGlobal: `webpackJsonp_${package.name}`,
+    globalObject: 'window',
   },
   devServer: {
     open: true,
-    host: 'localhost',
+    host: '0.0.0.0',
     port: 3000,
     hot: true, // 开启HMR功能
     historyApiFallback: true,
     static: {
       directory: path.join(__dirname, 'public')
-    }
+    },
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
   },
   plugins: [
     new HtmlPlugin({
@@ -91,6 +95,15 @@ const config = {
     new webpack.ProgressPlugin({
       activeModules: true,
     }),
+    new PurgeCSSPlugin({
+      paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
+      whitelist: ['html', 'body']
+    }),
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'static',
+    //   analyzerHost: '127.0.0.1',
+    //   analyzerPort: 8888,
+    // }),
   ],
   module: {
     rules: [
@@ -143,7 +156,7 @@ const config = {
     },
   },
   optimization: {
-    minimize: false,
+    // minimize: false,
     minimizer: [
       // 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
       // `...`,
@@ -175,13 +188,17 @@ const config = {
 };
 
 module.exports = (conf) => {
-  console.log('conf', conf, process.env.NODE_ENV)
   if (isProduction) {
     config.mode = 'production';
 
     config.plugins.push(new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
-      chunkFilename: '[id].[contenthash].css',
+      filename: 'css/[name].[contenthash].css',
+      chunkFilename: 'css/[id].[contenthash].css',
+    }));
+    config.plugins.push(new webpack.SourceMapDevToolPlugin({
+      test: /\.(tsx|jsx|js)$/,
+      filename: '[file].map',
+      publicPath: '/',
     }));
   } else {
     config.mode = 'development';

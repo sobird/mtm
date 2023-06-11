@@ -54,7 +54,7 @@ module.exports = () => {
     open: true,
     host: 'localhost',
     port: 3000,
-    hot: true,
+    hot: true, // 热更新
     historyApiFallback: true,
   },
   resolve: {
@@ -64,6 +64,30 @@ module.exports = () => {
     },
   }
 }
+```
+### 热更新
+在入口文件 `src/index.js` 尾部添加：
+
+```ts
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.tsx'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+
+// 支持热更新功能
+module?.hot?.accept();
+```
+
+为防止 ts 报错，安装 `@types/webpack-env`
+
+```sh
+yarn add -D @types/webpack-env
 ```
 
 ## scripts
@@ -216,7 +240,60 @@ const config = {
 }
 ```
 
+### purgecss-webpack-plugin
+去除无用样式，通过 `yarn add -D purgecss-webpack-plugin`安装，基本配置如下：
 
+```js
+const glob = require('glob');
+const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
+
+const config = {
+  plugins: [
+    new PurgeCSSPlugin({
+      paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
+      whitelist: ['html', 'body']
+    }),
+  ]
+}
+```
+
+### webpack-bundle-analyzer
+打包分析工具，通过 `yarn add -D webpack-bundle-analyzer`安装，基本配置如下：
+
+```js
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
+const config = {
+  plugins: [
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      analyzerHost: '127.0.0.1',
+      analyzerPort: 8888,
+    }),
+  ]
+}
+```
+
+### SourceMapDevToolPlugin
+本插件实现了对 source map 生成内容进行更细粒度的控制。它也可以根据 devtool 配置选项的某些设置来自动启用。
+
+```js
+module.exports = (conf) => {
+  console.log('conf', conf, process.env.NODE_ENV)
+  if (isProduction) {
+    config.mode = 'production';
+
+    config.plugins.push(new webpack.SourceMapDevToolPlugin({
+      test: /\.(tsx|jsx|js)$/,
+      filename: '[file].map',
+      publicPath: '/',
+    }));
+  } else {
+    config.mode = 'development';
+  }
+  return config;
+}
+```
 
 ## loader
 
