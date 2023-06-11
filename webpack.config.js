@@ -52,9 +52,9 @@ const config = {
     new HtmlWebpackPlugin({
       template: path.resolve('public/index.html'),
       filename: 'index.html',
-      minify: true,
+      // minify: true,
       inject: true,
-      title: 'Webpack App',
+      title: package.description,
     }),
     new Dotenv({
       path: path.join(__dirname, `.env.${process.env.NODE_ENV}`),
