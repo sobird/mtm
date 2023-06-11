@@ -257,6 +257,22 @@ const config = {
 }
 ```
 
+### webpack-bundle-analyzer
+打包分析工具，通过 `yarn add -D webpack-bundle-analyzer`安装，基本配置如下：
+
+```js
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
+const config = {
+  plugins: [
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      analyzerHost: '127.0.0.1',
+      analyzerPort: 8888,
+    }),
+  ]
+}
+```
 
 ## loader
 
