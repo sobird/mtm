@@ -37,20 +37,23 @@ const config = {
     chunkFilename: '[name].[contenthash].chunk.js',
     publicPath: '/',
     clean: true,
-    // library: `${package.name}`,
-    // libraryTarget: 'umd',
-    // chunkLoadingGlobal: `webpackJsonp_${package.name}`,
-    // globalObject: 'window',
+    library: `${package.name}`,
+    libraryTarget: 'umd',
+    chunkLoadingGlobal: `webpackJsonp_${package.name}`,
+    globalObject: 'window',
   },
   devServer: {
     open: true,
-    host: 'localhost',
+    host: '0.0.0.0',
     port: 3000,
     hot: true, // 开启HMR功能
     historyApiFallback: true,
     static: {
       directory: path.join(__dirname, 'public')
-    }
+    },
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
   },
   plugins: [
     new HtmlPlugin({
@@ -96,11 +99,11 @@ const config = {
       paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
       whitelist: ['html', 'body']
     }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      analyzerHost: '127.0.0.1',
-      analyzerPort: 8888,
-    }),
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'static',
+    //   analyzerHost: '127.0.0.1',
+    //   analyzerPort: 8888,
+    // }),
   ],
   module: {
     rules: [
@@ -185,7 +188,6 @@ const config = {
 };
 
 module.exports = (conf) => {
-  console.log('conf', conf, process.env.NODE_ENV)
   if (isProduction) {
     config.mode = 'production';
 
