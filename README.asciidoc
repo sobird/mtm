@@ -274,6 +274,27 @@ const config = {
 }
 ```
 
+### SourceMapDevToolPlugin
+本插件实现了对 source map 生成内容进行更细粒度的控制。它也可以根据 devtool 配置选项的某些设置来自动启用。
+
+```js
+module.exports = (conf) => {
+  console.log('conf', conf, process.env.NODE_ENV)
+  if (isProduction) {
+    config.mode = 'production';
+
+    config.plugins.push(new webpack.SourceMapDevToolPlugin({
+      test: /\.(tsx|jsx|js)$/,
+      filename: '[file].map',
+      publicPath: '/',
+    }));
+  } else {
+    config.mode = 'development';
+  }
+  return config;
+}
+```
+
 ## loader
 
 ### ts-loader

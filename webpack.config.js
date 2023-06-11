@@ -193,6 +193,11 @@ module.exports = (conf) => {
       filename: 'css/[name].[contenthash].css',
       chunkFilename: 'css/[id].[contenthash].css',
     }));
+    config.plugins.push(new webpack.SourceMapDevToolPlugin({
+      test: /\.(tsx|jsx|js)$/,
+      filename: '[file].map',
+      publicPath: '/',
+    }));
   } else {
     config.mode = 'development';
   }
