@@ -8,16 +8,16 @@
  * sobird<i@sobird.me> at 2019-11-06 16:53:47 build.
  */
 const path = require('path');
+const glob = require('glob');
 const webpack = require('webpack');
 const HtmlPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
 const package = require('./package.json');
-
-console.log('first', path.resolve(__dirname, './public'))
 
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
@@ -91,6 +91,10 @@ const config = {
     new webpack.ProgressPlugin({
       activeModules: true,
     }),
+    new PurgeCSSPlugin({
+      paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
+      whitelist: ['html', 'body']
+    }),
   ],
   module: {
     rules: [
@@ -143,7 +147,7 @@ const config = {
     },
   },
   optimization: {
-    minimize: false,
+    // minimize: false,
     minimizer: [
       // 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
       // `...`,
@@ -180,8 +184,8 @@ module.exports = (conf) => {
     config.mode = 'production';
 
     config.plugins.push(new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
-      chunkFilename: '[id].[contenthash].css',
+      filename: 'css/[name].[contenthash].css',
+      chunkFilename: 'css/[id].[contenthash].css',
     }));
   } else {
     config.mode = 'development';

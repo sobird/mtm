@@ -54,7 +54,7 @@ module.exports = () => {
     open: true,
     host: 'localhost',
     port: 3000,
-    hot: true,
+    hot: true, // 热更新
     historyApiFallback: true,
   },
   resolve: {
@@ -64,6 +64,30 @@ module.exports = () => {
     },
   }
 }
+```
+### 热更新
+在入口文件 `src/index.js` 尾部添加：
+
+```ts
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.tsx'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+
+// 支持热更新功能
+module?.hot?.accept();
+```
+
+为防止 ts 报错，安装 `@types/webpack-env`
+
+```sh
+yarn add -D @types/webpack-env
 ```
 
 ## scripts
@@ -216,6 +240,22 @@ const config = {
 }
 ```
 
+### purgecss-webpack-plugin
+去除无用样式，通过 `yarn add -D purgecss-webpack-plugin`安装，基本配置如下：
+
+```js
+const glob = require('glob');
+const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
+
+const config = {
+  plugins: [
+    new PurgeCSSPlugin({
+      paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
+      whitelist: ['html', 'body']
+    }),
+  ]
+}
+```
 
 
 ## loader
