@@ -7,6 +7,9 @@ import React, { useEffect } from 'react';
 import { useNavigate, RouterProviderProps, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import './index.scss';
+import mtLogo from '@/assets/mt_logo.png';
+import thhLogo from '@/assets/thh_logo.png';
+import thhLoginBg from '@/assets/thh_login_bg.png';
 
 function Login() {
   const navigate = useNavigate();
@@ -19,11 +22,7 @@ function Login() {
       const preLoginDateArr = preLoginDateStr.split(',');
       // 最近10秒连续登陆3次，最近1分钟连续登陆5次，跳转到error，并进行上报
       if ((preLoginDateArr.length >= 3 && +preLoginDateArr[0] - +preLoginDateArr[2] < 10000) || (preLoginDateArr.length >= 5 && +preLoginDateArr[0] - +preLoginDateArr[4] < 60000)) {
-        metrics.report('login', 1, {
-          type: 'endlessLoop',
-          code: -1,
-          msg: '无限重定向',
-        });
+        // 
         localStorage.setItem('preLoginDateStr', '');
         navigate(`/error?message=${encodeURIComponent('您的店铺登录遇到问题，请切换账号再尝试')}`);
       }
@@ -53,9 +52,9 @@ function Login() {
     <div className="login">
       <div className="login-header">
         <div className="logo-box">
-          <img src="https://p0.meituan.net/ingee/8272a28c8bb22fb54e2d4856badb610b5813.png" alt="" className="mt-logo" />
+          <img src={mtLogo} alt="" className="mt-logo" />
           <img
-            src="https://p0.meituan.net/ingee/ad96da3c1a817b82d3016db13d97934b9222.png"
+            src={thhLogo}
             alt=""
             className="thh-logo"
           />
@@ -64,7 +63,7 @@ function Login() {
       <div className="login-body">
         <div className="login-main">
           <img
-            src="https://s3plus.meituan.net/v1/mss_1ada830d56584ddeae1b0899c231c552/source/INGEE_SOURCEFILE/3854455/ingeetemp/1616337183840/assets/%E6%B3%A8%E5%86%8C%E5%BA%95%E5%9B%BE%401.5x.png"
+            src={thhLoginBg}
             alt=""
             className="bg"
           />
