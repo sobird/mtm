@@ -119,7 +119,7 @@ const config = {
       },
       {
         test: /\.s[ac]ss$/i,
-        use: [stylesHandler, 'css-loader', 'sass-loader', 'postcss-loader'],
+        use: [stylesHandler, 'css-loader', 'postcss-loader', 'sass-loader'],
       },
       {
         test: /\.less$/,

@@ -9,6 +9,4 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   </React.StrictMode>,
 )
 
-console.log('HOST', process.env.HOST);
-
 module?.hot?.accept();
