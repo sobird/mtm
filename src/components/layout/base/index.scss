@@ -1,0 +1,54 @@
+/**
+ * 通用布局页面样式
+ * 
+ * sobird<i@sobird.me> at 2023/06/13 22:40:05 created.
+ */
+
+.layout-base {
+  min-width: 1366px;
+
+  .base-header {
+    
+  }
+  .base-header-box {
+    height: 88px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      height: 38px;
+      margin-left: -852px;
+    }
+  }
+
+  .base-body {
+    height: 640px;
+    overflow: hidden;
+    background-image: linear-gradient(-43deg, #ffc212 0%, #ffd000 100%);
+    background: url('@/assets/mtm_login_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .base-footer {
+    .copyright {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 180px;
+      font-family: Helvetica;
+      font-size: 14px;
+
+      a {
+        color: #333333;
+        text-decoration: none;
+      }
+
+      img {
+        margin-left: 20px;
+        margin-right: 3px;
+      }
+    }
+  }
+}
