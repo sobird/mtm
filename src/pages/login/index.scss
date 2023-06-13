@@ -1,6 +1,9 @@
-.merchant-container.mounted {
-  background-color: #fff;
-}
+/**
+ * 用户登录
+ * 
+ * sobird<i@sobird.me> at 2023/06/12 8:33:53 created.
+ */
+
 
 .login {
   min-width: 1366px;
@@ -16,17 +19,11 @@
       left: 50%;
       margin-top: -19px;
       margin-left: -550px;
-    }
 
-    .mt-logo {
-      width: 105px;
-      height: 38px;
-    }
-
-    .thh-logo {
-      width: 123px;
-      height: 38px;
-      margin-left: 17px;
+      >img {
+        // width: 294px;
+        height: 38px;
+      }
     }
   }
 
@@ -85,43 +82,22 @@
           height: 100%;
         }
       }
-
-      &.register {
-        .iframe-container {
-          padding: 20px 15px 0;
-          height: 290px;
-        }
-
-        .register-btn {
-          text-align: left;
-          padding-left: 10px;
-        }
-
-        .roo-btn.roo-btn-link.roo-btn-normal {
-          height: 44px;
-          font-weight: 400;
-          font-family: PingFangSC-Regular;
-          font-size: 15px;
-          color: #222222;
-          letter-spacing: 0;
-          text-align: center;
-
-          .roo-icon {
-            margin-bottom: 4px;
-          }
-        }
-      }
     }
   }
+}
 
-  .login-footer {
-    // height: 200px;
-    background-color: #fff;
-    padding: 1px 0;
+.login-footer {
+  // height: 200px;
+  background-color: #fff;
+  padding: 1px 0;
 
-    .copy {
-      margin: 80px auto;
-      text-align: center;
-    }
+  .contact-reword {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 180px;
   }
 }
