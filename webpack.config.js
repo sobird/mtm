@@ -35,6 +35,7 @@ const config = {
     // pathinfo: true,
     filename: '[name].[contenthash].js',
     chunkFilename: '[name].[contenthash].chunk.js',
+    assetModuleFilename: 'assets/[contenthash][ext][query]',
     publicPath: '/',
     clean: true,
     library: `${package.name}`,
@@ -95,10 +96,10 @@ const config = {
     new webpack.ProgressPlugin({
       activeModules: true,
     }),
-    new PurgeCSSPlugin({
-      paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
-      whitelist: ['html', 'body']
-    }),
+    // new PurgeCSSPlugin({
+    //   paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
+    //   whitelist: ['html', 'body']
+    // }),
     // new BundleAnalyzerPlugin({
     //   analyzerMode: 'static',
     //   analyzerHost: '127.0.0.1',
