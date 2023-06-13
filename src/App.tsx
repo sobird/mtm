@@ -1,16 +1,15 @@
 import { useState } from 'react';
-import { BrowserRouter, Routes, Route} from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/login';
 import './App.css';
 
 function App() {
-
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
-        <Route path="/login" element={ <Login/> }></Route>
+        <Route path='/login' element={<Login />}></Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
