@@ -128,13 +128,14 @@ const config = {
           {
             loader: 'less-loader',
             options: {
-              lessOptions: {
-                modifyVars: {
-                  'primary-color': '#0080FF',
-                },
-                javascriptEnabled: true,
-                math: 'always',
-              },
+              // lessOptions: {
+              //   modifyVars: {
+              //     'primary-color': '#0080FF',
+              //     '@ant-prefix': 'mtm',
+              //   },
+              //   javascriptEnabled: true,
+              //   math: 'always',
+              // },
             },
           },
           'postcss-loader'

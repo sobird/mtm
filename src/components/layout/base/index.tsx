@@ -1,6 +1,6 @@
 /**
  * 通用布局页面
- * 
+ *
  * sobird<i@sobird.me> at 2023/06/13 22:39:58 created.
  */
 
@@ -9,9 +9,12 @@ import mtmLogo from '@/assets/mtm_logo.png';
 import policeIcon from '@/assets/police_icon.png';
 import './index.scss';
 
+interface BaseProps {
+  window?: boolean;
+}
 
-const Base: React.FC<PropsWithChildren> = ({children}) => {
-  console.log('children', children)
+const Base: React.FC<PropsWithChildren<BaseProps>> = ({ children, window = true }) => {
+  console.log('children', children);
   return (
     <div className='layout-base'>
       <div className='base-header'>
@@ -19,10 +22,12 @@ const Base: React.FC<PropsWithChildren> = ({children}) => {
           <img src={mtmLogo} />
         </div>
       </div>
-      <div className="base-body">
-        {children}
+      <div className='base-body'>
+        <div className='base-body-box'>
+          {window ? <div className='base-window'>{children}</div> : children}
+        </div>
       </div>
-      <div className="base-footer">
+      <div className='base-footer'>
         <div className='copyright'>
           <a target='_blank' href='https://beian.miit.gov.cn' rel='noreferrer'>
             <span>©2020 meituan.com 京ICP备10211739号</span>
@@ -38,7 +43,7 @@ const Base: React.FC<PropsWithChildren> = ({children}) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Base;
