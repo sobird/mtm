@@ -39,14 +39,14 @@ function Login() {
   const from = query?.from;
   const isSupply = from === '/supplementSignContract';
   let loginContinue = `${
-    process.env.FMA_EPASSPORT_SIGN_CONTINUE_URL || window.location.origin
+    process.env.EPASSPORT_SIGN_CONTINUE_URL || window.location.origin
   }/afterlogin?scene=platform${isSupply ? '-contract' : ''}-login&from=${from}`;
-  let recContinue = `${process.env.FMA_EPASSPORT_CONTINUE_URL}?scene=platform${isSupply ? '-contract' : ''}-recover`;
+  let recContinue = `${process.env.EPASSPORT_CONTINUE_URL}?scene=platform${isSupply ? '-contract' : ''}-recover`;
 
   loginContinue = encodeURIComponent(loginContinue);
   recContinue = encodeURIComponent(recContinue);
 
-  let recoverUrl = `${process.env.FMA_EPASSPORT_RECOVER_URL}&continue=${recContinue}`;
+  let recoverUrl = `${process.env.EPASSPORT_RECOVER_URL}&continue=${recContinue}`;
   const singupUrl = encodeURIComponent(`${window.location.origin}/register?from=${from}`);
   recoverUrl = encodeURIComponent(recoverUrl);
   const loginUrl = `${process.env.EPASSPORT_LOGIN_URL}&leftBottomLink=${singupUrl}&rightBottomLink=${recoverUrl}&continue=${loginContinue}`;
