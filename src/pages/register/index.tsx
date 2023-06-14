@@ -4,7 +4,8 @@
  * sobird<i@sobird.me> at 2023/06/13 22:17:20 created.
  */
 
-import { Button, Checkbox, Select, Form } from 'antd';
+import { useState } from 'react';
+import { Button, Select, message } from 'antd';
 import {RightOutlined} from '@ant-design/icons';
 import Base from "@/components/layout/base";
 import isMobilePhone from '@/utils/validator/isMobilePhone';
@@ -14,8 +15,6 @@ import './index.scss';
 import { ProForm, ProFormText, ProFormCaptcha, ProFormCheckbox } from '@ant-design/pro-components';
 
 
-console.log('ProFormText', ProFormText)
-
 const { Option } = Select;
 
 interface RegisterFormData {
@@ -24,11 +23,6 @@ interface RegisterFormData {
   smsCode: string,
   policy?: boolean
 }
-
-const onFinish = (values: RegisterFormData) => {
-  const {policy, ...formData} = values;
-  console.log('Success:', policy, formData);
-};
 
 const selectBefore = (
   <ProForm.Item 
@@ -50,6 +44,19 @@ const selectBefore = (
 
 function Register() {
   const [ form ] = ProForm.useForm();
+  const [loading, setLoading] = useState(false);
+
+  // 提交注册
+  const onFinish = async (values: RegisterFormData)=> {
+    const {policy, ...formData} = values;
+    message.destroy();
+    if(!policy) {
+      message.error('请勾选隐私协议');
+      return;
+    }
+
+    setLoading(true);
+  };
 
   return (
     <Base>
@@ -80,11 +87,10 @@ function Register() {
         
             // 完全自定义整个区域
             render: (props, doms) => {
-              console.log(props);
               return (
                 <>
                   <ProForm.Item>
-                    <Button type="primary" htmlType="submit" className='base-submit-btn'>注册
+                    <Button loading={loading} type="primary" htmlType="submit" className='base-submit-btn'>注册
                     </Button>
                   </ProForm.Item>
                   <Button type="link" style={{padding: 0, fontSize: 15, color: '#333'}}>已有账号，去登录 <RightOutlined size={18} /></Button>
