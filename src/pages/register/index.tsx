@@ -9,22 +9,26 @@ import {RightOutlined} from '@ant-design/icons';
 import Base from "@/components/layout/base";
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import isSmsCode from '@/utils/validator/isSmsCode';
-
 import './index.scss';
 
 const { Option } = Select;
 
+interface RegisterFormData {
+  interCode: string,
+  mobile: string,
+  smsCode: string,
+  policy?: boolean
+}
 
-const onFinish = (values: any) => {
-  console.log('Success:', values);
-};
-
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo);
+const onFinish = (values: RegisterFormData) => {
+  const {policy, ...formData} = values;
+  console.log('Success:', policy, formData);
 };
 
 const selectBefore = (
-  <Form.Item name="interCode" noStyle rules={[{ required: true, message: '验证码不能为空' }]}>
+  <Form.Item 
+    noStyle
+    name="interCode">
     <Select 
       popupMatchSelectWidth={false} 
       bordered={false} 
@@ -42,8 +46,6 @@ const selectBefore = (
 function Register() {
   const [ form ] = Form.useForm();
 
-
-
   return (
     <Base>
       <div className="base-register">
@@ -53,7 +55,6 @@ function Register() {
           name="base-form-register"
           initialValues={{ interCode: 86 }}
           onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
           autoComplete="off"
           colon={false}
           className='base-form'
@@ -62,10 +63,11 @@ function Register() {
             label="手机号"
             name="mobile"
             rules={[
-              { required: true, message: '手机号不能为空' },
               { validator: (_rule, value) => {
                 const interCode = form.getFieldValue('interCode');
-                if(isMobilePhone(value, interCode) || value === '') {
+                if(!value) {
+                  return Promise.reject(new Error('手机号不能为空'));
+                } else if(isMobilePhone(value, interCode)) {
                   return Promise.resolve();
                 } else {
                   return Promise.reject(new Error('手机号格式不符合要求'));
@@ -83,12 +85,13 @@ function Register() {
               name="smsCode" 
               noStyle 
               rules={[
-                { required: true, message: '验证码不能为空' },
                 { validator: (_rule, value) => {
-                  if(isSmsCode(value) || value === '') {
+                  if(!value) {
+                    return Promise.reject(new Error('验证码不能为空'));
+                  }else if(isSmsCode(value)) {
                     return Promise.resolve();
                   } else {
-                    return Promise.reject(new Error('验证码格式不符合要求'));
+                    return Promise.reject(new Error('验证码格式不正确'));
                   }
                 }}
               ]} 
