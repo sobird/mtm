@@ -21,9 +21,11 @@ const onFinishFailed = (errorInfo: any) => {
 };
 
 const selectBefore = (
-  <Select defaultValue="86" bordered={false} onClick={(event) => {event.stopPropagation()}}>
-    <Option value="86">86(中国)</Option>
-    <Option value="https://">https://</Option>
+  <Select defaultValue="86" popupMatchSelectWidth={false} bordered={false} onClick={(event) => {event.stopPropagation()}} optionLabelProp="label">
+    <Option value="86" label="+86">+86(中国)</Option>
+    <Option value="65" label="+65">+65(新加坡)</Option>
+    <Option value="852" label="+852">+852(中国香港)</Option>
+    <Option value="853" label="+853">+853(中国澳门)</Option>
   </Select>
 );
 
@@ -41,7 +43,7 @@ function Register() {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
           colon={false}
-          className='base-form-register'
+          className='base-form'
         >
           <Form.Item
             label="手机号"
@@ -51,33 +53,35 @@ function Register() {
             <Input prefix={selectBefore} placeholder='账号使用者手机' />
           </Form.Item>
 
-          <Form.Item className='sms-code-item'>
+          <Form.Item 
+            className='sms-code-item'
+            label="验证码"
+            name="smsCode"
+            rules={[{ required: true, message: 'Please input your password!' }]}>
             <Form.Item
               className='sms-code-item2'
-              label="验证码"
-              name="smsCode"
-              rules={[{ required: true, message: 'Please input your password!' }]}
+              hasFeedback={false}
             >
               <Input placeholder='请输入验证码'/> 
             </Form.Item>
             
-            <Button type="link" size='small' style={{padding: 0}}>
+            <Button className='sms-code-btn' type="link" size='small' style={{padding: 0}}>
             获取验证码
             </Button>
           
           </Form.Item>
 
           <Form.Item name="remember" valuePropName="checked">
-            <Checkbox>我已阅读并同意 <a href="https://page.meituan.net/html/1615180237352_38ceb3/index.html" target="_blank" >《团好货商家版隐私政策》</a></Checkbox>
+            <Checkbox className='policy'>我已阅读并同意 <a href="https://page.meituan.net/html/1615180237352_38ceb3/index.html" target="_blank" >《团好货商家版隐私政策》</a></Checkbox>
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" className='base-submit-btn'>
-              去注册
+              注册
             </Button>
           </Form.Item>
 
-          <Button type="link" style={{padding: 0}}>
+          <Button type="link" style={{padding: 0, fontSize: 15}}>
           已有账号，去登录 <RightOutlined size={18} />
           </Button>
         </Form>
