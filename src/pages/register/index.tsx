@@ -8,6 +8,7 @@ import { Button, Checkbox, Form, Input, Select } from 'antd';
 import {RightOutlined} from '@ant-design/icons';
 import Base from "@/components/layout/base";
 import isMobilePhone from '@/utils/validator/isMobilePhone';
+import isSmsCode from '@/utils/validator/isSmsCode';
 
 import './index.scss';
 
@@ -78,7 +79,20 @@ function Register() {
           <Form.Item 
             className='sms-code-item'
             label="验证码">
-            <Form.Item name="smsCode" noStyle rules={[{ required: true, message: '验证码不能为空' }]} className='sms-code-item2'>
+            <Form.Item 
+              name="smsCode" 
+              noStyle 
+              rules={[
+                { required: true, message: '验证码不能为空' },
+                { validator: (_rule, value) => {
+                  if(isSmsCode(value) || value === '') {
+                    return Promise.resolve();
+                  } else {
+                    return Promise.reject(new Error('验证码格式不符合要求'));
+                  }
+                }}
+              ]} 
+              className='sms-code-item2'>
               <Input placeholder='请输入验证码'/> 
             </Form.Item>
             

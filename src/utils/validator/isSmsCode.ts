@@ -4,3 +4,8 @@
  * sobird<i@sobird.me> at 2023/06/15 0:20:58 created.
  */
 
+export const pattern = /^\d{6}$/;
+
+export default function isSmsCode(str: string) {
+  return pattern.test(str);
+}
