@@ -7,6 +7,8 @@
 import { Button, Checkbox, Form, Input, Select } from 'antd';
 import {RightOutlined} from '@ant-design/icons';
 import Base from "@/components/layout/base";
+import isMobilePhone from '@/utils/validator/isMobilePhone';
+
 import './index.scss';
 
 const { Option } = Select;
@@ -58,7 +60,17 @@ function Register() {
           <Form.Item
             label="手机号"
             name="mobile"
-            rules={[{ required: true, message: '手机号不能为空' }]}
+            rules={[
+              { required: true, message: '手机号不能为空' },
+              { validator: (_rule, value) => {
+                const interCode = form.getFieldValue('interCode');
+                if(isMobilePhone(value, interCode) || value === '') {
+                  return Promise.resolve();
+                } else {
+                  return Promise.reject(new Error('手机号格式不符合要求'));
+                }
+              }}
+            ]}
           >
             <Input prefix={selectBefore} placeholder='账号使用者手机' />
           </Form.Item>
@@ -76,7 +88,7 @@ function Register() {
           
           </Form.Item>
 
-          <Form.Item name="policy" valuePropName="checked" rules={[{ required: true, message: '请勾选隐私协议' }]}>
+          <Form.Item name="policy" valuePropName="checked">
             <Checkbox className='policy'>我已阅读并同意 <a href="https://page.meituan.net/html/1615180237352_38ceb3/index.html" target="_blank" >《团好货商家版隐私政策》</a></Checkbox>
           </Form.Item>
 
