@@ -4,6 +4,47 @@
  * sobird<i@sobird.me> at 2023/06/14 0:54:24 created.
  */
 
-.base-register {
+.base-form-register {
+  .mtm-form-item {
+    .mtm-input-affix-wrapper {
+      padding: 0;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .mtm-select-selector {
+      font-size: 14px;
+    }
+    .mtm-form-item-label {
+      label {
+        &::before {
+          content: none !important; 
+        }
+      }
+    }
+  }
+  .sms-code-item {
+    .sms-code-item2 {
+      margin-bottom: 0;
+    }
+     .mtm-form-item-control-input-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
   
+  .mtm-input {
+    font-size: 14px;
+    height: 40px;
+    border-radius: 4px;
+    color: #111;
+    padding: 10px;
+    min-width: 50px;
+  }
+
+  .base-submit-btn {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 700;
+  }
 }

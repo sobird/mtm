@@ -6,11 +6,11 @@ import Login from './pages/login';
 import Register from './pages/register';
 import './App.css';
 
-const theme = { token: { colorPrimary: '#ffd100', borderRadius: 2 } };
+const theme = { token: { colorPrimary: '#ffd100', borderRadius: 2, colorWhite: '#333' } };
 
 function App() {
   return (
-    <ConfigProvider locale={zhCN} prefixCls='mtm' theme={theme}>
+    <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm' theme={theme}>
       <HashRouter>
         <Routes>
           <Route path='/login' element={<Login />}></Route>
