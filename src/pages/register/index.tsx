@@ -24,23 +24,7 @@ interface RegisterFormData {
   policy?: boolean
 }
 
-const selectBefore = (
-  <ProForm.Item 
-    noStyle
-    name="interCode">
-    <Select 
-      popupMatchSelectWidth={false} 
-      bordered={false} 
-      onClick={(event) => {event.stopPropagation()}} 
-      optionLabelProp="label"
-    >
-      <Option value="86" label="+86">+86(中国)</Option>
-      <Option value="65" label="+65">+65(新加坡)</Option>
-      <Option value="852" label="+852">+852(中国香港)</Option>
-      <Option value="853" label="+853">+853(中国澳门)</Option>
-    </Select>
-  </ProForm.Item>
-);
+
 
 function Register() {
   const [ form ] = ProForm.useForm();
@@ -58,6 +42,27 @@ function Register() {
     setLoading(true);
   };
 
+  const selectBefore = (
+    <ProForm.Item 
+      noStyle
+      name="interCode">
+      <Select 
+        popupMatchSelectWidth={false} 
+        bordered={false} 
+        onClick={(event) => {event.stopPropagation()}} 
+        optionLabelProp="label"
+        onSelect={() => {
+          form.validateFields(['mobile']);
+        }}
+      >
+        <Option value="86" label="+86">+86(中国)</Option>
+        <Option value="65" label="+65">+65(新加坡)</Option>
+        <Option value="852" label="+852">+852(中国香港)</Option>
+        <Option value="853" label="+853">+853(中国澳门)</Option>
+      </Select>
+    </ProForm.Item>
+  );
+
   return (
     <Base>
       <div className="base-register">
@@ -65,7 +70,7 @@ function Register() {
         <ProForm
           form={form}
           name="base-form-register"
-          initialValues={{ interCode: 86 }}
+          initialValues={{ interCode: "86" }}
           onFinish={onFinish}
           colon={false}
           className='base-form'
