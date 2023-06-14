@@ -4,14 +4,14 @@
  * sobird<i@sobird.me> at 2023/06/13 22:17:20 created.
  */
 
-import { Button, Checkbox, Form, Input, Select } from 'antd';
+import { Button, Checkbox, Select, Form } from 'antd';
 import {RightOutlined} from '@ant-design/icons';
 import Base from "@/components/layout/base";
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import isSmsCode from '@/utils/validator/isSmsCode';
 import './index.scss';
 
-import { ProForm, ProFormText, ProFormCaptcha } from '@ant-design/pro-components';
+import { ProForm, ProFormText, ProFormCaptcha, ProFormCheckbox } from '@ant-design/pro-components';
 
 
 console.log('ProFormText', ProFormText)
@@ -31,7 +31,7 @@ const onFinish = (values: RegisterFormData) => {
 };
 
 const selectBefore = (
-  <Form.Item 
+  <ProForm.Item 
     noStyle
     name="interCode">
     <Select 
@@ -45,7 +45,7 @@ const selectBefore = (
       <Option value="852" label="+852">+852(中国香港)</Option>
       <Option value="853" label="+853">+853(中国澳门)</Option>
     </Select>
-  </Form.Item>
+  </ProForm.Item>
 );
 
 function Register() {
@@ -63,7 +63,35 @@ function Register() {
           colon={false}
           className='base-form'
           layout="horizontal"
-          submitter={false}
+          submitter={{
+            // 配置按钮文本
+            searchConfig: {
+              resetText: '重置',
+              submitText: '提交',
+            },
+            // 配置按钮的属性
+            resetButtonProps: {
+              style: {
+                // 隐藏重置按钮
+                display: 'none',
+              },
+            },
+            submitButtonProps: {},
+        
+            // 完全自定义整个区域
+            render: (props, doms) => {
+              console.log(props);
+              return (
+                <>
+                  <ProForm.Item>
+                    <Button type="primary" htmlType="submit" className='base-submit-btn'>注册
+                    </Button>
+                  </ProForm.Item>
+                  <Button type="link" style={{padding: 0, fontSize: 15, color: '#333'}}>已有账号，去登录 <RightOutlined size={18} /></Button>
+                </>
+              );
+            },
+          }}
         >
           <ProFormText
             label="手机号"
@@ -127,19 +155,13 @@ function Register() {
             }}
           />
 
-          <Form.Item name="policy" valuePropName="checked">
-            <Checkbox className='policy'>我已阅读并同意 <a href="https://page.meituan.net/html/1615180237352_38ceb3/index.html" target="_blank" >《团好货商家版隐私政策》</a></Checkbox>
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" className='base-submit-btn'>
-              注册
-            </Button>
-          </Form.Item>
-
-          <Button type="link" style={{padding: 0, fontSize: 15, color: '#333'}}>
-          已有账号，去登录 <RightOutlined size={18} />
-          </Button>
+          <ProFormCheckbox
+            fieldProps={{
+              className:'policy'
+            }}
+            name="policy">
+              我已阅读并同意 <a href="https://page.meituan.net/html/1615180237352_38ceb3/index.html" target="_blank" >《团好货商家版隐私政策》</a>
+          </ProFormCheckbox>
         </ProForm>
       </div>
     </Base>
