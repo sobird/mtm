@@ -33,6 +33,9 @@
         }
       }
     }
+    .mtm-form-item-explain {
+      font-size: 12px;
+    }
   }
   .sms-code-item {
     .sms-code-item2 {
@@ -65,9 +68,8 @@
   padding: 30px 25px;
   .policy {
     color: #555;
-    .mtm-checkbox {
-      width: 14px;
-      height: 14px;
+    .mtm-checkbox+span {
+      padding-inline-start: 6px;
     }
   }
   .sms-code-btn {

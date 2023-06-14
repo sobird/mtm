@@ -21,24 +21,34 @@ const onFinishFailed = (errorInfo: any) => {
 };
 
 const selectBefore = (
-  <Select defaultValue="86" popupMatchSelectWidth={false} bordered={false} onClick={(event) => {event.stopPropagation()}} optionLabelProp="label">
-    <Option value="86" label="+86">+86(中国)</Option>
-    <Option value="65" label="+65">+65(新加坡)</Option>
-    <Option value="852" label="+852">+852(中国香港)</Option>
-    <Option value="853" label="+853">+853(中国澳门)</Option>
-  </Select>
+  <Form.Item name="interCode" noStyle rules={[{ required: true, message: '验证码不能为空' }]}>
+    <Select 
+      popupMatchSelectWidth={false} 
+      bordered={false} 
+      onClick={(event) => {event.stopPropagation()}} 
+      optionLabelProp="label"
+    >
+      <Option value="86" label="+86">+86(中国)</Option>
+      <Option value="65" label="+65">+65(新加坡)</Option>
+      <Option value="852" label="+852">+852(中国香港)</Option>
+      <Option value="853" label="+853">+853(中国澳门)</Option>
+    </Select>
+  </Form.Item>
 );
 
 function Register() {
+  const [ form ] = Form.useForm();
+
+
+
   return (
     <Base>
       <div className="base-register">
         <div className="base-title">注册</div>
         <Form
+          form={form}
           name="base-form-register"
-          // labelCol={{ span: 8 }}
-          // wrapperCol={{ span: 16 }}
-          initialValues={{ remember: true }}
+          initialValues={{ interCode: 86 }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -48,20 +58,15 @@ function Register() {
           <Form.Item
             label="手机号"
             name="mobile"
-            rules={[{ required: true, message: 'Please input your username!' }]}
+            rules={[{ required: true, message: '手机号不能为空' }]}
           >
             <Input prefix={selectBefore} placeholder='账号使用者手机' />
           </Form.Item>
 
           <Form.Item 
             className='sms-code-item'
-            label="验证码"
-            name="smsCode"
-            rules={[{ required: true, message: 'Please input your password!' }]}>
-            <Form.Item
-              className='sms-code-item2'
-              hasFeedback={false}
-            >
+            label="验证码">
+            <Form.Item name="smsCode" noStyle rules={[{ required: true, message: '验证码不能为空' }]} className='sms-code-item2'>
               <Input placeholder='请输入验证码'/> 
             </Form.Item>
             
@@ -71,7 +76,7 @@ function Register() {
           
           </Form.Item>
 
-          <Form.Item name="remember" valuePropName="checked">
+          <Form.Item name="policy" valuePropName="checked" rules={[{ required: true, message: '请勾选隐私协议' }]}>
             <Checkbox className='policy'>我已阅读并同意 <a href="https://page.meituan.net/html/1615180237352_38ceb3/index.html" target="_blank" >《团好货商家版隐私政策》</a></Checkbox>
           </Form.Item>
 
