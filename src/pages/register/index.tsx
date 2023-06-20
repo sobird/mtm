@@ -10,41 +10,10 @@ import {RightOutlined} from '@ant-design/icons';
 import Base from "@/components/layout/base";
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import isSmsCode from '@/utils/validator/isSmsCode';
+import captcha from '@/services/common/captcha';
 import './index.scss';
 
 import { ProForm, ProFormText, ProFormCaptcha, ProFormCheckbox } from '@ant-design/pro-components';
-
-import axios from '@/utils/axios';
-
-
-axios.get<{a:string}>('/api/sms/send.json', {
-  signal: new AbortController().signal,
-  params: {
-    a: 123
-  },
-}, {
-  headers: {'X-Requested-With': 'XMLHttpRequest'},
-  //parser: res => res.data as {a: string}
-}).then((res) => {
-  console.log('res', res)
-})
-  .catch(function (error) {
-    console.log(error.toJSON());
-  });
-
-interface TestReturn {
-  't': number;
-  'h': string;
-}
-
-const test = <T extends keyof TestReturn>(p: T) => ({
-  t: 3,
-  h: '',
-})[p];
-
-const re = test('h')
-
-console.log('re', re)
 
 const { Option } = Select;
 
@@ -193,7 +162,9 @@ function Register() {
             // throw new Error("获取验证码错误")
             onGetCaptcha={async (mobile) => {
               // await waitTime(1000);
-              console.log(`手机号 ${mobile} 验证码发送成功!`);
+              message.success(`手机号 ${mobile} 验证码发送成功!`, 5);
+
+              captcha();
             }}
           />
 

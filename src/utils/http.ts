@@ -118,25 +118,7 @@ export class Http {
   }
 }
 
-/**
- * 全局的 axios 默认值，所有新建的Axios实例将继承此处的设置
- *
- * 配置的优先级 配置将会按优先级进行合并。
- * 它的顺序是：在lib/defaults.js中找到的库默认值，然后是实例的 defaults 属性，最后是请求的 config 参数。
- * 后面的优先级要高于前面的。
- */
-axios.defaults.withCredentials = true;
-axios.defaults.timeout = 10 * 1000;
-// 全局默认的baseURL参数配置
-axios.defaults.baseURL = process.env.HOST;
-
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-// 设置 post 请求头
-axios.defaults.headers['Content-Type'] = 'application/json;charset=UTF-8';
-axios.defaults.headers.common['access-token'] = '';
-
-
-const defaults: CreateAxiosDefaults = {
+export const defaults: CreateAxiosDefaults = {
   withCredentials: true,
   timeout: 10 * 1000,
   baseURL: process.env.HOST,
