@@ -11,6 +11,8 @@ import Base from "@/components/layout/base";
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import isSmsCode from '@/utils/validator/isSmsCode';
 import captcha from '@/services/common/captcha';
+import { register } from '@/services/user';
+
 import './index.scss';
 
 import { ProForm, ProFormText, ProFormCaptcha, ProFormCheckbox } from '@ant-design/pro-components';
@@ -20,7 +22,7 @@ const { Option } = Select;
 interface RegisterFormData {
   interCode: string,
   mobile: string,
-  smsCode: string,
+  captcha: string,
   policy?: boolean
 }
 
@@ -40,6 +42,9 @@ function Register() {
     }
 
     setLoading(true);
+    register(formData).then(() => {
+      setLoading(false);
+    })
   };
 
   const selectBefore = (

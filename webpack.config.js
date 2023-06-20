@@ -55,6 +55,17 @@ const config = {
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
+    onBeforeSetupMiddleware: function (devServer) {
+      if (!devServer) {
+        throw new Error('webpack-dev-server is not defined');
+      }
+
+      const { app } = devServer;
+
+      app.post('*', (req, res) => {
+        res.redirect(req.originalUrl);
+      });
+    },
   },
   plugins: [
     new HtmlPlugin({
