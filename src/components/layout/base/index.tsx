@@ -23,9 +23,7 @@ const Base: React.FC<PropsWithChildren<BaseProps>> = ({ children, hasWindow = tr
         </div>
       </div>
       <div className='base-body' style={{background: hasBackground ? '' : 'none'}}>
-        <div className='base-body-box'>
-          {hasWindow ? <div className='base-window'>{children}</div> : children}
-        </div>
+        {hasWindow ? <div className='base-body-box'><div className='base-window'>{children}</div></div> : children}
       </div>
       <div className='base-footer'>
         <div className='copyright'>

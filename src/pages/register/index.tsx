@@ -106,7 +106,13 @@ function Register() {
                     <Button loading={loading} type="primary" htmlType="submit" className='base-submit-btn'>注册
                     </Button>
                   </ProForm.Item>
-                  <Button type="link" style={{padding: 0, fontSize: 15, color: '#333'}}>已有账号，去登录 <RightOutlined size={18} /></Button>
+                  <Button 
+                    type="link"
+                    onClick={() => {
+                      navigate('/login');
+                    }}
+                    style={{padding: 0, fontSize: 15, color: '#333'}}
+                  >已有账号，去登录 <RightOutlined size={18} /></Button>
                 </>
               );
             },
