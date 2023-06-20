@@ -121,7 +121,7 @@ export class Http {
     return this.service.request(config);
   }
 
-  get<T>(url: string, params?: object, config?: Omit<HttpRequestConfig, 'params'>) {
+  get<T>(url: string, params?: object | string, config?: Omit<HttpRequestConfig, 'params'>) {
     return this.service.get(url, { params, ...config }) as Promise<T>;
   }
   post<T>(url: string, data?: object, config?: HttpRequestConfig) {

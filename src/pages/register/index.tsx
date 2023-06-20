@@ -169,7 +169,7 @@ function Register() {
             // 如果需要失败可以 throw 一个错误出来，onGetCaptcha 会自动停止
             // throw new Error("获取验证码错误")
             onGetCaptcha={async (mobile) => {
-              const res = await captcha();
+              const res = await captcha(mobile);
               message.success(`【美团】${res.captcha}（商户注册验证码）。工作人员不会向您索要，请勿向任何人泄露，以免造成账户或资金损失。`, 5);
             }}
           />
