@@ -3,95 +3,165 @@
  *
  * sobird<i@sobird.me> at 2023/06/12 8:24:06 created.
  */
-import React, { useEffect } from 'react';
-import { useNavigate, RouterProviderProps, useLocation } from 'react-router-dom';
-import queryString from 'query-string';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { Button, Select, message } from 'antd';
+import { MobileOutlined }  from '@ant-design/icons';
+import Base from "@/components/layout/base";
+import isMobilePhone from '@/utils/validator/isMobilePhone';
+import captcha from '@/services/common/captcha';
+import { register } from '@/services/user';
+
 import './index.scss';
-import mtmLogo from '@/assets/mtm_logo.png';
-import mtmLoginBg from '@/assets/mtm_login_bg.png';
-import policeIcon from '@/assets/police_icon.png';
+
+import { ProForm, ProFormText, ProFormCaptcha } from '@ant-design/pro-components';
+
+const { Option } = Select;
+
+interface LoginFormData {
+  interCode: string,
+  mobile: string,
+  captcha: string,
+  policy?: boolean
+}
 
 function Login() {
   const navigate = useNavigate();
-  const location = useLocation();
-  console.log('location', location);
-  useEffect(() => {
-    try {
-      // 短时间多次登录处理逻辑
-      const preLoginDateStr = localStorage.getItem('preLoginDateStr') || '';
-      const preLoginDateArr = preLoginDateStr.split(',');
-      // 最近10秒连续登陆3次，最近1分钟连续登陆5次，跳转到error，并进行上报
-      if (
-        (preLoginDateArr.length >= 3 && +preLoginDateArr[0] - +preLoginDateArr[2] < 10000) ||
-        (preLoginDateArr.length >= 5 && +preLoginDateArr[0] - +preLoginDateArr[4] < 60000)
-      ) {
-        //
-        localStorage.setItem('preLoginDateStr', '');
-        navigate(`/error?message=${encodeURIComponent('您的店铺登录遇到问题，请切换账号再尝试')}`);
-      }
-    } catch (error) {
-      console.error('endlessLoop', error);
+  const [ form ] = ProForm.useForm();
+  const [loading, setLoading] = useState(false);
+
+  // 提交注册
+  const onFinish = async (values: LoginFormData)=> {
+    const { captcha, mobile, interCode } = values;
+    const captcha_cookie = Cookies.get('captcha');
+    message.destroy();
+
+    if(!isMobilePhone(mobile, interCode)) {
+      const error_str = "手机号格式不符合要求";
+      message.error(error_str);
+      return;
     }
-  }, [navigate]);
-  // 补签协议的 case 增加特殊的scene，只牵涉到登陆和忘记密码
-  const { search } = location;
-  const query = queryString.parse(search);
-  const from = query?.from;
-  const isSupply = from === '/supplementSignContract';
-  let loginContinue = `${
-    process.env.EPASSPORT_SIGN_CONTINUE_URL || window.location.origin
-  }/afterlogin?scene=platform${isSupply ? '-contract' : ''}-login&from=${from}`;
-  let recContinue = `${process.env.EPASSPORT_CONTINUE_URL}?scene=platform${isSupply ? '-contract' : ''}-recover`;
 
-  loginContinue = encodeURIComponent(loginContinue);
-  recContinue = encodeURIComponent(recContinue);
+    if(captcha_cookie != captcha) {
+      message.error('验证码错误');
+      return;
+    }
 
-  let recoverUrl = `${process.env.EPASSPORT_RECOVER_URL}&continue=${recContinue}`;
-  const singupUrl = encodeURIComponent(`${window.location.origin}/register?from=${from}`);
-  recoverUrl = encodeURIComponent(recoverUrl);
-  const loginUrl = `${process.env.EPASSPORT_LOGIN_URL}&leftBottomLink=${singupUrl}&rightBottomLink=${recoverUrl}&continue=${loginContinue}`;
-  // 需要特殊申请一个配置，注册按钮设置为链接方式并且打开新页面
+    setLoading(true);
+    register(values).then(() => {
+      setLoading(false);
+      navigate('/');
+    })
+  };
+
+  const selectBefore = (
+    <ProForm.Item 
+      noStyle
+      name="interCode">
+      <Select 
+        popupMatchSelectWidth={false} 
+        bordered={false} 
+        onClick={(event) => {event.stopPropagation()}} 
+        optionLabelProp="label"
+        onSelect={() => {
+          form.validateFields(['mobile']);
+        }}
+      >
+        <Option value="86" label="+86">+86(中国)</Option>
+        <Option value="65" label="+65">+65(新加坡)</Option>
+        <Option value="852" label="+852">+852(中国香港)</Option>
+        <Option value="853" label="+853">+853(中国澳门)</Option>
+      </Select>
+    </ProForm.Item>
+  );
 
   return (
-    <div className='login'>
-      <div className='login-header'>
-        <div className='logo-box'>
-          <img src={mtmLogo} />
-        </div>
+    <Base>
+      <div className="base-login">
+        <div className="base-title">登录</div>
+        <ProForm
+          form={form}
+          name="base-form-login"
+          initialValues={{ interCode: "86" }}
+          onFinish={onFinish}
+          colon={false}
+          className='base-form'
+          layout="horizontal"
+          submitter={{
+            // 配置按钮文本
+            searchConfig: {
+              resetText: '重置',
+              submitText: '提交',
+            },
+            // 配置按钮的属性
+            resetButtonProps: {
+              style: {
+                // 隐藏重置按钮
+                display: 'none',
+              },
+            },
+            submitButtonProps: {},
+        
+            // 完全自定义整个区域
+            render: (props, doms) => {
+              return (
+                <>
+                  <Button style={{marginTop: 20}} loading={loading} type="primary" htmlType="submit" className='base-submit-btn'>登录</Button>
+                  <div className="signup-btn"><div>还没有账号？<a href="/#/register" target="_blank">免费注册</a></div></div>
+                </>
+              );
+            },
+          }}
+        >
+          <ProFormText
+            name="mobile"
+            fieldProps={{
+              prefix: selectBefore,
+              addonBefore: <MobileOutlined />,
+            }}
+            allowClear={false}
+            placeholder="请输入手机号"
+          />
+          <ProFormCaptcha
+            label="验证码"
+            name="captcha"
+            // 手机号的 name，onGetCaptcha 会注入这个值
+            phoneName="mobile"
+            fieldProps={{
+              //
+            }}
+            captchaProps={{
+              size: 'small',
+              type: 'link',
+              style: { padding: 0 }
+            }}
+            placeholder="请输入验证码"
+            // captchaTextRender={
+            //   (paramsTiming, paramsCount) => {
+            //     return paramsTiming ? `${paramsCount} 秒后重新获取` : '获取验证码';
+            //   }
+            // }
+
+            // 如果需要失败可以 throw 一个错误出来，onGetCaptcha 会自动停止
+            // throw new Error("获取验证码错误")
+            onGetCaptcha={async (mobile) => {
+              const interCode = form.getFieldValue('interCode');
+
+              if(!isMobilePhone(mobile, interCode)) {
+                const error_str = "手机号格式不符合要求";
+                message.error(error_str);
+                throw new Error(error_str);
+              }
+              
+              const res = await captcha(mobile);
+              message.success(`【美团】${res.captcha}（商户注册验证码）。工作人员不会向您索要，请勿向任何人泄露，以免造成账户或资金损失。`, 5);
+            }}
+          />
+        </ProForm>
       </div>
-      <div className='login-body'>
-        <div className='login-main'>
-          <img src={mtmLoginBg} className='bg' />
-          <div className='login-window'>
-            <div className='login-title'>登录</div>
-            <div className='iframe-container'>
-              <iframe
-                title='美团电商'
-                src={loginUrl}
-                // sandbox="allow-forms allow-scripts allow-top-navigation allow-same-origin"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className='login-footer'>
-        <div className='contact-reword'>
-          <a target='_blank' href='https://beian.miit.gov.cn' rel='noreferrer' style={{ marginTop: '3px' }}>
-            <span>©2020 meituan.com 京ICP备10211739号</span>
-          </a>
-          <div />
-          <img src={policeIcon} style={{ marginRight: '3px' }} />
-          <a
-            target='_blank'
-            href='http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11000002002052'
-            rel='noreferrer'
-          >
-            <span>京公网安备11000002002052号</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  );
+    </Base>
+  )
 }
 
 export default Login;

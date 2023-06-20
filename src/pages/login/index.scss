@@ -4,100 +4,28 @@
  * sobird<i@sobird.me> at 2023/06/12 8:33:53 created.
  */
 
-
-.login {
-  min-width: 1366px;
-
-  .login-header {
-    height: 88px;
-    background-color: #fff;
-    position: relative;
-
-    .logo-box {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      margin-top: -19px;
-      margin-left: -550px;
-
-      >img {
-        // width: 294px;
-        height: 38px;
-      }
+.base-login {
+  .mtm-form-item {
+    border-bottom: 1px solid #e5e5e5;
+    color: #555;
+    .mtm-input-group-addon {
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .mtm-input-affix-wrapper {
+      border: none;
+    }
+    .mtm-input {
+      border: none;
     }
   }
-
-  .login-body {
-    height: 640px;
-    overflow: hidden;
-    background-image: linear-gradient(-43deg, #ffc212 0%, #ffd000 100%);
-
-    .login-main {
-      height: 640px;
-      margin: 0 auto;
-      width: 1366px;
-      position: relative;
-
-      .bg {
-        height: 640px;
-        width: 1792px;
-        position: absolute;
-        top: 0;
-        left: 50%;
-        margin-left: -896px;
-      }
-    }
-
-    .login-window {
-      position: absolute;
-      top: 120px;
-      left: 884px;
-      width: 350px;
-      height: 400px;
-      background: #ffffff;
-      box-shadow: 1px 3px 16px 0 rgba(209, 122, 0, 0.34);
-      border-radius: 4px;
-
-      .login-title {
-        height: 49px;
-        line-height: 49px;
-        font-weight: 600;
-        font-family: PingFangSC-Semibold;
-        font-size: 18px;
-        color: #333333;
-        letter-spacing: 0 !important;
-        text-align: center;
-        border-bottom: 1px solid #ececec;
-      }
-
-      .iframe-container {
-        width: 350px;
-        height: 350px;
-
-        iframe {
-          border: none;
-          outline: none;
-          margin: 0 auto;
-          width: 100%;
-          height: 100%;
-        }
-      }
-    }
-  }
-}
-
-.login-footer {
-  // height: 200px;
-  background-color: #fff;
-  padding: 1px 0;
-
-  .contact-reword {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -ms-flex-align: center;
-    align-items: center;
-    height: 180px;
+  .signup-btn {
+    font-size: 14px;
+    line-height: 48px;
+    text-align: center;
+    color: #555;
+    height: 48px;
+    margin-top: 20px;
   }
 }

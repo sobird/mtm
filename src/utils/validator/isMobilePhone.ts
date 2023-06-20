@@ -14,6 +14,6 @@ export const patterns = {
   886: /^(\+?886\-?|0)?9\d{8}$/,
 };
 
-export default function isMobilePhone(str: string, code: 86 | 65 | 852 | 853 | 886 = 86) {
+export default function isMobilePhone(str: string, code: 86 | 65 | 852 | 853 | 886 | string = 86) {
   return patterns[code].test(str);
 }
