@@ -68,8 +68,9 @@ export class Http {
       config.startTime = Date.now();
       const { method, url } = config;
 
-      // url 模拟适配
+      // url 模拟适配 全部转为get请求
       config.url = url + '/' + method.toLocaleLowerCase() + '.json';
+      config.method = 'get';
       
       return config;
     },

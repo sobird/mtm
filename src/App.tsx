@@ -4,6 +4,7 @@ import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
 import Login from './pages/login';
 import Register from './pages/register';
+import RegisterSuccess from './pages/register/success';
 import './App.css';
 
 const theme = { token: { colorPrimary: '#ffd100', borderRadius: 2, colorWhite: '#333' } };
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/register' element={<Register />}></Route>
+          <Route path='/register/success' element={<RegisterSuccess />}></Route>
         </Routes>
       </HashRouter>
     </ConfigProvider>

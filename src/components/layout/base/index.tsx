@@ -11,10 +11,10 @@ import './index.scss';
 
 interface BaseProps {
   hasWindow?: boolean;
+  hasBackground?: boolean;
 }
 
-const Base: React.FC<PropsWithChildren<BaseProps>> = ({ children, hasWindow = true }) => {
-  console.log('children', children);
+const Base: React.FC<PropsWithChildren<BaseProps>> = ({ children, hasWindow = true, hasBackground = true }) => {
   return (
     <div className='layout-base'>
       <div className='base-header'>
@@ -22,7 +22,7 @@ const Base: React.FC<PropsWithChildren<BaseProps>> = ({ children, hasWindow = tr
           <img src={mtmLogo} />
         </div>
       </div>
-      <div className='base-body'>
+      <div className='base-body' style={{background: hasBackground ? '' : 'none'}}>
         <div className='base-body-box'>
           {hasWindow ? <div className='base-window'>{children}</div> : children}
         </div>
