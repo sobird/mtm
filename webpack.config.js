@@ -80,7 +80,7 @@ const config = {
       patterns: [
         {
           context: path.resolve(__dirname, './public'),
-          from: '*',
+          from: '**/*',
           to: path.resolve(__dirname, './dist'),
           toType: 'dir',
           globOptions: {
