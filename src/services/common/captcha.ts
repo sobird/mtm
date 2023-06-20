@@ -3,7 +3,7 @@
  * 
  * sobird<i@sobird.me> at 2023/06/20 10:35:44 created.
  */
-
+import Cookies from 'js-cookie';
 import http from "@/utils/http";
 
 export interface CaptchaResponseData {
@@ -18,6 +18,7 @@ export default async function captcha(mobile: string) {
   
   return http.get<CaptchaResponseData>('/captcha', { mobile }).then(res => {
     res.captcha = captcha_num;
+    Cookies.set('captcha', captcha_num);
     return res;
   });
 }

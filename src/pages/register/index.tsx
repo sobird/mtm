@@ -5,9 +5,10 @@
  */
 
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import { Button, Select, message } from 'antd';
-import {RightOutlined} from '@ant-design/icons';
+import { RightOutlined}  from '@ant-design/icons';
 import Base from "@/components/layout/base";
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import isSmsCode from '@/utils/validator/isSmsCode';
@@ -27,8 +28,6 @@ interface RegisterFormData {
   policy?: boolean
 }
 
-
-
 function Register() {
   const navigate = useNavigate();
   const [ form ] = ProForm.useForm();
@@ -36,10 +35,16 @@ function Register() {
 
   // 提交注册
   const onFinish = async (values: RegisterFormData)=> {
-    const {policy, ...formData} = values;
+    const {policy, captcha, ...formData} = values;
+    const captcha_cookie = Cookies.get('captcha');
     message.destroy();
     if(!policy) {
       message.error('请勾选隐私协议');
+      return;
+    }
+
+    if(captcha_cookie != captcha) {
+      message.error('验证码错误');
       return;
     }
 
