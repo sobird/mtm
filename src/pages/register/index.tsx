@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button, Select, message } from 'antd';
 import {RightOutlined} from '@ant-design/icons';
 import Base from "@/components/layout/base";
@@ -29,6 +30,7 @@ interface RegisterFormData {
 
 
 function Register() {
+  const navigate = useNavigate();
   const [ form ] = ProForm.useForm();
   const [loading, setLoading] = useState(false);
 
@@ -44,6 +46,7 @@ function Register() {
     setLoading(true);
     register(formData).then(() => {
       setLoading(false);
+      navigate('/register/success');
     })
   };
 

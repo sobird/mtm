@@ -10,10 +10,10 @@ import policeIcon from '@/assets/police_icon.png';
 import './index.scss';
 
 interface BaseProps {
-  window?: boolean;
+  hasWindow?: boolean;
 }
 
-const Base: React.FC<PropsWithChildren<BaseProps>> = ({ children, window = true }) => {
+const Base: React.FC<PropsWithChildren<BaseProps>> = ({ children, hasWindow = true }) => {
   console.log('children', children);
   return (
     <div className='layout-base'>
@@ -24,7 +24,7 @@ const Base: React.FC<PropsWithChildren<BaseProps>> = ({ children, window = true 
       </div>
       <div className='base-body'>
         <div className='base-body-box'>
-          {window ? <div className='base-window'>{children}</div> : children}
+          {hasWindow ? <div className='base-window'>{children}</div> : children}
         </div>
       </div>
       <div className='base-footer'>
