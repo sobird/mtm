@@ -27,7 +27,7 @@
 
     /* Linting */
     // 严格模式
-    "strict": true,
+    "strict": false,
     // 若有未使用的局部变量则抛错
     "noUnusedLocals": true,
     // 若有未使用的参数则抛错

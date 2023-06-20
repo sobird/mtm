@@ -14,6 +14,37 @@ import './index.scss';
 
 import { ProForm, ProFormText, ProFormCaptcha, ProFormCheckbox } from '@ant-design/pro-components';
 
+import axios from '@/utils/axios';
+
+
+axios.get<{a:string}>('/api/sms/send.json', {
+  signal: new AbortController().signal,
+  params: {
+    a: 123
+  },
+}, {
+  headers: {'X-Requested-With': 'XMLHttpRequest'},
+  //parser: res => res.data as {a: string}
+}).then((res) => {
+  console.log('res', res)
+})
+  .catch(function (error) {
+    console.log(error.toJSON());
+  });
+
+interface TestReturn {
+  't': number;
+  'h': string;
+}
+
+const test = <T extends keyof TestReturn>(p: T) => ({
+  t: 3,
+  h: '',
+})[p];
+
+const re = test('h')
+
+console.log('re', re)
 
 const { Option } = Select;
 
