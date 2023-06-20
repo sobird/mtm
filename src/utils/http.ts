@@ -66,6 +66,10 @@ export class Http {
     // 请求拦截器
     this.service.interceptors.request.use((config: InternalHttpRequestConfig) => {
       config.startTime = Date.now();
+      const { method, url } = config;
+
+      // url 模拟适配
+      config.url = url + '/' + method.toLocaleLowerCase() + '.json';
       
       return config;
     },
@@ -113,8 +117,12 @@ export class Http {
     });
   }
 
+  request(config: HttpRequestConfig) {
+    return this.service.request(config);
+  }
+
   get<T>(url: string, params?: object, config?: HttpRequestConfig) {
-    return this.service.get(url, { params, ...config }) as Promise<ResponseData<T>>
+    return this.service.get(url, { params, ...config }) as Promise<T>;
   }
 }
 
