@@ -1,5 +1,5 @@
 
-import http from "@/utils/http"
+import http from "@/utils/http";
 
 interface RegisterRequestData {
   interCode: string;
