@@ -1,0 +1,44 @@
+.layout-entry {
+  overflow: hidden;
+}
+
+.entry-header {
+  box-sizing: border-box;
+  position: fixed;
+  width: 100%;
+  border-bottom: 1px solid #ebebeb;
+  overflow: hidden;
+  background-color: #fff;
+  .entry-header-box {
+    height: 60px;
+    display: flex;
+    padding: 0 20px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-logo {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    img {
+      height: 32px;
+      margin-right: 10px;
+    }
+  }
+  .header-item {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    .username {
+      font-weight: 400;
+      font-family: PingFangSC-Regular;
+      font-size: 14px;
+      color: #222;
+      text-align: justify;
+    }
+  }
+}
+
+.entry-body {
+  padding-top: 60px;
+}
