@@ -11,7 +11,7 @@ import { MobileOutlined }  from '@ant-design/icons';
 import Base from "@/components/layout/base";
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import captcha from '@/services/common/captcha';
-import { register } from '@/services/user';
+import login from '@/services/login';
 
 import './index.scss';
 
@@ -49,7 +49,7 @@ function Login() {
     }
 
     setLoading(true);
-    register(values).then(() => {
+    login(values).then(() => {
       setLoading(false);
       navigate('/');
     })

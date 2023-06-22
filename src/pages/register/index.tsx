@@ -13,20 +13,7 @@ import Base from "@/components/layout/base";
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import isSmsCode from '@/utils/validator/isSmsCode';
 import captcha from '@/services/common/captcha';
-import { register } from '@/services/user';
-import { verifyJWT, signJWT } from "@/utils/jwt";
-
-
-
-signJWT({ddd: 'sobird'}).then(token => {
-  console.log('token', token)
-
-  verifyJWT(token).then(res => {
-    console.log('res', res)
-  }).catch(error => {
-    console.log('error', error)
-  });
-})
+import register from '@/services/register';
 
 import './index.scss';
 

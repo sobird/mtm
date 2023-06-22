@@ -1,12 +1,12 @@
 
 import http from "@/utils/http";
 
-interface RegisterRequestData {
+interface IRegisterRequest {
   interCode: string;
   mobile: string;
   captcha?: string;
 }
 
-export function register(data: RegisterRequestData) {
+export default function register(data: IRegisterRequest) {
   return http.post('/register', data);
 }
