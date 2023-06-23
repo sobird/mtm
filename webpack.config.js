@@ -113,7 +113,7 @@ const config = {
         use: [{
           loader: 'esbuild-loader',
           options: {
-            target: 'es2015'
+            target: 'es2018'
           },
         }],
         exclude: ['/node_modules/'],
@@ -164,7 +164,7 @@ const config = {
       // `...`,
       new CssMinimizerPlugin(),
       new EsbuildPlugin({
-        target: 'es2015',
+        target: 'es2018',
         css: true, // 优化CSS
         minify: false, // 压缩JS
         minifyWhitespace: true, // 去掉空格
