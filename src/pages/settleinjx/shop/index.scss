@@ -1,0 +1,72 @@
+.entry-shop-tips {
+  width: 100%;
+  position: fixed;
+  top: 60px;
+  padding: 10px;
+  z-index: 100;
+}
+
+.entry-shop-footer {
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #ebebeb;
+  box-sizing: border-box;
+  z-index: 999;
+}
+
+.entry-shop-main {
+  width: 1100px;
+  margin: 100px auto;
+  h2 {
+    text-align: center;
+    font-size: 34px;
+    font-weight: 400;
+    color: #333;
+  }
+
+  form {
+    padding: 10px 80px;
+    .mtm-form-item-label {
+      label {
+        font-weight: 600;
+    font-size: 20px;
+    color: #333;
+      }
+      .how-select {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .shop-type-radio {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    label {
+      padding: 10px 15px;
+      border: 1px solid #e6e6e6;
+      border-radius: 2px;
+      margin-bottom: 15px;
+      width: 434px;
+
+      .title {
+        font-weight: 600;
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 3px;
+        display: block;
+      }
+      .desc {
+        font-size: 12px;
+    color: #999;
+      }
+    }
+  }
+}

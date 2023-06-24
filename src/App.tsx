@@ -7,6 +7,7 @@ import Register from './pages/register';
 import RegisterSuccess from './pages/register/success';
 import SettleInpc from './pages/settleinpc';
 import EntryHome from './pages/settleinjx/home';
+import EntryShop from './pages/settleinjx/shop';
 import './App.css';
 
 const theme = { token: { colorPrimary: '#ffd100', borderRadius: 2, colorWhite: '#333' } };
@@ -21,6 +22,7 @@ function App() {
           <Route path='/register/success' element={<RegisterSuccess />}></Route>
           <Route path='/settleinpc' element={<SettleInpc />}></Route>
           <Route path='/settleinjx/home' element={<EntryHome />}></Route>
+          <Route path='/settleinjx/shop' element={<EntryShop />}></Route>
         </Routes>
       </HashRouter>
     </ConfigProvider>
