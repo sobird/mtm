@@ -4,15 +4,22 @@
  * sobird<i@sobird.me> at 2023/06/22 22:41:07 created.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form, Card, Button, Alert, Radio, Cascader, Modal } from 'antd';
 import Entry from "@/components/layout/entry";
+import category from '@/services/merchant/category';
 
 import './index.scss';
 
 function EntryShop() {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    category().then(res => {
+      setCategoryOptions(res);
+    })
+  }, [])
 
   const onFinish = (values: any) => {
     console.log(values);
@@ -42,7 +49,7 @@ function EntryShop() {
               layout="vertical"
             >
               <Form.Item name="category" label="主营类目">
-                <Cascader options={[]} placeholder="主营类目决定您店铺的经营范围，请谨慎选择" style={{width: 430}} />
+                <Cascader options={categoryOptions} fieldNames={{label: 'name', value: 'id'}} placeholder="主营类目决定您店铺的经营范围，请谨慎选择" style={{width: 430}} />
               </Form.Item>
               <Form.Item name="shoptype" label={(<>店铺类型<Button type='link' className="how-select">该如何选择？</Button></>)}>
                 <Radio.Group options={options} className='shop-type-radio'/>
