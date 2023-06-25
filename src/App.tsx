@@ -12,6 +12,11 @@ import './App.css';
 
 const theme = { token: { colorPrimary: '#ffd100', borderRadius: 2, colorWhite: '#333' } };
 
+ConfigProvider.config({
+  prefixCls: 'mtm',
+  theme,
+})
+
 function App() {
   return (
     <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm' theme={theme}>

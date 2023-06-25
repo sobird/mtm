@@ -11,6 +11,11 @@ import category from '@/services/merchant/category';
 
 import './index.scss';
 
+interface IShopForm {
+  category: string[];
+  type: number;
+}
+
 function EntryShop() {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [form] = Form.useForm();
@@ -19,14 +24,17 @@ function EntryShop() {
     category().then(res => {
       setCategoryOptions(res);
     })
-  }, [])
+  }, []);
 
-  const onFinish = (values: any) => {
+  const shoptype = form.getFieldValue('shoptype');
+
+
+  const onFinish = (values: IShopForm) => {
     console.log(values);
   };
 
   const options = [
-    { value: '23', label: (<><span className='title'>企业旗舰店</span><span className='desc'>适合自有品牌的企业或拥有独占授权品牌的企业申请</span></>) },
+    { value: '23', name: '企业旗舰店', label: (<><span className='title'>企业旗舰店</span><span className='desc'>适合自有品牌的企业或拥有独占授权品牌的企业申请</span></>) },
     { value: '22', label: (<><span className='title'>企业专卖店</span><span className='desc'>适合拥有1个授权品牌且授权链路小于2级的企业申请</span></>) },
     { value: '21', label: (<><span className='title'>企业专营店</span><span className='desc'>适合拥有2个及更多自有品牌或授权品牌的企业申请</span></>) },
     { value: '20', label: (<><span className='title'>企业工厂店</span><span className='desc'>适合生产线企业申请</span></>) },
@@ -52,7 +60,17 @@ function EntryShop() {
                 <Cascader options={categoryOptions} fieldNames={{label: 'name', value: 'id'}} placeholder="主营类目决定您店铺的经营范围，请谨慎选择" style={{width: 430}} />
               </Form.Item>
               <Form.Item name="shoptype" label={(<>店铺类型<Button type='link' className="how-select">该如何选择？</Button></>)}>
-                <Radio.Group options={options} className='shop-type-radio'/>
+                <Radio.Group 
+                  onChange={(event) => {
+                    console.log('event', event)
+                    Modal.warning({
+                      title: '确定更改店铺类型为“专卖店”？',
+                      content: '温馨提示：如果更换店铺类型，店铺名称会被清空，需重新上传',
+                      okText: '确定',
+                    });
+                  }} 
+                  options={options} 
+                  className='shop-type-radio'/>
               </Form.Item>
             </Form>
           </Card>
