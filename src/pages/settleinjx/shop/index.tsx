@@ -34,7 +34,7 @@ function EntryShop() {
   };
 
   const options = [
-    { value: '23', name: '企业旗舰店', label: (<><span className='title'>企业旗舰店</span><span className='desc'>适合自有品牌的企业或拥有独占授权品牌的企业申请</span></>) },
+    { value: '23', label: (<><span className='title'>企业旗舰店</span><span className='desc'>适合自有品牌的企业或拥有独占授权品牌的企业申请</span></>) },
     { value: '22', label: (<><span className='title'>企业专卖店</span><span className='desc'>适合拥有1个授权品牌且授权链路小于2级的企业申请</span></>) },
     { value: '21', label: (<><span className='title'>企业专营店</span><span className='desc'>适合拥有2个及更多自有品牌或授权品牌的企业申请</span></>) },
     { value: '20', label: (<><span className='title'>企业工厂店</span><span className='desc'>适合生产线企业申请</span></>) },

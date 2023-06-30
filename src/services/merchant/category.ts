@@ -6,18 +6,14 @@
 
 import http from "@/utils/http";
 
-export interface IList {
-  id: number;
-  parentId: number;
-  [key: string]: any;
-}
 
 export interface ICategory {
   id: number;
-  name: string;
   parentId: number;
+  name: string;
   level: number;
   leaf: number;
+  [key: string]: any;
 }
 
 export default async function category(parentId?: number) {
@@ -26,7 +22,7 @@ export default async function category(parentId?: number) {
   });
 }
 
-export function toTree(list: IList[]) {
+export function toTree(list: ICategory[]) {
   const result = [];
   const map = new Map();
  
