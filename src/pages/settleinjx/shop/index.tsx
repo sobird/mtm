@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { Form, Card, Button, Alert, Radio, Cascader, Modal } from 'antd';
 import Entry from "@/components/layout/entry";
 import category from '@/services/merchant/category';
+import Task from '@/services/merchant/entry/task';
+import Type, { IEntryType } from '@/services/merchant/entry/type';
 
 import './index.scss';
 
@@ -18,27 +20,35 @@ interface IShopForm {
 
 function EntryShop() {
   const [categoryOptions, setCategoryOptions] = useState([]);
+  const [type, setType] = useState<IEntryType[]>([]);
   const [form] = Form.useForm();
 
   useEffect(() => {
     category().then(res => {
       setCategoryOptions(res);
-    })
-  }, []);
+    });
 
-  const shoptype = form.getFieldValue('shoptype');
+    Task.get().then(res => {
+      console.log('res', res)
+    });
+
+    // 获取店铺类型
+    Type.get().then(res => {
+      setType(res);
+    });
+  }, []);
 
 
   const onFinish = (values: IShopForm) => {
     console.log(values);
   };
 
-  const options = [
-    { value: '23', label: (<><span className='title'>企业旗舰店</span><span className='desc'>适合自有品牌的企业或拥有独占授权品牌的企业申请</span></>) },
-    { value: '22', label: (<><span className='title'>企业专卖店</span><span className='desc'>适合拥有1个授权品牌且授权链路小于2级的企业申请</span></>) },
-    { value: '21', label: (<><span className='title'>企业专营店</span><span className='desc'>适合拥有2个及更多自有品牌或授权品牌的企业申请</span></>) },
-    { value: '20', label: (<><span className='title'>企业工厂店</span><span className='desc'>适合生产线企业申请</span></>) },
-  ];
+  const options = type.map(item => {
+    return {
+      value: item.poiType,
+      label: (<><span className='title'>企业{item.poiTypeName}</span><span className='desc'>{item.poiTypeDesc}</span></>)
+    }
+  })
 
   return (
     <Entry>
@@ -62,9 +72,11 @@ function EntryShop() {
               <Form.Item name="shoptype" label={(<>店铺类型<Button type='link' className="how-select">该如何选择？</Button></>)}>
                 <Radio.Group 
                   onChange={(event) => {
-                    console.log('event', event)
+                    const { value } = event.target;
+                    const poi = type.find(item => item.poiType == value);
+                    
                     Modal.warning({
-                      title: '确定更改店铺类型为“专卖店”？',
+                      title: `确定更改店铺类型为 ${poi.poiTypeName} ？`,
                       content: '温馨提示：如果更换店铺类型，店铺名称会被清空，需重新上传',
                       okText: '确定',
                     });
