@@ -5,23 +5,47 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Form, Card, Button, Alert, Radio, Cascader, Modal } from 'antd';
+import { Form, Card, Button, Alert, Radio, Cascader, Modal, message, Space, Table, Tag } from 'antd';
 import Entry from "@/components/layout/entry";
-import category from '@/services/merchant/category';
+import category, {ICategory} from '@/services/merchant/category';
 import Task, { IEntryTask } from '@/services/merchant/entry/task';
 import Type, { IEntryType } from '@/services/merchant/entry/type';
+
+const { Column, ColumnGroup } = Table;
 
 import './index.scss';
 
 interface IShopForm {
   category: string[];
-  type: number;
+  poiType: number;
+}
+
+// 实现表格数据相同的行合并
+function getRowSpans (arr, key) {
+  let sameValueLength = 0;
+  const rowSpans = [];
+  for(let i = arr.length - 1; i >= 0; i--){
+    if(i === 0) {
+      rowSpans[i] = sameValueLength + 1;
+      continue;
+    }
+    if(arr[i][key] === arr[i-1][key]) {
+      rowSpans[i] = 0;
+      sameValueLength++;
+    } else {
+      console.log(sameValueLength)
+      rowSpans[i] = sameValueLength + 1;
+      sameValueLength = 0;
+    }
+  }
+  return rowSpans;
 }
 
 function EntryShop() {
-  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [categoryOptions, setCategoryOptions] = useState<ICategory[]>([]);
   const [type, setType] = useState<IEntryType[]>([]);
   const [task, setTask] = useState<IEntryTask>();
+  const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -41,7 +65,18 @@ function EntryShop() {
 
   // 表单提交
   const onFinish = (values: IShopForm) => {
-    console.log(values);
+    const { category, poiType } = values;
+
+    if(!category) {
+      message.error('请选择主营类目');
+      return;
+    }
+
+    if(!poiType) {
+      message.error('请选择店铺类型');
+      return;
+    }
+    
   };
 
   const options = type.map(item => {
@@ -49,7 +84,68 @@ function EntryShop() {
       value: item.poiType,
       label: (<><span className='title'>企业{item.poiTypeName}</span><span className='desc'>{item.poiTypeDesc}</span></>)
     }
-  })
+  });
+
+
+  const data = [
+    {
+      key: 1,
+      poiTypeName: '企业旗舰店',
+      poiTypeDesc: '经营一个品牌商品的旗舰店',
+    },
+    {
+      key: 2,
+      poiTypeName: '企业旗舰店',
+      poiTypeDesc: '经营多个品牌商品，且各品牌归属于同一实际控制人的旗舰店',
+    },
+    {
+      key: 3,
+      poiTypeName: '企业旗舰店',
+      poiTypeDesc: '卖场型品牌（服务类商标）商标权利人开设的旗舰店',
+    },
+    {
+      key: 4,
+      poiTypeName: '企业专卖店',
+      poiTypeDesc: '经营一个授权品牌的商品，但未获得品牌（注册商标）权利人独占授权入驻美团开放平台的商家专卖店',
+    },
+    {
+      key: 5,
+      poiTypeName: '企业专卖店',
+      poiTypeDesc: '经营多个授权品牌的商品，且各品牌归同一实际控制人的商家专卖店',
+    },
+    {
+      key: 6,
+      poiTypeName: '企业专营店',
+      poiTypeDesc: '经营多个自有品牌商品的专营店',
+    },
+    {
+      key: 7,
+      poiTypeName: '企业专营店',
+      poiTypeDesc: '经营多个授权品牌商品，持有相应注册商标权利人出具的销售授权文件',
+    },
+    {
+      key: 8,
+      poiTypeName: '企业专营店',
+      poiTypeDesc: '同时经营自有品牌商品和授权品牌商品的专营店',
+    },
+    {
+      key: 9,
+      poiTypeName: '企业工厂店',
+      poiTypeDesc: '经营一个或多个品牌商品的工厂店',
+    },
+    {
+      key: 10,
+      poiTypeName: '企业工厂店',
+      poiTypeDesc: '经营商品的商标持有人或持有相应注册商标权利人出具的销售授权文件',
+    },
+    {
+      key: 11,
+      poiTypeName: '企业工厂店',
+      poiTypeDesc: '经营商品均为自主生产的工厂店',
+    },
+  ];
+
+  const  rowSpans = getRowSpans(data, 'poiTypeName')
 
   return (
     <Entry>
@@ -70,7 +166,7 @@ function EntryShop() {
               <Form.Item name="category" label="主营类目">
                 <Cascader options={categoryOptions} fieldNames={{label: 'name', value: 'id'}} placeholder="主营类目决定您店铺的经营范围，请谨慎选择" style={{width: 430}} />
               </Form.Item>
-              <Form.Item name="shoptype" label={(<>店铺类型<Button type='link' className="how-select">该如何选择？</Button></>)}>
+              <Form.Item name="poiType" label={(<>店铺类型<Button onClick={() => setOpen(true)} type='link' className="how-select">该如何选择？</Button></>)}>
                 <Radio.Group 
                   onChange={(event) => {
                     const { value } = event.target;
@@ -97,14 +193,26 @@ function EntryShop() {
       </div>
 
       <Modal
-        title="Modal 1000px width"
+        title="企业店铺类型和资质说明"
         centered
-        open={false}
+        open={open}
+        onOk={() => setOpen(false)}
+        onCancel={() => setOpen(false)}
         width={1000}
+        okText="我知道了"
       >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
+        <Table bordered pagination={false} dataSource={data}>
+          <Column title="店铺类型" dataIndex="poiTypeName" key="poiTypeName"
+            render={(text, record, index) => {
+              return {
+                children: text,
+                props: {
+                  rowSpan: rowSpans[index]
+                }
+              };
+            }} />
+          <Column title="店铺说明" dataIndex="poiTypeDesc" key="poiTypeDesc" />
+        </Table>
       </Modal>
     </Entry>
   )
