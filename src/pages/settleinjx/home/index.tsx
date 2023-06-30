@@ -4,18 +4,23 @@
  * sobird<i@sobird.me> at 2023/06/22 22:41:07 created.
  */
 
-
+import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, Alert } from 'antd';
 import { RightOutlined } from '@ant-design/icons'
 import Entry from "@/components/layout/entry";
 
+import Invitation, { IInvitationRequestData } from '@/services/common/invitation';
+
 import './index.scss';
 
 function EntryHome() {
+  const navigate = useNavigate();
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
-    console.log(values);
+  const onFinish = (values: IInvitationRequestData) => {
+    Invitation.post(values).then(() => {
+      navigate('/settleinjx/shop');
+    });
   };
 
   return (
