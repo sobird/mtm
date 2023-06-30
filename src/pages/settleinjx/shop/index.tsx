@@ -10,6 +10,7 @@ import Entry from "@/components/layout/entry";
 import category, {ICategory} from '@/services/merchant/category';
 import Task, { IEntryTask } from '@/services/merchant/entry/task';
 import Type, { IEntryType } from '@/services/merchant/entry/type';
+import { getRowSpans } from '@/utils';
 
 const { Column, ColumnGroup } = Table;
 
@@ -18,27 +19,6 @@ import './index.scss';
 interface IShopForm {
   category: string[];
   poiType: number;
-}
-
-// 实现表格数据相同的行合并
-function getRowSpans (arr, key) {
-  let sameValueLength = 0;
-  const rowSpans = [];
-  for(let i = arr.length - 1; i >= 0; i--){
-    if(i === 0) {
-      rowSpans[i] = sameValueLength + 1;
-      continue;
-    }
-    if(arr[i][key] === arr[i-1][key]) {
-      rowSpans[i] = 0;
-      sameValueLength++;
-    } else {
-      console.log(sameValueLength)
-      rowSpans[i] = sameValueLength + 1;
-      sameValueLength = 0;
-    }
-  }
-  return rowSpans;
 }
 
 function EntryShop() {
@@ -203,14 +183,15 @@ function EntryShop() {
       >
         <Table bordered pagination={false} dataSource={data}>
           <Column title="店铺类型" dataIndex="poiTypeName" key="poiTypeName"
-            render={(text, record, index) => {
+            render={(text, _record, index) => {
               return {
                 children: text,
                 props: {
                   rowSpan: rowSpans[index]
                 }
               };
-            }} />
+            }}
+          />
           <Column title="店铺说明" dataIndex="poiTypeDesc" key="poiTypeDesc" />
         </Table>
       </Modal>
