@@ -8,10 +8,9 @@
 import React, { PropsWithChildren } from 'react';
 import { Dropdown, MenuProps } from 'antd';
 import mtmLogo from '@/assets/mtm_logo.png';
-import policeIcon from '@/assets/police_icon.png';
 import './index.scss';
 
-const Entry: React.FC<PropsWithChildren> = ({ children }) => {
+const LayoutEntry: React.FC<PropsWithChildren> = ({ children }) => {
   const items: MenuProps['items'] = [
     {
       label: '退出登录',
@@ -43,4 +42,4 @@ const Entry: React.FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export default Entry;
+export default LayoutEntry;

@@ -5,23 +5,21 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Form, Card, Button, Alert, Radio, Cascader, Modal, message, Space, Table, Tag } from 'antd';
-import Entry from "@/components/layout/entry";
+import { useNavigate } from 'react-router-dom';
+import { Form, Card, Button, Alert, Radio, Cascader, Modal, message, Table } from 'antd';
+import LayoutEntry from "@/components/layout/entry";
 import category, {ICategory} from '@/services/merchant/category';
 import Task, { IEntryTask } from '@/services/merchant/entry/task';
 import Type, { IEntryType } from '@/services/merchant/entry/type';
+import Entry, { IEntryRequestData } from '@/services/merchant/entry';
 import { getRowSpans } from '@/utils';
 
-const { Column, ColumnGroup } = Table;
+const { Column } = Table;
 
 import './index.scss';
 
-interface IShopForm {
-  category: string[];
-  poiType: number;
-}
-
 function EntryShop() {
+  const navigate = useNavigate();
   const [categoryOptions, setCategoryOptions] = useState<ICategory[]>([]);
   const [type, setType] = useState<IEntryType[]>([]);
   const [task, setTask] = useState<IEntryTask>();
@@ -44,7 +42,7 @@ function EntryShop() {
   }, []);
 
   // 表单提交
-  const onFinish = (values: IShopForm) => {
+  const onFinish = (values: IEntryRequestData['baseInfo']) => {
     const { category, poiType } = values;
 
     if(!category) {
@@ -57,6 +55,11 @@ function EntryShop() {
       return;
     }
     
+    Entry.post({
+      baseInfo: values
+    }).then(() => {
+      navigate('/settleinjx/company');
+    });
   };
 
   const options = type.map(item => {
@@ -128,7 +131,7 @@ function EntryShop() {
   const  rowSpans = getRowSpans(data, 'poiTypeName')
 
   return (
-    <Entry>
+    <LayoutEntry>
       <div className="entry-shop">
         <div className="entry-shop-tips">
           <Alert message="目前平台仅开放数码家电/办公、宠物生活、母婴玩具、服饰鞋包、运动户外、汽配摩托、医药健康类目的商家自入驻，其余类目邀约制入驻请勿提交申请。入驻审核时效预计在7个工作日内，感谢支持。" type="info" showIcon />
@@ -195,7 +198,7 @@ function EntryShop() {
           <Column title="店铺说明" dataIndex="poiTypeDesc" key="poiTypeDesc" />
         </Table>
       </Modal>
-    </Entry>
+    </LayoutEntry>
   )
 }
 
