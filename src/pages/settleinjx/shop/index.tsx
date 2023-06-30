@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { Form, Card, Button, Alert, Radio, Cascader, Modal } from 'antd';
 import Entry from "@/components/layout/entry";
 import category from '@/services/merchant/category';
-import Task from '@/services/merchant/entry/task';
+import Task, { IEntryTask } from '@/services/merchant/entry/task';
 import Type, { IEntryType } from '@/services/merchant/entry/type';
 
 import './index.scss';
@@ -21,6 +21,7 @@ interface IShopForm {
 function EntryShop() {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [type, setType] = useState<IEntryType[]>([]);
+  const [task, setTask] = useState<IEntryTask>();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -29,7 +30,7 @@ function EntryShop() {
     });
 
     Task.get().then(res => {
-      console.log('res', res)
+      setTask(res);
     });
 
     // 获取店铺类型
@@ -38,7 +39,7 @@ function EntryShop() {
     });
   }, []);
 
-
+  // 表单提交
   const onFinish = (values: IShopForm) => {
     console.log(values);
   };

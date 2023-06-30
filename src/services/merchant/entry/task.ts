@@ -6,7 +6,7 @@
 
 import http from "@/utils/http";
 
-export interface IEntryTaskResponseData {
+export interface IEntryTask {
   entryTaskId: number;
   bizType: number;
   localCommerce: number;
@@ -14,6 +14,6 @@ export interface IEntryTaskResponseData {
 
 export default {
   get() {
-    return http.get<IEntryTaskResponseData>('/merchant/entry/task');
+    return http.get<IEntryTask>('/merchant/entry/task');
   }
 }
