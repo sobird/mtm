@@ -6,12 +6,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Steps, theme, Button, message, Card } from 'antd';
+import { Form, Steps, theme, Button, message, Card, Upload, Checkbox, Radio } from 'antd';
 import Entry from "@/components/layout/entry";
 import Invitation, { IInvitationRequestData } from '@/services/common/invitation';
-import EntryEnumService from '@/services/merchant/entry/enum';
+import EntryEnumService, { IEntryEnum } from '@/services/merchant/entry/enum';
 
 import './index.scss';
+import { PlusOutlined } from '@ant-design/icons';
 
 
 const steps = [
@@ -37,10 +38,13 @@ function EntryCompany() {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [current, setCurrent] = useState(0);
+  const [option, setOption] = useState<IEntryEnum>();
 
   useEffect(() => {
     EntryEnumService.get().then(res => {
       console.log('res', res)
+
+      setOption(res);
     })
   }, []);
 
@@ -83,9 +87,46 @@ function EntryCompany() {
         <Steps size="small" className='company-steps' current={current} items={items} />
         <div style={contentStyle}>
           <Card title="企业主体信息" bordered={false}>
-            <p>Card content</p>
-            <p>Card content</p>
-            <p>Card content</p>
+            <Form
+              name="basic"
+              onFinish={onFinish}
+              labelCol= {{ span: 4 }}
+              wrapperCol= {{ span: 20 }}
+            >
+              <Form.Item
+                label="公司类型"
+                name="companyType"
+                rules={[{ required: true, message: '公司类型不能为空' }]}
+              >
+                <Radio.Group options={option?.companyTypeList.map(item => ({value: item.type, label: item.name}))} />
+              </Form.Item>
+
+              <Form.Item
+                label="销售渠道"
+                name="sellChanne"
+              >
+                <Checkbox.Group options={option?.sellChannelList.map(item => ({value: item.type, label: item.name}))} />
+              </Form.Item>
+
+              <Form.Item label="营业执照" valuePropName="fileList">
+                <Upload action="/upload.do" listType="picture-card">
+                  <div>
+                    <PlusOutlined style={{fontSize: '30px'}} />
+                    <div>点击上传</div>
+                  </div>
+                </Upload>
+              </Form.Item>
+
+              <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
+                <Checkbox>Remember me</Checkbox>
+              </Form.Item>
+
+              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Button type="primary" htmlType="submit">
+        Submit
+                </Button>
+              </Form.Item>
+            </Form>
           </Card>
         </div>
 
@@ -100,7 +141,7 @@ function EntryCompany() {
           )}
           {current === steps.length - 1 && (
             <Button type="primary" onClick={() => message.success('Processing complete!')}>
-            Done
+            完成
             </Button>
           )}
         </div>

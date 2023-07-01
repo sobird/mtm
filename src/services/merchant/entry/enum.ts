@@ -97,8 +97,8 @@ export interface IEntryEnum {
 }
 
 const EntryEnumService = {
-  get() {
-    return http.get<IEntryEnum>('/merchant/entry/enum');
+  get(entryTaskId: number) {
+    return http.get<IEntryEnum>('/merchant/entry/enum', { entryTaskId });
   }
 }
 
