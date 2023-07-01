@@ -4,12 +4,12 @@
  * sobird<i@sobird.me> at 2023/06/30 20:42:08 created.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Steps, theme, Button, message } from 'antd';
+import { Form, Steps, theme, Button, message, Card } from 'antd';
 import Entry from "@/components/layout/entry";
-
 import Invitation, { IInvitationRequestData } from '@/services/common/invitation';
+import EntryEnumService from '@/services/merchant/entry/enum';
 
 import './index.scss';
 
@@ -38,6 +38,12 @@ function EntryCompany() {
   const [form] = Form.useForm();
   const [current, setCurrent] = useState(0);
 
+  useEffect(() => {
+    EntryEnumService.get().then(res => {
+      console.log('res', res)
+    })
+  }, []);
+
   const onFinish = (values: IInvitationRequestData) => {
     Invitation.post(values).then(() => {
       navigate('/settleinjx/shop');
@@ -64,18 +70,24 @@ function EntryCompany() {
 
   const contentStyle: React.CSSProperties = {
     lineHeight: '260px',
-    textAlign: 'center',
     color: token.colorTextTertiary,
     borderRadius: token.borderRadiusLG,
     borderTop: `1px dashed ${token.colorBorder}`,
     marginTop: 16,
+    padding: `10px 20px`,
   };
 
   return (
     <Entry>
       <div className="entry-company">
         <Steps size="small" className='company-steps' current={current} items={items} />
-        <div style={contentStyle}>{steps[current].content}</div>
+        <div style={contentStyle}>
+          <Card title="企业主体信息" bordered={false}>
+            <p>Card content</p>
+            <p>Card content</p>
+            <p>Card content</p>
+          </Card>
+        </div>
 
         <div className='entry-footer'>
           <Button style={{ margin: '0 20px' }} onClick={() => prev()}>
