@@ -1,0 +1,111 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "entryTaskId": 82025,
+    "bizType": 100,
+    "localCommerce": 0,
+    "auditInfo": {
+      "auditState": 3,
+      "rejectReason": []
+    },
+    "baseInfo": {
+      "poiType": 23,
+      "category": 200010002,
+      "name": "",
+      "logo": "",
+      "state": 2
+    },
+    "customerInfo": {
+      "companyType": 0,
+      "sellChannel": [],
+      "certificateBankOpen": "",
+      "certificateTaxpayer": "",
+      "officeAddress": "",
+      "officePhoto": [],
+      "companyDesc": {
+        "desc": "",
+        "fileList": []
+      },
+      "businessLicenseInfo": {
+        "businessLicense": "",
+        "socialCreditCode": "",
+        "name": "",
+        "address": "",
+        "operatingTimeBegin": "",
+        "operatingTimeEnd": "",
+        "operatingTimeType": 1,
+        "legalPersonName": "",
+        "type": "",
+        "operatingRange": "",
+        "registeredCapital": "",
+        "foundedDate": "",
+        "registerAreaId": 0,
+        "registerAreaName": ""
+      },
+      "legalPersonInfo": null,
+      "enrichedPersonInfo": null,
+      "state": 1
+    },
+    "manageInfo": {
+      "goodsDesc": [],
+      "goodsPriceScope": [],
+      "peopleNumberYy": "",
+      "peopleNumberKf": "",
+      "peopleNumberCp": "",
+      "operateName": "",
+      "operatePhone": "",
+      "verificationCode": "",
+      "planSendCompanyList": [],
+      "baseInfo": {
+        "poiType": 23,
+        "category": 200010002,
+        "name": "",
+        "logo": "",
+        "state": 2
+      },
+      "managerPersonInfo": {
+        "isSameLegalPerson": 2,
+        "cardType": 1001,
+        "idCardPhotos": [],
+        "name": "",
+        "cardNum": "",
+        "validateDateEnd": "",
+        "cardValidateType": 1,
+        "phone": "",
+        "verificationCode": "",
+        "authLetter": "",
+        "address": ""
+      },
+      "state": 1,
+      "sameCityService": 0
+    },
+    "basicInfo": {
+      "productionAvgDay": null,
+      "productionUnit": null,
+      "productionLinePhoto": [],
+      "warehouseMode": 0,
+      "warehouseNumber": 0,
+      "warehouseArea": 0,
+      "warehouseAddress": "",
+      "warehousePhoto": [],
+      "operateMode": 0,
+      "operateScope": 0,
+      "salesOnline": null,
+      "salesAll": null,
+      "sendGoodsMode": 0,
+      "sendGoodsAvgDay": null,
+      "sendGoodsCertificate": [],
+      "alreadyExistPlatform": [],
+      "state": 1,
+      "peopleNumberGc": null,
+      "warehouseManage": null,
+      "sendGoodsAvgDayTotal": null
+    },
+    "qualificationAndBrand": null,
+    "customsRecordInfo": {
+      "customsRecordList": [],
+      "state": 1
+    }
+  }
+}

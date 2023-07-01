@@ -29,3 +29,38 @@ export function getRowSpans (data: any[], key: string) {
   }
   return rowSpans;
 }
+
+export interface IList {
+  id: number;
+  parentId: number;
+  name: string;
+  [key: string]: any;
+}
+
+/**
+ * 将数组转换为树结构
+ * 
+ * @param list 
+ * @returns 
+ */
+export function listToTree(list: IList[]) {
+  const result = [];
+  const map = new Map();
+
+  list.forEach(item => {
+    if (!item.children) {
+      item.children = []
+    }
+    map.set(item.id, item);
+  })
+
+  list.forEach(item => {
+    const parent = map.get(item.parentId);
+    if (parent) {
+      parent.children.push(item);
+    } else {
+      result.push(item);
+    }
+  })
+  return result;
+}

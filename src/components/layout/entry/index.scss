@@ -1,5 +1,6 @@
 .layout-entry {
   overflow: hidden;
+  background-color: #f9f9f9;
 }
 
 .entry-header {
@@ -42,4 +43,19 @@
 
 .entry-body {
   padding-top: 60px;
+}
+
+.entry-footer {
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #ebebeb;
+  box-sizing: border-box;
+  z-index: 999;
 }

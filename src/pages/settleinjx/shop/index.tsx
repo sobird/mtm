@@ -8,11 +8,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Card, Button, Alert, Radio, Cascader, Modal, message, Table } from 'antd';
 import LayoutEntry from "@/components/layout/entry";
-import category, {ICategory} from '@/services/merchant/category';
-import Task, { IEntryTask } from '@/services/merchant/entry/task';
-import Type, { IEntryType } from '@/services/merchant/entry/type';
-import Entry, { IEntryRequestData } from '@/services/merchant/entry';
-import { getRowSpans } from '@/utils';
+import CategoryService, { ICategory } from '@/services/merchant/category';
+import EntryTask, { IEntryTask } from '@/services/merchant/entry/task';
+import EntryType, { IEntryType } from '@/services/merchant/entry/type';
+import Entry, { IEntry } from '@/services/merchant/entry';
+import { getRowSpans, listToTree } from '@/utils';
 
 const { Column } = Table;
 
@@ -21,28 +21,41 @@ import './index.scss';
 function EntryShop() {
   const navigate = useNavigate();
   const [categoryOptions, setCategoryOptions] = useState<ICategory[]>([]);
-  const [type, setType] = useState<IEntryType[]>([]);
-  const [task, setTask] = useState<IEntryTask>();
+  const [entryType, setEntryType] = useState<IEntryType[]>([]);
+  const [entryTask, setEntryTask] = useState<IEntryTask>();
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
-    category().then(res => {
-      setCategoryOptions(res);
-    });
+    Promise.all([CategoryService.get(), EntryTask.get()]).then(([categoryList, entryTask] ) => {
+      const categoryTree = listToTree(categoryList);
+      setCategoryOptions(categoryTree);
 
-    Task.get().then(res => {
-      setTask(res);
-    });
+      Entry.get(entryTask.entryTaskId).then(({baseInfo}) => {
+        const categoryId = baseInfo.category;
+        const categoryValues = [categoryId];
+
+        const categoryItem = categoryList.find(item =>  item.id === baseInfo.category);
+        let categoryParentId = categoryItem.parentId;
+
+        while(categoryParentId) {
+          const categoryItem = categoryList.find(item =>  item.id === categoryParentId);
+          categoryValues.unshift(categoryItem.id);
+          categoryParentId = categoryItem.parentId;
+        }
+
+        form.setFieldsValue({...baseInfo, category: categoryValues, entryTaskId: entryTask.entryTaskId});
+      });
+    })
 
     // 获取店铺类型
-    Type.get().then(res => {
-      setType(res);
+    EntryType.get().then(res => {
+      setEntryType(res);
     });
   }, []);
 
   // 表单提交
-  const onFinish = (values: IEntryRequestData['baseInfo']) => {
+  const onFinish = (values: IEntry['baseInfo']) => {
     const { category, poiType } = values;
 
     if(!category) {
@@ -55,20 +68,22 @@ function EntryShop() {
       return;
     }
     
-    Entry.post({
-      baseInfo: values
+    Entry.patch({
+      baseInfo: {
+        category: category[(category as number[]).length],
+        poiType,
+      }
     }).then(() => {
       navigate('/settleinjx/company');
     });
   };
 
-  const options = type.map(item => {
+  const options = entryType.map(item => {
     return {
       value: item.poiType,
       label: (<><span className='title'>企业{item.poiTypeName}</span><span className='desc'>{item.poiTypeDesc}</span></>)
     }
   });
-
 
   const data = [
     {
@@ -153,7 +168,7 @@ function EntryShop() {
                 <Radio.Group 
                   onChange={(event) => {
                     const { value } = event.target;
-                    const poi = type.find(item => item.poiType == value);
+                    const poi = entryType.find(item => item.poiType == value);
                     
                     Modal.warning({
                       title: `确定更改店铺类型为 ${poi.poiTypeName} ？`,
@@ -168,7 +183,7 @@ function EntryShop() {
           </Card>
         </div>
 
-        <div className="entry-shop-footer">
+        <div className="entry-footer">
           <Button type="primary" onClick={() => {
             form.submit();
           }}>下一步</Button>

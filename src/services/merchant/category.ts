@@ -7,6 +7,9 @@
 import http from "@/utils/http";
 
 
+/**
+ * 主营类目
+ */
 export interface ICategory {
   id: number;
   parentId: number;
@@ -16,30 +19,10 @@ export interface ICategory {
   [key: string]: any;
 }
 
-export default async function category(parentId?: number) {
-  return http.get<ICategory[]>('/merchant/category', { parentId }).then(res => {
-    return toTree(res);
-  });
+const CategoryService = {
+  get(parentId?: number) {
+    return http.get<ICategory[]>('/merchant/category', { parentId });
+  }
 }
 
-export function toTree(list: ICategory[]) {
-  const result = [];
-  const map = new Map();
- 
-  list.forEach(item => {
-    if (!item.children) {
-      item.children = []
-    }
-    map.set(item.id, item);
-  })
- 
-  list.forEach(item => {
-    const parent = map.get(item.parentId);
-    if (parent) {
-      parent.children.push(item);
-    } else {
-      result.push(item);
-    }
-  })
-  return result;
-}
+export default CategoryService;

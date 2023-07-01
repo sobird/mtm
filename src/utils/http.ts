@@ -128,6 +128,15 @@ export class Http {
   post<T>(url: string, data?: object, config?: HttpRequestConfig) {
     return this.service.post(url, data, config) as Promise<T>;
   }
+  put<T>(url: string, data?: object, config?: HttpRequestConfig) {
+    return this.service.put(url, data, config) as Promise<T>;
+  }
+  patch<T>(url: string, data?: object, config?: HttpRequestConfig) {
+    return this.service.patch(url, data, config) as Promise<T>;
+  }
+  delete<T>(url: string, params?: object, config?: HttpRequestConfig) {
+    return this.service.delete(url, { params, ...config }) as Promise<T>;
+  }
 }
 
 export const defaults: CreateAxiosDefaults = {
