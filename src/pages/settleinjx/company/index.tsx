@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Steps, theme, Button, message, Card, Upload, Checkbox, Radio } from 'antd';
+import { Form, Steps, theme, Button, message, Card, Upload, Checkbox, Radio, Space } from 'antd';
 import Entry from "@/components/layout/entry";
 import Invitation, { IInvitationRequestData } from '@/services/common/invitation';
 import EntryEnumService, { IEntryEnum } from '@/services/merchant/entry/enum';
@@ -108,13 +108,19 @@ function EntryCompany() {
                 <Checkbox.Group options={option?.sellChannelList.map(item => ({value: item.type, label: item.name}))} />
               </Form.Item>
 
-              <Form.Item label="营业执照" valuePropName="fileList">
-                <Upload action="/upload.do" listType="picture-card">
-                  <div>
-                    <PlusOutlined style={{fontSize: '30px'}} />
-                    <div>点击上传</div>
-                  </div>
-                </Upload>
+              <Form.Item 
+                label="营业执照"
+                name="businessLicense"
+                rules={[{ required: true, message: '营业执照不能为空' }]}>
+                <Space>
+                  <Upload action="/upload.do" listType="picture-card">
+                    <div>
+                      <PlusOutlined style={{fontSize: '30px'}} />
+                      <div>点击上传</div>
+                    </div>
+                  </Upload>
+                  <div className="form-prompt"><p>1.请上传清晰的多证合一营业执照（统一社会信用代码）</p><p>2.文件最多上传1张，大小不得超过20MB</p><p>3.文件格式支持：JPG/JPEG/PNG/GIF/BPM</p><p>4.企业主体需满足&nbsp;<a class="name-link" target="_blank" href="https://rules-center.meituan.com/rules-detail/602?commonType=2">美团电商平台入驻标准</a>&nbsp;要求</p></div>
+                </Space>
               </Form.Item>
 
               <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>

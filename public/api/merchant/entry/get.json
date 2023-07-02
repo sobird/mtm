@@ -43,8 +43,26 @@
         "registerAreaId": 0,
         "registerAreaName": ""
       },
-      "legalPersonInfo": null,
-      "enrichedPersonInfo": null,
+      "legalPersonInfo": {
+        "address": "",
+        "cardNum": "",
+        "cardType": 1001,
+        "cardValidateType": 2,
+        "idCardPhotos": ["", ""],
+        "name": "",
+        "validateDateEnd": "",
+        "verificationCode": ""
+      },
+      "enrichedPersonInfo": {
+        "address": "",
+        "cardNum": "",
+        "cardType": 1001,
+        "cardValidateType": 2,
+        "idCardPhotos": ["", ""],
+        "name": "",
+        "validateDateEnd": "",
+        "verificationCode": ""
+      },
       "state": 1
     },
     "manageInfo": {

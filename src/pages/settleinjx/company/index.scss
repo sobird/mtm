@@ -2,11 +2,17 @@
   width: 1100px;
   background: #fff;
   box-shadow: 0 0 6px 0 #f3f3f4;
-    border-radius: 2px 0 2px 2px;
-    margin: 20px auto 80px;
-    overflow: hidden;
+  border-radius: 2px 0 2px 2px;
+  margin: 20px auto 80px;
+  overflow: hidden;
 
-    .company-steps {
-      padding: 28px 30px;
-    }
+  .company-steps {
+    padding: 28px 30px;
+  }
+}
+
+.form-prompt {
+  font-size: 12px;
+  color: #999;
+  line-height: 20px;
 }
