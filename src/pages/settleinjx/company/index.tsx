@@ -6,14 +6,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Steps, theme, Button, message, Card, Upload, Checkbox, Radio, Space } from 'antd';
+import { Form, Steps, theme, Button, message, Card, Upload, Checkbox, Radio, Space, Input, DatePicker } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import Entry from "@/components/layout/entry";
 import Invitation, { IInvitationRequestData } from '@/services/common/invitation';
 import EntryEnumService, { IEntryEnum } from '@/services/merchant/entry/enum';
 
-import './index.scss';
-import { PlusOutlined } from '@ant-design/icons';
+const { RangePicker } = DatePicker;
 
+import './index.scss';
 
 const steps = [
   {
@@ -121,6 +122,53 @@ function EntryCompany() {
                   </Upload>
                   <div className="form-prompt"><p>1.请上传清晰的多证合一营业执照（统一社会信用代码）</p><p>2.文件最多上传1张，大小不得超过20MB</p><p>3.文件格式支持：JPG/JPEG/PNG/GIF/BPM</p><p>4.企业主体需满足&nbsp;<a class="name-link" target="_blank" href="https://rules-center.meituan.com/rules-detail/602?commonType=2">美团电商平台入驻标准</a>&nbsp;要求</p></div>
                 </Space>
+
+                <Card title="请核对营业执照信息，若信息不符，请手动修改" className='license-info'>
+                  <Form.Item
+                    label="统一社会信用代码"
+                    name="socialCreditCode"
+                    labelCol= {{ span: 5 }}
+                    wrapperCol= {{ span: 10 }}
+                    rules={[{ required: true, message: '统一社会信用代码不能为空' }]}>
+                    <Input placeholder="请填写营业执照上的注册号" />
+                  </Form.Item>
+                  <Form.Item
+                    label="公司名称"
+                    name="name"
+                    labelCol= {{ span: 5 }}
+                    wrapperCol= {{ span: 10 }}
+                    rules={[{ required: true, message: '公司名称不能为空' }]}>
+                    <Input placeholder="请按照营业执照，填写公司名称" />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="经营地址"
+                    name="address"
+                    labelCol= {{ span: 5 }}
+                    wrapperCol= {{ span: 10 }}
+                    rules={[{ required: true, message: '经营地址不能为空' }]}>
+                    <Input placeholder="请按照营业执照，填写公司地址" />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="营业期限"
+                    name="operatingTimeType"
+                    labelCol= {{ span: 5 }}
+                    wrapperCol= {{ span: 10 }}
+                    rules={[{ required: true, message: '经营地址不能为空' }]}>
+                    <RangePicker />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="注册资金"
+                    name="registeredCapital"
+                    labelCol= {{ span: 5 }}
+                    wrapperCol= {{ span: 10 }}
+                    rules={[{ required: true, message: '注册资金不能为空' }]}>
+                    <Input placeholder="请输入" suffix="万元" />
+                    <span className='input-help'>若注册资金币种不是人民币，可按照当前汇率换算成人民币后进行填写</span>
+                  </Form.Item>
+                </Card>
               </Form.Item>
 
               <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
