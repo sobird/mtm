@@ -9,6 +9,14 @@
   .company-steps {
     padding: 28px 30px;
   }
+
+  .mtm-space {
+    align-items: baseline;
+  }
+
+  .mtm-card {
+    box-shadow: none;
+  }
 }
 
 .form-prompt {
@@ -21,7 +29,7 @@
   }
 }
 
-.license-info {
+.item-card {
   background-color: #f9f9f9;
   border-radius: 2px;
   margin-top: 20px;
@@ -36,7 +44,5 @@
 
 .input-help {
   font-size: 12px;
-  color: rgb(153, 153, 153);
-  width: 372px;
-  display: inline-block;
+  color: #999;
 }
