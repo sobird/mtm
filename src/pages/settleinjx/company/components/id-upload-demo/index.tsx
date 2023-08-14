@@ -1,5 +1,5 @@
-/*
- * index.tsx
+/**
+ * 身份证件上传示例
  * 
  * sobird<i@sobird.me> at 2023/07/12 11:20:46 created.
  */

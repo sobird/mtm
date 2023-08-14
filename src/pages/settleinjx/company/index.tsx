@@ -6,10 +6,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Steps, theme, Button, message } from 'antd';
-import Entry from "@/components/layout/entry";
+import { Form, Steps, theme, Button, message, Result } from 'antd';
+import LayoutEntry from "@/components/layout/entry";
 import EntryEnumService, { IEntryEnum } from '@/services/merchant/entry/enum';
+import EntryService from '@/services/merchant/entry';
+
 import Step1 from './components/step1';
+import Step2 from './components/step2';
 
 import './index.scss';
 
@@ -22,19 +25,19 @@ function EntryCompany() {
   const steps = [
     {
       title: '填写主体信息',
-      content: <Step1 option={option} />,
+      content: <Step1 option={option} form={form} />,
     },
     {
       title: '填写公司概况',
-      content: 'Second-content',
+      content: <Step2 />,
     },
     {
       title: '填写资质信息',
-      content: 'Last-content',
+      content: <Result status="warning" title="填写资质信息" />,
     },
     {
       title: '填写店铺信息',
-      content: 'Last-content',
+      content: <Result status="warning" title="填写店铺信息" />,
     },
   ];
 
@@ -42,13 +45,20 @@ function EntryCompany() {
     EntryEnumService.get().then(res => {
       console.log('res', res)
       setOption(res);
-    })
+    });
+
+    EntryService.get().then(({customerInfo}) => {
+      console.log('customerInfo', customerInfo)
+      form.setFieldsValue({...customerInfo});
+    });
   }, []);
 
   const { token } = theme.useToken();
 
   const next = () => {
     setCurrent(current + 1);
+
+    form.submit();
   };
 
   const prev = () => {
@@ -68,7 +78,7 @@ function EntryCompany() {
   };
 
   return (
-    <Entry>
+    <LayoutEntry>
       <div className="entry-company">
         <Steps size="small" className='company-steps' current={current} items={items} />
         <div style={contentStyle}>{steps[current].content}</div>
@@ -89,7 +99,7 @@ function EntryCompany() {
           )}
         </div>
       </div>
-    </Entry>
+    </LayoutEntry>
   )
 }
 

@@ -1,12 +1,12 @@
 /**
- * index.ts
+ * EntryService
  * 
  * sobird<i@sobird.me> at 2023/06/30 20:24:10 created.
  */
 
 import http from "@/utils/http";
 
-export interface IEntry {
+export interface IEntryService {
   entryTaskId?: number;
   bizType?: number;
   localCommerce?: number;
@@ -125,11 +125,11 @@ export interface IEntry {
 
 export default {
   get(entryTaskId?: number) {
-    return http.get<IEntry>('/merchant/entry', {
+    return http.get<IEntryService>('/merchant/entry', {
       entryTaskId
     });
   },
-  patch(data: IEntry) {
+  patch(data: IEntryService) {
     return http.patch('/merchant/entry', data);
   }
 }

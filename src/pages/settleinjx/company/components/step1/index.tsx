@@ -6,9 +6,8 @@
 
 import React, { PropsWithChildren } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Checkbox, Form, Input, Radio, Space, Upload, DatePicker, Button, Select, Image } from 'antd';
+import { Card, Checkbox, Form, Input, Radio, Space, Upload, DatePicker, Button, Select, Image, FormInstance } from 'antd';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import Invitation, { IInvitationRequestData } from '@/services/common/invitation';
 import { IEntryEnum } from '@/services/merchant/entry/enum';
 
 import IdCardPreview1 from '@/assets/idcard_preview_1.png';
@@ -20,16 +19,36 @@ const { RangePicker } = DatePicker;
 
 interface Step1Props {
   option: IEntryEnum
+  form: FormInstance
 }
 
-const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option}) => {
+const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
   const navigate = useNavigate();
   
   const onFinish = (values: IInvitationRequestData) => {
-    Invitation.post(values).then(() => {
-      navigate('/settleinjx/shop');
-    });
+    console.log('values', values)
   };
+
+  const formItemLayout = {
+    labelCol: { span: 5 },
+    wrapperCol: { span: 12 },
+  };
+
+  const fileList = [
+    {
+      uid: '-1',
+      name: 'image.png',
+      status: 'done',
+      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    },
+  ]
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined style={{fontSize: '30px'}} />
+      <div>点击上传</div>
+    </div>
+  );
 
   return (
     <Form
@@ -38,6 +57,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option}) => {
       labelCol= {{ span: 4 }}
       wrapperCol= {{ span: 20 }}
       size="middle"
+      form={form}
     >
       <Card title="企业主体信息" bordered={false}>
         <Form.Item
@@ -50,7 +70,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option}) => {
 
         <Form.Item
           label="销售渠道"
-          name="sellChanne"
+          name="sellChannel"
         >
           <Checkbox.Group options={option?.sellChannelList.map(item => ({value: item.type, label: item.name}))} />
         </Form.Item>
@@ -60,58 +80,68 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option}) => {
           name="businessLicense"
           rules={[{ required: true, message: '营业执照不能为空' }]}>
           <Space>
-            <Upload action="/upload.do" listType="picture-card">
-              <div>
-                <PlusOutlined style={{fontSize: '30px'}} />
-                <div>点击上传</div>
-              </div>
-            </Upload>
-            <div className="form-prompt"><p>1.请上传清晰的多证合一营业执照（统一社会信用代码）</p><p>2.文件最多上传1张，大小不得超过20MB</p><p>3.文件格式支持：JPG/JPEG/PNG/GIF/BPM</p><p>4.企业主体需满足&nbsp;<a class="name-link" target="_blank" href="https://rules-center.meituan.com/rules-detail/602?commonType=2">美团电商平台入驻标准</a>&nbsp;要求</p></div>
+            <Form.Item 
+              name={["businessLicenseInfo", "upload"]}
+              // valuePropName="fileList"
+              noStyle>
+              <Upload action="/api/upload/post.json" listType="picture-card">
+                {fileList?.length < 1 ? null : uploadButton}
+              </Upload>
+            </Form.Item>
+
+            
+            <div className="form-prompt"><p>1.请上传清晰的多证合一营业执照（统一社会信用代码）</p><p>2.文件最多上传1张，大小不得超过20MB</p><p>3.文件格式支持：JPG/JPEG/PNG/GIF/BPM</p><p>4.企业主体需满足&nbsp;<a className="name-link" target="_blank" href="https://rules-center.meituan.com/rules-detail/602?commonType=2">美团电商平台入驻标准</a>&nbsp;要求</p></div>
           </Space>
 
           <Card title="请核对营业执照信息，若信息不符，请手动修改" className='item-card'>
             <Form.Item
+              {...formItemLayout}
               label="统一社会信用代码"
-              name="socialCreditCode"
-              labelCol= {{ span: 5 }}
-              wrapperCol= {{ span: 12 }}
+              name={["businessLicenseInfo", "socialCreditCode"]}
               rules={[{ required: true, message: '统一社会信用代码不能为空' }]}>
               <Input placeholder="请填写营业执照上的注册号" />
             </Form.Item>
             <Form.Item
+              {...formItemLayout}
               label="公司名称"
-              name="name"
-              labelCol= {{ span: 5 }}
-              wrapperCol= {{ span: 12 }}
+              name={["businessLicenseInfo", "name"]}
               rules={[{ required: true, message: '公司名称不能为空' }]}>
               <Input placeholder="请按照营业执照，填写公司名称" />
             </Form.Item>
 
             <Form.Item
+              {...formItemLayout}
               label="经营地址"
-              name="address"
-              labelCol= {{ span: 5 }}
-              wrapperCol= {{ span: 12 }}
+              name={["businessLicenseInfo", "address"]}
               rules={[{ required: true, message: '经营地址不能为空' }]}>
               <Input placeholder="请按照营业执照，填写公司地址" />
             </Form.Item>
 
             <Form.Item
+              {...formItemLayout}
+              name={["businessLicenseInfo", "date"]}
               label="营业期限"
-              name="operatingTimeType"
-              labelCol= {{ span: 5 }}
-              wrapperCol= {{ span: 12 }}
+              wrapperCol= {{ span: 16 }}
               rules={[{ required: true, message: '经营地址不能为空' }]}>
-              <RangePicker style={{width: '100%'}} />
+              <RangePicker />
+
+              <Form.Item 
+                name={["businessLicenseInfo", "operatingTimeType"]}
+                valuePropName="value"
+                noStyle>
+                <Checkbox style={{marginLeft: '10px'}}>长期有效</Checkbox>
+              </Form.Item>
             </Form.Item>
 
             <Form.Item
-              label="注册资金"
-              name="registeredCapital"
-              labelCol= {{ span: 5 }}
-              wrapperCol= {{ span: 12 }}
-              rules={[{ required: true, message: '注册资金不能为空' }]}>
-              <Input placeholder="请输入" suffix="万元" />
+              {...formItemLayout}
+              label="注册资金">
+              <Form.Item 
+                name={["businessLicenseInfo", "registeredCapital"]}
+                noStyle 
+                rules={[{ required: true, message: '注册资金不能为空' }]}>
+                <Input placeholder="请输入" suffix="万元" />
+              </Form.Item>
               <span className='input-help'>若注册资金币种不是人民币，可按照当前汇率换算成人民币后进行填写</span>
             </Form.Item>
           </Card>
@@ -221,28 +251,25 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option}) => {
 
           <Card title="请核对身份信息，若信息不符合，可手动修改" className='item-card'>
             <Form.Item
+              {...formItemLayout}
               label="姓名"
-              name="socialCreditCode"
-              labelCol= {{ span: 5 }}
-              wrapperCol= {{ span: 12 }}
+              name={["legalPersonInfo", "name"]}
               rules={[{ required: true, message: '法人姓名不能为空' }]}>
               <Input placeholder="请保持与身份证件上的姓名一致" />
             </Form.Item>
             <Form.Item
+              {...formItemLayout}
               label="证件号码"
               name="name"
-              labelCol= {{ span: 5 }}
-              wrapperCol= {{ span: 12 }}
               rules={[{ required: true, message: '证件号码不能为空' }]}>
               <Input placeholder="请保持与身份证件上的证件号一致" />
             </Form.Item>
 
 
             <Form.Item
+              {...formItemLayout}
               label="有效截止日"
               name="cardValidateType"
-              labelCol= {{ span: 5 }}
-              wrapperCol= {{ span: 12 }}
               rules={[{ required: true, message: '经营地址不能为空' }]}>
               <RangePicker />
             </Form.Item>
