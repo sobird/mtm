@@ -10,9 +10,13 @@ import { Card, Checkbox, Form, Input, Radio, Space, Upload, DatePicker, Button, 
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { IEntryEnum } from '@/services/merchant/entry/enum';
 
+import OcrUpload from '@/components/ocr-upload';
+
 import IdCardPreview1 from '@/assets/idcard_preview_1.png';
 import IdCardPreview2 from '@/assets/idcard_preview_2.png';
 import IdUploadDemo from '../id-upload-demo';
+
+
 
 
 const { RangePicker } = DatePicker;
@@ -84,6 +88,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
               name={["businessLicenseInfo", "upload"]}
               // valuePropName="fileList"
               noStyle>
+              <OcrUpload />
               <Upload action="/api/upload/post.json" listType="picture-card">
                 {fileList?.length < 1 ? null : uploadButton}
               </Upload>

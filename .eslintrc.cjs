@@ -14,6 +14,9 @@ module.exports = {
   plugins: ['react-refresh'],
   rules: {
     // 替代基础的 indent 规则
+    '@typescript-eslint/no-explicit-any': 0,
+
+    // 替代基础的 indent 规则
     '@typescript-eslint/indent': ['error', 2],
     // 需要一致的成员声明顺序
     '@typescript-eslint/member-ordering': 0,
