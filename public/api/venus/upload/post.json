@@ -2,11 +2,11 @@
   "code": 0,
   "msg": "ok",
   "data": {
-      "rqst_file_md5": "ac7b8e205b72bf51bdb5c4cc350c368e",
-      "originalLink": "http://p0.meituan.net/mtm/ac7b8e205b72bf51bdb5c4cc350c368e741073.png",
-      "fileKey": "/mtm/ac7b8e205b72bf51bdb5c4cc350c368e741073.png",
-      "originalFileName": "banner.png",
-      "originalFileSize": 741073,
+      "md5": "ac7b8e205b72bf51bdb5c4cc350c368e",
+      "url": "http://p0.meituan.net/mtm/ac7b8e205b72bf51bdb5c4cc350c368e741073.png",
+      "key": "/mtm/ac7b8e205b72bf51bdb5c4cc350c368e741073.png",
+      "name": "banner.png",
+      "size": 741073,
       "height": 454,
       "width": 2880,
       "format": "png"
