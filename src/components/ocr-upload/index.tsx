@@ -9,9 +9,13 @@ import { Upload } from 'antd';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { PlusOutlined } from '@ant-design/icons';
 import VenusServices from '@/services/common/venus';
+import OcrService from '@/services/common/ocr';
 
 interface UploadOcrProps {
   type?: 1 | 2 | 3;
+  value?: string;
+  onChange?: (value: string) => void;
+  onUploadSuccess?: (value: any) => void;
 }
 
 const uploadButton = (
@@ -21,29 +25,39 @@ const uploadButton = (
   </div>
 );
 
-const OcrUpload: React.FC<PropsWithChildren<UploadOcrProps>> = ({ type = 1, children, ...props}) => {
-  const [fileList, setFileList] = useState<UploadFile[]>([
-    {
-      uid: '-1',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-  ]);
+const OcrUpload: React.FC<PropsWithChildren<UploadOcrProps>> = ({ value, onChange, onUploadSuccess, type = 0, children, ...props}) => {
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+  const onUploadChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
+    console.log('1122', newFileList)
   };
+
+  console.log('value', value)
 
   return (
     <Upload 
       listType="picture-card" 
       fileList={fileList}
-      onChange={onChange}
-      customRequest={(options) => {
-        console.log('options', options)
+      onChange={onUploadChange}
+      customRequest={({ file, onProgress, onSuccess, onError}) => {
+        VenusServices.upload(file as File, (percent) => {
+          onProgress({ percent });
+        }).then(res => {
+          onSuccess(res);
 
-        VenusServices.upload(options.file);
+          const { url } = res;
+          onChange(url);
+          console.log('url', url)
+          
+          // 图片文字识别
+          OcrService.get({
+            type,
+            url: url,
+          }).then(res => {
+            onUploadSuccess?.(res[type]);
+          })
+        }).catch(onError)
       }}
       {...props}>
       {fileList?.length > 0 ? null : children || uploadButton}

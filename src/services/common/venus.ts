@@ -4,8 +4,8 @@
  * sobird<i@sobird.me> at 2023/08/16 0:45:04 created.
  */
 
-import http from "@/utils/http";
 import { nanoid } from "nanoid";
+import http from "@/utils/http";
 
 interface IVenusSignature {
   expire: number;
@@ -28,7 +28,7 @@ export function signature() {
   return http.get<IVenusSignature>('/venus/sign');
 }
 
-export async function upload(file: File, progress: (p: number) => void) {
+export async function upload(file: File, progress?: (p: number) => void) {
   const { token, bucket} = await signature();
 
   const key = `${bucket}${nanoid()}-${file.name}`;
@@ -46,9 +46,11 @@ export async function upload(file: File, progress: (p: number) => void) {
     data: formData,
     // responseType: 'blob',
     onUploadProgress(progressEvent) {
-      console.log('progressEvent', progressEvent)
-      progress && progress(Math.floor(progressEvent.loaded / progressEvent.total * 100))
+      progress?.(Math.floor(progressEvent.loaded / progressEvent.total * 100))
     }
+  }).then(res => {
+    progress(100);
+    return res as IVenusUpload;
   });
 }
 

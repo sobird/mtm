@@ -85,16 +85,12 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
           rules={[{ required: true, message: '营业执照不能为空' }]}>
           <Space>
             <Form.Item 
-              name={["businessLicenseInfo", "upload"]}
-              // valuePropName="fileList"
+              name={["businessLicense", "url"]}
               noStyle>
-              <OcrUpload />
-              <Upload action="/api/upload/post.json" listType="picture-card">
-                {fileList?.length < 1 ? null : uploadButton}
-              </Upload>
+              <OcrUpload onUploadSuccess={res => {
+                console.log('res', res)
+              }} />
             </Form.Item>
-
-            
             <div className="form-prompt"><p>1.请上传清晰的多证合一营业执照（统一社会信用代码）</p><p>2.文件最多上传1张，大小不得超过20MB</p><p>3.文件格式支持：JPG/JPEG/PNG/GIF/BPM</p><p>4.企业主体需满足&nbsp;<a className="name-link" target="_blank" href="https://rules-center.meituan.com/rules-detail/602?commonType=2">美团电商平台入驻标准</a>&nbsp;要求</p></div>
           </Space>
 
@@ -102,14 +98,14 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
             <Form.Item
               {...formItemLayout}
               label="统一社会信用代码"
-              name={["businessLicenseInfo", "socialCreditCode"]}
+              name={["businessLicense", "socialCreditCode"]}
               rules={[{ required: true, message: '统一社会信用代码不能为空' }]}>
               <Input placeholder="请填写营业执照上的注册号" />
             </Form.Item>
             <Form.Item
               {...formItemLayout}
               label="公司名称"
-              name={["businessLicenseInfo", "name"]}
+              name={["businessLicense", "name"]}
               rules={[{ required: true, message: '公司名称不能为空' }]}>
               <Input placeholder="请按照营业执照，填写公司名称" />
             </Form.Item>
@@ -117,21 +113,21 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
             <Form.Item
               {...formItemLayout}
               label="经营地址"
-              name={["businessLicenseInfo", "address"]}
+              name={["businessLicense", "address"]}
               rules={[{ required: true, message: '经营地址不能为空' }]}>
               <Input placeholder="请按照营业执照，填写公司地址" />
             </Form.Item>
 
             <Form.Item
               {...formItemLayout}
-              name={["businessLicenseInfo", "date"]}
+              name={["businessLicense", "date"]}
               label="营业期限"
               wrapperCol= {{ span: 16 }}
               rules={[{ required: true, message: '经营地址不能为空' }]}>
               <RangePicker />
 
               <Form.Item 
-                name={["businessLicenseInfo", "operatingTimeType"]}
+                name={["businessLicense", "operatingTimeType"]}
                 valuePropName="value"
                 noStyle>
                 <Checkbox style={{marginLeft: '10px'}}>长期有效</Checkbox>
@@ -142,7 +138,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
               {...formItemLayout}
               label="注册资金">
               <Form.Item 
-                name={["businessLicenseInfo", "registeredCapital"]}
+                name={["businessLicense", "registeredCapital"]}
                 noStyle 
                 rules={[{ required: true, message: '注册资金不能为空' }]}>
                 <Input placeholder="请输入" suffix="万元" />

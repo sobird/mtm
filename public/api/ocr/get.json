@@ -1,8 +1,8 @@
 {
   "code": 0,
   "msg": "success",
-  "data": {
-    "cardInfo": {
+  "data": [
+    {
       "birthday": "1654年12月20日",
       "gender": "男",
       "name": "韦小宝",
@@ -20,7 +20,7 @@
       "setAddress": true,
       "setName": true
     },
-    "bzLicenseInfo": {
+    {
       "legalPerson": "李华容",
       "name": "北京永责托育服务有限公司",
       "address": "北京市朝阳区师家坟村156号3幢1层06号",
@@ -52,6 +52,6 @@
       "setName": true,
       "setAddress": true
     },
-    "brandLicenseInfo": null
-  }
+    null
+  ]
 }
