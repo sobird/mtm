@@ -82,10 +82,11 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
         <Form.Item 
           label="营业执照"
           name="businessLicense"
-          rules={[{ required: true, message: '营业执照不能为空' }]}>
+        >
           <Space>
             <Form.Item 
-              name={["businessLicense", "url"]}
+              name={["company", "businessLicense", "url"]}
+              rules={[{ required: true, message: '营业执照不能为空' }]}
               noStyle>
               <OcrUpload type={1} onUploadSuccess={res => {
                 console.log('res', res)

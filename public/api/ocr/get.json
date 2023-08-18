@@ -10,15 +10,7 @@
       "nation": "汉",
       "address": "北京市东城区景山前街4号紫禁城敬事房",
       "validdate": "",
-      "policeSt": "",
-      "setNation": true,
-      "setValiddate": true,
-      "setPoliceSt": true,
-      "setBirthday": true,
-      "setGender": true,
-      "setCitizenId": true,
-      "setAddress": true,
-      "setName": true
+      "policeSt": ""
     },
     {
       "legalPerson": "李华容",
@@ -35,22 +27,7 @@
       "effectiveDate": 1535472000000,
       "expiredDate": -1,
       "establishedDate": 1535472000000,
-      "approvedDate": 1643385600000,
-      "setType": true,
-      "setScope": true,
-      "setLegalPerson": true,
-      "setNumber": false,
-      "setDate": true,
-      "setFoundtime": true,
-      "setTerm": true,
-      "setExpiredDate": false,
-      "setForm": true,
-      "setRegisteCaptial": true,
-      "setEffectiveDate": false,
-      "setEstablishedDate": true,
-      "setApprovedDate": false,
-      "setName": true,
-      "setAddress": true
+      "approvedDate": 1643385600000
     },
     null
   ]
