@@ -66,7 +66,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
       <Card title="企业主体信息" bordered={false}>
         <Form.Item
           label="公司类型"
-          name="companyType"
+          name={["company", "companyType"]}
           rules={[{ required: true, message: '公司类型不能为空' }]}
         >
           <Radio.Group options={option?.companyTypeList.map(item => ({value: item.type, label: item.name}))} />
@@ -74,9 +74,9 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
 
         <Form.Item
           label="销售渠道"
-          name="sellChannel"
+          name={["company", "distChannel"]}
         >
-          <Checkbox.Group options={option?.sellChannelList.map(item => ({value: item.type, label: item.name}))} />
+          <Checkbox.Group options={option?.distChannelList.map(item => ({value: item.type, label: item.name}))} />
         </Form.Item>
 
         <Form.Item 
@@ -87,7 +87,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
             <Form.Item 
               name={["businessLicense", "url"]}
               noStyle>
-              <OcrUpload onUploadSuccess={res => {
+              <OcrUpload type={1} onUploadSuccess={res => {
                 console.log('res', res)
               }} />
             </Form.Item>
@@ -98,14 +98,14 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
             <Form.Item
               {...formItemLayout}
               label="统一社会信用代码"
-              name={["businessLicense", "socialCreditCode"]}
+              name={["company", "businessLicense", "socialCreditCode"]}
               rules={[{ required: true, message: '统一社会信用代码不能为空' }]}>
               <Input placeholder="请填写营业执照上的注册号" />
             </Form.Item>
             <Form.Item
               {...formItemLayout}
               label="公司名称"
-              name={["businessLicense", "name"]}
+              name={["company", "businessLicense", "name"]}
               rules={[{ required: true, message: '公司名称不能为空' }]}>
               <Input placeholder="请按照营业执照，填写公司名称" />
             </Form.Item>
@@ -113,14 +113,14 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
             <Form.Item
               {...formItemLayout}
               label="经营地址"
-              name={["businessLicense", "address"]}
+              name={["company", "businessLicense", "address"]}
               rules={[{ required: true, message: '经营地址不能为空' }]}>
               <Input placeholder="请按照营业执照，填写公司地址" />
             </Form.Item>
 
             <Form.Item
               {...formItemLayout}
-              name={["businessLicense", "date"]}
+              name={["company", "businessLicense", "date"]}
               label="营业期限"
               wrapperCol= {{ span: 16 }}
               rules={[{ required: true, message: '经营地址不能为空' }]}>
@@ -138,7 +138,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
               {...formItemLayout}
               label="注册资金">
               <Form.Item 
-                name={["businessLicense", "registeredCapital"]}
+                name={["company", "businessLicense", "registeredCapital"]}
                 noStyle 
                 rules={[{ required: true, message: '注册资金不能为空' }]}>
                 <Input placeholder="请输入" suffix="万元" />
@@ -150,7 +150,8 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
 
         <Form.Item 
           label="一般纳税人资格证电子版"
-          name="certificateTaxpayer">
+          name={["company", "certificateTaxpayer"]}
+        >
           <Space>
             <Upload action="/upload.do" listType="picture-card">
               <div>
@@ -164,7 +165,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
 
         <Form.Item 
           label="银行开户证明"
-          name="certificateBankOpen"
+          name={["company", "certificateBankOpen"]}
           rules={[{ required: true, message: '银行开户证明不能为空' }]}>
           <Space>
             <Upload action="/upload.do" listType="picture-card">
@@ -179,7 +180,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
 
         <Form.Item
           label="办公地址"
-          name="officeAddress"
+          name={["company", "officeAddress"]}
           wrapperCol= {{ span: 12 }}
           rules={[{ required: true, message: '办公地址不能为空' }]}>
           <Input placeholder="请填写真实的办公地址" />
@@ -187,18 +188,26 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
 
         <Form.Item
           label="公司简介"
-          name="companyDesc"
-          wrapperCol= {{ span: 12 }}
-          rules={[{ required: true, message: '公司简介不能为空' }]}>
-          <Input.TextArea 
-            showCount
-            maxLength={1000}
-            autoSize={{minRows: 5}}
-            placeholder="可以从品牌定位、品牌产品线、市场占有率或年销量、品牌当下布局、品牌未来规划等方面介绍，最多不得超过1000字" />
-
-          <Upload action="/upload.do">
-            <Button type="dashed" style={{marginTop: '20px', marginBottom: '10px'}} icon={<UploadOutlined />}> 上传文件</Button>
-          </Upload>
+          wrapperCol= {{ span: 12 }}>
+          <Form.Item
+            name={["company", "companyDesc"]}
+            noStyle
+            rules={[{ required: true, message: '公司简介不能为空' }]}
+          >
+            <Input.TextArea 
+              showCount
+              maxLength={1000}
+              autoSize={{minRows: 5}}
+              placeholder="可以从品牌定位、品牌产品线、市场占有率或年销量、品牌当下布局、品牌未来规划等方面介绍，最多不得超过1000字" />
+          </Form.Item>
+          <Form.Item
+            name={["company", "companyFile"]}
+            noStyle
+          >
+            <Upload action="/upload.do">
+              <Button type="dashed" style={{marginTop: '20px', marginBottom: '10px'}} icon={<UploadOutlined />}> 上传文件</Button>
+            </Upload>
+          </Form.Item>
 
           <div className="form-prompt">
             <p>1.支持上传相关公司介绍等相关资料附件</p>
@@ -212,7 +221,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
 
         <Form.Item
           label="证件类型"
-          name="cardType"
+          name={["company", "legalPerson", "idType"]}
           wrapperCol= {{ span: 12 }}
           rules={[{ required: true, message: '法人手机号不能为空' }]}>
           <Select
@@ -254,14 +263,14 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
             <Form.Item
               {...formItemLayout}
               label="姓名"
-              name={["legalPersonInfo", "name"]}
+              name={["company", "legalPerson", "name"]}
               rules={[{ required: true, message: '法人姓名不能为空' }]}>
               <Input placeholder="请保持与身份证件上的姓名一致" />
             </Form.Item>
             <Form.Item
               {...formItemLayout}
               label="证件号码"
-              name="name"
+              name={["company", "legalPerson", "idNum"]}
               rules={[{ required: true, message: '证件号码不能为空' }]}>
               <Input placeholder="请保持与身份证件上的证件号一致" />
             </Form.Item>
@@ -279,7 +288,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
 
         <Form.Item
           label="法人手机号"
-          name="phone"
+          name={["company", "legalPerson", "mobile"]}
           wrapperCol= {{ span: 12 }}
           rules={[{ required: true, message: '法人手机号不能为空' }]}>
           <Input placeholder="请填写真实的办公地址" showCount maxLength={11} />

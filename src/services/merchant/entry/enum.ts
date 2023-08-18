@@ -16,7 +16,7 @@ interface IOption {
 
 export interface IEntryEnum {
   companyTypeList: IOption[];
-  sellChannelList: IOption[];
+  distChannelList: IOption[];
   authLevelList: IOption[];
   externalUrlList: IOption[];
   goodsPriceScopeList: IOption[];
@@ -36,7 +36,7 @@ export interface IEntryEnum {
   warehouseManageList: IOption[];
 
   companyTypeListIterator: IOption[];
-  sellChannelListIterator: IOption[];
+  distChannelListIterator: IOption[];
   authLevelListIterator: IOption[];
   externalUrlListIterator: IOption[];
   goodsPriceScopeListIterator: IOption[];
@@ -56,7 +56,7 @@ export interface IEntryEnum {
   warehouseManageListIterator: IOption[];
 
   companyTypeListSize: number;
-  sellChannelListSize: number;
+  distChannelListSize: number;
   authLevelListSize: number;
   externalUrlListSize: number;
   goodsPriceScopeListSize: number;

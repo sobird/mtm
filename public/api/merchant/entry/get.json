@@ -5,28 +5,26 @@
     "entryTaskId": 82025,
     "bizType": 100,
     "localCommerce": 0,
-    "auditInfo": {
+    "audit": {
       "auditState": 3,
       "rejectReason": []
     },
-    "baseInfo": {
+    "base": {
       "poiType": 23,
       "category": 200010002,
       "name": "",
       "logo": "",
       "state": 2
     },
-    "customer": {
+    "company": {
       "companyType": 1,
-      "sellChannel": [1],
-      "certificateBankOpen": "https://mtm.sobird.me/mtm/certificate_bank.jpeg",
+      "distChannel": [1],
+      "certificateBankopen": "https://mtm.sobird.me/mtm/certificate_bank.jpeg",
       "certificateTaxpayer": "",
       "officeAddress": "北京市朝阳区师家坟村156号3幢1层06号",
       "officePhoto": [],
-      "companyDesc": {
-        "desc": "",
-        "fileList": []
-      },
+      "companyDesc": "公司简介",
+      "companyFile": "",
       "businessLicense": {
         "url": "https://mtm.sobird.me/mtm/business_license.jpeg",
         "socialCreditCode": "91110108MA01EBFH9B",
@@ -41,31 +39,30 @@
         "registeredCapital": "1000",
         "foundedDate": "2018-08-29",
         "registerAreaId": 0,
-        "registerAreaName": ""
+        "registerAreaName": "",
+        "term": [1, "2018-08-29", "2050-08-29"]
       },
       "legalPerson": {
         "address": "北京市东城区景山前街4号紫禁城敬事房",
         "idNum": "11204416541220243X",
         "idType": 1001,
-        "idValidateType": 2,
-        "idCardPhotos": ["https://mtm.sobird.me/mtm/identity_card_1.jpeg", "https://mtm.sobird.me/mtm/identity_card_2.jpeg"],
+        "mobile": 15321871566,
+        "idPhotos": ["https://mtm.sobird.me/mtm/identity_card_1.jpeg", "https://mtm.sobird.me/mtm/identity_card_2.jpeg"],
         "name": "韦小宝",
-        "validateDateEnd": "2023-07-12",
-        "verificationCode": ""
+        "term": [1, "2028-08-29"]
       },
       "enrichedPerson": {
         "address": "北京市东城区景山前街4号紫禁城敬事房",
-        "cardNum": "11204416541220243X",
-        "cardType": 1001,
-        "cardValidateType": 2,
-        "idCardPhotos": ["https://mtm.sobird.me/mtm/identity_card_1.jpeg", "https://mtm.sobird.me/mtm/identity_card_2.jpeg"],
+        "idNum": "11204416541220243X",
+        "idType": 1001,
+        "mobile": 15321871566,
+        "idPhotos": ["https://mtm.sobird.me/mtm/identity_card_1.jpeg", "https://mtm.sobird.me/mtm/identity_card_2.jpeg"],
         "name": "韦小宝",
-        "validateDateEnd": "2023-07-12",
-        "verificationCode": ""
+        "term": [1, "2028-08-29"]
       },
       "state": 1
     },
-    "manageInfo": {
+    "manage": {
       "goodsDesc": [],
       "goodsPriceScope": [],
       "peopleNumberYy": "",
@@ -75,14 +72,14 @@
       "operatePhone": "",
       "verificationCode": "",
       "planSendCompanyList": [],
-      "baseInfo": {
+      "base": {
         "poiType": 23,
         "category": 200010002,
         "name": "",
         "logo": "",
         "state": 2
       },
-      "managerPersonInfo": {
+      "person": {
         "isSameLegalPerson": 2,
         "cardType": 1001,
         "idCardPhotos": [],
@@ -98,7 +95,7 @@
       "state": 1,
       "sameCityService": 0
     },
-    "basicInfo": {
+    "basic": {
       "productionAvgDay": null,
       "productionUnit": null,
       "productionLinePhoto": [],
@@ -121,7 +118,7 @@
       "sendGoodsAvgDayTotal": null
     },
     "qualificationAndBrand": null,
-    "customsRecordInfo": {
+    "customsRecord": {
       "customsRecordList": [],
       "state": 1
     }

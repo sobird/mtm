@@ -47,9 +47,8 @@ function EntryCompany() {
       setOption(res);
     });
 
-    EntryService.get().then(({customerInfo}) => {
-      console.log('customerInfo', customerInfo)
-      form.setFieldsValue({...customerInfo});
+    EntryService.get().then(({ company }) => {
+      form.setFieldValue('company', company);
     });
   }, []);
 

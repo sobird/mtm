@@ -46,7 +46,7 @@
         "setName": true
       }
     ],
-    "sellChannelList": [
+    "distChannelList": [
       {
         "type": 1,
         "name": "百货商场",
@@ -2948,8 +2948,8 @@
       }
     ],
     "setCompanyTypeList": true,
-    "sellChannelListSize": 5,
-    "sellChannelListIterator": [
+    "distChannelListSize": 5,
+    "distChannelListIterator": [
       {
         "type": 1,
         "name": "百货商场",

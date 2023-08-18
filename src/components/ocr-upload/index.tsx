@@ -30,10 +30,7 @@ const OcrUpload: React.FC<PropsWithChildren<UploadOcrProps>> = ({ value, onChang
 
   const onUploadChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
-    console.log('1122', newFileList)
   };
-
-  console.log('value', value)
 
   return (
     <Upload 

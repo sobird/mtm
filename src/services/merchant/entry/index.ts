@@ -10,11 +10,11 @@ export interface IEntryService {
   entryTaskId?: number;
   bizType?: number;
   localCommerce?: number;
-  auditInfo?: {
+  audit?: {
     auditState: number;
     rejectReason: string[];
   };
-  baseInfo?: {
+  base?: {
     category: number | number[];
     poiType: number;
     name?: string;
@@ -24,20 +24,18 @@ export interface IEntryService {
   /**
    * 客户信息
    */
-  customerInfo?: {
+  company?: {
     // 公司类型
     companyType: number;
     // 销售渠道
-    sellChannel: number[];
+    distChannel: number[];
     certificateBankOpen: string;
     certificateTaxpayer: string;
     officeAddress: string;
     officePhoto: string[];
-    companyDesc: {
-      desc: string;
-      fileList: string[];
-    },
-    businessLicenseInfo: {
+    companyDesc: string;
+    companyFile: string[]
+    businessLicense: {
       businessLicense: string;
       socialCreditCode: string;
       name: string;
@@ -52,16 +50,15 @@ export interface IEntryService {
       foundedDate: string;
       registerAreaId: number;
       registerAreaName: string;
-    },
+    };
     /**
      * 法人信息
      */
-    legalPersonInfo: object;
-    enrichedPersonInfo: object;
+    legalPerson: object;
+    enrichedPerson: object;
     state: number;
-  };
-
-  manageInfo?: {
+  }
+  manage?: {
     goodsDesc: string[];
     goodsPriceScope: string[];
     peopleNumberYy: string;
@@ -71,14 +68,14 @@ export interface IEntryService {
     operatePhone: string;
     verificationCode: string;
     planSendCompanyList: string[];
-    baseInfo: {
+    base: {
       poiType: number;
       category: number;
       name: string;
       logo: string;
       state: number;
     },
-    managerPersonInfo: {
+    person: {
       isSameLegalPerson: number;
       cardType: number;
       idCardPhotos: string[];
@@ -94,7 +91,7 @@ export interface IEntryService {
     state: number;
     sameCityService: number;
   };
-  basicInfo?: {
+  basic?: {
     productionAvgDay: object;
     productionUnit: object;
     productionLinePhoto: string[];
@@ -117,7 +114,7 @@ export interface IEntryService {
     sendGoodsAvgDayTotal: object;
   };
   qualificationAndBrand?: object;
-  customsRecordInfo?: {
+  customsRecord?: {
     customsRecordList: string[];
     state: number;
   }
