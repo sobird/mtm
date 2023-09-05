@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/07/20 12:23:22 created.
  */
 
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Checkbox, Form, Input, Radio, Space, Upload, DatePicker, Button, Select, Image, FormInstance } from 'antd';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
@@ -27,26 +27,18 @@ interface Step1Props {
   form: FormInstance
 }
 
+const formItemLayout = {
+  labelCol: { span: 5 },
+  wrapperCol: { span: 12 },
+};
+
 const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
+  const [license, setLicense] = useState(false);
   const navigate = useNavigate();
   
   const onFinish = (values: IInvitationRequestData) => {
     console.log('values', values)
   };
-
-  const formItemLayout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 12 },
-  };
-
-  const fileList = [
-    {
-      uid: '-1',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-  ]
 
   const socialCreditCode = form.getFieldValue(["company", "businessLicense", "socialCreditCode"]);
 
@@ -91,18 +83,21 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
               rules={[{ required: true, message: '营业执照不能为空' }]}
               noStyle>
               <OcrUpload type={1} onUploadSuccess={res => {
-                console.log('res', res)
                 form.setFieldValue(["company", "businessLicense", "socialCreditCode"], res.number);
                 form.setFieldValue(["company", "businessLicense", "name"], res.name);
                 form.setFieldValue(["company", "businessLicense", "address"], res.address);
                 form.setFieldValue(["company", "businessLicense", "term"], res.term);
                 form.setFieldValue(["company", "businessLicense", "capital"], res.capital);
+
+                if(res.number) {
+                  setLicense(true);
+                }
               }} />
             </Form.Item>
             <div className="form-prompt"><p>1.请上传清晰的多证合一营业执照（统一社会信用代码）</p><p>2.文件最多上传1张，大小不得超过20MB</p><p>3.文件格式支持：JPG/JPEG/PNG/GIF/BPM</p><p>4.企业主体需满足&nbsp;<a className="name-link" target="_blank" href="https://rules-center.meituan.com/rules-detail/602?commonType=2">美团电商平台入驻标准</a>&nbsp;要求</p></div>
           </Space>
 
-          {socialCreditCode && 
+          {(socialCreditCode || license) && 
           <Card title="请核对营业执照信息，若信息不符，请手动修改" className='item-card'>
             <Form.Item
               {...formItemLayout}
