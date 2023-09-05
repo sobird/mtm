@@ -23,16 +23,16 @@ interface TermPickProps {
 }
 
 const TermPick: React.FC<TermPickProps> = ({ value = [false], onChange, format = 'YYYY-MM-DD', rangePicker, ...DatePickerProps }) => {
-  const [checked, setChecked] = useState(false);
-  const [picker, setPicker] = useState([]);
   const [checkedValue, ...pickerValue] = value;
+  const [checked, setChecked] = useState(checkedValue);
+  const [picker, setPicker] = useState(pickerValue.map(item => dayjs(item)));
 
   const onCheckboxChange = (e: CheckboxChangeEvent) => {
     const newValue = e.target.checked;
     setChecked(newValue);
 
     value[0] = newValue;
-    onChange?.(value);
+    onChange?.([...value]);
   };
 
   const onDatePickerChange = (e) => {
@@ -41,16 +41,16 @@ const TermPick: React.FC<TermPickProps> = ({ value = [false], onChange, format =
     }
     setPicker(e);
 
-    e.forEach((item: Dayjs, index) => {
-      value[index+1] = format ? item.format(format) : item;
+    e?.forEach((item: Dayjs, index) => {
+      value[index+1] = format ? item?.format(format) : item;
     });
     onChange?.(value);
   }
 
   return (
     <>
-      {rangePicker ? <RangePicker disabled={checked} value={pickerValue.map(item => dayjs(item)) || picker} format={format} {...DatePickerProps} onChange={onDatePickerChange}/> : <DatePicker disabled={checked} format={format} {...DatePickerProps} onChange={onDatePickerChange}/>}
-      <Checkbox checked={ checkedValue || checked } onChange={onCheckboxChange} style={{marginLeft: '10px'}}>长期有效</Checkbox>
+      {rangePicker ? <RangePicker disabled={checked} value={picker} format={format} {...DatePickerProps} onChange={onDatePickerChange}/> : <DatePicker disabled={checked} format={format} {...DatePickerProps} onChange={onDatePickerChange}/>}
+      <Checkbox checked={ checked } onChange={onCheckboxChange} style={{marginLeft: '10px'}}>长期有效</Checkbox>
     </>
   )
 };

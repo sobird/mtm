@@ -40,7 +40,7 @@
         "foundedDate": "2018-08-29",
         "registerAreaId": 0,
         "registerAreaName": "",
-        "term": [1, "2018-08-29", "2050-08-29"]
+        "term": [true, "2018-08-29", "2050-08-29"]
       },
       "legalPerson": {
         "address": "北京市东城区景山前街4号紫禁城敬事房",
