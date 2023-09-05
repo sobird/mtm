@@ -8,6 +8,7 @@ import React, { PropsWithChildren } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Checkbox, Form, Input, Radio, Space, Upload, DatePicker, Button, Select, Image, FormInstance } from 'antd';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import TermPick from '@/components/term-picker';
 import { IEntryEnum } from '@/services/merchant/entry/enum';
 
 import OcrUpload from '@/components/ocr-upload';
@@ -47,12 +48,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
     },
   ]
 
-  const uploadButton = (
-    <div>
-      <PlusOutlined style={{fontSize: '30px'}} />
-      <div>点击上传</div>
-    </div>
-  );
+  const socialCreditCode = form.getFieldValue(["company", "businessLicense", "socialCreditCode"]);
 
   return (
     <Form
@@ -63,7 +59,14 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
       size="middle"
       form={form}
     >
+      <TermPick value={[true, '2023-01-10', '2023-01-11']} rangePicker/>
       <Card title="企业主体信息" bordered={false}>
+        <Form.Item
+          label="测试组件"
+          name="testName">
+          <TermPick value={[true, '2023-01-10', '2023-01-11']} rangePicker/>
+        </Form.Item>
+
         <Form.Item
           label="公司类型"
           name={["company", "companyType"]}
@@ -95,6 +98,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
             <div className="form-prompt"><p>1.请上传清晰的多证合一营业执照（统一社会信用代码）</p><p>2.文件最多上传1张，大小不得超过20MB</p><p>3.文件格式支持：JPG/JPEG/PNG/GIF/BPM</p><p>4.企业主体需满足&nbsp;<a className="name-link" target="_blank" href="https://rules-center.meituan.com/rules-detail/602?commonType=2">美团电商平台入驻标准</a>&nbsp;要求</p></div>
           </Space>
 
+          {socialCreditCode && 
           <Card title="请核对营业执照信息，若信息不符，请手动修改" className='item-card'>
             <Form.Item
               {...formItemLayout}
@@ -146,7 +150,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
               </Form.Item>
               <span className='input-help'>若注册资金币种不是人民币，可按照当前汇率换算成人民币后进行填写</span>
             </Form.Item>
-          </Card>
+          </Card>}
         </Form.Item>
 
         <Form.Item 
