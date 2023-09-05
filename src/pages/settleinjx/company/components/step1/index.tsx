@@ -59,7 +59,6 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
       size="middle"
       form={form}
     >
-      <TermPick value={[true, '2023-01-10', '2023-01-11']} rangePicker/>
       <Card title="企业主体信息" bordered={false}>
         <Form.Item
           label="测试组件"
@@ -93,6 +92,11 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
               noStyle>
               <OcrUpload type={1} onUploadSuccess={res => {
                 console.log('res', res)
+                form.setFieldValue(["company", "businessLicense", "socialCreditCode"], res.number);
+                form.setFieldValue(["company", "businessLicense", "name"], res.name);
+                form.setFieldValue(["company", "businessLicense", "address"], res.address);
+                form.setFieldValue(["company", "businessLicense", "term"], res.term);
+                form.setFieldValue(["company", "businessLicense", "capital"], res.capital);
               }} />
             </Form.Item>
             <div className="form-prompt"><p>1.请上传清晰的多证合一营业执照（统一社会信用代码）</p><p>2.文件最多上传1张，大小不得超过20MB</p><p>3.文件格式支持：JPG/JPEG/PNG/GIF/BPM</p><p>4.企业主体需满足&nbsp;<a className="name-link" target="_blank" href="https://rules-center.meituan.com/rules-detail/602?commonType=2">美团电商平台入驻标准</a>&nbsp;要求</p></div>
@@ -125,25 +129,18 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({option, form}) => {
 
             <Form.Item
               {...formItemLayout}
-              name={["company", "businessLicense", "date"]}
+              name={["company", "businessLicense", "term"]}
               label="营业期限"
               wrapperCol= {{ span: 16 }}
-              rules={[{ required: true, message: '经营地址不能为空' }]}>
-              <RangePicker />
-
-              <Form.Item 
-                name={["businessLicense", "operatingTimeType"]}
-                valuePropName="value"
-                noStyle>
-                <Checkbox style={{marginLeft: '10px'}}>长期有效</Checkbox>
-              </Form.Item>
+              rules={[{ required: true, message: '营业期限不能为空' }]}>
+              <TermPick rangePicker/>
             </Form.Item>
 
             <Form.Item
               {...formItemLayout}
               label="注册资金">
               <Form.Item 
-                name={["company", "businessLicense", "registeredCapital"]}
+                name={["company", "businessLicense", "capital"]}
                 noStyle 
                 rules={[{ required: true, message: '注册资金不能为空' }]}>
                 <Input placeholder="请输入" suffix="万元" />
