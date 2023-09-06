@@ -9,6 +9,7 @@ import SettleInpc from './pages/settleinpc';
 import EntryHome from './pages/settleinjx/home';
 import EntryShop from './pages/settleinjx/shop';
 import EntryCompany from './pages/settleinjx/company';
+import SignContract from './components/sign-contract';
 import './App.css';
 
 const theme = { token: { colorPrimary: '#ffd100', borderRadius: 2, colorWhite: '#333' } };
@@ -30,6 +31,8 @@ function App() {
           <Route path='/settleinjx/home' element={<EntryHome />}></Route>
           <Route path='/settleinjx/shop' element={<EntryShop />}></Route>
           <Route path='/settleinjx/company' element={<EntryCompany />}></Route>
+
+          <Route path='/' element={<SignContract />}></Route>
         </Routes>
       </HashRouter>
     </ConfigProvider>

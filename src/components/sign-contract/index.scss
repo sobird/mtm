@@ -1,0 +1,36 @@
+.sign-constract-box {
+  box-sizing: border-box;
+  // alert提示层
+  .alert-box {
+    .mtm-alert {
+      margin-bottom: 20px;
+      .mtm-alert-content {
+        color: #585a6e;
+      }
+    }
+  }
+  // 手机号展示层
+  .tip-box {
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #3f4156;
+    margin-bottom: 14px;
+  }
+  
+  // 合作协议box
+  .agree-box {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: -8px;
+  }
+}
+.button-box {
+  display: flex;
+  justify-content: flex-end;
+  margin: 32px -5px 12px 0;
+  .roo-btn + .roo-btn {
+    margin-left: 16px;
+  }
+}
