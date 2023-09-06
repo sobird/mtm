@@ -10,7 +10,7 @@ import { Alert, Button, message, Form, Tooltip, Modal } from 'antd';
 import { ProFormCaptcha, ProFormCheckbox } from '@ant-design/pro-components';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
-import captcha from '@/services/common/captcha';
+import CaptchaService from '@/services/common/captcha';
 import ContractService from '@/services/merchant/contract';
 
 import './index.scss';
@@ -22,7 +22,6 @@ interface ContractSignProps {
     state: number;
   }
 }
-
 
 export default function ContractSign({ config } : ContractSignProps) {
   const [ form ] = Form.useForm();
@@ -124,7 +123,7 @@ export default function ContractSign({ config } : ContractSignProps) {
             // 如果需要失败可以 throw 一个错误出来，onGetCaptcha 会自动停止
             // throw new Error("获取验证码错误")
             onGetCaptcha={async (mobile) => {
-              const res = await captcha(mobile);
+              const res = await CaptchaService.get(mobile);
               message.success(`【美团】${res.captcha}（商户注册验证码）。工作人员不会向您索要，请勿向任何人泄露，以免造成账户或资金损失。`, 5);
             }}
           />
