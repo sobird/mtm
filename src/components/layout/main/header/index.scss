@@ -1,0 +1,33 @@
+/**
+ * LayoutMain Header style
+ * 
+ * sobird<i@sobird.me> at 2023/09/06 23:06:01 created.
+ */
+
+.layout-main-header {
+  height: 56px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-bottom: 1px solid rgb(232, 232, 232);
+
+  .mtm-brand {
+    img {
+      height: 32px;
+    }
+  }
+}
+
+
+.dropdown-overlay{
+  width:162px;
+}
+
+.mtm-avatar {
+  img {
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+  }
+}
