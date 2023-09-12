@@ -12,22 +12,28 @@
   background-color: #fff;
   border-bottom: 1px solid rgb(232, 232, 232);
 
-  .mtm-brand {
+  .header-brand {
     img {
       height: 32px;
     }
   }
 }
 
-
-.dropdown-overlay{
+.avatar-dropdown{
   width:162px;
 }
 
 .mtm-avatar {
+  cursor: pointer;
   img {
     height: 32px;
     width: 32px;
     border-radius: 50%;
   }
+}
+
+.header-bread {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
 }
