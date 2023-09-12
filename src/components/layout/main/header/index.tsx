@@ -44,7 +44,7 @@ const Header: React.FC = () => {
   );
 
   return (
-    <div className="layout-main-header">
+    <header className="app-header">
       <div className="header-brand">
         <a href="/" title="美团电商商家管理后台">
           <img src={LogoTitle}></img>
@@ -58,13 +58,13 @@ const Header: React.FC = () => {
             menu={{items: menu}}
             overlayClassName="avatar-dropdown"
           >
-            <div className="mtm-avatar">
+            <div className="app-avatar">
               <img src={AvatarDefault} />
             </div>
           </Dropdown>
         </div>
       </div>
-    </div>
+    </header>
   )
 }
 

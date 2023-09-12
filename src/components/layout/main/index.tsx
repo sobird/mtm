@@ -8,9 +8,11 @@ import Header from './header';
 
 export default function LayoutMain() {
   return (
-    <div className={classNames('layout-merchant-main', {
-      mounted: true,
-    })}>
+    <div 
+      className={classNames('app-container', {
+        mounted: true,
+      })}
+    >
       <Header />
     </div>
   )

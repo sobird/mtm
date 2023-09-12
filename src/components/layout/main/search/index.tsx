@@ -17,7 +17,7 @@ const content = (
 
 const Search: React.FC = () => {
   return (
-    <div className="layout-search">
+    <div className="app-search">
       <Popover content={content} trigger="click" title="Title" arrow={false}>
         <Input.Search
           placeholder="搜索你感兴趣的内容"
