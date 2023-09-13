@@ -5,8 +5,16 @@
  */
 
 .app-container {
-
+  height: 100%;
 }
 .app-body {
-  
+  display: flex;
+  flex: 1 1;
+  height: calc(100% - 56px);
+}
+.app-main {
+  flex: 1;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: overlay;
 }

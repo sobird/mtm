@@ -6,6 +6,7 @@
 import classNames from 'classnames';
 import Header from './header';
 import Aside from './aside';
+import './index.scss';
 
 export default function LayoutMain() {
   return (
@@ -19,14 +20,14 @@ export default function LayoutMain() {
         <div className="app-body">
           <Aside />
           <main className="app-main">
-
+            <div>123</div>
           </main>
         </div>
       </div>
       <div
         className="app-watermark"
         style={{
-          backgroundImage: 'url(/api-wm/image/visible?deg=-20&type=4)',
+          backgroundImage: 'url(/image/visible?deg=-20&type=4)',
           backgroundSize: '330px, auto',
           position: 'fixed',
           left: 0,

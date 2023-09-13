@@ -5,21 +5,20 @@
  */
 
 .app-aside {
+  height: 100%;
+  background-color: #f5f6fa;
+
   justify-content: center;
-  max-width: 212px;
-  min-width: 212px;
   width: 212px;
   overflow-y: auto;
   overflow-x: hidden;
-  border-right: 1px solid #e8e8e8;
 
   .app-menu {
     overflow-x: hidden;
     overflow-y: overlay;
-    height: calc(100% - 32px);
 
     .mtm-menu {
-      background-color: #f9f9f9;
+      background-color: transparent;
       border-right: none;
 
       &.mtm-menu-inline-collapsed {
@@ -30,6 +29,10 @@
         .iconfont {
           font-size: 1.1em;
         }
+      }
+
+      .mtm-menu-item-selected {
+        background-color: #fff;
       }
     }
   }
