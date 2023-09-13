@@ -18,7 +18,7 @@
     overflow-y: overlay;
 
     .mtm-menu {
-      background-color: transparent;
+      background-color: #fff;
       border-right: none;
 
       &.mtm-menu-inline-collapsed {
@@ -26,13 +26,27 @@
       }
 
       .mtm-menu-item {
+        width: 100%;
+        margin: 0;
+        background-color: #f5f6fa;
+        
         .iconfont {
           font-size: 1.1em;
+        }
+        &:has(+ .mtm-menu-item-selected) {
+          border-bottom-right-radius: 10px;
         }
       }
 
       .mtm-menu-item-selected {
         background-color: #fff;
+        color: #000;
+        font-weight: 500;
+        
+
+        & + li {
+          border-top-right-radius: 10px;
+        }
       }
     }
   }

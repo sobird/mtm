@@ -33,7 +33,7 @@ function App() {
           <Route path='/settleinjx/shop' element={<EntryShop />}></Route>
           <Route path='/settleinjx/company' element={<EntryCompany />}></Route>
 
-          <Route path='/' element={<LayoutMain />}></Route>
+          <Route path='/*' element={<LayoutMain />}></Route>
         </Routes>
       </HashRouter>
     </ConfigProvider>
