@@ -21,6 +21,7 @@ jobs:
 
     - name: Install and Build 🔧 
       run: |
+        cd packages/mtm_market 
         yarn
         yarn build
 
