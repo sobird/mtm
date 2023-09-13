@@ -12,7 +12,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@mtm/common": "file:../common"
+    "@mtm/common": "file:../common",
+    "antd": "^5.9.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
