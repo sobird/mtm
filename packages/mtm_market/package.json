@@ -15,6 +15,12 @@
     "@mtm/common": "file:../common"
   },
   "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "css-minimizer-webpack-plugin": "^5.0.1",
+    "dotenv-webpack": "^8.0.1",
+    "esbuild-loader": "^4.0.2",
+    "html-webpack-plugin": "^5.5.3",
+    "mini-css-extract-plugin": "^2.7.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "webpack": "^5.88.2",

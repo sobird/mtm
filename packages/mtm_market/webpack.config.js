@@ -19,6 +19,7 @@ const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
+const externals = require('@mtm/common/externals');
 const package = require('./package.json');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -181,13 +182,6 @@ const config = {
       config: [__filename],
     },
   },
-  externals: {
-    // react: {
-    //   commonjs: ['mix', 'React'],
-    //   commonjs2: ['mix', 'React'],
-    //   root: ['mix', 'React'],
-    // },
-  }
 };
 
 module.exports = (conf) => {
@@ -203,6 +197,7 @@ module.exports = (conf) => {
       filename: '[file].map',
       publicPath: '/',
     }));
+    config.externals = externals;
   } else {
     config.mode = 'development';
   }

@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/09/13 22:23:49 created.
  */
 
-export default {
+module.exports = {
   react: {
     commonjs: ['mtm', 'React'],
     commonjs2: ['mtm', 'React'],
