@@ -25,6 +25,8 @@ const package = require('./package.json');
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
+const outputPath = path.resolve(__dirname, `dist/${package.name}`);
+
 const config = {
   devtool: isProduction ? false : 'inline-source-map',
   entry: {
@@ -33,7 +35,7 @@ const config = {
     ],
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: outputPath,
     // pathinfo: true,
     filename: '[name].[contenthash].js',
     chunkFilename: '[name].[contenthash].chunk.js',
@@ -72,7 +74,7 @@ const config = {
         {
           context: path.resolve(__dirname, './public'),
           from: '**/*',
-          to: path.resolve(__dirname, './dist'),
+          to: outputPath,
           toType: 'dir',
           globOptions: {
             dot: false,

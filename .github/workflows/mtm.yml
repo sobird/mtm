@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "master" ]
     paths-ignore:
-      - packages/mtm_market/**
+      - packages/**
   pull_request:
     branches: [ "master" ]
 
