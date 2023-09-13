@@ -13,7 +13,7 @@ import EntryCompany from './pages/settleinjx/company';
 import LayoutMain from './components/layout/main';
 import './App.css';
 
-import '../packages/common/provider';
+import '@mtm/common/provider';
 
 const theme = { token: { colorPrimary: '#ffd100', borderRadius: 2, colorWhite: '#333' } };
 
