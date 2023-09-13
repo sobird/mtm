@@ -3,6 +3,8 @@ name: Build and Deploy MTM_MARKET
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - packages/mtm_market/**
   pull_request:
     branches: [ "master" ]
 
