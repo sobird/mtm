@@ -1,0 +1,6 @@
+# ☄️商家端营销子工程 <img src="https://img.shields.io/badge/mtm-market-42b983.svg?style=flat-square">
+
+## 安装common模块
+```
+npm i ../common
+```
