@@ -38,7 +38,7 @@ const config = {
     assetModuleFilename: 'assets/[contenthash][ext][query]',
     publicPath: '/',
     clean: true,
-    library: `${package.name}`,
+    // library: `${package.name}`,
     libraryTarget: 'umd',
     chunkLoadingGlobal: `webpackJsonp_${package.name}`,
     globalObject: 'window',
