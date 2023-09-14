@@ -35,13 +35,14 @@ const config = {
       './src/index.tsx',
     ],
   },
+  target: 'web',
   output: {
     path: outputPath,
     // pathinfo: true,
     filename: '[name].[contenthash].js',
     chunkFilename: '[name].[contenthash].chunk.js',
     assetModuleFilename: 'assets/[contenthash][ext][query]',
-    publicPath: '/',
+    //publicPath: '/',
     clean: true,
     // library: `${package.name}`,
     libraryTarget: 'umd',
@@ -104,12 +105,12 @@ const config = {
     new ModuleFederationPlugin({
       name: package.name,
       filename: 'remoteEntry.js',
-      library: { 
-        type: 'umd', 
-        name: package.name
-      },
+      // library: { 
+      //   type: 'umd', 
+      //   name: package.name
+      // },
       exposes: {
-        './campaign': './src/remotes/campaign/index.tsx',
+        './Campaign': './src/remotes/campaign',
       }
     }),
     // new PurgeCSSPlugin({

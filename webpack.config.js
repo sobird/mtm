@@ -30,6 +30,7 @@ const config = {
       './src/index.tsx',
     ],
   },
+  target: 'web',
   output: {
     path: path.resolve(__dirname, 'dist'),
     // pathinfo: true,
