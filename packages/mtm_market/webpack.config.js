@@ -19,6 +19,7 @@ const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
+const { ModuleFederationPlugin } = require('webpack').container;
 const externals = require('@mtm/shared/externals');
 const package = require('./package.json');
 
@@ -99,6 +100,17 @@ const config = {
     }),
     new webpack.ProgressPlugin({
       activeModules: true,
+    }),
+    new ModuleFederationPlugin({
+      name: package.name,
+      filename: 'remoteEntry.js',
+      library: { 
+        type: 'umd', 
+        name: package.name
+      },
+      exposes: {
+        './campaign': './src/remotes/campaign/index.tsx',
+      }
     }),
     // new PurgeCSSPlugin({
     //   paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
