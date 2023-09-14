@@ -5,7 +5,6 @@ import Empty from './components/UI/empty';
 const App: React.FC = () => {
   return (
     <>
-      <Empty></Empty>
       <Campaign />
     </>
   );

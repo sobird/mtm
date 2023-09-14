@@ -2,5 +2,5 @@
 
 ## 安装common模块
 ```
-npm i ../common
+npm i ../shared
 ```

@@ -66,10 +66,16 @@ export class Http {
     // 请求拦截器
     this.service.interceptors.request.use((config: InternalHttpRequestConfig) => {
       config.startTime = Date.now();
-      const { method, url } = config;
+      const { method, url, params } = config;
+
+      const filenames = [method.toLocaleLowerCase()];
+
+      if(params) {
+        filenames.push(Object.keys(params).sort().join('&'))
+      }
 
       // url 模拟适配 全部转为get请求
-      config.url = url + '/' + method.toLocaleLowerCase() + '.json';
+      config.url = url + '/' + filenames.join('_') +'.json';
       config.method = 'get';
       
       return config;
