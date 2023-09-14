@@ -12,7 +12,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@mtm/common": "file:../common",
+    "@mtm/shared": "file:../shared",
     "antd": "^5.9.0"
   },
   "devDependencies": {

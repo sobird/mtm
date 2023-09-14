@@ -19,7 +19,7 @@ const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
-const externals = require('@mtm/common/externals');
+const externals = require('@mtm/shared/externals');
 const package = require('./package.json');
 
 const isProduction = process.env.NODE_ENV === 'production';
