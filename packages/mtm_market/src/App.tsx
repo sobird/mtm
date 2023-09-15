@@ -1,11 +1,10 @@
 import React from 'react';
-import Campaign from './remotes/campaign';
-import Empty from './components/UI/empty';
+import Coupons from './pages/coupon';
 
 const App: React.FC = () => {
   return (
     <>
-      <Campaign />
+      <Coupons />
     </>
   );
 }

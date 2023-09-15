@@ -6,8 +6,6 @@
 
 import http from "@mtm/shared/utils/http";
 
-console.log('http.service', http.service.defaults)
-
 export interface ICampaignListQuery {
   ps?: number;
   pn?: number;
