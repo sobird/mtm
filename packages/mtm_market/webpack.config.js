@@ -103,7 +103,7 @@ const config = {
       activeModules: true,
     }),
     new ModuleFederationPlugin({
-      name: package.name,
+      name: 'app1',
       filename: 'remoteEntry.js',
       // library: { 
       //   type: 'umd', 
@@ -111,6 +111,8 @@ const config = {
       // },
       exposes: {
         './Campaign': './src/remotes/campaign',
+        './newReact': require.resolve('react'),
+        './newReactDOM': require.resolve('react-dom/client')
       }
     }),
     // new PurgeCSSPlugin({

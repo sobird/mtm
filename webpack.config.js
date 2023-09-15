@@ -18,6 +18,7 @@ const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
+const { ModuleFederationPlugin } = require('webpack').container;
 const package = require('./package.json');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -97,6 +98,12 @@ const config = {
     new webpack.ProgressPlugin({
       activeModules: true,
     }),
+    new ModuleFederationPlugin({
+      name: 'mtm',
+      remotes: {
+        app1: 'app1@http://localhost:3001/remoteEntry.js'
+      }
+    })
     // new PurgeCSSPlugin({
     //   paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
     //   whitelist: ['html', 'body']

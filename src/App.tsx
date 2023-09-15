@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import React, { useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
@@ -22,9 +23,23 @@ ConfigProvider.config({
   theme,
 })
 
+import useFederatedComponent from './hooks/useFederatedComponent';
+// @ts-ignore
+const ChildApp = React.lazy(() => import("app1/Campaign"));
+
+import Adapter from './Adapter';
+
+// console.log('ChildApp', ChildApp)
+
 function App() {
+  const { Component: FederatedComponent, errorLoading } = useFederatedComponent('http://localhost:3001/remoteEntry.js', 'app1', './Campaign');
   return (
     <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm' theme={theme}>
+      {/* {errorLoading
+        ? `Error loading module "${module}"`
+        : FederatedComponent && <FederatedComponent />} */}
+
+      <Adapter importer={() => ChildApp} />
       <HashRouter>
         <Routes>
           <Route path='/login' element={<Login />}></Route>
