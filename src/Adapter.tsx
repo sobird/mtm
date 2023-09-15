@@ -6,7 +6,6 @@
 
 import React, { Component } from "react";
 
-
 interface AdapterProps {
   importer: () => void;
   children: React.ReactNode;
@@ -21,14 +20,10 @@ class Adapter extends Component {
 
   init = () => {
     (async () => {
-      const R = await import('app1/newReact');
-      const React = (await import('app1/newReact'));
-      const ReactDOM = (await import('app1/newReactDOM'));
+      const React = (await import('market/newReact'));
+      const ReactDOM = (await import('market/newReactDOM'));
       const RemoteComponent = await this.props.importer();
       const { importer, children, ...props } = this.props;
-
-
-      console.log('RemoteComponent', RemoteComponent)
 
       ReactDOM.createRoot(this.refHold).render(React.createElement(RemoteComponent, props, children))
     })()

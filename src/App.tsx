@@ -25,14 +25,14 @@ ConfigProvider.config({
 
 import useFederatedComponent from './hooks/useFederatedComponent';
 // @ts-ignore
-const ChildApp = React.lazy(() => import("app1/Campaign"));
+const ChildApp = React.lazy(() => import("market/Campaign"));
 
 import Adapter from './Adapter';
 
 // console.log('ChildApp', ChildApp)
 
 function App() {
-  const { Component: FederatedComponent, errorLoading } = useFederatedComponent('http://localhost:3001/remoteEntry.js', 'app1', './Campaign');
+  const { Component: FederatedComponent, errorLoading } = useFederatedComponent('http://localhost:3001/remoteEntry.js', 'market', './Campaign');
   return (
     <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm' theme={theme}>
       {/* {errorLoading

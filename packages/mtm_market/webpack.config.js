@@ -103,7 +103,7 @@ const config = {
       activeModules: true,
     }),
     new ModuleFederationPlugin({
-      name: 'app1',
+      name: package.name,
       filename: 'remoteEntry.js',
       // library: { 
       //   type: 'umd', 
