@@ -27,19 +27,18 @@ import useFederatedComponent from './hooks/useFederatedComponent';
 // @ts-ignore
 const ChildApp = React.lazy(() => import("market/Campaign"));
 
-import Adapter from './Adapter';
+import FederatedAdapter from './components/federated-adapter';
 
 // console.log('ChildApp', ChildApp)
 
 function App() {
-  const { Component: FederatedComponent, errorLoading } = useFederatedComponent('http://localhost:3001/remoteEntry.js', 'market', './Campaign');
+  //const { Component: FederatedComponent, errorLoading } = useFederatedComponent('http://localhost:3001/remoteEntry.js', 'market', './Campaign');
+
   return (
     <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm' theme={theme}>
-      {/* {errorLoading
-        ? `Error loading module "${module}"`
-        : FederatedComponent && <FederatedComponent />} */}
 
-      <Adapter importer={() => ChildApp} />
+      <FederatedAdapter component={ChildApp}>123</FederatedAdapter>
+
       <HashRouter>
         <Routes>
           <Route path='/login' element={<Login />}></Route>
