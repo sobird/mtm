@@ -23,6 +23,7 @@ const package = require('./package.json');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
+const marketHOST = isProduction ? '/mtm_market' : 'http://localhost:3001';
 
 const config = {
   devtool: isProduction ? false : 'inline-source-map',
@@ -101,7 +102,7 @@ const config = {
     new ModuleFederationPlugin({
       name: 'mtm',
       remotes: {
-        market: 'mtm_market@http://localhost:3001/remoteEntry.js'
+        market: `mtm_market@${marketHOST}/remoteEntry.js`
       }
     })
     // new PurgeCSSPlugin({

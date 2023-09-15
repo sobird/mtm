@@ -32,7 +32,7 @@ import FederatedAdapter from './components/federated-adapter';
 // console.log('ChildApp', ChildApp)
 
 function App() {
-  //const { Component: FederatedComponent, errorLoading } = useFederatedComponent('http://localhost:3001/remoteEntry.js', 'market', './Campaign');
+  const { Component: FederatedComponent, errorLoading } = useFederatedComponent(`${process.env.MTM_MARKET_HOST}/remoteEntry.js`, 'market', './Campaign');
 
   return (
     <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm' theme={theme}>
