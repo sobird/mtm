@@ -114,10 +114,10 @@ const config = {
         './newReact': require.resolve('react'),
         './newReactDOM': require.resolve('react-dom/client')
       },
-      shared: {
-        react: { singleton: true },
-        "react-dom": { singleton: true }
-      }
+      // shared: {
+      //   react: { singleton: true },
+      //   "react-dom": { singleton: true }
+      // }
     }),
     // new PurgeCSSPlugin({
     //   paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
@@ -218,7 +218,7 @@ module.exports = (conf) => {
       filename: '[file].map',
       publicPath: '/',
     }));
-    config.externals = externals;
+    // config.externals = externals;
   } else {
     config.mode = 'development';
   }
