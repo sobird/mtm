@@ -101,7 +101,7 @@ const config = {
     new ModuleFederationPlugin({
       name: 'mtm',
       remotes: {
-        market: 'mtm_market@http://localhost:3001/remoteEntry.js'
+        market: 'mtm_market@/mtm_market/remoteEntry.js'
       }
     })
     // new PurgeCSSPlugin({
