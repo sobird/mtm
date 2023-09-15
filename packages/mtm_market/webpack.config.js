@@ -113,6 +113,10 @@ const config = {
         './Campaign': './src/remotes/campaign',
         './newReact': require.resolve('react'),
         './newReactDOM': require.resolve('react-dom/client')
+      },
+      shared: {
+        react: { singleton: true },
+        "react-dom": { singleton: true }
       }
     }),
     // new PurgeCSSPlugin({
