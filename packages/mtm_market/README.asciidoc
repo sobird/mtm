@@ -1,6 +1,87 @@
 # ☄️商家端营销子工程 <img src="https://img.shields.io/badge/mtm-market-42b983.svg?style=flat-square">
 
-## 安装common模块
+## 安装shared模块
 ```
 npm i ../shared
+```
+
+## 模块联邦配置
+
+### 子应用
+在`webpack.config.js`文件中配置如下：
+```js
+const { ModuleFederationPlugin } = require('webpack').container;
+
+...
+
+const config = {
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'app1',
+      filename: 'remoteEntry.js',
+      exposes: {
+        './Widget': './src/Widget',
+      },
+      shared: {
+        /**
+         * 一些库使用全局内部状态（例如 react、react-dom）。
+         * 因此，一次只运行一个库的实例至关重要。
+         */
+        react: { singleton: true },
+        "react-dom": { singleton: true }
+      }
+    }),
+  ]
+}
+```
+
+### 消费者
+
+在`webpack.config.js`文件中配置如下：
+```js
+
+const { ModuleFederationPlugin } = require('webpack').container;
+
+...
+
+const config = {
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'app',
+      remotes: {
+        Widget: 'app1@http://localhost:3001/remoteEntry.js'
+      }
+    })
+  ]
+}
+```
+
+远程组件调佣
+```js
+import React from 'react';
+import useFederatedComponent from './hooks/useFederatedComponent';
+
+// 方式一 需要在webpack.config.js中进行上面配置
+const ChildApp = React.lazy(() => import("Widget/Widget"));
+
+
+function App() {
+  // 方式二
+  const { Component: FederatedComponent, errorLoading } = useFederatedComponent('http://localhost:3001/remoteEntry.js', 'app1', './Widget');
+  
+  return (
+    <div style={{ marginTop: '2em' }}>
+      <React.Suspense fallback="Loading System">
+        <ChildApp />
+
+        {errorLoading
+        ? `Error loading module "${module}"`
+        : FederatedComponent && <FederatedComponent />}
+      </React.Suspense>
+      
+    </div>
+  );
+}
+
+export default App;
 ```
