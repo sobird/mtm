@@ -5,8 +5,8 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { Table, Tag } from 'antd';
-import CouponService, { ICouponPagination, ECouponType, ECouponTarget, ECouponStatus, ECouponStatusColor } from "@/services/coupon";
+import { Button, Table, Tag, Popconfirm } from 'antd';
+import CouponService, { ICouponEntity, ICouponPagination, ECouponType, ECouponTarget, ECouponStatus, ECouponStatusColor } from "@/services/coupon";
 const { Column, ColumnGroup } = Table;
 
 import './index.scss';
@@ -48,6 +48,27 @@ const Coupons: React.FC = () => {
           title="状态" dataIndex="status" 
           render={(text) => {
             return <Tag color={ECouponStatusColor[text]}>{ECouponStatus[text]}</Tag>;
+          }} />
+
+        <Column<ICouponEntity> 
+          title="操作" 
+          dataIndex="status" 
+          render={(text, record) => {
+            return (
+              <>
+                <Button type="link" size="small">查看</Button>
+                { text < 2 && <Button type="link" size="small">编辑</Button>}
+                { text < 2 && <Popconfirm
+                  title="您确定要下线该优惠券吗？"
+                  onConfirm={() => {
+                    CouponService.delete(record.id);
+                  }}
+                  okText="确定"
+                  cancelText="取消">
+                  <Button type="link" size="small">下线</Button>
+                </Popconfirm>}
+              </>
+            );
           }} />
       </Table>
     </div>

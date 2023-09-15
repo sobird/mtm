@@ -83,6 +83,9 @@ export enum ECouponStatusColor {
 const CouponService = {
   list(params?: ICouponListParams) {
     return http.get<ICouponPagination>('/merchant/coupons', params);
+  },
+  delete(id: number) {
+    return http.delete<ICouponEntity>('/merchant/coupons', { id });
   }
 }
 
