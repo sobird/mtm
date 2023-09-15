@@ -187,7 +187,7 @@ const config = {
       // `...`,
       new CssMinimizerPlugin(),
       new EsbuildPlugin({
-        target: 'es2018',
+        // target: 'es2018',
         css: true, // 优化CSS
         minify: false, // 压缩JS
         minifyWhitespace: true, // 去掉空格

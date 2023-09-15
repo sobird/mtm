@@ -101,7 +101,7 @@ const config = {
     new ModuleFederationPlugin({
       name: 'mtm',
       remotes: {
-        market: 'mtm_market@/mtm_market/remoteEntry.js'
+        market: 'mtm_market@http://localhost:3001/remoteEntry.js'
       }
     })
     // new PurgeCSSPlugin({
@@ -172,7 +172,7 @@ const config = {
       // `...`,
       new CssMinimizerPlugin(),
       new EsbuildPlugin({
-        target: 'es2018',
+        // target: 'es2018',
         css: true, // 优化CSS
         minify: false, // 压缩JS
         minifyWhitespace: true, // 去掉空格
