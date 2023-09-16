@@ -84,8 +84,17 @@ const CouponService = {
   list(params?: ICouponListParams) {
     return http.get<ICouponPagination>('/merchant/coupons', params);
   },
+  detail(id: number) {
+    return http.get<ICouponPagination>('/merchant/coupons', { id });
+  },
   delete(id: number) {
     return http.delete<ICouponEntity>('/merchant/coupons', { id });
+  },
+  create(data: ICouponEntity) {
+    return http.post<ICouponEntity>('/merchant/coupons', data);
+  },
+  update(data: ICouponEntity) {
+    return http.patch<ICouponEntity>('/merchant/coupons', data);
   }
 }
 

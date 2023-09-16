@@ -49,7 +49,6 @@ const Coupons: React.FC = () => {
           render={(text) => {
             return <Tag color={ECouponStatusColor[text]}>{ECouponStatus[text]}</Tag>;
           }} />
-
         <Column<ICouponEntity> 
           title="操作" 
           dataIndex="status" 
