@@ -102,23 +102,19 @@ const config = {
     new webpack.ProgressPlugin({
       activeModules: true,
     }),
-    new ModuleFederationPlugin({
-      name: package.name,
-      filename: 'remoteEntry.js',
-      // library: { 
-      //   type: 'umd', 
-      //   name: package.name
-      // },
-      exposes: {
-        './Campaign': './src/remotes/campaign',
-        './newReact': require.resolve('react'),
-        './newReactDOM': require.resolve('react-dom/client')
-      },
-      // shared: {
-      //   react: { singleton: true },
-      //   "react-dom": { singleton: true }
-      // }
-    }),
+    // new ModuleFederationPlugin({
+    //   name: package.name,
+    //   filename: 'remoteEntry.js',
+    //   // library: { 
+    //   //   type: 'umd', 
+    //   //   name: package.name
+    //   // },
+    //   exposes: {
+    //     './Campaign': './src/remotes/campaign',
+    //     './newReact': require.resolve('react'),
+    //     './newReactDOM': require.resolve('react-dom/client')
+    //   },
+    // }),
     // new PurgeCSSPlugin({
     //   paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
     //   whitelist: ['html', 'body']

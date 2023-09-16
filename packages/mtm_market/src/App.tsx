@@ -1,10 +1,10 @@
 import React from 'react';
-import Coupons from './pages/coupon';
+import CouponDetail from './pages/coupon/detail';
 
 const App: React.FC = () => {
   return (
     <>
-      <Coupons />
+      <CouponDetail />
     </>
   );
 }

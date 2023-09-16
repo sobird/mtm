@@ -22,7 +22,12 @@ const Coupons: React.FC = () => {
   return (
     <div className="page-coupons">
       
-      <Table dataSource={couponPagination?.list} rowKey="id">
+      <Table dataSource={couponPagination?.list} rowKey="id"
+        pagination={{
+          total: couponPagination?.total,
+          current: 2,
+          pageSize: 10
+        }}>
         <Column title="优惠券编码" dataIndex="id" />
         <Column title="优惠券名称" dataIndex="name" />
         <Column 

@@ -73,6 +73,14 @@ export enum ECouponStatus {
   "已下线" = 6
 }
 
+export const CouponStatusOption = [
+  { value: -1, label: "全部"},
+  { value: 0, label: "未开始"},
+  { value: 1, label: "进行中"},
+  { value: 2, label: "已结束"},
+  { value: 6, label: "已下线"}
+];
+
 export enum ECouponStatusColor {
   "gray" = 0,
   "green" = 1,
