@@ -6,45 +6,72 @@
 
 import http from "@mtm/shared/utils/http";
 
-
-export interface ICouponListParams {
-  ps?: number;
-  pn?: number;
-  status?: number;
-  stime?: number;
-  etime?: number;
-}
-
 interface ISpu {
-  spuId: number;
-  spuName: string;
-  shelfStatus: number;
+  /** SPU ID */
+  id: number;
+  /** SPU名称 */
+  name: string;
+  /** SPU状态; 0:已下架, 1:已上架 */
+  status: number;
+  /** 库存 */
   stock: number;
-  lowSellPrice: number;
+  /** 最低价 */
+  minPrice: number;
+  /** 当前SPU下的SKU数量 */
   skuCount: number;
 }
 
 export interface ICouponEntity {
+  /** 优惠券ID */
   id: number;
+  /** 优惠券名称 */
   name: string;
+  /** 优惠券文案 */
   displayName: string;
+  /** 优惠券类型; 0:满减券, 1:折扣券 */
+  type: 0 | 1;
+  /** 优惠券发放开始日期 */
   stime: number;
+  /** 优惠券发放结束日期 */
   etime: number;
-  type: number;
+  /** 优惠券库存 */
   stock: number;
+  /** 优惠券门槛 单位: 元 */
   price: number;
+  /** 优惠券面额 单位: 元 */
   discount: number;
+  /** 每人限领张数 */
   limitCount: number;
-  validDays: number;
-  useStime: number;
-  useEtime: number;
-  spuIds: [];
-  target: number;
+  /** 
+   * 使用期限 单位: 天
+   * 
+   * 先判断useTerm[0]的值，该值 >0 认为 是券领取X天内有效;
+   * 该值<=0 或 false，认为是在useTerm[1]到useTerm[2]期间券可以进行使用
+   */
+  useTerm: [number, number?, number?];
+  /** 发券目标 */
+  target: 11 | 12;
+  /** 投放目标人群 -1:全部用户 新老客, 1:老客, 2:新老客 */
+  putTarget: -1 | 1 | 2;
+  /** 使用人群 */
+  useTarget: -1 | 1 | 2;
+  /** 投放位置 */
   position: number;
+  /** 使用范围 */
   useScope: string;
-  ticketType: number;
-  useRange: string;
+  /** 发放数量 */
+  sendCount: number;
+  /** 当前余量 */
+  leftCount: number;
+  /** 优惠券状态; 未开始:0, 已开始(进行中):1, 已结束:2, 已撤销(已下线):6 */
+  status: 0 | 1 | 2 | 6;
+  /** 创建时间 时间戳 */
+  ctime: number;
+  /** 优惠券商品列表 */
   spuList: ISpu[];
+  /** SPU ID 列表 */
+  spuIds: [];
+  /** 商家ID列表 */
   wmPoiIds: number[]
 }
 
@@ -88,12 +115,20 @@ export enum ECouponStatusColor {
   "red" = 6
 }
 
+export interface ICouponsParams {
+  ps?: number;
+  pn?: number;
+  status?: number;
+  stime?: number;
+  etime?: number;
+}
+
 const CouponService = {
-  list(params?: ICouponListParams) {
+  list(params?: ICouponsParams) {
     return http.get<ICouponPagination>('/merchant/coupons', params);
   },
   detail(id: number) {
-    return http.get<ICouponPagination>('/merchant/coupons', { id });
+    return http.get<ICouponEntity>('/merchant/coupons', { id });
   },
   delete(id: number) {
     return http.delete<ICouponEntity>('/merchant/coupons', { id });
