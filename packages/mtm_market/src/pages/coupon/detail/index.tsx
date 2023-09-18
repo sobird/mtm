@@ -6,60 +6,44 @@
 
 import React, { useEffect, useState } from 'react';
 import { Form, Card, Input, Spin } from 'antd';
+import { ProForm, ProFormText, ProFormDateTimeRangePicker, ProFormDigit } from '@ant-design/pro-components';
 import { LoadingOutlined } from '@ant-design/icons';
 
-import CouponService, { ICouponEntity } from '@/services/coupon';
+import CouponService, { ICouponEntity, ECouponType } from '@/services/coupon';
 
 const formItemLayout = {
   labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
+    span: 4
   },
   wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
+    span: 14
   },
 };
 
 const CouponDetail: React.FC = () => {
-  const [form] = Form.useForm();
-  const [coupon, setCoupon] = useState<ICouponEntity>();
-  const [loading, setLoading] = useState(true);
-
-  console.log('coupon', coupon);
-
-  useEffect(() => {
-    CouponService.detail(123).then(res => {
-      setCoupon(res);
-      form.resetFields();
-      setLoading(false);
-    });
-  }, []);
+  const [form] = ProForm.useForm();
 
   return (
     <div className='page-coupon-detail'>
-      <Spin spinning={loading} indicator={<LoadingOutlined spin />}>
-        <Form {...formItemLayout} form={form} initialValues={coupon}>
-          <Card title='基本信息' bordered={false}>
-            <Form.Item label='优惠券类型' name='type'>
-              请填写优惠券名称
-            </Form.Item>
-            <Form.Item
-              label='优惠券名称'
-              name='name'
-              rules={[
-                { required: true, message: '请填写优惠券名称' },
-                { max: 10, message: '优惠券名称最多填写10个字' },
-              ]}
-            >
-              <Input placeholder='请填写优惠券名称' />
-            </Form.Item>
-            <Form.Item label='券文案' name='displayName'>
-              请填写优惠券名称
-            </Form.Item>
-          </Card>
-        </Form>
-      </Spin>
+      <ProForm layout="horizontal" {...formItemLayout} form={form} request={() => CouponService.detail(123)}>
+        <ProFormText readonly getValueProps={(value) => {
+          return {
+            value: ECouponType[value]
+          }
+        }} width="md" name="type" label="优惠券类型" />
+
+        <ProFormText width="lg" name="name" label="优惠券名称" placeholder="请填写优惠券名称" rules={[
+          { required: true, message: '请填写优惠券名称' },
+          { max: 10, message: '优惠券名称最多填写10个字' },
+        ]}/>
+        <Form.Item label='优惠券文案' name='displayName'>
+          请填写优惠券名称
+        </Form.Item>
+        {/* 发放设置 */}
+
+        <ProFormDateTimeRangePicker required width="lg" name="dateRange" label="发放时间" />
+        <ProFormDigit label="发放张数" name="putCount" width="lg" min={1} max={1000000} />
+      </ProForm>
     </div>
   );
 };
