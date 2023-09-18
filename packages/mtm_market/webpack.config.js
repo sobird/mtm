@@ -193,12 +193,12 @@ const config = {
       })
     ],
   },
-  cache: {
-    type: 'filesystem',
-    buildDependencies: {
-      config: [__filename],
-    },
-  },
+  // cache: {
+  //   type: 'filesystem',
+  //   buildDependencies: {
+  //     config: [__filename],
+  //   },
+  // },
 };
 
 module.exports = (conf) => {

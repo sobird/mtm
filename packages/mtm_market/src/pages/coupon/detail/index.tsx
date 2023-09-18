@@ -9,6 +9,9 @@ import { Form, Card, Input, Spin } from 'antd';
 import { ProForm, ProFormText, ProFormDateTimeRangePicker, ProFormDigit } from '@ant-design/pro-components';
 import InputAmountRule from '@/components/pro/field-amount-rule';
 
+import Test from '@/components/pro/form/Test';
+import Text from '@ant-design/pro-form/lib/components/Text';
+
 import CouponService, { ICouponEntity, ECouponType } from '@/services/coupon';
 
 const formItemLayout = {
@@ -40,6 +43,9 @@ const CouponDetail: React.FC = () => {
           <InputAmountRule />
         </Form.Item>
         {/* 发放设置 */}
+
+        <Test label="Test" width="lg" />
+        <Text label="Text" />
 
         <ProFormDateTimeRangePicker required width="lg" name="dateRange" label="发放时间" />
         <ProFormDigit label="发放张数" name="putCount" width="lg" min={1} max={1000000} />

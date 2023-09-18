@@ -18,10 +18,7 @@ import 'antd/lib/input/style';
  *
  * @param
  */
-const FieldText: ProFieldFC<{
-  text: string;
-  emptyText?: React.ReactNode;
-}> = (
+const FieldText: ProFieldFC<{text: string; emptyText?: React.ReactNode;}> = (
   { text, mode, render, renderFormItem, fieldProps, emptyText = '-' },
   ref,
 ) => {
