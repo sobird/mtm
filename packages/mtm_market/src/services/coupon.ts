@@ -30,10 +30,17 @@ export interface ICouponEntity {
   displayName: string;
   /** 优惠券类型; 0:满减券, 1:折扣券 */
   type: 0 | 1;
-  /** 优惠券发放开始日期 */
-  stime: number;
-  /** 优惠券发放结束日期 */
-  etime: number;
+  /** 发放时间段 */
+  putTerm: {
+    /** 优惠券发放开始日期 */
+    stime: number;
+    /** 优惠券发放结束日期 */
+    etime: number;
+  },
+  amountRule: {
+    amount: number;
+    discount: number;
+  },
   /** 优惠券库存 */
   stock: number;
   /** 优惠券门槛 单位: 元 */
@@ -48,7 +55,12 @@ export interface ICouponEntity {
    * 先判断useTerm[0]的值，该值 >0 认为 是券领取X天内有效;
    * 该值<=0 或 false，认为是在useTerm[1]到useTerm[2]期间券可以进行使用
    */
-  useTerm: [number, number?, number?];
+  useTerm: {
+    /** 优惠券领取X天内有效 */
+    periodDay: number;
+    stime: number;
+    etime: number;
+  };
   /** 发券目标 */
   target: 11 | 12;
   /** 投放目标人群 -1:全部用户 新老客, 1:老客, 2:新老客 */

@@ -7,7 +7,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Card, Input, Spin } from 'antd';
 import { ProForm, ProFormText, ProFormDateTimeRangePicker, ProFormDigit } from '@ant-design/pro-components';
-import { LoadingOutlined } from '@ant-design/icons';
+import InputAmountRule from '@/components/pro/field-amount-rule';
 
 import CouponService, { ICouponEntity, ECouponType } from '@/services/coupon';
 
@@ -37,7 +37,7 @@ const CouponDetail: React.FC = () => {
           { max: 10, message: '优惠券名称最多填写10个字' },
         ]}/>
         <Form.Item label='优惠券文案' name='displayName'>
-          请填写优惠券名称
+          <InputAmountRule />
         </Form.Item>
         {/* 发放设置 */}
 
