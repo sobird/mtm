@@ -6,7 +6,6 @@
 
 import React from 'react';
 import { InputNumber, Space } from 'antd';
-import { useIntl } from '@ant-design/pro-provider';
 import type { ProFieldFC } from '@ant-design/pro-components';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 
@@ -40,7 +39,6 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
   ref,
 ) => {
   const { value, defaultValue, onChange, id } = fieldProps;
-  const intl = useIntl();
 
   const [valuePair, setValuePair] = useMergedState(() => defaultValue, {
     value: value,
@@ -93,8 +91,8 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
 
     const placeholderValue = fieldProps?.placeholder ||
       placeholder || [
-      intl.getMessage('tableForm.inputPlaceholder', '请输入'),
-      intl.getMessage('tableForm.inputPlaceholder', '请输入'),
+      '请输入满减门槛',
+      '请输入优惠金额',
     ];
 
     const getInputNumberPlaceholder = (index: number) =>
@@ -108,6 +106,8 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
         <label htmlFor={`${id}-0`}>满</label>
         <InputNumber<number>
           prefix="￥"
+          style={{width: '100%'}}
+          min={0}
           {...restFieldProps}
           placeholder={getInputNumberPlaceholder(0)}
           id={`${id}-0`}
@@ -118,6 +118,8 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
         <label htmlFor={`${id}-1`}>减</label>
         <InputNumber<number>
           prefix="￥"
+          style={{width: '100%'}}
+          min={0}
           {...restFieldProps}
           placeholder={getInputNumberPlaceholder(1)}
           id={`${id}-1`}
@@ -138,8 +140,17 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
 };
 
 /** 预置表单校验器 根据具体业务自定 */
-export const validator = async (rule, value) => {
-  return //
+export const validator = async (rule, value: ValuePair) => {
+  const [amount, discount] = value
+  
+  if (!amount && amount !== 0) {
+    throw new Error('请输入满减门槛');
+  }
+
+  if (!discount && discount !== 0) {
+    throw new Error('请输入优惠金额');
+  }
+
 };
 
 export default React.forwardRef(FieldAmountRule);

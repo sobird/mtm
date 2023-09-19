@@ -7,7 +7,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Card, Input, Spin } from 'antd';
 import { ProForm, ProFormText, ProFormDateTimeRangePicker, ProFormDigit, ProFormDigitRange } from '@ant-design/pro-components';
-import InputAmountRule from '@/components/pro/form/AmountRule';
+import InputAmountRule, { validator } from '@/components/pro/form/AmountRule';
 
 import CouponService, { ICouponEntity, ECouponType } from '@/services/coupon';
 
@@ -46,11 +46,11 @@ const CouponDetail: React.FC = () => {
 
         <InputAmountRule placeholder="test" readonly name="test"  label="123456" />
 
-        <InputAmountRule placeholder="test" name="test" label="InputAmountRule" width="lg" rules={[
-          { required: true, message: '请填写优惠券名称' },
+        <InputAmountRule fieldProps={{rules: []}} placeholder={"12"} name="test" label="InputAmountRule" width="lg" rules={[
+          { validator },
         ]} />
 
-        <ProFormDigitRange name="name2" label="ProFormDigitRange" width="lg" required/>
+        <ProFormDigitRange separatorWidth={40} name="name2" label="ProFormDigitRange" width="lg" required/>
 
         <ProFormDateTimeRangePicker required width="lg" name="dateRange" label="发放时间" />
         <ProFormDigit label="发放张数" name="putCount" width="lg" min={1} max={1000000} />
