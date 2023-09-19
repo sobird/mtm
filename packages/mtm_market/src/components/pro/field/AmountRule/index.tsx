@@ -48,17 +48,9 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
   });
 
   if (mode === 'read') {
-    const getContent = (number: Value) => {
-      const digit = new Intl.NumberFormat(undefined, {
-        minimumSignificantDigits: 2,
-        ...(fieldProps?.intlProps || {}),
-      }).format(Number(number) as number);
-
-      return fieldProps?.formatter?.(digit) || digit;
-    };
     const dom = (
       <span ref={ref}>
-        满 {getContent(text[0])} 减 {getContent(text[1])}
+        满{text[0]}减{text[1]}
       </span>
     );
     if (render) {
@@ -108,7 +100,9 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
     const { className, ...restFieldProps } = fieldProps;
 
     const dom = (
-      <Space size={10} onBlur={handleGroupBlur} className={className}>
+      <Space size={10} 
+        // onBlur={handleGroupBlur} 
+        className={className}>
         <Form.Item
           label="满"
           htmlFor={`${id}-0`}
@@ -119,6 +113,7 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
             style={{width: '100%'}}
             prefix="￥"
             min={0}
+            max={5000}
             {...restFieldProps}
             placeholder={getInputNumberPlaceholder(0)}
             id={`${id}-0`}
@@ -130,11 +125,15 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
 
         <Form.Item
           label="减"
+          htmlFor={`${id}-1`}
+          validateStatus={validate[1]?.status}
+          help={validate[1]?.help}
         >
           <InputNumber
             prefix="￥"
             style={{width: '100%'}}
             min={0}
+            max={5000}
             {...restFieldProps}
             placeholder={getInputNumberPlaceholder(1)}
             id={`${id}-1`}
@@ -204,7 +203,32 @@ export const FieldValidator = [(value: ValuePair) => {
 
   
 }, (value: ValuePair) => {
-  //
+  const [amount, discount] = value
+  if (!discount && discount !== 0) {
+    return {
+      status: 'error',
+      help: '请输入优惠金额'
+    }
+  }
+  if (discount as number < 0.01) {
+    return {
+      status: 'error',
+      help: '面额最小值是0.01元'
+    }
+  }
+
+  if (amount === 0) {
+    if (discount as number > 500) {
+      return {
+        status: 'error',
+        help: '门槛为0时，面额需小于等于500元'
+      }
+    } else {
+      if (discount as number > 10) {
+        // Message.warning('您正在配置无门槛且面额大于10元的优惠券，请确认是否配置正确');
+      }
+    }
+  } 
 }];
 
 export default React.forwardRef(FieldAmountRule);
