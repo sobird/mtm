@@ -4,11 +4,11 @@
  * sobird<i@sobird.me> at 2023/09/18 21:05:33 created.
  */
 
-import React from 'react';
-import { InputNumber, Space } from 'antd';
+import React, { useState } from 'react';
+import { InputNumber, Space, Form } from 'antd';
 import type { ProFieldFC } from '@ant-design/pro-components';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
-
+type ValidateStatus = Parameters<typeof Form.Item>[0]['validateStatus'];
 // 兼容代码-----------
 import 'antd/lib/input-number/style';
 
@@ -38,11 +38,13 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
   },
   ref,
 ) => {
-  const { value, defaultValue, onChange, id } = fieldProps;
+  const { value, defaultValue, onChange, id, validator = [] } = fieldProps;
+
+  const [validate, setValidate] = useState([]);
 
   const [valuePair, setValuePair] = useMergedState(() => defaultValue, {
-    value: value,
-    onChange: onChange,
+    value,
+    onChange,
   });
 
   if (mode === 'read') {
@@ -87,6 +89,9 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
       const newValuePair = [...(valuePair || [])];
       newValuePair[index] = changedValue === null ? undefined : changedValue;
       setValuePair(newValuePair);
+
+      validate[index] = {...validator[index]?.(newValuePair)};
+      setValidate(validate);
     };
 
     const placeholderValue = fieldProps?.placeholder ||
@@ -101,9 +106,45 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
         : placeholderValue;
 
     const { className, ...restFieldProps } = fieldProps;
+
     const dom = (
       <Space size={10} onBlur={handleGroupBlur} className={className}>
-        <label htmlFor={`${id}-0`}>满</label>
+        <Form.Item
+          label="满"
+          htmlFor={`${id}-0`}
+          validateStatus={validate[0]?.status}
+          help={validate[0]?.help}
+        >
+          <InputNumber
+            style={{width: '100%'}}
+            prefix="￥"
+            min={0}
+            {...restFieldProps}
+            placeholder={getInputNumberPlaceholder(0)}
+            id={`${id}-0`}
+            value={valuePair?.[0]}
+            defaultValue={defaultValue?.[0]}
+            onChange={(changedValue) => handleChange(0, changedValue)}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="减"
+        >
+          <InputNumber
+            prefix="￥"
+            style={{width: '100%'}}
+            min={0}
+            {...restFieldProps}
+            placeholder={getInputNumberPlaceholder(1)}
+            id={`${id}-1`}
+            value={valuePair?.[1]}
+            defaultValue={defaultValue?.[1]}
+            onChange={(changedValue) => handleChange(1, changedValue)}
+          />
+        </Form.Item>
+      
+        {/* <label htmlFor={`${id}-0`}>满</label>
         <InputNumber<number>
           prefix="￥"
           style={{width: '100%'}}
@@ -126,7 +167,7 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
           value={valuePair?.[1]}
           defaultValue={defaultValue?.[1]}
           onChange={(changedValue) => handleChange(1, changedValue)}
-        />
+        /> */}
       </Space>
     );
 
@@ -150,7 +191,20 @@ export const validator = async (rule, value: ValuePair) => {
   if (!discount && discount !== 0) {
     throw new Error('请输入优惠金额');
   }
-
 };
+
+export const FieldValidator = [(value: ValuePair) => {
+  const [amount, discount] = value
+  if (!amount && amount !== 0) {
+    return {
+      status: 'error',
+      help: '请输入满减门槛'
+    }
+  }
+
+  
+}, (value: ValuePair) => {
+  //
+}];
 
 export default React.forwardRef(FieldAmountRule);

@@ -5,7 +5,7 @@ import type { ProFormFieldItemProps } from '@ant-design/pro-form/es/typing';
 import ProField from '@ant-design/pro-form/es/components/Field';
 
 export const WrappedProFormField = (ProFieldComponent: React.ElementType, valueType?: string) => {
-  const ProFormFiels: React.FC<ProFormFieldItemProps<InputProps, InputRef>> = ({
+  const ProFormField: React.FC<ProFormFieldItemProps<any, InputRef>> = ({
     fieldProps,
     proFieldProps,
     ...rest
@@ -34,5 +34,5 @@ export const WrappedProFormField = (ProFieldComponent: React.ElementType, valueT
     );
   };
   
-  return ProFormFiels;
+  return ProFormField;
 };

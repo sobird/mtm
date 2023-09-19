@@ -7,7 +7,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Card, Input, Spin } from 'antd';
 import { ProForm, ProFormText, ProFormDateTimeRangePicker, ProFormDigit, ProFormDigitRange } from '@ant-design/pro-components';
-import InputAmountRule, { validator } from '@/components/pro/form/AmountRule';
+import InputAmountRule, { validator, FieldValidator } from '@/components/pro/form/AmountRule';
 
 import CouponService, { ICouponEntity, ECouponType } from '@/services/coupon';
 
@@ -46,9 +46,7 @@ const CouponDetail: React.FC = () => {
 
         <InputAmountRule placeholder="test" readonly name="test"  label="123456" />
 
-        <InputAmountRule fieldProps={{rules: []}} placeholder={"12"} name="test" label="InputAmountRule" width="lg" rules={[
-          { validator },
-        ]} />
+        <InputAmountRule fieldProps={{validator: FieldValidator}} placeholder={"12"} name="test" label="InputAmountRule" width="lg" />
 
         <ProFormDigitRange separatorWidth={40} name="name2" label="ProFormDigitRange" width="lg" required/>
 
