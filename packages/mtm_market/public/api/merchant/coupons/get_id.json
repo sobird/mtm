@@ -5,6 +5,7 @@
     "id": "1070734573",
     "name": "测试",
     "displayName": null,
+    "test": [100, 10],
     "type": 0,
     "stime": 1642608000,
     "etime": 1643644799,

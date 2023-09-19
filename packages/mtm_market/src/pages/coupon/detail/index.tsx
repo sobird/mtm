@@ -6,11 +6,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { Form, Card, Input, Spin } from 'antd';
-import { ProForm, ProFormText, ProFormDateTimeRangePicker, ProFormDigit } from '@ant-design/pro-components';
-import InputAmountRule from '@/components/pro/field-amount-rule';
-
-import Test from '@/components/pro/form/Test';
-import Text from '@ant-design/pro-form/lib/components/Text';
+import { ProForm, ProFormText, ProFormDateTimeRangePicker, ProFormDigit, ProFormDigitRange } from '@ant-design/pro-components';
+import InputAmountRule from '@/components/pro/form/AmountRule';
 
 import CouponService, { ICouponEntity, ECouponType } from '@/services/coupon';
 
@@ -39,13 +36,14 @@ const CouponDetail: React.FC = () => {
           { required: true, message: '请填写优惠券名称' },
           { max: 10, message: '优惠券名称最多填写10个字' },
         ]}/>
-        <Form.Item label='优惠券文案' name='displayName'>
-          <InputAmountRule />
-        </Form.Item>
+       
         {/* 发放设置 */}
 
-        <Test label="Test" width="lg" />
-        <Text label="Text" />
+        <InputAmountRule placeholder="test" readonly name="test"  label="123456"/>
+
+        <InputAmountRule placeholder="test" name="test" label="InputAmountRule" width="lg" />
+
+        <ProFormDigitRange name="name2" label="ProFormDigitRange" width="lg" />
 
         <ProFormDateTimeRangePicker required width="lg" name="dateRange" label="发放时间" />
         <ProFormDigit label="发放张数" name="putCount" width="lg" min={1} max={1000000} />
