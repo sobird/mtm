@@ -1,27 +1,8 @@
 /**
- * 优惠券满减规则 自定义表单控件
+ * 优惠券满减规则 自定义表单控件 跟业务耦合
  * 
  * sobird<i@sobird.me> at 2023/09/18 21:05:33 created.
  */
-
-// import React, { ComponentProps } from "react";
-// import { InputNumber } from 'antd';
-
-// import './index.scss';
-
-// const InputAmountRule: React.FC<ComponentProps<typeof InputNumber>> = ({ value, onChange }) => {
-//   return (
-//     <div className="input-amount-rule">
-//       <label htmlFor="amount">满</label>
-//       <InputNumber prefix="￥" style={{ width: '100%' }} id="amount"/>
-
-//       <label htmlFor="discount">减</label>
-//       <InputNumber prefix="￥" style={{ width: '100%' }} id="discount"/>
-//     </div>
-//   )
-// }
-
-// export default InputAmountRule;
 
 import React from 'react';
 import { InputNumber, Space } from 'antd';
@@ -31,7 +12,6 @@ import useMergedState from 'rc-util/lib/hooks/useMergedState';
 
 // 兼容代码-----------
 import 'antd/lib/input-number/style';
-//----------------------
 
 export type Value = string | number | undefined | null;
 
@@ -40,7 +20,6 @@ export type ValuePair = Value[];
 export type FieldAmountRuleProps = {
   text: ValuePair;
   placeholder?: string | string[];
-  separator?: string;
   separatorWidth?: number;
 };
 
@@ -52,12 +31,11 @@ export type FieldAmountRuleProps = {
 const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
   {
     text,
-    mode: type,
+    mode,
     render,
     placeholder,
     renderFormItem,
     fieldProps,
-    separator = '~',
   },
   ref,
 ) => {
@@ -69,7 +47,7 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
     onChange: onChange,
   });
 
-  if (type === 'read') {
+  if (mode === 'read') {
     const getContent = (number: Value) => {
       const digit = new Intl.NumberFormat(undefined, {
         minimumSignificantDigits: 2,
@@ -84,12 +62,12 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
       </span>
     );
     if (render) {
-      return render(text, { mode: type, ...fieldProps }, dom);
+      return render(text, { mode, ...fieldProps }, dom);
     }
     return dom;
   }
 
-  if (type === 'edit' || type === 'update') {
+  if (mode === 'edit' || mode === 'update') {
     const handleGroupBlur = () => {
       if (Array.isArray(valuePair)) {
         //   仅在两个值均为数字时才做比较并转换
@@ -125,9 +103,6 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
         : placeholderValue;
 
     const { className, ...restFieldProps } = fieldProps;
-
-    console.log('restFieldProps', placeholderValue)
-
     const dom = (
       <Space size={10} onBlur={handleGroupBlur} className={className}>
         <label htmlFor={`${id}-0`}>满</label>
@@ -154,12 +129,17 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
     );
 
     if (renderFormItem) {
-      return renderFormItem(text, { mode: type, ...fieldProps }, dom);
+      return renderFormItem(text, { mode, ...fieldProps }, dom);
     }
     
     return dom;
   }
   return null;
+};
+
+/** 预置表单校验器 根据具体业务自定 */
+export const validator = async (rule, value) => {
+  return //
 };
 
 export default React.forwardRef(FieldAmountRule);

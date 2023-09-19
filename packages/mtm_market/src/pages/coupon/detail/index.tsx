@@ -23,9 +23,14 @@ const formItemLayout = {
 const CouponDetail: React.FC = () => {
   const [form] = ProForm.useForm();
 
+  const onFinish = (values, rule) => {
+    form.validateFields();
+    console.log('values', values, rule)
+  }
+
   return (
     <div className='page-coupon-detail'>
-      <ProForm layout="horizontal" {...formItemLayout} form={form} request={() => CouponService.detail(123)}>
+      <ProForm layout="horizontal" {...formItemLayout} form={form} request={() => CouponService.detail(123)} onFinish={onFinish}>
         <ProFormText readonly getValueProps={(value) => {
           return {
             value: ECouponType[value]
@@ -39,11 +44,13 @@ const CouponDetail: React.FC = () => {
        
         {/* 发放设置 */}
 
-        <InputAmountRule placeholder="test" readonly name="test"  label="123456"/>
+        <InputAmountRule placeholder="test" readonly name="test"  label="123456" />
 
-        <InputAmountRule placeholder="test" name="test" label="InputAmountRule" width="lg" />
+        <InputAmountRule placeholder="test" name="test" label="InputAmountRule" width="lg" rules={[
+          { required: true, message: '请填写优惠券名称' },
+        ]} />
 
-        <ProFormDigitRange name="name2" label="ProFormDigitRange" width="lg" />
+        <ProFormDigitRange name="name2" label="ProFormDigitRange" width="lg" required/>
 
         <ProFormDateTimeRangePicker required width="lg" name="dateRange" label="发放时间" />
         <ProFormDigit label="发放张数" name="putCount" width="lg" min={1} max={1000000} />

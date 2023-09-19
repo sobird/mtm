@@ -26,6 +26,7 @@ const ProFormAmountRule: React.FC<ProFormFieldItemProps<InputProps, InputRef>> =
       }}
       renderFormItem={(text: any, fieldProps: any) => {
         const { mode } = fieldProps;
+        console.log('renderFormItem', fieldProps)
         return <FieldAmountRule text={text} mode={mode} fieldProps={fieldProps} />
       }}
       fieldProps={fieldProps}
