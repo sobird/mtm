@@ -47,7 +47,8 @@ const CouponDetail: React.FC = () => {
         <InputAmountRule placeholder="test" readonly name="test"  label="123456" />
         <InputAmountRule fieldProps={{validator: FieldValidator}} placeholder={"12"} name="test" label="InputAmountRule" width="lg" />
 
-        <ProFormUseTerm label="ProFormUseTerm" />
+        <ProFormUseTerm readonly name="useTerm" fieldProps={{b: 'b'}} label="只读模式" width="lg" />
+        <ProFormUseTerm name="useTerm" fieldProps={{b: 'b'}} label="ProFormUseTerm" width="lg" />
 
         <ProFormDigitRange separatorWidth={40} name="name2" label="ProFormDigitRange" width="lg" required/>
 

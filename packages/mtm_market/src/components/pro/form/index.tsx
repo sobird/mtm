@@ -10,6 +10,7 @@ export const WrappedProFormField = (ProFieldComponent: React.ElementType, valueT
     proFieldProps,
     ...rest
   }: ProFormFieldItemProps<InputProps, InputRef>) => {
+    console.log(valueType, fieldProps, proFieldProps, rest)
     return (
       <ProField
         valueType={valueType}
@@ -19,7 +20,6 @@ export const WrappedProFormField = (ProFieldComponent: React.ElementType, valueT
         }}
         renderFormItem={(text: any, fieldProps: any) => {
           const { mode } = fieldProps;
-          fieldProps.test = 123;
           return <ProFieldComponent text={text} mode={mode} fieldProps={fieldProps} />;
         }}
         fieldProps={fieldProps}

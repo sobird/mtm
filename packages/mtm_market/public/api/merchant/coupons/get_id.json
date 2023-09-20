@@ -13,6 +13,7 @@
     "price": 100,
     "discount": 10,
     "limitCount": 1,
+    "useTerm": [3, [1642608000, 1643644799]],
     "validDays": 3,
     "useStime": null,
     "useeTime": null,
