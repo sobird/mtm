@@ -36,9 +36,6 @@ function App() {
 
   return (
     <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm' theme={theme}>
-
-      <FederatedAdapter component={ChildApp}>123</FederatedAdapter>
-
       <HashRouter>
         <Routes>
           <Route path='/login' element={<Login />}></Route>
