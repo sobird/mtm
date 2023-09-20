@@ -1,5 +1,5 @@
 /**
- * 商家后台SPA Layout
+ * 商家管理后台 布局组件
  *
  * sobird<i@sobird.me> at 2023/09/06 16:47:45 created.
  */
@@ -10,7 +10,7 @@ import Header from './header';
 import Aside from './aside';
 import './index.scss';
 
-const LayoutMain: React.FC<PropsWithChildren> = ({ children }) => {
+const LayoutAdmin: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <div
@@ -45,4 +45,4 @@ const LayoutMain: React.FC<PropsWithChildren> = ({ children }) => {
   );
 }
 
-export default LayoutMain;
+export default LayoutAdmin;

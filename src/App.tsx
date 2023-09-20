@@ -14,7 +14,7 @@ ConfigProvider.config({
   theme,
 })
 
-import config from './routes/config';
+import config from '@/routes/config';
 const router = createHashRouter(config);
 
 function App() {

@@ -5,9 +5,9 @@
  */
 
 import { lazy, Suspense } from "react";
-import { Outlet, RouteObject, RouteProps } from "react-router-dom";
+import { Outlet, RouteObject } from "react-router-dom";
 
-import LayoutMain from '@/components/layout/main';
+import LayoutAdmin from '@/components/layout/admin';
 const Login = lazy(() => import('@/pages/login'));
 const Register = lazy(() => import('@/pages/register'));
 const RegisterSuccess = lazy(() => import('@/pages/register/success'));
@@ -19,7 +19,7 @@ const EntryCompany = lazy(() => import('@/pages/settleinjx/company'));
 const config: RouteObject[] = [
   {
     path: "/",
-    element: <LayoutMain><Outlet /></LayoutMain>,
+    element: <LayoutAdmin><Outlet /></LayoutAdmin>,
     //  errorElement: "errorElement",
     children: [
       {
