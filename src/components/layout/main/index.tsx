@@ -3,14 +3,14 @@
  *
  * sobird<i@sobird.me> at 2023/09/06 16:47:45 created.
  */
-
+import React, { PropsWithChildren } from 'react';
 import { Watermark } from 'antd';
 import classNames from 'classnames';
 import Header from './header';
 import Aside from './aside';
 import './index.scss';
 
-export default function LayoutMain() {
+const LayoutMain: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <div
@@ -21,9 +21,7 @@ export default function LayoutMain() {
         <Header />
         <div className='app-body'>
           <Aside />
-          <main className='app-main'>
-            <div>123</div>
-          </main>
+          <main className='app-main'>{children}</main>
         </div>
       </div>
       <Watermark
@@ -46,3 +44,5 @@ export default function LayoutMain() {
     </>
   );
 }
+
+export default LayoutMain;
