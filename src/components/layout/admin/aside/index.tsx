@@ -29,6 +29,12 @@ const Aside: React.FunctionComponent = () => {
           >
             <Link to="/about">关于</Link>
           </Menu.Item>
+          <Menu.Item
+            key="/setting"
+            icon={<SettingOutlined />}
+          >
+            <Link to="/setting">设置</Link>
+          </Menu.Item>
         </Menu>
       </div>
     </aside>

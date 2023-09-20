@@ -31,6 +31,8 @@ const IdUploadDemo: React.FC<PropsWithChildren> = ({ children }) => {
         onCancel={() => setOpen(false)}
         width="auto"
         okText="我知道了"
+        transitionName=""
+        maskTransitionName=""
       >
         <p>1. 身份证件正反面复印件，加盖开店公司印章：</p>
         <Space style={{marginBottom: '20px'}}>
