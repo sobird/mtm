@@ -30,7 +30,7 @@ module.exports = {
     ],
     
     // eslint-plugin-react-refresh
-    'react-refresh/only-export-components': 'warn',
+    'react-refresh/only-export-components': 'off',
     // jsx缩进
     // 'react/jsx-indent': ['error', 2],
     // jsx props 缩进
