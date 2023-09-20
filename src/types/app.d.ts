@@ -1,4 +1,7 @@
-declare module 'axios/lib/helpers/cookies';
+// 全局参数定义
+declare interface Window {
+  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
+}
 
 declare let process: {
   env: {

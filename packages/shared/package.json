@@ -1,5 +1,5 @@
 {
-  "name": "@mtm/common",
+  "name": "@mtm/shared",
   "version": "0.0.1",
   "description": "MTM微前端通用包",
   "main": "index.js",
