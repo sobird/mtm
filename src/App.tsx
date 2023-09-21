@@ -21,9 +21,7 @@ const router = createHashRouter(config);
 function App() {
   return (
     <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm' theme={theme}>
-      <Suspense>
-        <RouterProvider router={router} />
-      </Suspense>
+      <RouterProvider router={router} />
     </ConfigProvider>
   );
 }

@@ -3,11 +3,15 @@
  *
  * sobird<i@sobird.me> at 2023/09/06 16:47:45 created.
  */
-import React, { PropsWithChildren } from 'react';
-import { Watermark } from 'antd';
+import React, { PropsWithChildren, Suspense } from 'react';
+import { Outlet } from 'react-router-dom';
+import { Watermark, Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import Header from './header';
 import Aside from './aside';
+import ErrorBoundary from "@/components/error-boundary";
+
 import './index.scss';
 
 const LayoutAdmin: React.FC<PropsWithChildren> = ({ children }) => {
@@ -21,7 +25,12 @@ const LayoutAdmin: React.FC<PropsWithChildren> = ({ children }) => {
         <Header />
         <div className='app-body'>
           <Aside />
-          <main className='app-main'>{children}</main>
+          <main className='app-main'>
+            {children ? children : (
+              <ErrorBoundary>
+                <Suspense fallback={<Spin indicator={<LoadingOutlined />} />}><Outlet /></Suspense>
+              </ErrorBoundary>
+            )}</main>
         </div>
       </div>
       <Watermark
