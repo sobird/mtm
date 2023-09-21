@@ -5,12 +5,12 @@
  */
 import React, { PropsWithChildren, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Watermark, Spin } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { Watermark } from 'antd';
 import classNames from 'classnames';
 import Header from './header';
 import Aside from './aside';
 import ErrorBoundary from "@/components/error-boundary";
+import Loading from '@/components/loading';
 
 import './index.scss';
 
@@ -28,7 +28,7 @@ const LayoutAdmin: React.FC<PropsWithChildren> = ({ children }) => {
           <main className='app-main'>
             {children ? children : (
               <ErrorBoundary>
-                <Suspense fallback={<Spin indicator={<LoadingOutlined />} />}><Outlet /></Suspense>
+                <Suspense fallback={<Loading />}><Outlet /></Suspense>
               </ErrorBoundary>
             )}</main>
         </div>
