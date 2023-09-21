@@ -4,6 +4,8 @@
  * sobird<i@sobird.me> at 2023/06/30 19:48:37 created.
  */
 
+import { TopNavHeader } from "@ant-design/pro-layout";
+
 /**
  * 实现表格数据相同的行合并
  * 
@@ -32,8 +34,9 @@ export function getRowSpans (data: any[], key: string) {
 
 export interface IList {
   id: number;
-  parentId: number;
-  name: string;
+  parentId: string;
+  name?: string;
+  title: string;
   [key: string]: any;
 }
 
@@ -49,7 +52,7 @@ export function listToTree(list: IList[]) {
 
   list.forEach(item => {
     if (!item.children) {
-      item.children = []
+      //item.children = []
     }
     map.set(item.id, item);
   })
@@ -57,6 +60,9 @@ export function listToTree(list: IList[]) {
   list.forEach(item => {
     const parent = map.get(item.parentId);
     if (parent) {
+      if (!parent.children) {
+        parent.children = [];
+      }
       parent.children.push(item);
     } else {
       result.push(item);

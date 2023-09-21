@@ -2,8 +2,6 @@
   "code": 0,
   "message": "ok",
   "data": {
-    "code": 0,
-    "msg": null,
     "menus": [
       {
         "title": "子账号管理",
@@ -708,7 +706,7 @@
         "toolMenu": false
       }
     ],
-    "generateMenuTool": [
+    "favorites": [
       {
         "title": "订单列表",
         "icon": "bars",
