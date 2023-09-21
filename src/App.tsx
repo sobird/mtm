@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Suspense, useState } from 'react';
+import { Suspense } from 'react';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
+
 import './App.css';
 
 import '@mtm/shared/provider';
@@ -20,7 +21,9 @@ const router = createHashRouter(config);
 function App() {
   return (
     <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm' theme={theme}>
-      <Suspense><RouterProvider router={router} /></Suspense>
+      <Suspense>
+        <RouterProvider router={router} />
+      </Suspense>
     </ConfigProvider>
   );
 }

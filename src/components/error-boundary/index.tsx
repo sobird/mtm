@@ -4,11 +4,10 @@
  * sobird<i@sobird.me> at 2023/05/09 1:51:06 created.
  */
 
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { Result, Button } from "antd";
 
 interface ErrorBoundaryProps {
-  children?: React.ReactNode;
   title?: React.ReactNode;
   onRetry?: () => void;
 }
@@ -26,7 +25,7 @@ export interface ErrorInfo {
 
 const reloadPage = () => window.location.reload();
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class ErrorBoundary extends React.Component<PropsWithChildren<ErrorBoundaryProps>, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
@@ -39,24 +38,19 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     return { error };
   }
 
-  // 将错误信息上报给服务器
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // 将错误信息上报给服务器
     console.log(error, errorInfo);
   }
 
   private handleRetry = () => {
     const { onRetry = reloadPage } = this.props;
-    this.setState(
-      {
-        error: null,
-      },
-      onRetry
-    );
+    this.setState({ error: null }, onRetry);
   };
 
   render(): React.ReactNode {
     const { error } = this.state;
-    const { children } = this.props;
+    const { title, children } = this.props;
 
     if (error) {
       // 你可以自定义降级后的 UI 并渲染
@@ -65,9 +59,9 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       return (
         <Result
           status="error"
-          title={this.props.title || "应用出现异常"}
+          title={title || "应用出现异常"}
           subTitle={
-            <span>
+            <>
               请稍后重试，无法恢复时请反馈给客服、运营同学
               {errorMessage && (
                 <>
@@ -75,7 +69,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                   <span>{errorMessage}</span>
                 </>
               )}
-            </span>
+            </>
           }
           extra={
             <Button type="primary" onClick={this.handleRetry}>

@@ -5,9 +5,10 @@
  */
 
 import { lazy, Suspense } from "react";
-import { Outlet, RouteObject } from "react-router-dom";
-
+import { Outlet, RouteObject, useRouteError } from "react-router-dom";
 import LayoutAdmin from '@/components/layout/admin';
+import ErrorBoundary from "@/components/error-boundary";
+
 const Login = lazy(() => import('@/pages/login'));
 const Register = lazy(() => import('@/pages/register'));
 const RegisterSuccess = lazy(() => import('@/pages/register/success'));
@@ -16,15 +17,26 @@ const EntryHome = lazy(() => import('@/pages/settleinjx/home'));
 const EntryShop = lazy(() => import('@/pages/settleinjx/shop'));
 const EntryCompany = lazy(() => import('@/pages/settleinjx/company'));
 
+
+
+function ErrorBoundary1() {
+  const error = useRouteError();
+  dd
+  return (
+    <div>ddd</div>
+  )
+}
+
+
+
 const config: RouteObject[] = [
   {
     path: "/",
-    element: <LayoutAdmin><Outlet /></LayoutAdmin>,
-    //  errorElement: "errorElement",
+    element: <LayoutAdmin><ErrorBoundary><Outlet /></ErrorBoundary></LayoutAdmin>,
     children: [
       {
         path: "test",
-        element: <div>Child</div>,
+        element: <ErrorBoundary1 />,
       },
 
       {
@@ -33,7 +45,7 @@ const config: RouteObject[] = [
       },
     ],
   },
-  { path: '/login', element:<Login /> },
+  { path: '/login', element: <ErrorBoundary><Login /> </ErrorBoundary>},
   { path: '/register', element:<Register /> },
   { path: '/register/success', element:<RegisterSuccess /> },
   { path: '/settleinpc', element:<SettleInpc /> },
