@@ -17,38 +17,38 @@
     overflow-x: hidden;
     overflow-y: overlay;
 
-    .mtm-menu {
-      background-color: #fff;
-      border-right: none;
+    // .mtm-menu {
+    //   background-color: #fff;
+    //   border-right: none;
 
-      &.mtm-menu-inline-collapsed {
-        width: 64px;
-      }
+    //   &.mtm-menu-inline-collapsed {
+    //     width: 64px;
+    //   }
 
-      .mtm-menu-item {
-        width: 100%;
-        margin: 0;
-        background-color: #f5f6fa;
+    //   .mtm-menu-item {
+    //     width: 100%;
+    //     margin: 0;
+    //     background-color: #f5f6fa;
         
-        .iconfont {
-          font-size: 1.1em;
-        }
-        &:has(+ .mtm-menu-item-selected) {
-          border-bottom-right-radius: 10px;
-        }
-      }
+    //     .iconfont {
+    //       font-size: 1.1em;
+    //     }
+    //     &:has(+ .mtm-menu-item-selected) {
+    //       border-bottom-right-radius: 10px;
+    //     }
+    //   }
 
-      .mtm-menu-item-selected {
-        background-color: #fff;
-        color: #000;
-        font-weight: 500;
+    //   .mtm-menu-item-selected {
+    //     background-color: #fff;
+    //     color: #000;
+    //     font-weight: 500;
         
 
-        & + li {
-          border-top-right-radius: 10px;
-        }
-      }
-    }
+    //     & + li {
+    //       border-top-right-radius: 10px;
+    //     }
+    //   }
+    // }
   }
 
   // background-color: #fff;
@@ -80,6 +80,166 @@
     &::-webkit-scrollbar-thumb {
       border-radius: 4px;
       background-color: #dbdbdb;
+    }
+  }
+}
+
+.app-menu {
+  overflow-x: hidden;
+  overflow-y: overlay;
+  height: calc(100% - 80px);
+  padding: 15px 10px;
+
+  // 菜单项通用样式
+  .mtm-menu {
+    border-right: none;
+
+    &::before,
+    &::after {
+      content: none;
+    }
+    .mtm-menu-item-divider {
+      margin: 10px 0;
+    }
+    .mtm-menu-item {
+      a {
+        &:hover {
+          text-decoration: none;
+        }
+      }
+      .iconfont {
+        vertical-align: text-top;
+        margin-right: 5px;
+      }
+    }
+  }
+  .mtm-menu-inline {
+    border: none;
+  }
+
+  .mtm-menu-root {
+    // 根菜单项
+    &> .mtm-menu-item {
+      background-color: transparent;
+      line-height: normal;
+      height: auto;
+      margin: 0 0 10px;
+    }
+    &> .mtm-menu-item-selected {
+      &::after {
+        border: 0;
+      }
+    }
+  }
+
+  .mtm-menu-submenu {
+    .mtm-menu-submenu-title {
+      padding: 10px 0 !important;
+      height: auto;
+      line-height: normal;
+
+      font-weight: 500;
+      color: #222;
+
+      .iconfont {
+        vertical-align: text-top;
+        margin-right: 5px;
+      }
+
+      .mtm-menu-submenu-arrow {
+        right: 0;
+      }
+    }
+
+    .mtm-menu-sub {
+      display: flex;
+      flex-wrap: wrap;
+      flex: 1 1;
+      justify-content: space-between;
+      &.mtm-menu-hidden {
+        display: none;
+      }
+      .mtm-menu-item {
+        width: 48%;
+        height: 24px;
+        line-height: 24px;
+        border-radius: 3px;
+        padding-left: 5px !important;
+        padding-right: 5px;
+        margin: 2px 0;
+        font-size: 12px;
+        .iconfont {
+          font-size: 1.1em;
+        }
+
+        &:hover {
+          background-color: rgb(243, 246, 249);
+        }
+      }
+
+      &> .mtm-menu-item-divider {
+        display: none;
+      }
+
+      &> .mtm-menu-submenu {
+        width: 100%;
+        background-color: #f3f6f9;
+        border-radius: 3px;
+        .mtm-menu-submenu-title {
+          font-size: 12px;
+          margin: 0 5px !important;
+          line-height: normal;
+          height: auto;
+          width: auto;
+          .mtm-menu-submenu-arrow {
+            color: #888;
+          }
+        }
+        &> .mtm-menu-sub {
+          width: auto;
+          margin: 0 10px;
+          background-color: transparent;
+          padding-bottom: 10px;
+          .mtm-menu-item {
+            &:hover {
+              background-color: #fff;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 折叠后的样式
+  .mtm-menu-inline-collapsed {
+    width: 45px;
+    .mtm-menu-item-divider {
+      margin: 0;
+    }
+    &> .mtm-menu-item {
+      text-align: center;
+      padding: 10px 0 !important;
+      .iconfont {
+        font-size: 18px;
+        & + span {
+          display: inline-block;
+          max-width: 0;
+          opacity: 0;
+        }
+      }
+    }
+    .mtm-menu-submenu {
+      .mtm-menu-submenu-title {
+        text-align: center;
+        .iconfont {
+          font-size: 18px;
+          & + span {
+            display: inline-block;
+            max-width: 0;
+            opacity: 0;
+          }
+        }
+      }
     }
   }
 }
