@@ -44,7 +44,7 @@
       },
       {
         "title": "消息设置",
-        "icon": "icon-mshopxiaoxishezhi",
+        "icon": "message",
         "url": "",
         "id": "19221",
         "parentId": "-1",
@@ -96,7 +96,7 @@
       },
       {
         "title": "商家成长",
-        "icon": "icon-mshopshangjiachengchangv3",
+        "icon": "growth",
         "url": "/merchant-growing",
         "id": "18846",
         "parentId": "-1",
@@ -148,7 +148,7 @@
       },
       {
         "title": "规则管理",
-        "icon": "icon-mshopmtmall-guizezhongxin",
+        "icon": "rule",
         "url": "/violation",
         "id": "18849",
         "parentId": "-1",
@@ -343,7 +343,7 @@
       },
       {
         "title": "顾客管理",
-        "icon": "icon-mshopgukeguanli",
+        "icon": "customer",
         "url": "/customer-manage",
         "id": "1875",
         "parentId": "-1",
@@ -395,7 +395,7 @@
       },
       {
         "title": "后台首页",
-        "icon": "icon-mshopmtmall-shujutongji",
+        "icon": "home-fill",
         "url": "/home",
         "id": "1370",
         "parentId": "-1",
@@ -421,7 +421,7 @@
       },
       {
         "title": "发货管理",
-        "icon": "icon-mshopmtmall-fahuoguanli",
+        "icon": "express",
         "url": "/shipping",
         "id": "1371",
         "parentId": "-1",
@@ -434,7 +434,7 @@
       },
       {
         "title": "营销中心",
-        "icon": "icon-mshopmtmall-yingxiaozhongxin",
+        "icon": "marketing",
         "url": "/marketing",
         "id": "1499",
         "parentId": "-1",
@@ -512,7 +512,7 @@
       },
       {
         "title": "商品管理",
-        "icon": "icon-mshopmtmall-shangpinguanli",
+        "icon": "commodity",
         "url": "/product",
         "id": "1382",
         "parentId": "-1",
@@ -538,7 +538,7 @@
       },
       {
         "title": "售后管理",
-        "icon": "icon-mshopmtmall-shouhouguanli",
+        "icon": "service",
         "url": "/aftersale",
         "id": "1387",
         "parentId": "-1",
@@ -564,7 +564,7 @@
       },
       {
         "title": "店铺管理",
-        "icon": "icon-mshopmtmall-dianpuguanli",
+        "icon": "shop",
         "url": "/shop",
         "id": "1391",
         "parentId": "-1",
@@ -590,7 +590,7 @@
       },
       {
         "title": "数据中心",
-        "icon": "icon-mshopmtmall-shujuzhongxin",
+        "icon": "data",
         "url": "/data/center",
         "id": "1398",
         "parentId": "-1",
@@ -603,7 +603,7 @@
       },
       {
         "title": "账户资金",
-        "icon": "icon-mshopmtmall-zhanghuzijin",
+        "icon": "fund",
         "url": "/account",
         "id": "1399",
         "parentId": "-1",
@@ -681,7 +681,7 @@
       },
       {
         "title": "消息中心",
-        "icon": "icon-mshopmtmall-zhanneixin",
+        "icon": "message-center",
         "url": "/site-notice",
         "id": "1406",
         "parentId": "-1",
@@ -694,7 +694,7 @@
       },
       {
         "title": "客服平台",
-        "icon": "icon-mshopmtmall-xiaoxi",
+        "icon": "customer-service",
         "url": "/notice-center",
         "id": "1407",
         "parentId": "-1",

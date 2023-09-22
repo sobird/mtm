@@ -109,16 +109,21 @@
       display: inline;
       .mtm-menu-title-content {
         height: 24px;
-      }
-      a {
-        &:hover {
-          text-decoration: none;
+        transition: none;
+        a {
+          &:hover {
+            text-decoration: none;
+          }
+        }
+        .iconfont {
+          vertical-align: text-top;
+          margin-right: 5px;
         }
       }
-      .iconfont {
-        vertical-align: text-top;
-        margin-right: 5px;
-      }
+      
+    }
+    .mtm-menu-item-selected {
+      font-weight: 500;
     }
     &.mtm-menu-inline {
       border: none;
@@ -146,8 +151,7 @@
       padding: 10px 0 !important;
       height: auto;
       line-height: normal;
-
-      font-weight: 500;
+      font-weight: 400;
       color: #222;
 
       .iconfont {
