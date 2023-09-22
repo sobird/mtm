@@ -108,16 +108,14 @@ function renderMenu(routes) {
 const Aside: React.FunctionComponent = () => {
   const location = useLocation();
 
-  const [items, setItems] = useState([]);
+  const [menus, setMenus] = useState([]);
   useEffect(() => {
     MenusService.list().then(res => {
-      setItems(res.menus);
+      setMenus(res);
     })
   }, []);
 
-  const asideMenu = renderMenu(items);
-
-  console.log('asideMenu', asideMenu)
+  const asideMenu = renderMenu(menus);
 
   return (
     <aside className="app-aside">

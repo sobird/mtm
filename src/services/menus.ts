@@ -14,7 +14,7 @@ export interface IMenuItem {
   title: string;
   icon: string;
   url: string;
-  id: number,
+  id: number | string,
   parentId: string;
   code: string;
   auth: boolean;
@@ -22,6 +22,7 @@ export interface IMenuItem {
   level: number;
   sortId: number;
   toolMenu: boolean;
+  children?: IMenuItem[];
 }
 
 export interface IMenus {
@@ -29,17 +30,30 @@ export interface IMenus {
   favorites: IMenuItem[]
 }
 
+
+const FavoriteFold: IMenuItem = {
+  title: '常用功能',
+  code: "favorite-sub-menu",
+  icon: 'favorite',
+  id: "favorite-sub-menu",
+  index: 1,
+  level: 0,
+  parentId: '-1',
+  sortId: 0,
+  auth: false,
+  toolMenu: false,
+  url: '/favorite-sub-menu',
+};
+
 const MenusService = {
   async list(parentId?: number) {
     return http.get<IMenus>('/menus', { parentId }).then(res => {
-      let {menus, favorites}  = res;
-      menus = menus.sort((a: any, b: any) => a.index - b.index);
-      menus = listToTree(res.menus);
-      favorites = listToTree(res.favorites);
-      return {
-        menus,
-        favorites
-      }
+      const menus = res.menus.sort((a: any, b: any) => a.index - b.index);
+
+      const [first, ...others] = listToTree(menus);
+      FavoriteFold.children = res.favorites
+
+      return [first, FavoriteFold, ...others]
     });
   },
 

@@ -33,7 +33,7 @@ export function getRowSpans (data: any[], key: string) {
 }
 
 export interface IList {
-  id: number;
+  id: number | string;
   parentId: string;
   name?: string;
   title: string;
