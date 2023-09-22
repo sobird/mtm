@@ -12,7 +12,7 @@ const theme = { token: { colorPrimary: '#ffd100', borderRadius: 2, colorWhite: '
 
 ConfigProvider.config({
   prefixCls: 'mtm',
-  theme,
+  // theme,
 })
 
 import config from '@/routes/config';
@@ -20,7 +20,7 @@ const router = createHashRouter(config);
 
 function App() {
   return (
-    <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm' theme={theme}>
+    <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm'>
       <RouterProvider router={router} />
     </ConfigProvider>
   );

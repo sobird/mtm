@@ -30,10 +30,12 @@ export interface IMenus {
 }
 
 const MenusService = {
-  list(parentId?: number) {
+  async list(parentId?: number) {
     return http.get<IMenus>('/menus', { parentId }).then(res => {
-      const menus = listToTree(res.menus);
-      const favorites = listToTree(res.favorites);
+      let {menus, favorites}  = res;
+      menus = menus.sort((a: any, b: any) => a.index - b.index);
+      menus = listToTree(res.menus);
+      favorites = listToTree(res.favorites);
       return {
         menus,
         favorites

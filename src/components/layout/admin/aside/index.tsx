@@ -76,7 +76,7 @@ function renderMenu(routes) {
           key={route.id}
           title={(
             <>
-              {typeof icon === 'string' ? <i className={`icon iconfont icon-${icon}`} /> : icon}
+              {typeof icon === 'string' ? <i className={`main-app-iconfont ${icon}`} /> : icon}
               <span>{name}</span>
             </>
           )}
@@ -88,7 +88,7 @@ function renderMenu(routes) {
       return [
         <Menu.Item key={pathname}>
           <Link to={pathname}>
-            {typeof icon === 'string' ? <i className={`icon iconfont icon-${icon}`} /> : icon}
+            {typeof icon === 'string' ? <i className={`main-app-iconfont ${icon}`} /> : icon}
             <span>{name}</span>
           </Link>
         </Menu.Item>,
@@ -129,8 +129,7 @@ const Aside: React.FunctionComponent = () => {
             defaultSelectedKeys={[location.pathname]}
             defaultOpenKeys={asideMenu.defaultOpenKeys}
             // items={items}
-            // inlineIndent={0}
-            forceSubMenuRender={true}
+            inlineIndent={7}
           >
             {asideMenu.menu}
           </Menu>}

@@ -6,7 +6,8 @@
 
 .app-aside {
   height: 100%;
-  background-color: #f5f6fa;
+  // background-color: #f5f6fa;
+  background: rgba(0, 0, 0, 0.02);
 
   justify-content: center;
   width: 212px;
@@ -87,12 +88,14 @@
 .app-menu {
   overflow-x: hidden;
   overflow-y: overlay;
-  height: calc(100% - 80px);
+  // height: calc(100% - 80px);
   padding: 15px 10px;
+  border-right: none;
 
   // 菜单项通用样式
   .mtm-menu {
     border-right: none;
+    background-color: transparent;
 
     &::before,
     &::after {
@@ -102,6 +105,11 @@
       margin: 10px 0;
     }
     .mtm-menu-item {
+      padding: 0;
+      display: inline;
+      .mtm-menu-title-content {
+        height: 24px;
+      }
       a {
         &:hover {
           text-decoration: none;
@@ -112,10 +120,11 @@
         margin-right: 5px;
       }
     }
+    &.mtm-menu-inline {
+      border: none;
+    }
   }
-  .mtm-menu-inline {
-    border: none;
-  }
+  
 
   .mtm-menu-root {
     // 根菜单项
@@ -149,6 +158,10 @@
       .mtm-menu-submenu-arrow {
         right: 0;
       }
+
+      &:hover {
+        background-color: transparent;
+      }
     }
 
     .mtm-menu-sub {
@@ -156,6 +169,9 @@
       flex-wrap: wrap;
       flex: 1 1;
       justify-content: space-between;
+      &.mtm-menu-inline {
+        background-color: transparent;
+      }
       &.mtm-menu-hidden {
         display: none;
       }
