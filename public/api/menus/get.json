@@ -447,7 +447,7 @@
       },
       {
         "title": "订单列表",
-        "icon": "bars",
+        "icon": "",
         "url": "/shipping/order-list",
         "id": "1372",
         "parentId": "1371",

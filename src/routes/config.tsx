@@ -7,6 +7,7 @@
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 import LayoutAdmin from '@/components/layout/admin';
+import NoneSupport from "@/pages/none-support";
 
 const Login = lazy(() => import('@/pages/login'));
 const Register = lazy(() => import('@/pages/register'));
@@ -28,7 +29,7 @@ const config: RouteObject[] = [
 
       {
         path: "*",
-        element: <div>404</div>,
+        element: <NoneSupport />,
       },
     ],
   },

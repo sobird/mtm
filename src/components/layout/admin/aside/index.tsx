@@ -51,7 +51,7 @@ const isMenu = (route): {
  * @param dirname
  * @returns
  */
-function renderMenu(routes) {
+function renderMenu(routes, badge) {
   const defaultOpenKeys: any[] = [];
   const menu = routes.map(route => {
     const {
@@ -76,7 +76,7 @@ function renderMenu(routes) {
           key={route.id}
           title={(
             <>
-              {typeof icon === 'string' ? <i className={`icon iconfont icon-${icon}`} /> : icon}
+              {icon ? <i className={`icon iconfont icon-${icon}`} /> : null}
               <span>{name}</span>
             </>
           )}
@@ -88,7 +88,7 @@ function renderMenu(routes) {
       return [
         <Menu.Item key={pathname}>
           <Link to={pathname}>
-            {typeof icon === 'string' ? <i className={`icon iconfont icon-${icon}`} /> : icon}
+            {<i className={`icon iconfont icon-${icon}`} />}
             <span>{name}</span>
           </Link>
         </Menu.Item>,
@@ -107,15 +107,20 @@ function renderMenu(routes) {
 
 const Aside: React.FunctionComponent = () => {
   const location = useLocation();
-
   const [menus, setMenus] = useState([]);
+  const [badge, setBadge] = useState({});
+
   useEffect(() => {
     MenusService.list().then(res => {
       setMenus(res);
+    });
+
+    MenusService.badges().then(res => {
+      setBadge(res);
     })
   }, []);
 
-  const asideMenu = renderMenu(menus);
+  const asideMenu = renderMenu(menus, badge);
 
   return (
     <aside className="app-aside">

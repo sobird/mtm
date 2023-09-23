@@ -30,6 +30,13 @@ export interface IMenus {
   favorites: IMenuItem[]
 }
 
+export interface IMenuBadge {
+  menuId: number;
+  actionType?: 10 | 20;
+  noticeStyle: 10 | 20 | 30;
+  noticeContent: string;
+}
+
 
 const FavoriteFold: IMenuItem = {
   title: '常用功能',
@@ -59,6 +66,21 @@ const MenusService = {
 
   favorite(favorites?: Partial<IMenuItem>[]) {
     return http.patch('/menus', { favorites });
+  },
+
+  /** 可将此接口合并到 /menus */
+  badges(menuId?: number) {
+    return http.get<IMenuBadge[]>('/menus/badges', { menuId }).then(res => {
+      return (
+        res?.reduce((pre, cur) => {
+          if (!cur?.menuId) {
+            return pre;
+          }
+          pre[`${cur?.menuId}`] = cur;
+          return pre;
+        }, {}) || {}
+      );
+    });
   },
 }
 
