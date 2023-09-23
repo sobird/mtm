@@ -318,7 +318,7 @@
       {
         "title": "优惠券",
         "icon": "''",
-        "url": "/marketing/coupon",
+        "url": "/market/coupons",
         "id": "1734",
         "parentId": "1499",
         "code": "a1bfbb83-a74c-4f2a-842f-3f37f9f733de",
@@ -409,7 +409,7 @@
       {
         "title": "营销活动",
         "icon": "",
-        "url": "/marketing/activity",
+        "url": "/market/activity",
         "id": "1882",
         "parentId": "1499",
         "code": "9aeb6fbe-6b54-481f-a314-adb831b62c3d",
@@ -709,7 +709,7 @@
     "favorites": [
       {
         "title": "订单列表",
-        "icon": "bars",
+        "icon": "",
         "url": "/shipping/order-list",
         "id": "1372",
         "parentId": "1371",
