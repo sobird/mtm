@@ -16,10 +16,10 @@ body {
 /* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
 @font-face {
   font-family: 'iconfont';  /* Project id 4264481 */
-  src: url('//at.alicdn.com/t/c/font_4264481_ef0pbodb9oc.woff2?t=1695392008149') format('woff2'),
-       url('//at.alicdn.com/t/c/font_4264481_ef0pbodb9oc.woff?t=1695392008149') format('woff'),
-       url('//at.alicdn.com/t/c/font_4264481_ef0pbodb9oc.ttf?t=1695392008149') format('truetype'),
-       url('//at.alicdn.com/t/c/font_4264481_ef0pbodb9oc.svg?t=1695392008149#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/c/font_4264481_7rom14dh30o.woff2?t=1695477901197') format('woff2'),
+       url('//at.alicdn.com/t/c/font_4264481_7rom14dh30o.woff?t=1695477901197') format('woff'),
+       url('//at.alicdn.com/t/c/font_4264481_7rom14dh30o.ttf?t=1695477901197') format('truetype'),
+       url('//at.alicdn.com/t/c/font_4264481_7rom14dh30o.svg?t=1695477901197#iconfont') format('svg');
 }
 
 .iconfont {
@@ -28,6 +28,14 @@ body {
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-cargo:before {
+  content: "\e7bb";
+}
+
+.icon-bars:before {
+  content: "\e60e";
 }
 
 .icon-favorite:before {

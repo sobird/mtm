@@ -17,23 +17,22 @@
       height: 32px;
     }
   }
-}
-
-.avatar-dropdown{
-  width:162px;
-}
-
-.app-avatar {
-  cursor: pointer;
-  img {
-    height: 32px;
-    width: 32px;
-    border-radius: 50%;
+  .avatar-dropdown{
+    width:162px;
   }
-}
-
-.header-bread {
-  display: flex;
-  justify-content: flex-end;
-  flex-grow: 1;
+  
+  .app-avatar {
+    cursor: pointer;
+    img {
+      height: 32px;
+      width: 32px;
+      border-radius: 50%;
+    }
+  }
+  
+  .header-bread {
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+  }
 }

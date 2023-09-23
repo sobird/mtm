@@ -8,7 +8,7 @@ import React from "react";
 import { useSelector } from 'react-redux';
 
 const Home: React.FC = () => {
-  const st = useSelector(state => state);
+  const st = useSelector(state => state.app);
   console.log('st', st)
   return (
     <div>1</div>

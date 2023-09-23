@@ -5,21 +5,25 @@
  */
 import React, { PropsWithChildren, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Watermark } from 'antd';
 import classNames from 'classnames';
 import Header from './header';
 import Aside from './aside';
 import ErrorBoundary from "@/components/error-boundary";
 import Loading from '@/components/loading';
+import { IStoreState } from "@/store/reducers";
 
 import './index.scss';
 
 const LayoutAdmin: React.FC<PropsWithChildren> = ({ children }) => {
+  const { collapsed } = useSelector((state: IStoreState) => state.app);
+
   return (
     <>
       <div
         className={classNames('app-container', {
-          mounted: true,
+          "aside-collapsed": collapsed,
         })}
       >
         <Header />

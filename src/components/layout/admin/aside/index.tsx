@@ -3,13 +3,16 @@
  * 
  * sobird<i@sobird.me> at 2023/09/12 15:46:42 created.
  */
-import path from 'path';
+
+import React, { useCallback, useEffect, useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { nanoid } from 'nanoid';
-import React, { useEffect, useState } from "react";
 import { Button, Menu } from "antd";
-import { AppstoreOutlined, SettingOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import MenusService from "@/services/menus";
+
+import { IStoreState } from "@/store/reducers";
+import * as actionCreators from "@/store/actions/app";
 
 import "./index.scss";
 
@@ -51,7 +54,7 @@ const isMenu = (route): {
  * @param dirname
  * @returns
  */
-function renderMenu(routes, badge) {
+function renderMenu(routes, badge?: any) {
   const defaultOpenKeys: any[] = [];
   const menu = routes.map(route => {
     const {
@@ -86,12 +89,12 @@ function renderMenu(routes, badge) {
         <Divider />];
     } else {
       return [
-        <Menu.Item key={pathname}>
+        <Item key={pathname}>
           <Link to={pathname}>
             {<i className={`icon iconfont icon-${icon}`} />}
             <span>{name}</span>
           </Link>
-        </Menu.Item>,
+        </Item>,
         <Divider />,
       ];
     }
@@ -103,12 +106,19 @@ function renderMenu(routes, badge) {
   };
 }
 
-
-
 const Aside: React.FunctionComponent = () => {
   const location = useLocation();
   const [menus, setMenus] = useState([]);
   const [badge, setBadge] = useState({});
+
+  const dispatch = useDispatch();
+  const { collapsed } = useSelector((state: IStoreState) => state.app);
+
+  // dispach action
+  const toggleAside = useCallback(
+    () => dispatch(actionCreators.toggleAside()),
+    [dispatch]
+  );
 
   useEffect(() => {
     MenusService.list().then(res => {
@@ -121,11 +131,9 @@ const Aside: React.FunctionComponent = () => {
   }, []);
 
   const asideMenu = renderMenu(menus, badge);
-
-  console.log('location', location)
-
-
   const currentURL = location.pathname + location.search;
+
+  console.log('collapsed', asideMenu.defaultOpenKeys)
 
   return (
     <aside className="app-aside">
@@ -133,15 +141,19 @@ const Aside: React.FunctionComponent = () => {
         {asideMenu.menu.length === 0 ? null : 
           <Menu
             mode="inline"
-            //inlineCollapsed={collapsed}
+            inlineCollapsed={collapsed}
             selectedKeys={[currentURL, location.pathname]}
-            defaultOpenKeys={asideMenu.defaultOpenKeys}
+            defaultOpenKeys={collapsed ? [] : asideMenu.defaultOpenKeys}
             // items={items}
-            inlineIndent={7}
+            inlineIndent={0}
           >
             {asideMenu.menu}
           </Menu>}
       </div>
+
+      <Button type="text" className="hamburger" onClick={toggleAside}>
+        <i className="icon iconfont icon-bars" />
+      </Button>
     </aside>
   )
 }

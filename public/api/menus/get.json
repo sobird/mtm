@@ -421,7 +421,7 @@
       },
       {
         "title": "发货管理",
-        "icon": "express",
+        "icon": "cargo",
         "url": "/shipping",
         "id": "1371",
         "parentId": "-1",

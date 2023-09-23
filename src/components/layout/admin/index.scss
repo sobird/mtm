@@ -18,3 +18,33 @@
   overflow-x: hidden;
   overflow-y: overlay;
 }
+
+// 边栏折叠后样式
+.aside-collapsed {
+  .header-brand {
+    width: 64px;
+    margin-left: -20px;
+    text-align: center;
+    .logo {
+      display: inline-block;
+    }
+  }
+  .app-body {
+    aside {
+      width: 64px;
+      .app-menu {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+    }
+  }
+  
+  // .main {
+  //   margin-left: 64px;
+  // }
+  .hamburger {
+    .iconfont {
+      transform: rotateZ(-90deg);
+    }
+  }
+}

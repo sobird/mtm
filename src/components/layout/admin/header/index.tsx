@@ -5,24 +5,21 @@
  */
 
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Dropdown, Input, Popover } from 'antd';
-import { AudioOutlined } from '@ant-design/icons';
+import { IStoreState } from "@/store/reducers";
 import Search from '../search';
 
-import LogoTitle from '@/assets/mtm/logo_title.png';
+import NomalLogo from '@/assets/mtm/logo_title.png';
+import SamllLogo from '@/assets/logo.png';
 import AvatarDefault from '@/assets/mtm/avatar_default.png';
 
 import './index.scss';
 
 
-const content = (
-  <div style={{width: '300px'}}>
-    <p>Content</p>
-    <p>Content</p>
-  </div>
-);
-
 const Header: React.FC = () => {
+  const { collapsed } = useSelector((state: IStoreState) => state.app);
+  
   const menu = [
     {
       label: '更换登录手机',
@@ -34,20 +31,11 @@ const Header: React.FC = () => {
     },
   ];
 
-  const suffix = (
-    <AudioOutlined
-      style={{
-        fontSize: 16,
-        color: '#1677ff',
-      }}
-    />
-  );
-
   return (
     <header className="app-header">
       <div className="header-brand">
         <a href="/" title="美团电商商家管理后台">
-          <img src={LogoTitle}></img>
+          <img src={collapsed ? SamllLogo : NomalLogo}></img>
         </a>
       </div>
 
