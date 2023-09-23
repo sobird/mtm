@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Suspense } from 'react';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
+import store from './store';
 
 import './App.css';
 
@@ -21,7 +23,9 @@ const router = createHashRouter(config);
 function App() {
   return (
     <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm'>
-      <RouterProvider router={router} />
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
     </ConfigProvider>
   );
 }

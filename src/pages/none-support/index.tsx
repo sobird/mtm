@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Result } from 'antd';
 
 interface NoneSupportProps {
-  text: string;
+  text?: string;
 }
 
 const NoneSupport: React.FC<NoneSupportProps> = ({ text }) => {

@@ -122,6 +122,11 @@ const Aside: React.FunctionComponent = () => {
 
   const asideMenu = renderMenu(menus, badge);
 
+  console.log('location', location)
+
+
+  const currentURL = location.pathname + location.search;
+
   return (
     <aside className="app-aside">
       <div className="app-menu">
@@ -129,7 +134,7 @@ const Aside: React.FunctionComponent = () => {
           <Menu
             mode="inline"
             //inlineCollapsed={collapsed}
-            selectedKeys={[location.pathname]}
+            selectedKeys={[currentURL, location.pathname]}
             defaultOpenKeys={asideMenu.defaultOpenKeys}
             // items={items}
             inlineIndent={7}

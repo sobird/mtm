@@ -9,6 +9,7 @@ import { RouteObject } from "react-router-dom";
 import LayoutAdmin from '@/components/layout/admin';
 import NoneSupport from "@/pages/none-support";
 
+import Home from "@/pages/home";
 const Login = lazy(() => import('@/pages/login'));
 const Register = lazy(() => import('@/pages/register'));
 const RegisterSuccess = lazy(() => import('@/pages/register/success'));
@@ -23,8 +24,8 @@ const config: RouteObject[] = [
     element: <LayoutAdmin />,
     children: [
       {
-        path: "test",
-        element: <Login />,
+        index: true,
+        element: <Home />,
       },
 
       {

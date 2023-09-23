@@ -58,7 +58,10 @@ const MenusService = {
       const menus = res.menus.sort((a: any, b: any) => a.index - b.index);
 
       const [first, ...others] = listToTree(menus);
-      FavoriteFold.children = res.favorites
+      FavoriteFold.children = res.favorites.map(item => {
+        item.url = item.url + '?fav'
+        return item;
+      })
 
       return [first, FavoriteFold, ...others]
     });
