@@ -4,12 +4,12 @@
   "data": [
     {
       "menuId": "1399",
-      "noticeStyle": 20,
+      "noticeStyle": 30,
       "noticeContent": 99
     },
     {
       "menuId": "1400",
-      "noticeStyle": 20,
+      "noticeStyle": 30,
       "noticeContent": 99
     },
     {
@@ -34,7 +34,7 @@
     },
     {
       "menuId": "1370",
-      "noticeStyle": 20,
+      "noticeStyle": 10,
       "noticeContent": 111
     },
     {

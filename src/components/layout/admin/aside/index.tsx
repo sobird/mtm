@@ -12,7 +12,9 @@ import { Link, useLocation } from "react-router-dom";
 import MenusService from "@/services/menus";
 
 import { IStoreState } from "@/store/reducers";
-import * as actionCreators from "@/store/actions/app";
+import { toggleAside } from "@/store/actions/app";
+
+import TitleWithBadge from "./components/title-with-badge";
 
 import "./index.scss";
 
@@ -54,7 +56,7 @@ const isMenu = (route): {
  * @param dirname
  * @returns
  */
-function renderMenu(routes, badge?: any) {
+function renderMenu(routes, badgeMap) {
   const defaultOpenKeys: any[] = [];
   const menu = routes.map(route => {
     const {
@@ -84,15 +86,18 @@ function renderMenu(routes, badge?: any) {
             </>
           )}
         >
-          {children.length && renderMenu(children).menu}
+          {children.length && renderMenu(children, badgeMap).menu}
         </SubMenu>,
         <Divider />];
     } else {
+
+      const badge = badgeMap.get(route.id);
+      console.log('badge', badge)
       return [
         <Item key={pathname}>
           <Link to={pathname}>
             {<i className={`icon iconfont icon-${icon}`} />}
-            <span>{name}</span>
+            <TitleWithBadge badge={badge}><span>{name}</span></TitleWithBadge>
           </Link>
         </Item>,
         <Divider />,
@@ -109,16 +114,10 @@ function renderMenu(routes, badge?: any) {
 const Aside: React.FunctionComponent = () => {
   const location = useLocation();
   const [menus, setMenus] = useState([]);
-  const [badge, setBadge] = useState({});
+  const [badgeMap, setBadgeMap] = useState({});
 
   const dispatch = useDispatch();
   const { collapsed } = useSelector((state: IStoreState) => state.app);
-
-  // dispach action
-  const toggleAside = useCallback(
-    () => dispatch(actionCreators.toggleAside()),
-    [dispatch]
-  );
 
   useEffect(() => {
     MenusService.list().then(res => {
@@ -126,14 +125,12 @@ const Aside: React.FunctionComponent = () => {
     });
 
     MenusService.badges().then(res => {
-      setBadge(res);
+      setBadgeMap(res);
     })
   }, []);
 
-  const asideMenu = renderMenu(menus, badge);
+  const asideMenu = renderMenu(menus, badgeMap);
   const currentURL = location.pathname + location.search;
-
-  console.log('collapsed', asideMenu.defaultOpenKeys)
 
   return (
     <aside className="app-aside">
@@ -151,7 +148,7 @@ const Aside: React.FunctionComponent = () => {
           </Menu>}
       </div>
 
-      <Button type="text" className="hamburger" onClick={toggleAside}>
+      <Button type="text" className="hamburger" onClick={() => dispatch(toggleAside())}>
         <i className="icon iconfont icon-bars" />
       </Button>
     </aside>

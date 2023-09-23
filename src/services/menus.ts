@@ -74,14 +74,15 @@ const MenusService = {
   /** 可将此接口合并到 /menus */
   badges(menuId?: number) {
     return http.get<IMenuBadge[]>('/menus/badges', { menuId }).then(res => {
+      const badgeMap = new Map();
       return (
         res?.reduce((pre, cur) => {
           if (!cur?.menuId) {
             return pre;
           }
-          pre[`${cur?.menuId}`] = cur;
+          pre.set(cur?.menuId, cur);
           return pre;
-        }, {}) || {}
+        }, badgeMap)
       );
     });
   },

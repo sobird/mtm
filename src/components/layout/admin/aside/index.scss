@@ -86,6 +86,13 @@
 
   // background-color: #fff;
 
+  .mtm-badge {
+    font-size: 12px;
+    .mtm-badge-count {
+      zoom: 0.55;
+      padding: 0 5px;
+    }
+  }
 
   .hamburger {
     height: 32px;
@@ -137,6 +144,7 @@
       .mtm-menu-title-content {
         height: 24px;
         transition: none;
+        overflow: inherit;
 
         a {
           &:hover {
@@ -231,6 +239,7 @@
         padding-right: 5px;
         margin: 2px 0;
         font-size: 12px;
+        overflow: inherit;
 
         .iconfont {
           font-size: 1em;
