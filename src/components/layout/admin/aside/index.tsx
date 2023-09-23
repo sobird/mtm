@@ -129,7 +129,7 @@ const Aside: React.FunctionComponent = () => {
           <Menu
             mode="inline"
             //inlineCollapsed={collapsed}
-            defaultSelectedKeys={[location.pathname]}
+            selectedKeys={[location.pathname]}
             defaultOpenKeys={asideMenu.defaultOpenKeys}
             // items={items}
             inlineIndent={7}
