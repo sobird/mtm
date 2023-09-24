@@ -30,11 +30,14 @@ const LayoutAdmin: React.FC<PropsWithChildren> = ({ children }) => {
         <div className='app-body'>
           <Aside />
           <main className='app-main'>
+            <div id="micro-container" style={{ width: '100%' }}  />
+
             {children ? children : (
               <ErrorBoundary>
                 <Suspense fallback={<Loading />}><Outlet /></Suspense>
               </ErrorBoundary>
-            )}</main>
+            )}
+          </main>
         </div>
       </div>
       <Watermark

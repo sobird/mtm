@@ -92,7 +92,7 @@ function renderMenu(routes, badgeMap) {
     } else {
 
       const badge = badgeMap.get(route.id);
-      console.log('badge', badge)
+      
       return [
         <Item key={pathname}>
           <Link to={pathname}>

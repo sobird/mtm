@@ -34,6 +34,13 @@ const config: RouteObject[] = [
       },
     ],
   },
+  {
+    path: "/app-hash",
+    element: <LayoutAdmin />,
+    children: [
+      
+    ],
+  },
   { path: '/login', element: <Login />},
   { path: '/register', element:<Register /> },
   { path: '/register/success', element:<RegisterSuccess /> },
