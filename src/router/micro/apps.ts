@@ -11,7 +11,7 @@ const getActiveRule = (hash: string) => (location) => location.hash.startsWith(h
 const apps: RegistrableApp<any>[] = [
   {
     name: 'mtm_market',
-    entry: '//localhost:3001',
+    entry: process.env.MICRO_MTM_MARKET_HOST,
     container: '#micro-container',
     activeRule: getActiveRule('#/market'),
   },
