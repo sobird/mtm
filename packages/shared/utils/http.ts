@@ -68,7 +68,7 @@ export class Http {
       config.startTime = Date.now();
       const { method, url, params } = config;
 
-      const filenames = [method.toLocaleLowerCase()];
+      const filenames = [method?.toLocaleLowerCase()];
 
       if(params) {
         filenames.push(Object.keys(params).sort().join('&'))
