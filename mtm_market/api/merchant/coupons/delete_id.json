@@ -1,0 +1,21 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "id": "500145283",
+    "name": "团好货IM",
+    "type": 0,
+    "target": 11,
+    "stime": 1642867200,
+    "etime": 1642953599,
+    "price": 10,
+    "discount": 2,
+    "validDays": 4,
+    "validStime": 0,
+    "validEtime": 0,
+    "sendCount": 0,
+    "leftCount": 50,
+    "status": 6,
+    "ctime": 1642756508
+  }
+}
