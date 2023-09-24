@@ -27,6 +27,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
 const outputPath = path.resolve(__dirname, `dist/${package.name}`);
+const publicUrl = isProduction ? `/${package.name}` : '';
 
 const config = {
   devtool: isProduction ? false : 'inline-source-map',
@@ -38,11 +39,10 @@ const config = {
   target: 'web',
   output: {
     path: outputPath,
-    // pathinfo: true,
+    publicPath: publicUrl,
     filename: '[name].[contenthash].js',
     chunkFilename: '[name].[contenthash].chunk.js',
     assetModuleFilename: 'assets/[contenthash][ext][query]',
-    //publicPath: '/',
     clean: true,
     library: `${package.name}`,
     libraryTarget: 'umd',
