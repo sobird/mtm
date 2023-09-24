@@ -23,6 +23,11 @@ export async function bootstrap() {
 export async function mount(props: any) {
   console.log('mtm_market app mount', props);
 
+  props.onGlobalStateChange((state, prev) => {
+    // state: 变更后的状态; prev 变更前的状态
+    console.log(state, prev);
+  });
+
   const container = props.container ? props.container.querySelector('#root') : document.getElementById('root');
 
   root = ReactDOM.createRoot(container as HTMLElement);

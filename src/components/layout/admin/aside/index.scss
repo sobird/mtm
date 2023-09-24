@@ -86,14 +86,6 @@
 
   // background-color: #fff;
 
-  .mtm-badge {
-    font-size: 12px;
-    .mtm-badge-count {
-      zoom: 0.55;
-      padding: 0 5px;
-    }
-  }
-
   .hamburger {
     height: 32px;
     line-height: 32px;
@@ -141,6 +133,11 @@
       padding: 0;
       display: inline;
 
+      &:hover {
+        background-color: transparent !important;
+        color: #1677ff !important;
+      }
+
       .mtm-menu-title-content {
         height: 24px;
         transition: none;
@@ -155,8 +152,14 @@
         .iconfont {
           // margin-right: 5px;
         }
+        .mtm-badge {
+          color: inherit;
+          .mtm-badge-count {
+            zoom: 0.55;
+            padding: 0 5px;
+          }
+        }
       }
-
     }
 
     .mtm-menu-item-selected{
@@ -285,6 +288,14 @@
         }
       }
     }
+    .mtm-badge {
+      font-size: 12px;
+      color: inherit;
+      .mtm-badge-count {
+        zoom: 0.55;
+        padding: 0 5px;
+      }
+    }
   }
 
   // 折叠后的样式
@@ -324,6 +335,24 @@
           }
         }
       }
+    }
+  }
+}
+
+.mtm-menu-inline-collapsed-tooltip {
+  .iconfont {
+    margin-right: 5px;
+  }
+  .mtm-badge {
+    color: inherit;
+  }
+}
+.mtm-menu-submenu-popup {
+  .mtm-badge {
+    color: inherit;
+    .mtm-badge-count {
+      zoom: 0.55;
+      padding: 0 5px;
     }
   }
 }
