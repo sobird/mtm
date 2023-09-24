@@ -21,16 +21,22 @@ const EntryCompany = lazy(() => import('@/pages/settleinjx/company'));
 
 const routes: RouteObject[] = [
   {
-    path: "/*",
+    path: "/",
     element: <LayoutAdmin />,
     children: [
       {
         index: true,
         element: <Home />,
       },
-
-      
+      {
+        path: "*",
+        element: <NoneSupport />,
+      },
     ],
+  },
+  {
+    path: "/market/*",
+    element: <LayoutAdmin />,
   },
   // {
   //   path: "/app-hash",
@@ -46,10 +52,6 @@ const routes: RouteObject[] = [
   { path: '/settleinjx/home', element:<EntryHome /> },
   { path: '/settleinjx/shop', element:<EntryShop /> },
   { path: '/settleinjx/company', element:<EntryCompany /> },
-  {
-    path: "*",
-    element: <NoneSupport />,
-  },
 ];
 
 export default routes;
