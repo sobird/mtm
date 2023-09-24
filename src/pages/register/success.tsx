@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/06/20 12:47:45 created.
  */
 
-import { useNavigate, RouteObject } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Base from "@/components/layout/base";
 import { Result, Button } from 'antd'
 
@@ -27,10 +27,5 @@ function RegisterSuccess() {
     </Base>
   )
 }
-
-export const route: RouteObject = { 
-  path: '/register', 
-  element: <RegisterSuccess />,
-};
 
 export default RegisterSuccess;

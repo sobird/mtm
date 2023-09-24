@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react';
-import { useNavigate, RouteObject } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { Button, Select, message } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
@@ -197,10 +197,5 @@ function Register() {
     </Base>
   )
 }
-
-export const route: RouteObject = { 
-  path: '/register', 
-  element: <Register />,
-};
 
 export default Register;

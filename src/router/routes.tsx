@@ -9,9 +9,7 @@ import { RouteObject } from "react-router-dom";
 import LayoutAdmin from '@/components/layout/admin';
 import NoneSupport from "@/pages/none-support";
 
-import HomeRoutes from "@/pages/home/routes";
-import LoginRoutes from "@/pages/login/routes";
-
+import Home from "@/pages/home";
 const Login = lazy(() => import('@/pages/login'));
 const Register = lazy(() => import('@/pages/register'));
 const RegisterSuccess = lazy(() => import('@/pages/register/success'));
@@ -22,10 +20,15 @@ const EntryCompany = lazy(() => import('@/pages/settleinjx/company'));
 
 const routes: RouteObject[] = [
   {
-    path: "/",
+    path: "/*",
     element: <LayoutAdmin />,
     children: [
-      ...HomeRoutes,
+      {
+        index: true,
+        element: <Home />,
+      },
+
+      
     ],
   },
   // {
@@ -35,7 +38,7 @@ const routes: RouteObject[] = [
       
   //   ],
   // },
-  ...LoginRoutes,
+  { path: '/login', element: <Login />},
   { path: '/register', element:<Register /> },
   { path: '/register/success', element:<RegisterSuccess /> },
   { path: '/settleinpc', element:<SettleInpc /> },
