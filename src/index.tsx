@@ -49,7 +49,7 @@ registerMicroApps([
 // setDefaultMountApp(getActiveRule('#/app-hash'))
 
 // 启动 qiankun
-start();
+// start();
 
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

@@ -9,7 +9,9 @@ import { RouteObject } from "react-router-dom";
 import LayoutAdmin from '@/components/layout/admin';
 import NoneSupport from "@/pages/none-support";
 
-import Home from "@/pages/home";
+import HomeRoutes from "@/pages/home/routes";
+import LoginRoutes from "@/pages/login/routes";
+
 const Login = lazy(() => import('@/pages/login'));
 const Register = lazy(() => import('@/pages/register'));
 const RegisterSuccess = lazy(() => import('@/pages/register/success'));
@@ -18,36 +20,32 @@ const EntryHome = lazy(() => import('@/pages/settleinjx/home'));
 const EntryShop = lazy(() => import('@/pages/settleinjx/shop'));
 const EntryCompany = lazy(() => import('@/pages/settleinjx/company'));
 
-const config: RouteObject[] = [
+const routes: RouteObject[] = [
   {
     path: "/",
     element: <LayoutAdmin />,
     children: [
-      {
-        index: true,
-        element: <Home />,
-      },
-
-      {
-        path: "*",
-        element: <NoneSupport />,
-      },
+      ...HomeRoutes,
     ],
   },
-  {
-    path: "/app-hash",
-    element: <LayoutAdmin />,
-    children: [
+  // {
+  //   path: "/app-hash",
+  //   element: <LayoutAdmin />,
+  //   children: [
       
-    ],
-  },
-  { path: '/login', element: <Login />},
+  //   ],
+  // },
+  ...LoginRoutes,
   { path: '/register', element:<Register /> },
   { path: '/register/success', element:<RegisterSuccess /> },
   { path: '/settleinpc', element:<SettleInpc /> },
   { path: '/settleinjx/home', element:<EntryHome /> },
   { path: '/settleinjx/shop', element:<EntryShop /> },
   { path: '/settleinjx/company', element:<EntryCompany /> },
+  {
+    path: "*",
+    element: <NoneSupport />,
+  },
 ];
 
-export default config;
+export default routes;
