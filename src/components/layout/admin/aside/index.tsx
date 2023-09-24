@@ -91,7 +91,7 @@ function renderMenu(routes, badgeMap) {
         <Divider />];
     } else {
 
-      const badge = badgeMap?.get(route.id);
+      const badge = badgeMap && badgeMap.get(route.id);
       
       return [
         <Item key={pathname}>
