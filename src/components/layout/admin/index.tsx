@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/09/06 16:47:45 created.
  */
 import React, { PropsWithChildren, Suspense, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Watermark } from 'antd';
 import classNames from 'classnames';
@@ -13,21 +13,29 @@ import Aside from './aside';
 import ErrorBoundary from "@/components/error-boundary";
 import Loading from '@/components/loading';
 import { IStoreState } from "@/store/reducers";
-
-import { start } from 'qiankun';
+import startQiankun from '@/router/micro';
 
 import './index.scss';
 
 const LayoutAdmin: React.FC<PropsWithChildren> = ({ children }) => {
+  const location = useLocation();
   const { collapsed } = useSelector((state: IStoreState) => state.app);
 
   useEffect(() => {
-    console.log('effect');
     if (!window.qiankunStarted) {
       window.qiankunStarted = true;
-      start();
+      startQiankun();
     }
   }, []);
+
+  // 路由守卫配置
+  useEffect(() => {
+    console.log('entry', location.pathname);
+
+    return () => {
+      console.log('leave', location.pathname);
+    }
+  }, [location.pathname]);
 
   return (
     <>

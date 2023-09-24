@@ -1,6 +1,7 @@
 // 全局参数定义
 declare interface Window {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
+  qiankunStarted: boolean;
 }
 
 declare let process: {
