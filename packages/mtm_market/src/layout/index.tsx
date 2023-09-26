@@ -1,90 +1,82 @@
-import { PageContainer, ProLayout } from '@ant-design/pro-components';
-import DefaultProps from './_defaultProps';
+import {
+  GithubFilled,
+  InfoCircleFilled,
+  QuestionCircleFilled,
+} from '@ant-design/icons';
 
-export default () => (
-  <div
-    style={{
-      height: '100vh',
-    }}
-  >
-    <ProLayout
-      location={{
-        pathname: '/data_hui/data_hui2',
+import { PageContainer, ProCard, ProConfigProvider, ProLayout } from '@ant-design/pro-components';
+import { Button, ConfigProvider } from 'antd';
+import React, { useState } from 'react';
+import defaultProps from './_defaultProps';
+import SearchInput from './components/search-input';
+
+export default () => {
+  const [pathname, setPathname] = useState('/');
+
+  if (typeof document === 'undefined') {
+    return <div />;
+  }
+  return (
+    <div
+      id='test-pro-layout'
+      style={{
+        height: '100vh',
+        overflow: 'auto',
       }}
-      collapsed={false}
-      collapsedButtonRender={false}
-      route={{
-        routes: [
-          {
-            path: '/home',
-            name: '首页',
-            locale: 'menu.home',
-            routes: [
-              {
-                path: '/home/overview',
-                name: '概述',
-                hideInMenu: true,
-                locale: 'menu.home.overview',
-              },
-              {
-                path: '/home/search',
-                name: '搜索',
-                hideInMenu: true,
-                locale: 'menu.home.search',
-              },
-            ],
-          },
-          {
-            path: '/data_hui',
-            name: '汇总数据',
-            locale: 'menu.data_hui',
-            routes: [
-              {
-                collapsed: true,
-                menuName: '域买家维度交易',
-                name: '域买家维度交易',
-                path: '/xx',
-                routes: [
-                  {
-                    id: 2,
-                    name: '月表',
-                    path: '/data_hui2',
-                  },
-                  {
-                    name: '日表',
-                    path: '/data_hui3?tableName=adm_rk_cr_tb_trv_byr_ds&tableSchema=alifin_odps_birisk',
-                  },
-                ],
-              },
-              {
-                name: '维度交易',
-                path: '/',
-                routes: [
-                  {
-                    name: '月表',
-                    path: '/data_hui4',
-                  },
-                  {
-                    name: '日表',
-                    key: 'tableName=adm_rk_cr_tb_trv_byr_ds&tableSchema=alifin_odps_birisk',
-                    path: '/data_hui5',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      }}
-      menu={{
-        defaultOpenAll: true,
-        hideMenuWhenCollapsed: true,
-        ignoreFlatMenu: true,
-      }}
-      {...DefaultProps}
     >
-      <PageContainer content="欢迎使用">
-        <div>Hello World</div>
-      </PageContainer>
-    </ProLayout>
-  </div>
-);
+      <ProConfigProvider hashed={false}>
+        <ConfigProvider
+          getTargetContainer={() => {
+            return document.getElementById('test-pro-layout') || document.body;
+          }}
+        >
+          <ProLayout
+            {...defaultProps}
+            location={{
+              pathname,
+            }}
+            actionsRender={props => {
+              if (props.isMobile) return [];
+              if (typeof window === 'undefined') return [];
+              return [
+                props.layout !== 'side' && document.body.clientWidth > 1400 ? <SearchInput /> : undefined,
+                <a href='https://github.com/sobird/mtm'><GithubFilled key='GithubFilled' /></a>,
+              ];
+            }}
+            headerTitleRender={(logo, title, _) => {
+              const defaultDom = (
+                <a href="/">
+                  {logo}
+                  {title}
+                </a>
+              );
+              if (typeof window === 'undefined') return defaultDom;
+              if (document.body.clientWidth < 1400) {
+                return defaultDom;
+              }
+              if (_.isMobile) return defaultDom;
+
+              return defaultDom;
+            }}
+            menuItemRender={(item, dom) => (
+              <div
+                onClick={() => {
+                  console.log('item', item)
+                  setPathname(item.path || '/welcome');
+                }}
+              >
+                {dom}
+              </div>
+            )}
+          >
+            <PageContainer
+              subTitle='简单的描述'
+            >
+              123
+            </PageContainer>
+          </ProLayout>
+        </ConfigProvider>
+      </ProConfigProvider>
+    </div>
+  );
+};

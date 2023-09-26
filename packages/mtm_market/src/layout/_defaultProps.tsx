@@ -1,21 +1,21 @@
 /**
  * ProLayout defaultProps
- * 
+ *
  * @see https://procomponents.ant.design/components/layout
  * sobird<i@sobird.me> at 2023/09/26 7:21:58 created.
  */
-
+import { Dropdown } from 'antd';
 import { ProLayoutProps } from '@ant-design/pro-components';
-
-import {
-  ChromeFilled,
-  CrownFilled,
-  SmileFilled,
-  TabletFilled,
-} from '@ant-design/icons';
+import { LogoutOutlined, SmileFilled } from '@ant-design/icons';
 import Logo from './assets/logo.png';
 
 const DefaultProps: ProLayoutProps = {
+  prefixCls: 'mtm',
+  token: {
+    header: {
+      colorBgMenuItemSelected: 'rgba(0,0,0,0.04)',
+    },
+  },
   title: '商家后台',
   logo: Logo,
   pure: false,
@@ -24,99 +24,72 @@ const DefaultProps: ProLayoutProps = {
     src: 'https://gravatar.sobird.me/avatar/b5c9ccc6a294ab482e9709d4f6c0eb40?s=128&d=mm&r=g',
     size: 'small',
     title: 'Sobird',
+    render: (props, dom) => {
+      return (
+        <Dropdown
+          menu={{
+            items: [
+              {
+                key: 'logout',
+                icon: <LogoutOutlined />,
+                label: '退出登录',
+              },
+            ],
+          }}
+        >
+          {dom}
+        </Dropdown>
+      );
+    },
+  },
+
+  location: {
+    pathname: '/',
   },
   route: {
     path: '/',
     name: '首页',
     routes: [
       {
-        path: '/welcome',
-        name: '欢迎',
-        icon: <SmileFilled />,
-        component: './Welcome',
-      },
-      {
         path: '/admin',
-        name: '管理页',
-        icon: <CrownFilled />,
+        name: '营销中心',
+        icon: <SmileFilled />,
         access: 'canAdmin',
-        component: './Admin',
         routes: [
           {
-            path: '/admin/sub-page1',
-            name: '一级页面',
-            icon: 'https://gw.alipayobjects.com/zos/antfincdn/upvrAjAPQX/Logo_Tech%252520UI.svg',
-            component: './Welcome',
+            path: '/activities',
+            name: '营销活动',
           },
           {
-            path: '/admin/sub-page2',
-            name: '二级页面',
-            icon: <CrownFilled />,
-            component: './Welcome',
+            path: '/coupons',
+            name: '优惠券',
           },
           {
-            path: '/admin/sub-page3',
-            name: '三级页面',
-            icon: <CrownFilled />,
-            component: './Welcome',
+            path: '/promotion',
+            name: '限时限量促销',
+          },
+          {
+            path: '/discount',
+            name: '满件打折',
+          },
+          {
+            path: '/cps',
+            name: '团销宝数据',
+          },
+          {
+            path: '/shop',
+            name: '随手买',
           },
         ],
-      },
-      {
-        name: '列表页',
-        icon: <TabletFilled />,
-        path: '/list',
-        component: './ListTableList',
-        routes: [
-          {
-            path: '/list/sub-page',
-            name: '列表页面',
-            icon: <CrownFilled />,
-            routes: [
-              {
-                path: 'sub-sub-page1',
-                name: '一一级列表页面',
-                icon: <CrownFilled />,
-                component: './Welcome',
-              },
-              {
-                path: 'sub-sub-page2',
-                name: '一二级列表页面',
-                icon: <CrownFilled />,
-                component: './Welcome',
-              },
-              {
-                path: 'sub-sub-page3',
-                name: '一三级列表页面',
-                icon: <CrownFilled />,
-                component: './Welcome',
-              },
-            ],
-          },
-          {
-            path: '/list/sub-page2',
-            name: '二级列表页面',
-            icon: <CrownFilled />,
-            component: './Welcome',
-          },
-          {
-            path: '/list/sub-page3',
-            name: '三级列表页面',
-            icon: <CrownFilled />,
-            component: './Welcome',
-          },
-        ],
-      },
-      {
-        path: 'https://ant.design',
-        name: 'Ant Design 官网外链',
-        icon: <ChromeFilled />,
       },
     ],
   },
-  location: {
-    pathname: '/',
+  siderMenuType: 'sub',
+  splitMenus: false,
+  menu: {
+    defaultOpenAll: true,
   },
+
   appList: [
     {
       icon: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
