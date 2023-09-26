@@ -1,11 +1,12 @@
 import React from 'react';
-import CouponDetail from './pages/coupon/detail';
+import { RouterProvider } from 'react-router-dom';
+import router from '@/router';
+
+console.log('router', router)
 
 const App: React.FC = () => {
   return (
-    <>
-      <CouponDetail />
-    </>
+    <RouterProvider router={router} />
   );
 }
 
