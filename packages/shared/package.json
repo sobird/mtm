@@ -1,16 +1,25 @@
 {
   "name": "@mtm/shared",
   "version": "0.0.1",
-  "description": "MTM微前端通用包",
-  "main": "index.js",
+  "description": "MTM通用组件库",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "unpkg": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c"
   },
   "keywords": [],
   "author": "sobird",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.5.0",
+    "design-06k4": "^2.17.10",
     "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.3",
+    "rollup": "^3.29.3",
+    "rollup-plugin-typescript2": "^0.36.0"
   }
 }

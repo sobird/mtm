@@ -4,11 +4,12 @@
  * @see https://procomponents.ant.design/components/layout
  * sobird<i@sobird.me> at 2023/09/26 7:21:58 created.
  */
+import React from 'react';
 import { Dropdown } from 'antd';
 import { ProLayoutProps } from '@ant-design/pro-components';
 import { LogoutOutlined, SmileFilled } from '@ant-design/icons';
-import Logo from './assets/logo.png';
-import AvatarDefault from './assets/avatar_default.png';
+//import Logo from './assets/logo.png';
+//import AvatarDefault from './assets/avatar_default.png';
 
 const DefaultProps: ProLayoutProps = {
   prefixCls: 'mtm',
@@ -18,11 +19,11 @@ const DefaultProps: ProLayoutProps = {
     },
   },
   title: '商家后台',
-  logo: Logo,
+  //logo: Logo,
   pure: false,
   layout: 'mix',
   avatarProps: {
-    src: AvatarDefault,
+    //src: AvatarDefault,
     size: 'small',
     title: '团好货',
     render: (props, dom) => {

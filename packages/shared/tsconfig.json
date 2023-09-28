@@ -1,0 +1,70 @@
+// https://www.typescriptlang.org/tsconfig
+{
+  "compilerOptions": {
+    // 指定生成文件的 ECMAScript 版本
+    "target": "ES6",
+    // 指定生成哪个模块系统代码
+    "module": "ES2015",
+    // 用来指定编译器可用的JavaScript库的列表
+    "lib": ["DOM", "DOM.Iterable", "ESNext", "ES2021"],
+    // 是否跳过声明文件的类型检查，这可以在编译期间以牺牲类型系统准确性为代价来节省时间，默认：false。
+    "skipLibCheck": true,
+    // 支持使用 import x from y 方式导入commonjs模块
+    "esModuleInterop": true,
+    // 用来指定允许从没有默认导出的模块中默认导入
+    "allowSyntheticDefaultImports": true,
+    // 指定是否允许编译JS文件，默认: false
+    "allowJs": true,
+    // 指定是否检查和报告JS文件中的错误，默认: false
+    "checkJs": true,
+    // 指定导入的模块文件名是否大小写敏感 默认: true
+    "forceConsistentCasingInFileNames": true,
+    // 指定模块解析策略
+    "moduleResolution": "Node", //node环境
+    // 支持导入 JSON 模块
+    "resolveJsonModule": true,
+    // 是否将每个文件转换为单独的模块，默认：false。
+    "isolatedModules": true,
+    // 不生成编译文件，默认：false。
+    "noEmit": true,
+    // 指定jsx代码用于的开发环境
+    "jsx": "react",
+    // 指定编译后是否移除注释
+    "removeComments": false,
+    // 用于设置解析非相对模块名称的基本目录，相对模块不会受到baseUrl的影响
+    // 从TypeScript 4.1开始，使用paths时不再需要设置baseUrl。
+    "baseUrl": "./",
+    // 用于设置模块名到基于baseUrl的路径映射
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    // 用于指定是否启用实验性的装饰器特性
+    "experimentalDecorators": true,
+    "sourceMap": true,
+
+    /* Linting */
+    // 指定是否启动所有类型检查，如果设为true 会同时开启下面这几个严格检查，默认为false
+    "strict": true,
+    // 设为true后对bind、call和apply绑定的方法的参数的检测是严格检测
+    "strictBindCallApply": true,
+    // 用来指定是否使用函数参数双向协变检查
+    "strictFunctionTypes": true,
+    // 当设为true时，null和undefined值不能赋值给非这两种类型的值，别的类型的值也不能赋给他们，除了any类型，还有个例外就是undefined可以赋值给void类型
+    "strictNullChecks": true,
+    // 设为true后会检查类的非undefined属性是否已经在构造函数里初始化，如果要开启这项，需要同时开启strictNullChecks,默认为false
+    "strictPropertyInitialization": false,
+    // 若有未使用的局部变量则抛错
+    "noUnusedLocals": false,
+    // 若有未使用的参数则抛错
+    "noUnusedParameters": false
+  },
+  "include": [
+    // "typings.d.ts", //配置的.d.ts文件
+    "src"
+  ],
+  // 指定要排除的编译文件列表
+  "exclude": [
+    "node_modules",
+    "lib"
+  ]
+}
