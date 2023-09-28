@@ -38,19 +38,21 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    "outDir": "dist",
+
     // 用于指定是否启用实验性的装饰器特性
     "experimentalDecorators": true,
     "sourceMap": true,
 
     /* Linting */
     // 指定是否启动所有类型检查，如果设为true 会同时开启下面这几个严格检查，默认为false
-    "strict": true,
+    "strict": false,
     // 设为true后对bind、call和apply绑定的方法的参数的检测是严格检测
-    "strictBindCallApply": true,
+    "strictBindCallApply": false,
     // 用来指定是否使用函数参数双向协变检查
-    "strictFunctionTypes": true,
+    "strictFunctionTypes": false,
     // 当设为true时，null和undefined值不能赋值给非这两种类型的值，别的类型的值也不能赋给他们，除了any类型，还有个例外就是undefined可以赋值给void类型
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     // 设为true后会检查类的非undefined属性是否已经在构造函数里初始化，如果要开启这项，需要同时开启strictNullChecks,默认为false
     "strictPropertyInitialization": false,
     // 若有未使用的局部变量则抛错

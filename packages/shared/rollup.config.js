@@ -6,6 +6,10 @@
  */
 import typescript from 'rollup-plugin-typescript2';
 import terser from '@rollup/plugin-terser';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import image from '@rollup/plugin-image';
 
 export default {
   input: 'src/index.ts',
@@ -49,5 +53,10 @@ export default {
   plugins: [
     typescript(/*{ plugin options }*/),
     // terser()
-  ]
+    nodeResolve(),
+    commonjs(),
+    json(),
+    image(),
+  ],
+  external: ['antd', 'react', 'react-dom', '@ant-design/icons', '@ant-design/pro-components']
 };
