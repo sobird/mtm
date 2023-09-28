@@ -8,6 +8,7 @@ import { Dropdown } from 'antd';
 import { ProLayoutProps } from '@ant-design/pro-components';
 import { LogoutOutlined, SmileFilled } from '@ant-design/icons';
 import Logo from './assets/logo.png';
+import AvatarDefault from './assets/avatar_default.png';
 
 const DefaultProps: ProLayoutProps = {
   prefixCls: 'mtm',
@@ -21,9 +22,9 @@ const DefaultProps: ProLayoutProps = {
   pure: false,
   layout: 'mix',
   avatarProps: {
-    src: 'https://gravatar.sobird.me/avatar/b5c9ccc6a294ab482e9709d4f6c0eb40?s=128&d=mm&r=g',
+    src: AvatarDefault,
     size: 'small',
-    title: 'Sobird',
+    title: '团好货',
     render: (props, dom) => {
       return (
         <Dropdown

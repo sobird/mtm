@@ -18,6 +18,7 @@ const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
+// const WebpackBar = require('webpackbar');
 const { ModuleFederationPlugin } = require('webpack').container;
 const package = require('./package.json');
 
@@ -99,6 +100,7 @@ const config = {
     new webpack.ProgressPlugin({
       activeModules: true,
     }),
+    // new WebpackBar(),
     new ModuleFederationPlugin({
       name: 'mtm',
       remotes: {
