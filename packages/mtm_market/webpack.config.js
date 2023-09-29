@@ -20,7 +20,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
 const { ModuleFederationPlugin } = require('webpack').container;
-const externals = require('@mtm/shared/externals');
+// const externals = require('@mtm/shared/externals');
 const package = require('./package.json');
 
 const isProduction = process.env.NODE_ENV === 'production';
