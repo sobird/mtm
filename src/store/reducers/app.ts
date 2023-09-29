@@ -5,7 +5,7 @@
  */
 import Cookies from 'js-cookie';
 import { IAction } from '../actions';
-import { SET_USER, TOGGLE_ASIDE } from '../constants/app';
+import { SET_USER, TOGGLE_ASIDE, UPDATE_MICRO } from '../actions/app';
 
 export type User = {
   name: string,
@@ -14,6 +14,9 @@ export type User = {
 export interface IAppState {
   user: User,
   collapsed: boolean;
+  micro: {
+    loading: boolean
+  };
 }
 
 // defaultState
@@ -22,6 +25,9 @@ const initialState = {
     name: 'sobird'
   },
   collapsed: Cookies.get(TOGGLE_ASIDE) === '1',
+  micro: {
+    loading: false
+  }
 };
 
 export default function (state: IAppState = initialState, action: IAction) {
@@ -31,7 +37,7 @@ export default function (state: IAppState = initialState, action: IAction) {
         ...state,
         user: action.payload,
       };
-    case 'TOGGLE_ASIDE':
+    case TOGGLE_ASIDE:
       if (state.collapsed) {
         Cookies.set(TOGGLE_ASIDE, '0', {
           path: '/',
@@ -50,6 +56,11 @@ export default function (state: IAppState = initialState, action: IAction) {
       return {
         ...state,
         collapsed: !state.collapsed,
+      };
+    case UPDATE_MICRO :
+      return {
+        ...state,
+        micro: action.payload,
       };
     default:
       return state;

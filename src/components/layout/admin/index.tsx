@@ -19,8 +19,8 @@ import './index.scss';
 
 const LayoutAdmin: React.FC<PropsWithChildren> = ({ children }) => {
   const location = useLocation();
-  const { collapsed } = useSelector((state: IStoreState) => state.app);
-
+  const { collapsed, micro } = useSelector((state: IStoreState) => state.app);
+  console.log('micro', micro)
   useEffect(() => {
     if (!window.qiankunStarted) {
       window.qiankunStarted = true;
@@ -48,8 +48,9 @@ const LayoutAdmin: React.FC<PropsWithChildren> = ({ children }) => {
         <div className='app-body'>
           <Aside />
           <main className='app-main'>
-            <div id="micro-container" style={{ width: '100%' }}  />
-
+            <div id="micro-container" style={{ width: '100%', height: "100px" }} >
+              {micro.loading ? <Loading /> : null}
+            </div>
             {children ? children : (
               <ErrorBoundary>
                 <Suspense fallback={<Loading />}><Outlet /></Suspense>
