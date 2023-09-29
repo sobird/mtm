@@ -43,6 +43,7 @@
     // 用于指定是否启用实验性的装饰器特性
     "experimentalDecorators": true,
     "sourceMap": true,
+    "declaration": true,
 
     /* Linting */
     // 指定是否启动所有类型检查，如果设为true 会同时开启下面这几个严格检查，默认为false

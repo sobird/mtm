@@ -8,6 +8,7 @@ import typescript from 'rollup-plugin-typescript2';
 import terser from '@rollup/plugin-terser';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import { babel } from '@rollup/plugin-babel';
 import json from '@rollup/plugin-json';
 import image from '@rollup/plugin-image';
 
@@ -55,6 +56,7 @@ export default {
     // terser()
     nodeResolve(),
     commonjs(),
+    babel({ babelHelpers: 'bundled' }),
     json(),
     image(),
   ],
