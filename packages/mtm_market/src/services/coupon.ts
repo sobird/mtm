@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/09/15 21:58:06 created.
  */
 
-import http from "@mtm/shared/utils/http";
+import http from "@mtm/shared/src/utils/http";
 
 interface ISpu {
   /** SPU ID */
