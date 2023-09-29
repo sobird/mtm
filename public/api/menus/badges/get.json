@@ -33,9 +33,13 @@
       "noticeContent": 111
     },
     {
-      "menuId": "1370",
+      "menuId": "1882",
       "noticeStyle": 10,
       "noticeContent": 111
+    },
+    {
+      "menuId": "1734",
+      "noticeStyle": 10
     },
     {
       "menuId": "1406",

@@ -7,30 +7,26 @@
 
 import { lazy } from "react";
 import { RouteObject, Outlet } from "react-router-dom";
-import { ProLayout } from "@ant-design/pro-components";
 import Layout from "@/layout";
 
+const Coupon = lazy(() => import('@/pages/coupon'));
 const CouponDetail = lazy(() => import('@/pages/coupon/detail'));
 
-// const Layout = window.__POWERED_BY_QIANKUN__ ? null : <ProLayout layout="mix" title="ddd" appList={[{title: 'aaa'}]}><Outlet /></ProLayout>
-
+const MTMLayout = window.__POWERED_BY_QIANKUN__ ? null : <Layout><Outlet /></Layout>
+const basename = window.__POWERED_BY_QIANKUN__ ? '/market' : '/';
 
 const routes: RouteObject[] = [
   {
-    path: "/market/*",
-    element: window.__POWERED_BY_QIANKUN__ ? null : <Layout />,
+    path: basename,
+    element: MTMLayout,
     children: [
       {
+        path: 'coupons',
         index: true,
-        element: <CouponDetail />,
+        element: <Coupon />,
       },
       
     ],
-  },
-
-  {
-    path: '*',
-    element: <Layout></Layout>
   }
 ];
 

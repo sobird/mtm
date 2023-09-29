@@ -11,7 +11,7 @@ const Home: React.FC = () => {
   const st = useSelector(state => state.app);
   console.log('st', st)
   return (
-    <div>1</div>
+    <div>home</div>
   )
 }
 
