@@ -4,13 +4,14 @@
  * @see https://cn.rollupjs.org/configuration-options
  * sobird<i@sobird.me> at 2023/09/28 11:30:37 created.
  */
-import typescript from 'rollup-plugin-typescript2';
-import terser from '@rollup/plugin-terser';
+
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import typescript from 'rollup-plugin-typescript2';
 import commonjs from '@rollup/plugin-commonjs';
 import { babel } from '@rollup/plugin-babel';
-import json from '@rollup/plugin-json';
+import terser from '@rollup/plugin-terser';
 import image from '@rollup/plugin-image';
+import json from '@rollup/plugin-json';
 
 export default {
   input: 'src/index.ts',
@@ -53,12 +54,15 @@ export default {
   ],
   plugins: [
     typescript(/*{ plugin options }*/),
-    // terser()
     nodeResolve(),
     commonjs(),
-    babel({ babelHelpers: 'bundled' }),
+    babel({ 
+      babelHelpers: 'bundled',
+      presets: ['@babel/preset-env']
+    }),
     json(),
     image(),
+    // terser(),
   ],
   external: ['antd', 'react', 'react-dom', '@ant-design/icons', '@ant-design/pro-components']
 };

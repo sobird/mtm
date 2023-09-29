@@ -5,6 +5,8 @@ export async function aaa() {
   })
 }
 
+export const map = new Map();
+
 const createKeyboard = (modelID: number) => {
   const defaultModelID = 23;
   return { type: "keyboard", modelID };
