@@ -20,14 +20,14 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
 const { ModuleFederationPlugin } = require('webpack').container;
-const externals = require('@mtm/shared/src/externals');
-const package = require('./package.json');
+//import externals from '@mtm/shared/src/externals.js';
+const pkg = require('./package.json');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
-const outputPath = path.resolve(__dirname, `dist/${package.name}`);
-const publicUrl = isProduction ? `/${package.name}/` : '';
+const outputPath = path.resolve(__dirname, `dist/${pkg.name}`);
+const publicUrl = isProduction ? `/${pkg.name}/` : '';
 
 const config = {
   devtool: isProduction ? false : 'inline-source-map',
@@ -44,9 +44,9 @@ const config = {
     chunkFilename: '[name].[contenthash].chunk.js',
     assetModuleFilename: 'assets/[contenthash][ext][query]',
     clean: true,
-    library: `${package.name}`,
+    library: `${pkg.name}`,
     libraryTarget: 'umd',
-    chunkLoadingGlobal: `webpackJsonp_${package.name}`,
+    chunkLoadingGlobal: `webpackJsonp_${pkg.name}`,
     globalObject: 'window',
   },
   devServer: {
@@ -69,7 +69,7 @@ const config = {
       cache: false,
       minify: isProduction,
       inject: true,
-      title: package.description,
+      title: pkg.description,
     }),
     new CopyPlugin({
       patterns: [
@@ -103,11 +103,11 @@ const config = {
       activeModules: true,
     }),
     // new ModuleFederationPlugin({
-    //   name: package.name,
+    //   name: pkg.name,
     //   filename: 'remoteEntry.js',
     //   // library: { 
     //   //   type: 'umd', 
-    //   //   name: package.name
+    //   //   name: pkg.name
     //   // },
     //   exposes: {
     //     './Campaign': './src/remotes/campaign',
@@ -214,7 +214,18 @@ module.exports = (conf) => {
       filename: '[file].map',
       publicPath: '/',
     }));
-    config.externals = externals;
+    config.externals = {
+      react: {
+        commonjs: ['mtm', 'React'],
+        commonjs2: ['mtm', 'React'],
+        root: ['mtm', 'React'],
+      },
+      'react-router-dom': {
+        commonjs: ['mtm', 'ReactRouterDOM'],
+        commonjs2: ['mtm', 'ReactRouterDOM'],
+        root: ['mtm', 'ReactRouterDOM'],
+      }
+    };
   } else {
     config.mode = 'development';
   }
