@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/09/24 21:16:11 created.
  */
 
-import { registerMicroApps, prefetchApps, start, initGlobalState, addGlobalUncaughtErrorHandler, MicroAppStateActions, FrameworkConfiguration } from 'qiankun';
+import { registerMicroApps, prefetchApps, start, runAfterFirstMounted, initGlobalState, addGlobalUncaughtErrorHandler, MicroAppStateActions, FrameworkConfiguration } from 'qiankun';
 import apps from './apps';
 import lifeCycles from './lifeCycles';
 
@@ -45,6 +45,10 @@ actions.onGlobalStateChange((state, prev) => {
 export function setGlobalState(state: object) {
   actions.setGlobalState(state);
 }
+
+runAfterFirstMounted(() => {
+  console.log('[MainApp] first app mounted');
+});
 
 const startQiankun = (opts?: FrameworkConfiguration) => {
   start({
