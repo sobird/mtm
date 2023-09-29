@@ -1,12 +1,12 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-
-let root = null;
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
 
 // if (window.__POWERED_BY_QIANKUN__) {
 //   __webpack_public_path__ = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__;
 // }
+
+let root = null;
 
 /**
  * bootstrap 只会在微应用初始化的时候调用一次，下次微应用重新进入时会直接调用 mount 钩子，不会再重复触发 bootstrap。
@@ -34,8 +34,8 @@ export async function mount(props: any) {
   root.render(
     <React.StrictMode>
       <App />
-    </React.StrictMode>,
-  )
+    </React.StrictMode>
+  );
 }
 
 /**
@@ -53,17 +53,12 @@ export async function update(props: any) {
   console.log('mtm_market app update', props);
 }
 
-if (window.__POWERED_BY_QIANKUN__) {
-  __webpack_public_path__ = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__;
-}
-
 if (!window.__POWERED_BY_QIANKUN__) {
   ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
       <App />
-    </React.StrictMode>,
+    </React.StrictMode>
   );
 }
-
 
 module?.hot?.accept();

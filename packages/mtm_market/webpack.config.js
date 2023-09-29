@@ -27,7 +27,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
 const outputPath = path.resolve(__dirname, `dist/${package.name}`);
-const publicUrl = isProduction ? `/${package.name}` : '';
+const publicUrl = isProduction ? `/${package.name}/` : '';
 
 const config = {
   devtool: isProduction ? false : 'inline-source-map',
@@ -206,8 +206,8 @@ module.exports = (conf) => {
     config.mode = 'production';
 
     config.plugins.push(new MiniCssExtractPlugin({
-      filename: 'css/[name].[contenthash].css',
-      chunkFilename: 'css/[id].[contenthash].css',
+      filename: '[name].[contenthash].css',
+      chunkFilename: '[id].[contenthash].css',
     }));
     config.plugins.push(new webpack.SourceMapDevToolPlugin({
       test: /\.(tsx|jsx|js)$/,
