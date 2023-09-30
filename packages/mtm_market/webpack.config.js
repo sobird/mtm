@@ -20,7 +20,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
 const { ModuleFederationPlugin } = require('webpack').container;
-//import externals from '@mtm/shared/src/externals.js';
+import { externals } from '@mtm/shared';
 const pkg = require('./package.json');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -214,18 +214,7 @@ module.exports = (conf) => {
       filename: '[file].map',
       publicPath: '/',
     }));
-    config.externals = {
-      react: {
-        commonjs: ['mtm', 'React'],
-        commonjs2: ['mtm', 'React'],
-        root: ['mtm', 'React'],
-      },
-      'react-router-dom': {
-        commonjs: ['mtm', 'ReactRouterDOM'],
-        commonjs2: ['mtm', 'ReactRouterDOM'],
-        root: ['mtm', 'ReactRouterDOM'],
-      }
-    };
+    config.externals = externals;
   } else {
     config.mode = 'development';
   }
