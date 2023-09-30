@@ -25,7 +25,7 @@ jobs:
       run: |
         cd packages/shared
         yarn
-        rollup:build
+        yarn rollup:build
         cd - 
         cd packages/mtm_market 
         yarn
