@@ -23,6 +23,10 @@ jobs:
 
     - name: Install and Build 🔧 
       run: |
+        cd packages/shared
+        yarn
+        rollup:build
+        cd - 
         yarn
         yarn build
 

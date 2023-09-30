@@ -15,6 +15,7 @@ import { babel } from '@rollup/plugin-babel';
 import terser from '@rollup/plugin-terser';
 import image from '@rollup/plugin-image';
 import json from '@rollup/plugin-json';
+import copy from 'rollup-plugin-copy';
 
 const files = glob.sync('src/**/*.js').reduce((map, filename) => {
   map[filename] = filename;
@@ -32,7 +33,7 @@ export default {
   output: {
     //preserveModules: true,
     dir: "dist",
-    format: "es"
+    format: "cjs"
   },
   // output: [
   //   {
@@ -85,6 +86,11 @@ export default {
     json(),
     image(),
     // terser(),
+    copy({
+      targets: [
+        { src: 'package.json', dest: 'dist' },
+      ]
+    })
   ],
   external: ['antd', 'react', 'react-dom', 'react-router-dom', '@ant-design/icons', '@ant-design/pro-components', 'axios']
 };
