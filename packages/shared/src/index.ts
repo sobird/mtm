@@ -1,15 +1,9 @@
+/**
+ * index.js
+ *
+ * sobird<i@sobird.me> at 2023/09/30 16:50:23 created.
+ */
 
-export async function aaa() {
-  return await new Promise((resolve) => {
-    resolve(123);
-  })
-}
-
-export const map = new Map();
-
-const createKeyboard = (modelID: number) => {
-  const defaultModelID = 23;
-  return { type: "keyboard", modelID };
-};
-// test
-export default createKeyboard;
+export { default as MTMLayout } from './layout';
+export { default as http } from './utils/http';
+export { default as externals } from './utils/externals';

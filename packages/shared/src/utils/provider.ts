@@ -1,6 +1,6 @@
 /**
  * MTM微前端通用包
- * 
+ *
  * sobird<i@sobird.me> at 2023/09/13 21:31:48 created.
  */
 
@@ -11,9 +11,9 @@ import * as ReactRouterDOM from 'react-router-dom';
   Object.keys(deps).forEach(key => {
     root[key] = deps[key];
   });
-}(window, {
+})(window, {
   mtm: {
     React,
     ReactRouterDOM,
-  }
-}));
+  },
+});
