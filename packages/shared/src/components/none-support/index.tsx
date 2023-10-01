@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
-import { Button, Result } from 'antd';
+import { Button } from 'antd';
+import Result from 'antd/es/result';
 
 interface NoneSupportProps {
   text?: string;
