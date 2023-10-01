@@ -5,6 +5,8 @@
  */
 
 import { RegistrableApp } from "qiankun";
+import store from '@/store';
+import { updateMicro } from '@/store/actions/app';
 
 const getActiveRule = (hash: string) => (location) => location.hash.startsWith(hash);
 
@@ -13,6 +15,7 @@ const loader = (loading) => {
   if(!loading) {
     // alert(123)
   }
+  store.dispatch(updateMicro({ loading }));
 };
 
 const apps: RegistrableApp<any>[] = [
