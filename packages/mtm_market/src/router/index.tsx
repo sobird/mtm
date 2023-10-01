@@ -10,4 +10,3 @@ import routes from './routes';
 export default createHashRouter(routes, {
   basename: window.__POWERED_BY_QIANKUN__ ? '/market' : '/'
 });
-

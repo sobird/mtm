@@ -1,4 +1,5 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import { ProConfigProvider, ProLayout, ProLayoutProps } from '@ant-design/pro-components';
 import { GithubFilled } from '@ant-design/icons';
@@ -6,13 +7,14 @@ import defaultProps from './_defaultProps';
 import SearchInput from './components/search-input';
 
 interface MTMLayoutProps {
-  onMenuItemSelected?: () => void;
+  onMenuItemSelected?: (item: ProLayoutProps['route']) => void;
 }
 
-const MTMLayout: React.FC<PropsWithChildren<MTMLayoutProps & ProLayoutProps>> = ({children, ...props}) => {
-  if (typeof document === 'undefined') {
-    return <div />;
-  }
+const MTMLayout: React.FC<PropsWithChildren<MTMLayoutProps & ProLayoutProps>> = ({children, onMenuItemSelected, ...props}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [pathname, setPathname] = useState(location.pathname);
+
   return (
     <ProConfigProvider hashed={false}>
       <ConfigProvider
@@ -22,6 +24,9 @@ const MTMLayout: React.FC<PropsWithChildren<MTMLayoutProps & ProLayoutProps>> = 
       >
         <ProLayout
           {...defaultProps}
+          location={{
+            pathname,
+          }}
           actionsRender={props => {
             if (props.isMobile) return [];
             if (typeof window === 'undefined') return [];
@@ -47,6 +52,17 @@ const MTMLayout: React.FC<PropsWithChildren<MTMLayoutProps & ProLayoutProps>> = 
 
             return defaultDom;
           }}
+          menuItemRender={(item, dom) => (
+            <div
+              onClick={() => {
+                setPathname(item.path || '/welcome');
+                navigate(item.path);
+                // onMenuItemSelected?.(item)
+              }}
+            >
+              {dom}
+            </div>
+          )}
           {...props}
         >
           {children}
