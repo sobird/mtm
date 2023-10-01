@@ -97,6 +97,7 @@ export default {
     copy({
       targets: [
         { src: 'package.json', dest: 'dist' },
+        //{ src: 'src/utils/externals.js', dest: 'dist/utils' },
       ]
     })
   ],

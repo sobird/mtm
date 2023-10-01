@@ -6,6 +6,7 @@
 
 import * as React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
+import * as Antd from 'antd';
 
 (function (root: any, deps: any) {
   Object.keys(deps).forEach(key => {
@@ -15,5 +16,6 @@ import * as ReactRouterDOM from 'react-router-dom';
   mtm: {
     React,
     ReactRouterDOM,
+    Antd,
   },
 });
