@@ -28,7 +28,7 @@ export default {
     'index': 'src/index.ts',
     'utils/http': 'src/utils/http.ts',
     'utils/provider': 'src/utils/provider.ts',
-    'utils/externals': 'src/utils/externals.ts',
+    // 'utils/externals': 'src/utils/externals.ts',
     'layout/index': 'src/layout/index.tsx',
     'components/loading/index': 'src/components/loading/index.tsx',
     'components/none-support/index': 'src/components/none-support/index.tsx'
@@ -97,7 +97,7 @@ export default {
     copy({
       targets: [
         { src: 'package.json', dest: 'dist' },
-        //{ src: 'src/utils/externals.js', dest: 'dist/utils' },
+        { src: 'src/utils/externals.js', dest: 'dist/utils' },
       ]
     })
   ],
