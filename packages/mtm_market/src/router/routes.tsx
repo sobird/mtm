@@ -8,6 +8,7 @@ import { lazy, Suspense } from 'react';
 import { RouteObject, Outlet } from 'react-router-dom';
 import { default as MTMLayout } from '@/layout';
 import Loading from '@mtm/shared/components/loading';
+import NoneSupport from "@mtm/shared/components/none-support";
 
 const Coupon = lazy(() => import('@/pages/coupon'));
 const CouponDetail = lazy(() => import('@/pages/coupon/detail'));
@@ -31,6 +32,11 @@ const routes: RouteObject[] = [
       {
         path: 'coupons/:id',
         element: <CouponDetail />,
+      },
+
+      {
+        path: "*",
+        element: <NoneSupport />,
       },
     ],
   },
