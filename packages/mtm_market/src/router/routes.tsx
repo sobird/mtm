@@ -19,18 +19,17 @@ const routes: RouteObject[] = [
     path: basename,
     element: MTMLayout,
     children: [
-      
+      {
+        path: 'coupons',
+        element: <Coupon />,
+      },
       {
         path: 'coupons/:id',
-        index: true,
         element: <CouponDetail />,
       },
     ],
   },
-  {
-    path: '/market/coupons',
-    element: <Coupon />,
-  },
+  ,
 ];
 
 export default routes;

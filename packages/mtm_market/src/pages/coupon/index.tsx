@@ -6,6 +6,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Button, Table, Tag, Popconfirm } from 'antd';
+import { Link } from 'react-router-dom';
 import CouponService, { ICouponEntity, ICouponPagination, ECouponType, ECouponTarget, ECouponStatus, ECouponStatusColor } from "@/services/coupon";
 const { Column, ColumnGroup } = Table;
 
@@ -60,7 +61,7 @@ const Coupons: React.FC = () => {
           render={(text, record) => {
             return (
               <>
-                <Button type="link" size="small">查看</Button>
+                <Link to={`/market/coupons/${record.id}`}>查看</Link>
                 { text < 2 && <Button type="link" size="small">编辑</Button>}
                 { text < 2 && <Popconfirm
                   title="您确定要下线该优惠券吗？"
