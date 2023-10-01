@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
-import { Button } from 'antd';
+import { Button, Result } from 'antd';
 
 interface NoneSupportProps {
   text?: string;
@@ -9,13 +9,18 @@ interface NoneSupportProps {
 const NoneSupport: React.FC<NoneSupportProps> = ({ text }) => {
   const navigate = useNavigate();
   return (
-    <Button
-      onClick={() => {
-        navigate(-1)
-      }}
-    >
+    <Result
+      title={text || '功能即将上线'}
+      extra={(
+        <Button
+          onClick={() => {
+            navigate(-1)
+          }}
+        >
           我知道了
-    </Button>
+        </Button>
+      )}
+    ></Result>
   );
 }
 
