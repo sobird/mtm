@@ -20,8 +20,13 @@ module.exports = {
     root: ['mtm', 'Antd'],
   },
   '@ant-design/pro-components': {
-    commonjs: ['mtm', 'ProComponents'],
-    commonjs2: ['mtm', 'ProComponents'],
-    root: ['mtm', 'ProComponents'],
+    commonjs: ['mtm', 'AntdProComponents'],
+    commonjs2: ['mtm', 'AntdProComponents'],
+    root: ['mtm', 'AntdProComponents'],
+  },
+  '@ant-design/icons': {
+    commonjs: ['mtm', 'AntdIcons'],
+    commonjs2: ['mtm', 'AntdIcons'],
+    root: ['mtm', 'AntdIcons'],
   },
 };
