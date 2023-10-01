@@ -16,6 +16,7 @@ import terser from '@rollup/plugin-terser';
 import image from '@rollup/plugin-image';
 import json from '@rollup/plugin-json';
 import copy from 'rollup-plugin-copy';
+import clear from 'rollup-plugin-clear';
 
 const files = glob.sync('src/**/*.js').reduce((map, filename) => {
   map[filename] = filename;
@@ -28,7 +29,8 @@ export default {
     'utils/http': 'src/utils/http.ts',
     'utils/provider': 'src/utils/provider.ts',
     'utils/externals': 'src/utils/externals.ts',
-    'layout/index': 'src/layout/index.tsx'
+    'layout/index': 'src/layout/index.tsx',
+    'components/loading/index': 'src/components/loading/index.tsx'
   },
   output: {
     //preserveModules: true,
@@ -76,6 +78,9 @@ export default {
   //   // }
   // ],
   plugins: [
+    clear({
+      targets: ['dist'],
+    }),
     typescript(/*{ plugin options }*/),
     nodeResolve(),
     commonjs(),

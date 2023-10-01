@@ -7,3 +7,4 @@
 export { default as MTMLayout } from './layout';
 export { default as http } from './utils/http';
 export { default as externals } from './utils/externals';
+export { default as Loading } from './components/loading';

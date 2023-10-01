@@ -11,7 +11,7 @@ import classNames from 'classnames';
 import Header from './header';
 import Aside from './aside';
 import ErrorBoundary from "@/components/error-boundary";
-import Loading from '@/components/loading';
+import { Loading } from '@mtm/shared';
 import { IStoreState } from "@/store/reducers";
 import startQiankun from '@/router/micro';
 
