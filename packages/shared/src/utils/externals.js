@@ -19,4 +19,9 @@ module.exports = {
     commonjs2: ['mtm', 'Antd'],
     root: ['mtm', 'Antd'],
   },
+  '@ant-design/pro-components': {
+    commonjs: ['mtm', 'ProComponents'],
+    commonjs2: ['mtm', 'ProComponents'],
+    root: ['mtm', 'ProComponents'],
+  },
 };

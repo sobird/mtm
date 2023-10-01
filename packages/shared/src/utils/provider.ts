@@ -7,6 +7,7 @@
 import * as React from 'react';
 import * as ReactRouterDOM from 'react-router-dom';
 import * as Antd from 'antd';
+import * as ProComponents from '@ant-design/pro-components'
 
 (function (root: any, deps: any) {
   Object.keys(deps).forEach(key => {
@@ -17,5 +18,6 @@ import * as Antd from 'antd';
     React,
     ReactRouterDOM,
     Antd,
+    ProComponents,
   },
 });
