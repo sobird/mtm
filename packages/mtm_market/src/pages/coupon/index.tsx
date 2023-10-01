@@ -61,7 +61,7 @@ const Coupons: React.FC = () => {
           render={(text, record) => {
             return (
               <>
-                <Link to={`/market/coupons/${record.id}`}>查看</Link>
+                <Link to={`/coupons/${record.id}`}>查看</Link>
                 { text < 2 && <Button type="link" size="small">编辑</Button>}
                 { text < 2 && <Popconfirm
                   title="您确定要下线该优惠券吗？"

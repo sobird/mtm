@@ -12,12 +12,12 @@ import Loading from "@mtm/shared/components/loading";
 const Coupon = lazy(() => import('@/pages/coupon'));
 const CouponDetail = lazy(() => import('@/pages/coupon/detail'));
 
-const Layout = window.__POWERED_BY_QIANKUN__ ? <Suspense fallback={<Loading />}><Outlet /></Suspense> : <MTMLayout><Outlet /></MTMLayout>
-const basename = window.__POWERED_BY_QIANKUN__ ? '/market' : '/';
+const suspense = <Suspense fallback={<Loading />}><Outlet /></Suspense>;
+const Layout = window.__POWERED_BY_QIANKUN__ ? suspense : <MTMLayout>{suspense}</MTMLayout>
 
 const routes: RouteObject[] = [
   {
-    path: basename,
+    path: '/',
     element: Layout,
     children: [
       {
