@@ -7,7 +7,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, Alert } from 'antd';
 import { RightOutlined } from '@ant-design/icons'
-import Entry from "@/components/layout/entry";
+import Entry from "@/layout/entry";
 
 import Invitation, { IInvitationRequestData } from '@/services/common/invitation';
 

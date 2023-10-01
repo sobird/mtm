@@ -7,7 +7,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Steps, theme, Button, message, Result } from 'antd';
-import LayoutEntry from "@/components/layout/entry";
+import LayoutEntry from "@/layout/entry";
 import EntryEnumService, { IEntryEnum } from '@/services/merchant/entry/enum';
 import EntryService from '@/services/merchant/entry';
 

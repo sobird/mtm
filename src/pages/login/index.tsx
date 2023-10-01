@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { Button, Select, message } from 'antd';
 import { MobileOutlined }  from '@ant-design/icons';
-import Base from "@/components/layout/base";
+import Base from "@/layout/base";
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import CaptchaService from '@/services/common/captcha';
 import login from '@/services/login';

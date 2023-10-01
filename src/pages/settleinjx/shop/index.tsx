@@ -7,7 +7,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Card, Button, Alert, Radio, Cascader, Modal, message, Table } from 'antd';
-import LayoutEntry from "@/components/layout/entry";
+import LayoutEntry from "@/layout/entry";
 import CategoryService, { ICategory } from '@/services/merchant/category';
 import EntryTask, { IEntryTask } from '@/services/merchant/entry/task';
 import EntryType, { IEntryType } from '@/services/merchant/entry/type';

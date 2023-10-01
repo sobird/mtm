@@ -24,12 +24,12 @@ const lifeCycles = {
   afterMount: (app: any) => {
     // 加载微应用前，进度条加载完成
     console.log(app.name, 'after mount');
+    store.dispatch(updateMicro({ loading: false }));
     return Promise.resolve();
   },
   beforeUnmount: (app: any) => {
     // 卸载微应用前
     console.log(app.name, 'before unmount');
-    store.dispatch(updateMicro({ loading: false }));
     return Promise.resolve();
   },
   afterUnmount: (app: any) => {

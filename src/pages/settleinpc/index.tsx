@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/06/12 8:24:06 created.
  */
 import { Button } from 'antd'
-import Base from "@/components/layout/base";
+import Base from "@/layout/base";
 
 import './index.scss';
 

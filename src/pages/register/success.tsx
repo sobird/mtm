@@ -5,7 +5,7 @@
  */
 
 import { useNavigate } from 'react-router-dom';
-import Base from "@/components/layout/base";
+import Base from "@/layout/base";
 import { Result, Button } from 'antd'
 
 function RegisterSuccess() {

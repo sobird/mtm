@@ -48,7 +48,7 @@ const LayoutAdmin: React.FC<PropsWithChildren> = ({ children }) => {
         <div className='app-body'>
           <Aside />
           <main className='app-main'>
-            <div id="micro-container" style={{ width: '100%', height: "100px" }} >
+            <div id="micro-container" style={{ width: '100%' }} >
               {micro.loading ? <Loading /> : null}
             </div>
             {children ? children : (
