@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
-import { Button } from 'antd';
-import Result from 'antd/es/result';
+import { Button, Result } from 'antd';
 
 interface NoneSupportProps {
   text?: string;
@@ -21,7 +20,7 @@ const NoneSupport: React.FC<NoneSupportProps> = ({ text }) => {
           我知道了
         </Button>
       )}
-    ></Result>
+    />
   );
 }
 

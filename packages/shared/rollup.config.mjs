@@ -82,7 +82,9 @@ export default {
     clear({
       targets: ['dist'],
     }),
-    typescript(/*{ plugin options }*/),
+    typescript({
+      check: false
+    }),
     nodeResolve(),
     commonjs(),
     babel({ 
