@@ -203,7 +203,6 @@ const config = {
 module.exports = (conf) => {
   if (isProduction) {
     config.mode = 'production';
-
     config.plugins.push(new MiniCssExtractPlugin({
       filename: 'css/[name].[contenthash].css',
       chunkFilename: 'css/[id].[contenthash].css',

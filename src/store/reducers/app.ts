@@ -5,7 +5,7 @@
  */
 import Cookies from 'js-cookie';
 import { IAction } from '../actions';
-import { SET_USER, TOGGLE_ASIDE, UPDATE_MICRO } from '../actions/app';
+import { UPDATE_USER, TOGGLE_ASIDE, UPDATE_MICRO } from '../actions/app';
 
 export type User = {
   name: string,
@@ -32,7 +32,7 @@ const initialState = {
 
 export default function (state: IAppState = initialState, action: IAction) {
   switch (action.type) {
-    case SET_USER :
+    case UPDATE_USER :
       return {
         ...state,
         user: action.payload,
