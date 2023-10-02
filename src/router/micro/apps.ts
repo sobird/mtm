@@ -12,6 +12,12 @@ const getActiveRule = (hash: string) => (location) => location.hash.startsWith(h
 
 const loader = (loading) => {
   store.dispatch(updateMicro({ loading }));
+
+  if(!loading) {
+    window.$loadTimer = setTimeout(() => {
+      store.dispatch(updateMicro({ loading }));
+    }, 200)
+  }
 };
 
 const apps: RegistrableApp<any>[] = [

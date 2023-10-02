@@ -3,6 +3,7 @@ declare interface Window {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
   qiankunStarted: boolean;
   $store: object;
+  $loadTimer: any;
 }
 
 declare let process: {

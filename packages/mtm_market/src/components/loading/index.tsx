@@ -8,6 +8,7 @@ import { useEffect } from "react";
 
 export default function Loading() {
   useEffect(() => {
+    clearTimeout(window.$loadTimer);
     window.$store.dispatch({
       type: "UPDATE_MICRO",
       payload: {
