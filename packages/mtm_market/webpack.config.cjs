@@ -67,7 +67,12 @@ const config = {
       template: path.resolve('public/index.html'),
       filename: 'index.html',
       cache: false,
-      minify: isProduction,
+      minify: {
+        collapseWhitespace: true,
+        removeComments: true,
+        minifyJS: true,
+        minifyCSS: true,
+      },
       inject: true,
       title: pkg.description,
     }),

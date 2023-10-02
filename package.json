@@ -7,7 +7,7 @@
     "start": "NODE_ENV=development webpack serve",
     "build": "webpack --mode=production --node-env=production",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "analyzer": "NODE_ENV=production webpack --profile --json > stats.json && webpack-bundle-analyzer --port 8888 stats.json"
+    "analyzer": "NODE_ENV=production webpack --mode=production --node-env=production --profile --json > stats.json && webpack-bundle-analyzer --port 8888 stats.json"
   },
   "dependencies": {
     "@ant-design/icons": "^5.1.4",

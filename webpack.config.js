@@ -65,7 +65,12 @@ const config = {
       template: path.resolve('public/index.html'),
       filename: 'index.html',
       cache: false,
-      minify: isProduction,
+      minify: {
+        collapseWhitespace: true,
+        removeComments: true,
+        minifyJS: true,
+        minifyCSS: true,
+      },
       inject: true,
       title: package.description,
     }),
@@ -204,8 +209,8 @@ module.exports = (conf) => {
   if (isProduction) {
     config.mode = 'production';
     config.plugins.push(new MiniCssExtractPlugin({
-      filename: 'css/[name].[contenthash].css',
-      chunkFilename: 'css/[id].[contenthash].css',
+      filename: '[name].[contenthash].css',
+      chunkFilename: '[id].[contenthash].css',
     }));
     config.plugins.push(new webpack.SourceMapDevToolPlugin({
       test: /\.(tsx|jsx|js)$/,
