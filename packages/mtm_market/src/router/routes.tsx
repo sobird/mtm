@@ -7,7 +7,7 @@
 import { lazy, Suspense } from 'react';
 import { RouteObject, Outlet } from 'react-router-dom';
 import { default as MTMLayout } from '@/layout';
-import Loading from '@mtm/shared/components/loading';
+import Loading from '@/components/loading';
 import NoneSupport from "@mtm/shared/components/none-support";
 
 const Coupon = lazy(() => import('@/pages/coupon'));

@@ -15,6 +15,8 @@ ConfigProvider.config({
   // theme,
 })
 
+window.$store = store;
+
 function App() {
   return (
     <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm'>

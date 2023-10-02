@@ -111,7 +111,7 @@ const config = {
       remotes: {
         market: `mtm_market@${marketHOST}/remoteEntry.js`
       }
-    })
+    }),
     // new PurgeCSSPlugin({
     //   paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
     //   whitelist: ['html', 'body']
@@ -121,6 +121,7 @@ const config = {
     //   analyzerHost: '127.0.0.1',
     //   analyzerPort: 8888,
     // }),
+    // new BundleAnalyzerPlugin(),
   ],
   module: {
     rules: [

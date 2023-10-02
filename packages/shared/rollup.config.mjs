@@ -30,7 +30,6 @@ export default {
     'utils/provider': 'src/utils/provider.ts',
     // 'utils/externals': 'src/utils/externals.ts',
     'layout/index': 'src/layout/index.tsx',
-    'components/loading/index': 'src/components/loading/index.tsx',
     'components/none-support/index': 'src/components/none-support/index.tsx'
   },
   output: {

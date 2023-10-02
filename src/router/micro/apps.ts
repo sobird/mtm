@@ -11,10 +11,6 @@ import { updateMicro } from '@/store/actions/app';
 const getActiveRule = (hash: string) => (location) => location.hash.startsWith(hash);
 
 const loader = (loading) => {
-  console.log('loading', loading)
-  if(!loading) {
-    // alert(123)
-  }
   store.dispatch(updateMicro({ loading }));
 };
 
