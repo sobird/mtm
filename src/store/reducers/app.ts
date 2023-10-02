@@ -38,15 +38,9 @@ export default function (state: IAppState = initialState, action: IAction) {
         user: action.payload,
       };
     case TOGGLE_ASIDE:
-      if (state.collapsed) {
-        Cookies.set(TOGGLE_ASIDE, '0', {
-          path: '/',
-        });
-      } else {
-        Cookies.set(TOGGLE_ASIDE, '1', {
-          path: '/',
-        });
-      }
+      Cookies.set(TOGGLE_ASIDE, state.collapsed ? '0' : '1', {
+        path: '/',
+      });
   
       // 主动触发window.resize事件
       setTimeout(() => {
