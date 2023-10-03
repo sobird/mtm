@@ -4,6 +4,7 @@ declare interface Window {
   qiankunStarted: boolean;
   $store: object;
   $loadTimer: any;
+  $clearTimeout: any;
 }
 
 declare let process: {

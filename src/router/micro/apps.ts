@@ -11,14 +11,16 @@ import { updateMicro } from '@/store/actions/app';
 const getActiveRule = (hash: string) => (location) => location.hash.startsWith(hash);
 
 const loader = (loading) => {
-  store.dispatch(updateMicro({ loading }));
-
-  if(!loading) {
+  if(loading) {
+    store.dispatch(updateMicro({ loading }));
+  } else {
     window.$loadTimer = setTimeout(() => {
       store.dispatch(updateMicro({ loading }));
-    }, 200)
+    }, 100);
   }
 };
+
+window.$clearTimeout = clearTimeout;
 
 const apps: RegistrableApp<any>[] = [
   {
