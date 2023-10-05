@@ -1,104 +1,186 @@
 /**
  * 商家端优惠券列表
- * 
+ *
  * sobird<i@sobird.me> at 2023/09/15 21:14:09 created.
  */
 
-import React, { useEffect, useState } from "react";
-import { Button, Table, Tag, Popconfirm } from 'antd';
-import { Link, useSearchParams } from 'react-router-dom';
-import CouponService, { ICouponEntity, ICouponPagination, ECouponType, ECouponTarget, ECouponStatus, ECouponStatusColor } from "@/services/coupon";
-const { Column } = Table;
+import React, { useEffect, useState } from 'react';
+import { Button, Table, Tag, Popconfirm, Space, Form, Select, DatePicker, Radio, Card, Row, Col } from 'antd';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import dayjs from 'dayjs';
 
+import CouponService, {
+  ICouponEntity,
+  ICouponPagination,
+  ECouponType,
+  ECouponTarget,
+  ECouponStatus,
+  ECouponStatusColor,
+  CouponStatusOption,
+} from '@/services/coupon';
+import useSearchParamsState from '@/hooks/useSearchParamsState';
+import SearchForm from '@/components/search-form';
+const { Column } = Table;
+const { RangePicker } = DatePicker;
 import './index.scss';
-import useSearchParamsState from "@/hooks/useSearchParamsState";
 
 const Coupons: React.FC = () => {
+  const location = useLocation();
   const [couponPagination, setCouponPagination] = useState<ICouponPagination>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchParamsState, setSearchParamsState] = useSearchParamsState('test', '123');
-
-  console.log('searchParams', searchParams);
-  console.log('searchParamsState', searchParamsState)
+  const [searchParamTest, setSearchParamTest] = useSearchParamsState('test', '123');
 
   useEffect(() => {
     CouponService.list().then(res => {
       setCouponPagination(res);
-    })
-  }, []);
+    });
+  }, [location.search]);
   return (
-    <div className="page-coupons">
-      
-      <Table 
-      bordered 
-      dataSource={couponPagination?.list} 
-      rowKey="id"
-      scroll={{ x: 1400 }}
+    <div className='page-coupons'>
+      <Table
+        bordered
+        title={() => {
+          return (
+            <Row>
+              <Col flex={1}>
+                <SearchForm reset>
+                  <Form.Item
+                    name='status'
+                    getValueProps={value => {
+                      return {
+                        // 数据类型转换
+                        value: Number.isInteger(Number(value)) ? Number(value) : -1,
+                      };
+                    }}
+                  >
+                    <Radio.Group
+                      defaultValue={-1}
+                      buttonStyle='solid'
+                      options={CouponStatusOption}
+                      optionType='button'
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name='term'
+                    getValueFromEvent={(...[, dateString]) => {
+                      return JSON.stringify(dateString);
+                    }}
+                    getValueProps={value => {
+                      let objValue = [];
+                      try {
+                        objValue = JSON.parse(value);
+                      } catch (err) {
+                        objValue = [];
+                      }
+                      return {
+                        value: objValue
+                          ? objValue.map(item => {
+                              return dayjs(item).isValid() ? dayjs(item) : undefined;
+                            })
+                          : undefined,
+                      };
+                    }}
+                  >
+                    <RangePicker
+                      placeholder={['券发放开始时间', '券发放结束时间']}
+                      showTime
+                      format='YYYY-MM-DD HH:mm:ss'
+                    />
+                  </Form.Item>
+                </SearchForm>
+              </Col>
+              <Col>
+                <Button type='primary'>创建券</Button>
+              </Col>
+            </Row>
+          );
+        }}
+        dataSource={couponPagination?.list}
+        rowKey='id'
+        scroll={{ x: 1400 }}
+        size='middle'
         pagination={{
+          position: ['bottomCenter'],
           total: couponPagination?.total,
           current: 2,
-          pageSize: 10
-        }}>
-        <Column title="优惠券编码" dataIndex="id" width={120} />
-        <Column<ICouponEntity> title="优惠券名称" dataIndex="name" render={(text, record) => {
-          return <Link to={`/coupons/${record.id}`}>{text}</Link>;
-        }}/>
-        <Column 
-          title="优惠类型" 
-          dataIndex="type"
+          pageSize: 10,
+        }}
+      >
+        <Column title='优惠券编码' dataIndex='id' width={120} />
+        <Column<ICouponEntity>
+          title='优惠券名称'
+          dataIndex='name'
+          render={(text, record) => {
+            return <Link to={`/coupons/${record.id}`}>{text}</Link>;
+          }}
+        />
+        <Column
+          title='优惠类型'
+          dataIndex='type'
           width={100}
-          render={(text) => {
+          render={text => {
             return ECouponType[text];
           }}
         />
-        <Column 
-          title="券类型" 
-          dataIndex="target"
+        <Column
+          title='券类型'
+          dataIndex='target'
           width={130}
-          render={(text) => {
+          render={text => {
             return ECouponTarget[text];
           }}
         />
-        <Column title="发放时间" width={120} dataIndex="stime" />
-        <Column title="使用时间" width={150} dataIndex="validDays" />
-        <Column title="发放数量" width={100} dataIndex="sendCount" />
-        <Column title="当前余量" width={100} dataIndex="leftCount" />
-        <Column title="创建时间" dataIndex="ctime" width={120}/>
-        <Column 
-          title="状态" 
-          dataIndex="status"
+        <Column title='发放时间' width={120} dataIndex='stime' />
+        <Column title='使用时间' width={150} dataIndex='validDays' />
+        <Column title='发放数量' width={100} dataIndex='sendCount' />
+        <Column title='当前余量' width={100} dataIndex='leftCount' />
+        <Column title='创建时间' dataIndex='ctime' width={120} />
+        <Column
+          title='状态'
+          dataIndex='status'
           fixed='right'
           width={80}
-          render={(text) => {
+          render={text => {
             return <Tag color={ECouponStatusColor[text]}>{ECouponStatus[text]}</Tag>;
-          }} />
-        <Column<ICouponEntity> 
-          title="操作"
-          dataIndex="status"
+          }}
+        />
+        <Column<ICouponEntity>
+          title='操作'
+          dataIndex='status'
           fixed='right'
           width={150}
           render={(text, record) => {
             return (
-              <>
+              <Space>
                 <Link to={`/coupons/${record.id}`}>查看</Link>
-                { text < 2 && <Button type="link" size="small">编辑</Button>}
-                { text < 2 && <Popconfirm
-                  title="您确定要下线该优惠券吗？"
-                  onConfirm={() => {
-                    setSearchParams({a: '123'})
-                    setSearchParamsState('456')
-                    CouponService.delete(record.id);
-                  }}
-                  okText="确定"
-                  cancelText="取消">
-                  <Button type="link" size="small">下线</Button>
-                </Popconfirm>}
-              </>
+                {text < 2 && (
+                  <Button type='link' style={{ padding: 0 }}>
+                    编辑
+                  </Button>
+                )}
+                {text < 2 && (
+                  <Popconfirm
+                    title='您确定要下线该优惠券吗？'
+                    onConfirm={() => {
+                      setSearchParams({ a: '123' });
+                      setSearchParamTest('456');
+                      CouponService.delete(record.id);
+                    }}
+                    okText='确定'
+                    cancelText='取消'
+                  >
+                    <Button type='link' style={{ padding: 0 }}>
+                      下线
+                    </Button>
+                  </Popconfirm>
+                )}
+              </Space>
             );
-          }} />
+          }}
+        />
       </Table>
     </div>
-  )
+  );
 };
 
 export default Coupons;

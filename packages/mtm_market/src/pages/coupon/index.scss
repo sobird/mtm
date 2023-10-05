@@ -4,3 +4,15 @@
  * sobird<i@sobird.me> at 2023/09/15 22:26:50 created.
  */
 
+ .search-list-container {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  .info-wrapper {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+  }
+}
