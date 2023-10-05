@@ -3,7 +3,7 @@
  *
  * sobird<i@sobird.me> at 2023/09/06 16:47:45 created.
  */
-import React, { PropsWithChildren, Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Watermark } from 'antd';
@@ -17,7 +17,7 @@ import startQiankun from '@/router/micro';
 
 import './index.scss';
 
-const LayoutAdmin: React.FC<PropsWithChildren> = ({ children }) => {
+const LayoutAdmin: React.FC = () => {
   const location = useLocation();
   const { collapsed, micro } = useSelector((state: IStoreState) => state.app);
   console.log('micro', micro)
@@ -48,13 +48,13 @@ const LayoutAdmin: React.FC<PropsWithChildren> = ({ children }) => {
         <div className='app-body'>
           <Aside />
           <main className='app-main'>
-            <div id="micro-container" style={{ width: '100%' }} ></div>
-            {micro.loading ? <Loading /> : null}
-            {children ? children : (
+            <div id="micro-container" className="page-container" style={{ width: '100%' }} ></div>
+            <div id="main-container" className="page-container" style={{ width: '100%' }} >
               <ErrorBoundary>
                 <Suspense fallback={<Loading />}><Outlet /></Suspense>
               </ErrorBoundary>
-            )}
+            </div>
+            {micro.loading ? <Loading /> : null}
           </main>
         </div>
       </div>
