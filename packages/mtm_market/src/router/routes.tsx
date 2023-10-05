@@ -8,15 +8,15 @@ import { lazy, Suspense } from 'react';
 import { RouteObject, Outlet } from 'react-router-dom';
 import { default as MTMLayout } from '@/layout';
 import Loading from '@/components/loading';
-import NoneSupport from "@mtm/shared/components/none-support";
+import NoneSupport from '@mtm/shared/components/none-support';
 
 const Coupon = lazy(() => import('@/pages/coupon'));
 const CouponDetail = lazy(() => import('@/pages/coupon/detail'));
 
 const suspense = (
-  <Suspense fallback={<Loading />}>
-    <Outlet />
-  </Suspense>
+    <Suspense fallback={<Loading />}>
+      <Outlet />
+    </Suspense>
 );
 const Layout = window.__POWERED_BY_QIANKUN__ ? suspense : <MTMLayout>{suspense}</MTMLayout>;
 
@@ -35,7 +35,7 @@ const routes: RouteObject[] = [
       },
 
       {
-        path: "*",
+        path: '*',
         element: <NoneSupport />,
       },
     ],

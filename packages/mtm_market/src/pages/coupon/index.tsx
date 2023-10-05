@@ -6,14 +6,20 @@
 
 import React, { useEffect, useState } from "react";
 import { Button, Table, Tag, Popconfirm } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import CouponService, { ICouponEntity, ICouponPagination, ECouponType, ECouponTarget, ECouponStatus, ECouponStatusColor } from "@/services/coupon";
-const { Column, ColumnGroup } = Table;
+const { Column } = Table;
 
 import './index.scss';
+import useSearchParamsState from "@/hooks/useSearchParamsState";
 
 const Coupons: React.FC = () => {
   const [couponPagination, setCouponPagination] = useState<ICouponPagination>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParamsState, setSearchParamsState] = useSearchParamsState('test', '123');
+
+  console.log('searchParams', searchParams);
+  console.log('searchParamsState', searchParamsState)
 
   useEffect(() => {
     CouponService.list().then(res => {
@@ -23,41 +29,54 @@ const Coupons: React.FC = () => {
   return (
     <div className="page-coupons">
       
-      <Table dataSource={couponPagination?.list} rowKey="id"
+      <Table 
+      bordered 
+      dataSource={couponPagination?.list} 
+      rowKey="id"
+      scroll={{ x: 1400 }}
         pagination={{
           total: couponPagination?.total,
           current: 2,
           pageSize: 10
         }}>
-        <Column title="优惠券编码" dataIndex="id" />
-        <Column title="优惠券名称" dataIndex="name" />
+        <Column title="优惠券编码" dataIndex="id" width={120} />
+        <Column<ICouponEntity> title="优惠券名称" dataIndex="name" render={(text, record) => {
+          return <Link to={`/coupons/${record.id}`}>{text}</Link>;
+        }}/>
         <Column 
           title="优惠类型" 
-          dataIndex="type" 
+          dataIndex="type"
+          width={100}
           render={(text) => {
             return ECouponType[text];
           }}
         />
         <Column 
           title="券类型" 
-          dataIndex="target" 
+          dataIndex="target"
+          width={130}
           render={(text) => {
             return ECouponTarget[text];
           }}
         />
-        <Column title="发放时间" dataIndex="stime" />
-        <Column title="使用时间" dataIndex="validDays" />
-        <Column title="发放数量" dataIndex="sendCount" />
-        <Column title="当前余量" dataIndex="leftCount" />
-        <Column title="创建时间" dataIndex="ctime" />
+        <Column title="发放时间" width={120} dataIndex="stime" />
+        <Column title="使用时间" width={150} dataIndex="validDays" />
+        <Column title="发放数量" width={100} dataIndex="sendCount" />
+        <Column title="当前余量" width={100} dataIndex="leftCount" />
+        <Column title="创建时间" dataIndex="ctime" width={120}/>
         <Column 
-          title="状态" dataIndex="status" 
+          title="状态" 
+          dataIndex="status"
+          fixed='right'
+          width={80}
           render={(text) => {
             return <Tag color={ECouponStatusColor[text]}>{ECouponStatus[text]}</Tag>;
           }} />
         <Column<ICouponEntity> 
-          title="操作" 
-          dataIndex="status" 
+          title="操作"
+          dataIndex="status"
+          fixed='right'
+          width={150}
           render={(text, record) => {
             return (
               <>
@@ -66,6 +85,8 @@ const Coupons: React.FC = () => {
                 { text < 2 && <Popconfirm
                   title="您确定要下线该优惠券吗？"
                   onConfirm={() => {
+                    setSearchParams({a: '123'})
+                    setSearchParamsState('456')
                     CouponService.delete(record.id);
                   }}
                   okText="确定"
