@@ -43,7 +43,7 @@ const Coupons: React.FC = () => {
           return (
             <Row>
               <Col flex={1}>
-                <SearchForm reset>
+                <SearchForm reset submit>
                   <Form.Item
                     name='status'
                     getValueProps={value => {
@@ -102,8 +102,21 @@ const Coupons: React.FC = () => {
         pagination={{
           position: ['bottomCenter'],
           total: couponPagination?.total,
-          current: 2,
-          pageSize: 10,
+          // current: 2,
+          // pageSize: 10,
+          showSizeChanger: true,
+          onChange: (page, pageSize) => {
+            // 合并请求参数
+
+            setSearchParams((prev) => {
+
+              return {
+                ...Object.fromEntries(prev.entries()),
+                pn: page,
+                ps: pageSize,
+              }
+            })
+          },
         }}
       >
         <Column title='优惠券编码' dataIndex='id' width={120} />

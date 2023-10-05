@@ -11,6 +11,7 @@ interface SearchFormProps<Values> extends FormProps {
   beforeInitialValues?: (val: URLSearchParams) => URLSearchParams;
   beforeValuesChange?: (val: Values) => Values;
   reset?: boolean;
+  submit?: boolean;
 }
 
 const SearchForm: React.FC<PropsWithChildren<SearchFormProps<any>>> = ({
@@ -18,6 +19,7 @@ const SearchForm: React.FC<PropsWithChildren<SearchFormProps<any>>> = ({
   beforeInitialValues,
   children,
   reset,
+  submit,
   ...props
 }) => {
   const [form] = Form.useForm();
@@ -42,19 +44,35 @@ const SearchForm: React.FC<PropsWithChildren<SearchFormProps<any>>> = ({
     }, 100);
   };
 
-  return (
-    <Form layout='inline' form={form} {...props} onValuesChange={onValuesChange}>
-      {children}
+  if(!submit) {
+    props.onValuesChange = onValuesChange;
+  }
 
+  const onFinish = (values) => {
+    onValuesChange(values);
+  }
+
+  return (
+    <Form layout='inline' form={form} onFinish={onFinish} {...props}>
+      {children}
+      {submit ? (
+        <Form.Item>
+          <Button type='primary' htmlType='submit'>
+            查询
+          </Button>
+        </Form.Item>
+      ) : null}
       {reset ? (
-        <Button
-          onClick={() => {
-            form.resetFields();
-            onValuesChange(form.getFieldsValue());
-          }}
-        >
-          重置
-        </Button>
+        <Form.Item>
+          <Button
+            onClick={() => {
+              form.resetFields();
+              onValuesChange(form.getFieldsValue());
+            }}
+          >
+            重置
+          </Button>
+        </Form.Item>
       ) : null}
     </Form>
   );
