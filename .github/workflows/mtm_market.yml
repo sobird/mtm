@@ -37,4 +37,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         branch: gh-pages
         folder: packages/mtm_market/dist
-        clean: false
+        clean: true

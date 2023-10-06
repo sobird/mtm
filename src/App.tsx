@@ -19,7 +19,7 @@ window.$store = store;
 
 function App() {
   return (
-    <ConfigProvider componentSize='large' locale={zhCN} prefixCls='mtm'>
+    <ConfigProvider locale={zhCN} prefixCls='mtm'>
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>
