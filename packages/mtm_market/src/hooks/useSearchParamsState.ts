@@ -22,8 +22,10 @@ export default function useSearchParamsState(
   }, [searchParams.toString()]);
 
   const setSearchParamsState = (newState: string) => {
-    singletonSearchParams.set(searchParamName, newState)
-    setSearchParams(singletonSearchParams);
+    singletonSearchParams.set(searchParamName, newState);
+    setTimeout(() => {
+      setSearchParams(singletonSearchParams);
+    }, 0);
   };
 
   return [searchParamsState, setSearchParamsState];

@@ -5,7 +5,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Button, Table, Tag, Popconfirm, Space, Form, Select, DatePicker, Radio, Card, Row, Col } from 'antd';
+import { Button, Table, Tag, Popconfirm, Space, Form, TimeRangePickerProps, DatePicker, Radio, Row, Col } from 'antd';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 
@@ -24,10 +24,15 @@ const { Column } = Table;
 const { RangePicker } = DatePicker;
 import './index.scss';
 
+const rangePresets: TimeRangePickerProps['presets'] = [
+  { label: '最近一周', value: [dayjs().add(-7, 'd'), dayjs()] },
+  { label: '最近两周', value: [dayjs().add(-14, 'd'), dayjs()] },
+  { label: '最近一个月', value: [dayjs().add(-1, 'month'), dayjs()] },
+];
+
 const Coupons: React.FC = () => {
   const location = useLocation();
   const [couponPagination, setCouponPagination] = useState<ICouponPagination>();
-  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     CouponService.list().then(res => {
@@ -84,6 +89,7 @@ const Coupons: React.FC = () => {
                       placeholder={['券发放开始时间', '券发放结束时间']}
                       showTime
                       format='YYYY-MM-DD HH:mm:ss'
+                      presets={rangePresets}
                     />
                   </Form.Item>
                 </SearchForm>
@@ -101,6 +107,11 @@ const Coupons: React.FC = () => {
         pagination={{
           total: couponPagination?.total,
         }}
+        // footer={() => {
+        //   return (
+        //     <div>dddd</div>
+        //   )
+        // }}
       >
         <Column title='优惠券编码' dataIndex='id' width={120} />
         <Column<ICouponEntity>
@@ -158,8 +169,6 @@ const Coupons: React.FC = () => {
                   <Popconfirm
                     title='您确定要下线该优惠券吗？'
                     onConfirm={() => {
-                      setSearchParams({ a: '123' });
-                      setSearchParamTest('456');
                       CouponService.delete(record.id);
                     }}
                     okText='确定'
