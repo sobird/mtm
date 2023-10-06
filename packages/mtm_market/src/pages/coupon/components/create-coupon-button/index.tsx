@@ -37,6 +37,8 @@ const CreateCouponButton: React.FC<PropsWithChildren<ComponentProps<typeof Butto
         }}
         closable
         okButtonProps={{ disabled: couponTarget === 0 }}
+        transitionName=""
+        maskTransitionName=""
       >
         <div
           className={classnames('coupon-target-item', {
