@@ -5,6 +5,7 @@
  */
 
 import http from "@mtm/shared/utils/http";
+import moment from "@/utils/moment";
 
 interface ISpu {
   /** SPU ID */
@@ -137,8 +138,18 @@ export interface ICouponsParams {
 }
 
 const CouponService = {
-  list(params?: ICouponsParams) {
-    return http.get<ICouponPagination>('/merchant/coupons', params);
+  async list(params?: ICouponsParams) {
+    return http.get<ICouponPagination>('/merchant/coupons', params).then(res => {
+      const { list = [] } = res;
+
+      res.list = list.map(item => {
+        const { ctime, } = item;
+        item.ctimeLabel = moment(ctime).format();
+        return item;
+      });
+
+      return res;
+    });
   },
   detail(id: number) {
     return http.get<ICouponEntity>('/merchant/coupons', { id });

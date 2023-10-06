@@ -7,7 +7,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table, Tag, Popconfirm, Space, Form, TimeRangePickerProps, DatePicker, Radio, Row, Col } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
-import dayjs from 'dayjs';
+import moment from '@/utils/moment';
+import numeral from '@/utils/numeral';
+
+console.log('numeral', numeral._)
 
 import CouponService, {
   ICouponEntity,
@@ -27,9 +30,9 @@ const { RangePicker } = DatePicker;
 import './index.scss';
 
 const rangePresets: TimeRangePickerProps['presets'] = [
-  { label: '最近一周', value: [dayjs().add(-7, 'd'), dayjs()] },
-  { label: '最近两周', value: [dayjs().add(-14, 'd'), dayjs()] },
-  { label: '最近一个月', value: [dayjs().add(-1, 'month'), dayjs()] },
+  { label: '最近一周', value: [moment().add(-7, 'd'), moment()] },
+  { label: '最近两周', value: [moment().add(-14, 'd'), moment()] },
+  { label: '最近一个月', value: [moment().add(-1, 'month'), moment()] },
 ];
 
 const Coupons: React.FC = () => {
@@ -81,7 +84,7 @@ const Coupons: React.FC = () => {
                       return {
                         value: objValue
                           ? objValue.map(item => {
-                              return dayjs(item).isValid() ? dayjs(item) : undefined;
+                              return moment(item).isValid() ? moment(item) : undefined;
                             })
                           : undefined,
                       };
@@ -115,7 +118,7 @@ const Coupons: React.FC = () => {
         //   )
         // }}
       >
-        <Column title='优惠券编码' dataIndex='id' width={120} />
+        <Column title='优惠券编码' dataIndex='id' width={100} />
         <Column<ICouponEntity>
           title='优惠券名称'
           dataIndex='name'
@@ -126,7 +129,7 @@ const Coupons: React.FC = () => {
         <Column
           title='优惠类型'
           dataIndex='type'
-          width={100}
+          width={80}
           render={text => {
             return ECouponType[text];
           }}
@@ -134,16 +137,16 @@ const Coupons: React.FC = () => {
         <Column
           title='券类型'
           dataIndex='target'
-          width={130}
+          width={120}
           render={text => {
             return ECouponTarget[text];
           }}
         />
-        <Column title='发放时间' width={120} dataIndex='stime' />
+        <Column title='发放时段' width={180} dataIndex='putTerm' />
         <Column title='使用时间' width={150} dataIndex='validDays' />
         <Column title='发放数量' width={100} dataIndex='sendCount' />
         <Column title='当前余量' width={100} dataIndex='leftCount' />
-        <Column title='创建时间' dataIndex='ctime' width={120} />
+        <Column title='创建时间' dataIndex='ctimeLabel' width={160} />
         <Column
           title='状态'
           dataIndex='status'
