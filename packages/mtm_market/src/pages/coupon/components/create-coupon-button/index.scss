@@ -1,0 +1,67 @@
+/*
+ * index.scss
+ * 
+ * sobird<i@sobird.me> at 2023/10/06 10:25:57 created.
+ */
+
+.coupon-target-item {
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  display: flex;
+  padding: 12px;
+  border: 1px solid #ebebeb;
+  margin-bottom: 12px;
+  border-radius: 2px;
+
+  .target-icon {
+    width: 60px;
+    height: 60px;
+    margin-right: 12px;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .target-text {
+    h4 {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    p {
+      font-size: 12px;
+      color: #666;
+      line-height: 17px;
+    }
+  }
+
+  .sup-mark {
+    display: none;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    background-image: url(./images/sup_mark.png);
+    background-size: contain;
+    height: 24px;
+    width: 24px;
+  }
+
+  &:hover {
+    border: 1px solid #0080FF;
+
+    .sup-mark {
+      display: block;
+    }
+  }
+
+  &.coupon-target-active {
+    border: 1px solid #0080FF;
+
+    .sup-mark {
+      display: block;
+    }
+  }
+}

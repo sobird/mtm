@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button, Table, Tag, Popconfirm, Space, Form, TimeRangePickerProps, DatePicker, Radio, Row, Col } from 'antd';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import dayjs from 'dayjs';
 
 import CouponService, {
@@ -20,6 +20,8 @@ import CouponService, {
 } from '@/services/coupon';
 import SearchForm from '@/components/search-form';
 import MTable from '@/components/table';
+import CreateCouponButton from './components/create-coupon-button';
+
 const { Column } = Table;
 const { RangePicker } = DatePicker;
 import './index.scss';
@@ -95,7 +97,7 @@ const Coupons: React.FC = () => {
                 </SearchForm>
               </Col>
               <Col>
-                <Button type='primary'>创建券</Button>
+                <CreateCouponButton type='primary'>创建券</CreateCouponButton>
               </Col>
             </Row>
           );

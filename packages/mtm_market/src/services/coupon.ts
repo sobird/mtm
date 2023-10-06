@@ -100,8 +100,9 @@ export enum ECouponType {
 }
 
 export enum ECouponTarget {
-  "店铺通用券" = 11,
-  "店铺客服体验券" = 12
+  "店铺商品券" = 1,
+  "店铺通用券" = 2,
+  "店铺客服体验券" = 3
 }
 
 export enum ECouponStatus {
