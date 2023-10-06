@@ -222,6 +222,7 @@ module.exports = (conf) => {
     config.externals = externals;
   } else {
     config.mode = 'development';
+    config.externals = externals;
   }
   return config;
 }

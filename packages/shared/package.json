@@ -9,7 +9,7 @@
   "module": "es/index.js",
   "unpkg": "dist/index.js",
   "scripts": {
-    "rollup:build": "rollup -c"
+    "build": "rollup -c"
   },
   "keywords": [
     "Components",
