@@ -2,9 +2,7 @@
 declare interface Window {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
   qiankunStarted: boolean;
-  $store: object;
-  $loadTimer: any;
-  $clearTimeout: any;
+  microTimer: Timeout;
 }
 
 declare let process: {

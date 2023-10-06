@@ -33,7 +33,7 @@ export async function mount(props: any) {
   root = ReactDOM.createRoot(container as HTMLElement);
   root.render(
     <React.StrictMode>
-      <App />
+      <App master={props}/>
     </React.StrictMode>
   );
 }

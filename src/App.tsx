@@ -15,8 +15,6 @@ ConfigProvider.config({
   // theme,
 })
 
-window.$store = store;
-
 function App() {
   return (
     <ConfigProvider locale={zhCN} prefixCls='mtm'>

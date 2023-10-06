@@ -14,13 +14,11 @@ const loader = (loading) => {
   if(loading) {
     store.dispatch(updateMicro({ loading }));
   } else {
-    window.$loadTimer = setTimeout(() => {
+    window.microTimer = setTimeout(() => {
       store.dispatch(updateMicro({ loading }));
     }, 100);
   }
 };
-
-window.$clearTimeout = clearTimeout;
 
 const apps: RegistrableApp<any>[] = [
   {
@@ -29,6 +27,10 @@ const apps: RegistrableApp<any>[] = [
     container: '#micro-container',
     loader,
     activeRule: getActiveRule('#/market'),
+    props: {
+      store,
+      window,
+    }
   },
 ];
 

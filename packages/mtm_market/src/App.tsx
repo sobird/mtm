@@ -3,14 +3,21 @@ import { RouterProvider } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
 import router from '@/router';
+import { MasterContext } from '@/utils/context';
 import './App.scss';
 
-const App: React.FC = () => {
+interface AppProps {
+  master: any;
+}
+
+const App: React.FC<AppProps> = ({ master = {} }) => {
   return (
     <ConfigProvider locale={zhCN} prefixCls='mtm'>
-    <RouterProvider router={router} />
+      <MasterContext.Provider value={ master }>
+        <RouterProvider router={router} />
+      </MasterContext.Provider>
     </ConfigProvider>
   );
-}
+};
 
 export default App;
