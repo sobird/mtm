@@ -48,12 +48,8 @@ const SearchForm: React.FC<PropsWithChildren<SearchFormProps<any>>> = ({
     props.onValuesChange = onValuesChange;
   }
 
-  const onFinish = (values) => {
-    onValuesChange(values);
-  }
-
   return (
-    <Form layout='inline' form={form} onFinish={onFinish} {...props}>
+    <Form layout='inline' form={form} onFinish={(values) => onValuesChange(values)} {...props}>
       {children}
       {submit ? (
         <Form.Item>

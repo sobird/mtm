@@ -18,8 +18,8 @@ import CouponService, {
   ECouponStatusColor,
   CouponStatusOption,
 } from '@/services/coupon';
-import useSearchParamsState from '@/hooks/useSearchParamsState';
 import SearchForm from '@/components/search-form';
+import MTable from '@/components/table';
 const { Column } = Table;
 const { RangePicker } = DatePicker;
 import './index.scss';
@@ -28,7 +28,6 @@ const Coupons: React.FC = () => {
   const location = useLocation();
   const [couponPagination, setCouponPagination] = useState<ICouponPagination>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchParamTest, setSearchParamTest] = useSearchParamsState('test', '123');
 
   useEffect(() => {
     CouponService.list().then(res => {
@@ -37,7 +36,7 @@ const Coupons: React.FC = () => {
   }, [location.search]);
   return (
     <div className='page-coupons'>
-      <Table
+      <MTable
         bordered
         title={() => {
           return (
@@ -100,23 +99,7 @@ const Coupons: React.FC = () => {
         scroll={{ x: 1400 }}
         size='middle'
         pagination={{
-          position: ['bottomCenter'],
           total: couponPagination?.total,
-          // current: 2,
-          // pageSize: 10,
-          showSizeChanger: true,
-          onChange: (page, pageSize) => {
-            // 合并请求参数
-
-            setSearchParams((prev) => {
-
-              return {
-                ...Object.fromEntries(prev.entries()),
-                pn: page,
-                ps: pageSize,
-              }
-            })
-          },
         }}
       >
         <Column title='优惠券编码' dataIndex='id' width={120} />
@@ -191,7 +174,7 @@ const Coupons: React.FC = () => {
             );
           }}
         />
-      </Table>
+      </MTable>
     </div>
   );
 };

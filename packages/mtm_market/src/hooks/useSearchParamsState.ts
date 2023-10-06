@@ -4,7 +4,10 @@
  * sobird<i@sobird.me> at 2023/10/05 10:13:44 created.
  */
 
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+
+let singletonSearchParams = null;
 
 export default function useSearchParamsState(
   searchParamName: string,
@@ -14,14 +17,13 @@ export default function useSearchParamsState(
   const acquiredSearchParam = searchParams.get(searchParamName);
   const searchParamsState = acquiredSearchParam ?? defaultValue;
 
-  const setSearchParamsState = (newState: string) => {
-    const next = Object.assign(
-      {},
-      [...searchParams.entries()].reduce((o, [key, value]) => ({ ...o, [key]: value }), {}),
-      { [searchParamName]: newState }
-    );
+  useEffect(() => {
+    singletonSearchParams = searchParams;
+  }, [searchParams.toString()]);
 
-    setSearchParams(next);
+  const setSearchParamsState = (newState: string) => {
+    singletonSearchParams.set(searchParamName, newState)
+    setSearchParams(singletonSearchParams);
   };
 
   return [searchParamsState, setSearchParamsState];
