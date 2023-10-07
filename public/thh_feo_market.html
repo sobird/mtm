@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>IconFont</title>
+    <link rel="stylesheet"
+        href="https://s3plus.sankuai.com/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/prism.css" />
+    <script src="https://s3plus.sankuai.com/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/prism.js"></script>
+    <script
+        src="https://s3plus.sankuai.com/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/jquery-3.3.1.min.js"></script>
+    <script src="//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.js"></script>
+    <style>
+        *{margin:0;padding:0;list-style:none;}
+        body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,form,button,input,textarea,th,td{margin:0;padding:0;}
+        body,button,input,select,textarea{font:12px/1.5 tahoma,arial,\5b8b\4f53,sans-serif;}
+        h1,h2,h3,h4,h5,h6{font-size:100%;}
+        address,cite,dfn,em,var{font-style:normal;}
+        ul,ol{list-style:none;}
+        a{text-decoration:none;}
+        a:hover{text-decoration:underline;}
+        button,input,select,textarea{font-size:100%;}
+        table{border-collapse:collapse;border-spacing:0;}
+        .clear:after{content:'\20';display:block;height:0;clear:both;}
+        .clear{*zoom:1;}
+        .main{padding:30px 100px;width:960px;margin:0 auto;}
+        .main .title{font-size:24px;color:#333;text-align:left;margin-bottom:20px;}
+        .tabs{border-bottom:1px solid #eee;font-size:16px;position:relative;}
+        .tabs .tab{display:inline-block;cursor:pointer;width:100px;height:40px;line-height:40px;text-align:center;border-bottom:2px solid transparent;position:relative;z-index:1;margin-bottom:-1px;color:#666;}
+        .tabs .active{color:#222;border-bottom-color:#f00;}
+        .tabs .project-link{position:absolute;right:0;bottom:0;height:42px;line-height:42px;color:#666;font-size:14px;}
+        .tab-container .content{display:none;}
+        .tab-container .step{font-size:14px;}.tab-container .step .subuse{font-size:12px;color:#333;}
+        .tab-container .step code{font-size:12px;}.tab-container .step pre{max-height:210px;}
+        .icon_lists{margin-top:20px;}
+        .icon_lists li{float:left;width:150px;height:150px;text-align:center;}
+        .icon_lists .icon{font-size:50px;margin:10px 0;color:#333;}
+        .multi-color .icon_lists .icon{width:1em;height:1em;vertical-align:-0.15em;fill:currentColor;overflow:hidden;}
+        .icon_lists li .name{font-size:14px;margin:10px 0;word-break:break-all;}
+        .icon_lists li .code{font-size:12px;line-height:16px;padding:0 15px;word-break:break-all;}
+        .intro_title{margin-top:10px;font-size:20px;border-bottom:1px solid #eee;padding-bottom:10px;font-weight:600;}
+        .intro_detail{font-size:13px;line-height:22px;margin:10px 0;padding:0 0 10px 0;}
+    </style>
+    <link href="//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="main">
+        <h1 class="title">图标字体 iconfont</h1>
+        <ul class="tabs" id="tabs">
+            <li class="tab active">单色图标</li>
+            <li class="tab">彩色图标</li>
+        </ul>
+        <div class="tab-container">
+            <div class="content single-color">
+                <ul class="icon_lists clear">
+                        <li>
+                            <i class="icon iconfont icon-tags"></i>
+                            <div class="name">tags</div>
+                            <div class="code">.icon-tags</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-check-circle-s"></i>
+                            <div class="name">check-circle</div>
+                            <div class="code">.icon-check-circle-s</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-bars"></i>
+                            <div class="name">bars</div>
+                            <div class="code">.icon-bars</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-sign-out"></i>
+                            <div class="name">sign-out</div>
+                            <div class="code">.icon-sign-out</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-expand-arrows"></i>
+                            <div class="name">expand-arrows</div>
+                            <div class="code">.icon-expand-arrows</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-compress-arrows"></i>
+                            <div class="name">compress-arrows</div>
+                            <div class="code">.icon-compress-arrows</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-commodity"></i>
+                            <div class="name">commodity</div>
+                            <div class="code">.icon-commodity</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-arrow-right-s"></i>
+                            <div class="name">arrow-right</div>
+                            <div class="code">.icon-arrow-right-s</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-arrow-right"></i>
+                            <div class="name">arrow-right</div>
+                            <div class="code">.icon-arrow-right</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-excel"></i>
+                            <div class="name">excel</div>
+                            <div class="code">.icon-excel</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-close"></i>
+                            <div class="name">close</div>
+                            <div class="code">.icon-close</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-question"></i>
+                            <div class="name">question</div>
+                            <div class="code">.icon-question</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-reply"></i>
+                            <div class="name">reply</div>
+                            <div class="code">.icon-reply</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-delete"></i>
+                            <div class="name">delete</div>
+                            <div class="code">.icon-delete</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-edit"></i>
+                            <div class="name">edit</div>
+                            <div class="code">.icon-edit</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-plus-circle"></i>
+                            <div class="name">plus-circle</div>
+                            <div class="code">.icon-plus-circle</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-copy"></i>
+                            <div class="name">copy</div>
+                            <div class="code">.icon-copy</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-add"></i>
+                            <div class="name">add</div>
+                            <div class="code">.icon-add</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-eye"></i>
+                            <div class="name">eye</div>
+                            <div class="code">.icon-eye</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-download"></i>
+                            <div class="name">download</div>
+                            <div class="code">.icon-download</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-activity"></i>
+                            <div class="name">activity</div>
+                            <div class="code">.icon-activity</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-coupon-s"></i>
+                            <div class="name">coupon</div>
+                            <div class="code">.icon-coupon-s</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-coupon"></i>
+                            <div class="name">coupon</div>
+                            <div class="code">.icon-coupon</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-users"></i>
+                            <div class="name">users</div>
+                            <div class="code">.icon-users</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-supply"></i>
+                            <div class="name">supply</div>
+                            <div class="code">.icon-supply</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-operate"></i>
+                            <div class="name">operate</div>
+                            <div class="code">.icon-operate</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-form"></i>
+                            <div class="name">form</div>
+                            <div class="code">.icon-form</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-treasure"></i>
+                            <div class="name">treasure</div>
+                            <div class="code">.icon-treasure</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-approve"></i>
+                            <div class="name">approve</div>
+                            <div class="code">.icon-approve</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-home"></i>
+                            <div class="name">home</div>
+                            <div class="code">.icon-home</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-tools"></i>
+                            <div class="name">tools</div>
+                            <div class="code">.icon-tools</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-comment"></i>
+                            <div class="name">comment</div>
+                            <div class="code">.icon-comment</div>
+                        </li>
+                        <li>
+                            <i class="icon iconfont icon-wechat"></i>
+                            <div class="name">wechat</div>
+                            <div class="code">.icon-wechat</div>
+                        </li>
+                </ul>
+                <div class="intro_title">单色图标：font-class 引用</div>
+                <div class="intro_detail">
+                    <p>
+                        font-class 是比较推荐的使用方法，取代了直接使用图标编码
+                        Unicode，解决 Unicode 书写不直观，语意不明确的问题。
+                    </p>
+                    <p>· 兼容性良好，支持 IE8+，及所有现代浏览器。</p>
+                    <p>
+                        · 相比于 Unicode 语意明确，书写更直观。可以很容易分辨这个 icon
+                        是什么。
+                    </p>
+                    <p>
+                        · 因为使用 class 来定义图标，所以当要替换图标时，只需要修改 class
+                        里面的 Unicode 引用。
+                    </p>
+                    <p>· 不过因为本质上还是使用的字体，所以多色图标还是不支持的。</p>
+                </div>
+                <div class="intro_title">关于基线</div>
+                <div class="intro_detail">
+                    <p>
+                        默认生成的图标字体，会显示在区域的正中间，不高也不低。但大多数中英文字符是衬线对齐的，并不是显示在正中间。
+                    </p>
+                    <p>
+                        ·
+                        单色图标，为了方便对齐，我们提供了默认字体和调整基线之后的字体。使用时，引用不不同的字体链接即可。
+                    </p>
+                </div>
+                <div class="intro_title">使用方法</div>
+                <div class="intro_detail">
+                    <div class="helps">
+                        <div class="step">
+                            <p>第一步：使用font-face声明字体，并定义使用iconfont的样式</p>
+                            <p class="subuse">可直接引用 //s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.css</p>
+                            <pre><code class="language-css">@font-face {font-family: 'iconfont';
+  src: url('//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.eot'); /* IE9*/
+  src: url('//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.woff') format('woff'), /* chrome、firefox */
+  url('//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;}
+
+.icon-tags:before { content: "\e000"; }
+.icon-check-circle-s:before { content: "\e001"; }
+.icon-bars:before { content: "\e002"; }
+.icon-sign-out:before { content: "\e003"; }
+.icon-expand-arrows:before { content: "\e004"; }
+.icon-compress-arrows:before { content: "\e005"; }
+.icon-commodity:before { content: "\e006"; }
+.icon-arrow-right-s:before { content: "\e007"; }
+.icon-arrow-right:before { content: "\e008"; }
+.icon-excel:before { content: "\e009"; }
+.icon-close:before { content: "\e00a"; }
+.icon-question:before { content: "\e00b"; }
+.icon-reply:before { content: "\e00c"; }
+.icon-delete:before { content: "\e00d"; }
+.icon-edit:before { content: "\e00e"; }
+.icon-plus-circle:before { content: "\e00f"; }
+.icon-copy:before { content: "\e010"; }
+.icon-add:before { content: "\e011"; }
+.icon-eye:before { content: "\e012"; }
+.icon-download:before { content: "\e013"; }
+.icon-activity:before { content: "\e014"; }
+.icon-coupon-s:before { content: "\e015"; }
+.icon-coupon:before { content: "\e016"; }
+.icon-users:before { content: "\e017"; }
+.icon-supply:before { content: "\e018"; }
+.icon-operate:before { content: "\e019"; }
+.icon-form:before { content: "\e01a"; }
+.icon-treasure:before { content: "\e01b"; }
+.icon-approve:before { content: "\e01c"; }
+.icon-home:before { content: "\e01d"; }
+.icon-tools:before { content: "\e01e"; }
+.icon-comment:before { content: "\e01f"; }
+.icon-wechat:before { content: "\e020"; }
+</code></pre>
+                            <p>调整基线的版本：</p>
+                            <p class="subuse">可直接引用 //s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.baseline.css</p>
+                            <pre><code class="language-css">@font-face {font-family: 'iconfont';
+  src: url('//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.baseline.eot'); /* IE9*/
+  src: url('//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.baseline.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.baseline.woff') format('woff'), /* chrome、firefox */
+  url('//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.baseline.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.baseline.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;}
+
+.icon-tags:before { content: "\e000"; }
+.icon-check-circle-s:before { content: "\e001"; }
+.icon-bars:before { content: "\e002"; }
+.icon-sign-out:before { content: "\e003"; }
+.icon-expand-arrows:before { content: "\e004"; }
+.icon-compress-arrows:before { content: "\e005"; }
+.icon-commodity:before { content: "\e006"; }
+.icon-arrow-right-s:before { content: "\e007"; }
+.icon-arrow-right:before { content: "\e008"; }
+.icon-excel:before { content: "\e009"; }
+.icon-close:before { content: "\e00a"; }
+.icon-question:before { content: "\e00b"; }
+.icon-reply:before { content: "\e00c"; }
+.icon-delete:before { content: "\e00d"; }
+.icon-edit:before { content: "\e00e"; }
+.icon-plus-circle:before { content: "\e00f"; }
+.icon-copy:before { content: "\e010"; }
+.icon-add:before { content: "\e011"; }
+.icon-eye:before { content: "\e012"; }
+.icon-download:before { content: "\e013"; }
+.icon-activity:before { content: "\e014"; }
+.icon-coupon-s:before { content: "\e015"; }
+.icon-coupon:before { content: "\e016"; }
+.icon-users:before { content: "\e017"; }
+.icon-supply:before { content: "\e018"; }
+.icon-operate:before { content: "\e019"; }
+.icon-form:before { content: "\e01a"; }
+.icon-treasure:before { content: "\e01b"; }
+.icon-approve:before { content: "\e01c"; }
+.icon-home:before { content: "\e01d"; }
+.icon-tools:before { content: "\e01e"; }
+.icon-comment:before { content: "\e01f"; }
+.icon-wechat:before { content: "\e020"; }
+</code></pre>
+                        </div>
+                        <div class="step">
+                            <p>第二步：通过 fontClass 来使用 icon</p>
+                            <pre><code class="language-html"
+>&lt;i class="iconfont icon-tags"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-check-circle-s"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-bars"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-sign-out"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-expand-arrows"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-compress-arrows"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-commodity"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-arrow-right-s"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-arrow-right"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-excel"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-close"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-question"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-reply"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-delete"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-edit"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-plus-circle"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-copy"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-add"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-eye"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-download"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-activity"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-coupon-s"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-coupon"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-users"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-supply"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-operate"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-form"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-treasure"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-approve"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-home"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-tools"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-comment"&gt;&lt;/i&gt;
+&lt;i class="iconfont icon-wechat"&gt;&lt;/i&gt;
+</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content multi-color">
+                <ul class="icon_lists clear">
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-tags"></use>
+                            </svg>
+                            <div class="name">tags</div>
+                            <div class="code">icon-tags</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-check-circle-s"></use>
+                            </svg>
+                            <div class="name">check-circle</div>
+                            <div class="code">icon-check-circle-s</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-bars"></use>
+                            </svg>
+                            <div class="name">bars</div>
+                            <div class="code">icon-bars</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-sign-out"></use>
+                            </svg>
+                            <div class="name">sign-out</div>
+                            <div class="code">icon-sign-out</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-expand-arrows"></use>
+                            </svg>
+                            <div class="name">expand-arrows</div>
+                            <div class="code">icon-expand-arrows</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-compress-arrows"></use>
+                            </svg>
+                            <div class="name">compress-arrows</div>
+                            <div class="code">icon-compress-arrows</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-commodity"></use>
+                            </svg>
+                            <div class="name">commodity</div>
+                            <div class="code">icon-commodity</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-arrow-right-s"></use>
+                            </svg>
+                            <div class="name">arrow-right</div>
+                            <div class="code">icon-arrow-right-s</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-arrow-right"></use>
+                            </svg>
+                            <div class="name">arrow-right</div>
+                            <div class="code">icon-arrow-right</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-excel"></use>
+                            </svg>
+                            <div class="name">excel</div>
+                            <div class="code">icon-excel</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-close"></use>
+                            </svg>
+                            <div class="name">close</div>
+                            <div class="code">icon-close</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-question"></use>
+                            </svg>
+                            <div class="name">question</div>
+                            <div class="code">icon-question</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-reply"></use>
+                            </svg>
+                            <div class="name">reply</div>
+                            <div class="code">icon-reply</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-delete"></use>
+                            </svg>
+                            <div class="name">delete</div>
+                            <div class="code">icon-delete</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-edit"></use>
+                            </svg>
+                            <div class="name">edit</div>
+                            <div class="code">icon-edit</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-plus-circle"></use>
+                            </svg>
+                            <div class="name">plus-circle</div>
+                            <div class="code">icon-plus-circle</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-copy"></use>
+                            </svg>
+                            <div class="name">copy</div>
+                            <div class="code">icon-copy</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-add"></use>
+                            </svg>
+                            <div class="name">add</div>
+                            <div class="code">icon-add</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-eye"></use>
+                            </svg>
+                            <div class="name">eye</div>
+                            <div class="code">icon-eye</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-download"></use>
+                            </svg>
+                            <div class="name">download</div>
+                            <div class="code">icon-download</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-activity"></use>
+                            </svg>
+                            <div class="name">activity</div>
+                            <div class="code">icon-activity</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-coupon-s"></use>
+                            </svg>
+                            <div class="name">coupon</div>
+                            <div class="code">icon-coupon-s</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-coupon"></use>
+                            </svg>
+                            <div class="name">coupon</div>
+                            <div class="code">icon-coupon</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-users"></use>
+                            </svg>
+                            <div class="name">users</div>
+                            <div class="code">icon-users</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-supply"></use>
+                            </svg>
+                            <div class="name">supply</div>
+                            <div class="code">icon-supply</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-operate"></use>
+                            </svg>
+                            <div class="name">operate</div>
+                            <div class="code">icon-operate</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-form"></use>
+                            </svg>
+                            <div class="name">form</div>
+                            <div class="code">icon-form</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-treasure"></use>
+                            </svg>
+                            <div class="name">treasure</div>
+                            <div class="code">icon-treasure</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-approve"></use>
+                            </svg>
+                            <div class="name">approve</div>
+                            <div class="code">icon-approve</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-home"></use>
+                            </svg>
+                            <div class="name">home</div>
+                            <div class="code">icon-home</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-tools"></use>
+                            </svg>
+                            <div class="name">tools</div>
+                            <div class="code">icon-tools</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-comment"></use>
+                            </svg>
+                            <div class="name">comment</div>
+                            <div class="code">icon-comment</div>
+                        </li>
+                        <li>
+                            <svg class="icon iconfont" aria-hidden="true">
+                                <use xlink:href="#icon-wechat"></use>
+                            </svg>
+                            <div class="name">wechat</div>
+                            <div class="code">icon-wechat</div>
+                        </li>
+                </ul>
+                <div class="intro_title">彩色图标：Symbol 引用</div>
+                <div class="intro_detail">
+                    <p>
+                        这是一种全新的使用方式，应该说这才是未来的主流，也是平台目前推荐的用法。相关介绍可以参考<a href="https://www.zhangxinxu.com/wordpress/2014/07/introduce-svg-sprite-technology/" target="_blank">这篇文章</a>
+                        这种用法其实是做了一个 SVG 的集合，与另外两种相比具有如下特点：
+                    </p>
+                    <p>· 支持多色图标了，不再受单色限制。</p>
+                    <p>· 支持像字体那样，通过 font-size, color 来调整样式。</p>
+                    <p>· 兼容性较差，支持 IE9+，及现代浏览器。</p>
+                    <p>· 浏览器渲染 SVG 的性能一般，还不如 png。</p>
+                </div>
+                <div class="intro_title">关于基线</div>
+                <div class="intro_detail">
+                    <p>
+                        默认生成的图标字体，会显示在区域的正中间，不高也不低。但大多数中英文字符是衬线对齐的，并不是显示在正中间。
+                    </p>
+                    <p>
+                        · 彩色图标，通过调整样式中的 vertical-align
+                        值即可调整图标的纵轴位置。
+                    </p>
+                </div>
+                <div class="intro_title">使用方法</div>
+                <div class="intro_detail">
+                    <div class="helps">
+                        <div class="step">
+                            <p>第一步：引入项目下面生成的 symbol 代码：</p>
+                            <pre><code class="language-html"
+>&lt;script src="//s3plus.meituan.net/v1/mss_28a77f134e5b4abf876b4ff035f4107f/iconfont/project/569/0.0.14/thh_feo_market.js"&gt;&lt;/script&gt;
+</code></pre>
+                        </div>
+                        <div class="step">
+                            <p>第二步：加入通用 CSS 代码（引入一次就行）：</p>
+                            <pre><code class="language-html"
+>&lt;style&gt;
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em; /* 调整纵轴位置，方便对齐 */
+  fill: currentColor;
+  overflow: hidden;
+}
+&lt;/style&gt;
+</code></pre>
+                        </div>
+                        <div class="step">
+                            <p>第三步：挑选相应图标并获取类名，应用于页面：</p>
+                            <pre><code class="language-html"
+>&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-tags">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-check-circle-s">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-bars">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-sign-out">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-expand-arrows">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-compress-arrows">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-commodity">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-arrow-right-s">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-arrow-right">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-excel">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-close">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-question">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-reply">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-delete">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-edit">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-plus-circle">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-copy">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-add">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-eye">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-download">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-activity">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-coupon-s">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-coupon">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-users">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-supply">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-operate">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-form">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-treasure">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-approve">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-home">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-tools">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-comment">&lt;/use&gt;
+&lt;/svg&gt;
+&lt;svg class="icon" aria-hidden="true"&gt;
+  &lt;use xlink:href="#icon-wechat">&lt;/use&gt;
+&lt;/svg&gt;
+</code></pre>
+                        </div>
+                        <div class="step">
+                            <p>注意：可以通过修改 width、height、font-size 来调整图标的展示大小。当 svg 的父节点是 flex 的时候，有可能会出现影响 svg 的显示，推荐此时在 svg 外层包裹一层。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.tab-container .content:first').show();
+
+            $('#tabs .tab').click(function (e) {
+                var tabContent = $('.tab-container .content');
+                var index = $(this).index();
+
+                if ($(this).hasClass('active')) {
+                    return;
+                } else {
+                    $('#tabs .tab').removeClass('active');
+                    $(this).addClass('active');
+
+                    tabContent
+                        .hide()
+                        .eq(index)
+                        .fadeIn();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

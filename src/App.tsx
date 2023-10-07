@@ -8,16 +8,23 @@ import '@mtm/shared/utils/provider';
 
 import './App.css';
 
-// const theme = { token: { colorPrimary: '#ffd100', borderRadius: 2, colorWhite: '#333' } };
+const theme = {
+  token: {
+    // colorPrimary: '#ffd100',
+    // borderRadius: 2,
+    // colorWhite: '#333',
+    motion: false,
+  },
+};
 
 ConfigProvider.config({
   prefixCls: 'mtm',
   // theme,
-})
+});
 
 function App() {
   return (
-    <ConfigProvider locale={zhCN} prefixCls='mtm'>
+    <ConfigProvider locale={zhCN} prefixCls='mtm' theme={theme}>
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>

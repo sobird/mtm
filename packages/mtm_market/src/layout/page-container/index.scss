@@ -19,6 +19,10 @@
     margin-bottom: 15px;
     a {
       height: auto;
+      &:hover {
+        background-color: inherit;
+        font-weight: 500;
+      }
     }
   }
 
@@ -26,10 +30,15 @@
     h2 {
       font-weight: 400;
       color: #1f2f3d;
-      margin-bottom: 0;
+      margin-bottom: 5px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+
+      .iconfont {
+        margin-right: 5px;
+        font-size: inherit;
+      }
     }
   }
   &-description {

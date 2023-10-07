@@ -17,22 +17,8 @@ interface PageContainerProps {
   breadcrumb?: BreadcrumbProps;
   description?: string;
   extra?: ReactNode[];
+  icon?: ReactNode;
 }
-
-const BreadcrumbItem = [
-  {
-    title: '首页',
-    href: '/',
-  },
-  {
-    title: '第二个',
-    path: '/test',
-  },
-  {
-    title: '优惠券',
-    path: 'test',
-  },
-];
 
 function itemRender(item, params, items, paths) {
   let path = item.path;
@@ -69,7 +55,9 @@ function itemRender(item, params, items, paths) {
 
 const PageContainer: React.FC<PropsWithChildren<PageContainerProps>> = ({
   children,
+  breadcrumb,
   title,
+  icon,
   description,
   extra,
   ...props
@@ -80,13 +68,13 @@ const PageContainer: React.FC<PropsWithChildren<PageContainerProps>> = ({
       <div className='micro-page-header'>
         <Breadcrumb
           className='micro-breadcrumb'
-          items={BreadcrumbItem}
-          separator={<RightOutlined style={{ color: '#c0c4cc' }} />}
+          separator={<RightOutlined />}
           itemRender={itemRender}
+          {...breadcrumb}
         />
         <Row className='micro-page-header-heading' align='middle'>
           <Col flex={1}>
-            <h2>{title}</h2>
+            <h2>{typeof icon === 'string' ? <i className={`iconfont icon-${icon}`} /> : icon}{title}</h2>
           </Col>
           <Col>
             <Space>{extra}</Space>
