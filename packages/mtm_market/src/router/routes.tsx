@@ -31,7 +31,7 @@ const routes: RouteObject[] = [
         element: <Coupon />,
       },
       {
-        path: 'coupon/create/:test',
+        path: 'coupon/create',
         element: <CouponCreate />,
       },
       {

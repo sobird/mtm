@@ -20,7 +20,7 @@ interface PageContainerProps {
   icon?: ReactNode;
 }
 
-function itemRender(item, params, items, paths) {
+function itemRender(item, params, items, paths: string[]) {
   let path = item.path;
   const last = items.indexOf(item) === items.length - 1;
   if (last) {
@@ -41,9 +41,12 @@ function itemRender(item, params, items, paths) {
       </a>
     );
   }
+  
   if (item.path?.indexOf('/') !== 0) {
-    path = '/' + paths.join('/');
+    path = '/' + paths.filter(item => item).join('/');
   }
+  console.log('paths', JSON.stringify(paths), path);
+
   return last ? (
     <span>{item.title}</span>
   ) : (
