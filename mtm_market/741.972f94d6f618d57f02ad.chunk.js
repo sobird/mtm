@@ -1,0 +1,3 @@
+"use strict";(window.webpackJsonp_mtm_market=window.webpackJsonp_mtm_market||[]).push([[741],{8741:(m,o,a)=>{a.r(o),a.d(o,{default:()=>e});var s=a(5893),t=a(2975),c=a.n(t);const e=()=>{const r=(0,t.useParams)(),[n]=(0,t.useSearchParams)(),_=n.get("target");return console.log("params",r,_),(0,s.jsx)("div",{className:"coupon-create-page",children:"CouponCreate"})}}}]);
+
+//# sourceMappingURL=/741.972f94d6f618d57f02ad.chunk.js.map
