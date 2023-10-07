@@ -1,0 +1,126 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "entryTaskId": 82025,
+    "bizType": 100,
+    "localCommerce": 0,
+    "audit": {
+      "auditState": 3,
+      "rejectReason": []
+    },
+    "base": {
+      "poiType": 23,
+      "category": 200010002,
+      "name": "",
+      "logo": "",
+      "state": 2
+    },
+    "company": {
+      "companyType": 1,
+      "distChannel": [1],
+      "certificateBankopen": "https://mtm.sobird.me/mtm/certificate_bank.jpeg",
+      "certificateTaxpayer": "",
+      "officeAddress": "北京市朝阳区师家坟村156号3幢1层06号",
+      "officePhoto": [],
+      "companyDesc": "公司简介",
+      "companyFile": ["https://mtm.sobird.me/mtm/identity_card_1.jpeg", "https://mtm.sobird.me/mtm/identity_card_2.jpeg"],
+      "businessLicense": {
+        "url": "https://mtm.sobird.me/mtm/business_license.jpeg",
+        "socialCreditCode": "91110108MA01EBFH9B",
+        "name": "北京妙树托育服务有限公司",
+        "address": "北京市朝阳区师家坟村156号3幢1层06号",
+        "operatingTimeBegin": "2018-08-29",
+        "operatingTimeEnd": "2050-08-29",
+        "operatingTimeType": 1,
+        "legalPersonName": "李华容",
+        "type": "其他有限责任公司",
+        "operatingRange": "托育服务（不含幼儿园、托儿所）；技术开发、技术转让、技术咨询、技术服务、技术推广；组织文化艺术交流活动（不含营业性演出）；设计、制作、代理、发布广告；企业管理；企业管理咨询；经济贸易咨询；文化咨询；教育咨询（中介服务除外）；体育咨询；市场调查；文艺创作；承办展览展示活动；翻译服务；公共关系服务；会议服务。（市场主体依法自主选择经营项目，开展经营活动；依法须经批准的项目，经相关部门批准后依批准的内容开展经营活动；不得从事国家和本市产业政策禁止和限制类项目的经营活动。）",
+        "capital": "1000",
+        "foundedDate": "2018-08-29",
+        "registerAreaId": 0,
+        "registerAreaName": "",
+        "term": [true, "2018-08-29", "2050-08-29"]
+      },
+      "legalPerson": {
+        "address": "北京市东城区景山前街4号紫禁城敬事房",
+        "idNum": "11204416541220243X",
+        "idType": 1001,
+        "mobile": 15321871566,
+        "idPhotos": ["https://mtm.sobird.me/mtm/identity_card_1.jpeg", "https://mtm.sobird.me/mtm/identity_card_2.jpeg"],
+        "name": "韦小宝",
+        "term": [1, "2028-08-29"]
+      },
+      "enrichedPerson": {
+        "address": "北京市东城区景山前街4号紫禁城敬事房",
+        "idNum": "11204416541220243X",
+        "idType": 1001,
+        "mobile": 15321871566,
+        "idPhotos": ["https://mtm.sobird.me/mtm/identity_card_1.jpeg", "https://mtm.sobird.me/mtm/identity_card_2.jpeg"],
+        "name": "韦小宝",
+        "term": [1, "2028-08-29"]
+      },
+      "state": 1
+    },
+    "manage": {
+      "goodsDesc": [],
+      "goodsPriceScope": [],
+      "peopleNumberYy": "",
+      "peopleNumberKf": "",
+      "peopleNumberCp": "",
+      "operateName": "",
+      "operatePhone": "",
+      "verificationCode": "",
+      "planSendCompanyList": [],
+      "base": {
+        "poiType": 23,
+        "category": 200010002,
+        "name": "",
+        "logo": "",
+        "state": 2
+      },
+      "person": {
+        "isSameLegalPerson": 2,
+        "cardType": 1001,
+        "idCardPhotos": [],
+        "name": "",
+        "cardNum": "",
+        "validateDateEnd": "",
+        "cardValidateType": 1,
+        "phone": "",
+        "verificationCode": "",
+        "authLetter": "",
+        "address": ""
+      },
+      "state": 1,
+      "sameCityService": 0
+    },
+    "basic": {
+      "productionAvgDay": null,
+      "productionUnit": null,
+      "productionLinePhoto": [],
+      "warehouseMode": 0,
+      "warehouseNumber": 0,
+      "warehouseArea": 0,
+      "warehouseAddress": "",
+      "warehousePhoto": [],
+      "operateMode": 0,
+      "operateScope": 0,
+      "salesOnline": null,
+      "salesAll": null,
+      "sendGoodsMode": 0,
+      "sendGoodsAvgDay": null,
+      "sendGoodsCertificate": [],
+      "alreadyExistPlatform": [],
+      "state": 1,
+      "peopleNumberGc": null,
+      "warehouseManage": null,
+      "sendGoodsAvgDayTotal": null
+    },
+    "qualificationAndBrand": null,
+    "customsRecord": {
+      "customsRecordList": [],
+      "state": 1
+    }
+  }
+}
