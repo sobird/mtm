@@ -5,7 +5,7 @@
  */
 
 import http from "@mtm/shared/utils/http";
-import moment from "@/utils/moment";
+import dayjs from "@/utils/dayjs";
 
 interface ISpu {
   /** SPU ID */
@@ -38,6 +38,7 @@ export interface ICouponEntity {
     /** 优惠券发放结束日期 */
     etime: number;
   },
+  /** 优惠券 门槛&面额 */
   amountRule: {
     amount: number;
     discount: number;
@@ -80,6 +81,8 @@ export interface ICouponEntity {
   status: 0 | 1 | 2 | 6;
   /** 创建时间 时间戳 */
   ctime: number;
+  /** 创建时间 格式化 形如 2022-01-21 17:15:08 */
+  ctimeLabel: string;
   /** 优惠券商品列表 */
   spuList: ISpu[];
   /** SPU ID 列表 */
@@ -144,7 +147,7 @@ const CouponService = {
 
       res.list = list.map(item => {
         const { ctime, } = item;
-        item.ctimeLabel = moment(ctime).format();
+        item.ctimeLabel = dayjs(ctime).format();
         return item;
       });
 

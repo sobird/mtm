@@ -5,12 +5,9 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Button, Table, Tag, Popconfirm, Space, Form, TimeRangePickerProps, DatePicker, Radio, Row, Col } from 'antd';
+import { Button, Table, Tag, Popconfirm, Space, Form, DatePicker, Radio, Row, Col } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
-import moment from '@/utils/moment';
-import numeral from '@/utils/numeral';
-
-console.log('numeral', numeral._)
+import dayjs from '@/utils/dayjs';
 
 import CouponService, {
   ICouponEntity,
@@ -21,6 +18,7 @@ import CouponService, {
   ECouponStatusColor,
   CouponStatusOption,
 } from '@/services/coupon';
+import { Range_Picker_Presets } from '@/utils/constant';
 import SearchForm from '@/components/search-form';
 import MTable from '@/components/table';
 import CreateCouponButton from './components/create-coupon-button';
@@ -28,12 +26,6 @@ import CreateCouponButton from './components/create-coupon-button';
 const { Column } = Table;
 const { RangePicker } = DatePicker;
 import './index.scss';
-
-const rangePresets: TimeRangePickerProps['presets'] = [
-  { label: '最近一周', value: [moment().add(-7, 'd'), moment()] },
-  { label: '最近两周', value: [moment().add(-14, 'd'), moment()] },
-  { label: '最近一个月', value: [moment().add(-1, 'month'), moment()] },
-];
 
 const Coupons: React.FC = () => {
   const location = useLocation();
@@ -74,17 +66,17 @@ const Coupons: React.FC = () => {
                     getValueFromEvent={(...[, dateString]) => {
                       return JSON.stringify(dateString);
                     }}
-                    getValueProps={value => {
-                      let objValue = [];
+                    getValueProps={originValue => {
+                      let value = [];
                       try {
-                        objValue = JSON.parse(value);
+                        value = JSON.parse(originValue);
                       } catch (err) {
-                        objValue = [];
+                        value = [];
                       }
                       return {
-                        value: objValue
-                          ? objValue.map(item => {
-                              return moment(item).isValid() ? moment(item) : undefined;
+                        value: value
+                          ? value.map(item => {
+                              return dayjs(item).isValid() ? dayjs(item) : undefined;
                             })
                           : undefined,
                       };
@@ -94,7 +86,7 @@ const Coupons: React.FC = () => {
                       placeholder={['券发放开始时间', '券发放结束时间']}
                       showTime
                       format='YYYY-MM-DD HH:mm:ss'
-                      presets={rangePresets}
+                      presets={Range_Picker_Presets}
                     />
                   </Form.Item>
                 </SearchForm>
@@ -112,11 +104,6 @@ const Coupons: React.FC = () => {
         pagination={{
           total: couponPagination?.total,
         }}
-        // footer={() => {
-        //   return (
-        //     <div>dddd</div>
-        //   )
-        // }}
       >
         <Column title='优惠券编码' dataIndex='id' width={100} />
         <Column<ICouponEntity>
