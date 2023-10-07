@@ -21,7 +21,8 @@ import CouponService, {
 import { Range_Picker_Presets } from '@/utils/constant';
 import SearchForm from '@/components/search-form';
 import MTable from '@/components/table';
-import CreateCouponButton from './components/create-coupon-button';
+import CreateCouponEntry from './components/create-coupon-entry';
+import PageContainer from '@/layout/page-container';
 
 const { Column } = Table;
 const { RangePicker } = DatePicker;
@@ -37,6 +38,8 @@ const Coupons: React.FC = () => {
     });
   }, [location.search]);
   return (
+    <PageContainer title="高级表单" description='高级表单常见于一次性输入和提交大批量数据的场景。' extra={[<Button>添加优惠券</Button>, <Button>添加优惠券123s</Button>]}>
+
     <div className='page-coupons'>
       <MTable
         bordered
@@ -92,7 +95,7 @@ const Coupons: React.FC = () => {
                 </SearchForm>
               </Col>
               <Col>
-                <CreateCouponButton type='primary'>创建券</CreateCouponButton>
+                <CreateCouponEntry type='primary'>创建券</CreateCouponEntry>
               </Col>
             </Row>
           );
@@ -177,6 +180,7 @@ const Coupons: React.FC = () => {
         />
       </MTable>
     </div>
+    </PageContainer>
   );
 };
 

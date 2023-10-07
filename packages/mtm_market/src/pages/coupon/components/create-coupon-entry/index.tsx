@@ -16,8 +16,8 @@ import IconCouponTarget3 from './images/coupon_target_3.png';
 
 import './index.scss';
 
-
-const CreateCouponButton: React.FC<PropsWithChildren<ComponentProps<typeof Button>>> = ({ children, ...props}) => {
+/** 新建优惠券 入口按钮 */
+const CreateCouponEntry: React.FC<PropsWithChildren<ComponentProps<typeof Button>>> = ({ children, ...props}) => {
   const [open, setOpen] = useState(false);
   const [couponTarget, setCouponTarget] = useState(0);
   const navigate = useNavigate();
@@ -99,4 +99,4 @@ const CreateCouponButton: React.FC<PropsWithChildren<ComponentProps<typeof Butto
   );
 };
 
-export default CreateCouponButton;
+export default CreateCouponEntry;

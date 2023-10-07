@@ -1,0 +1,38 @@
+/*
+ * index.scss
+ * 
+ * sobird<i@sobird.me> at 2023/10/07 15:39:51 created.
+ */
+
+.micro-page-container {}
+
+.micro-page-header {
+  // background-color: rgba(110, 116, 224, 0.1);
+  margin: -15px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #fdfdfd;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.15);
+
+  .micro-breadcrumb {
+    line-height: 1;
+    margin-bottom: 15px;
+    a {
+      height: auto;
+    }
+  }
+
+  .micro-page-header-heading {
+    h2 {
+      font-weight: 400;
+      color: #1f2f3d;
+      margin-bottom: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  &-description {
+
+  }
+}

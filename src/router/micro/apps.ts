@@ -6,6 +6,7 @@
 
 import { RegistrableApp } from "qiankun";
 import store from '@/store';
+import history from "@/utils/history";
 import { updateMicro } from '@/store/actions/app';
 
 const getActiveRule = (hash: string) => (location) => location.hash.startsWith(hash);
@@ -30,6 +31,7 @@ const apps: RegistrableApp<any>[] = [
     props: {
       store,
       window,
+      history,
     }
   },
 ];

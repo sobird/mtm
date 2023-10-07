@@ -12,6 +12,7 @@ import NoneSupport from '@mtm/shared/components/none-support';
 
 const Coupon = lazy(() => import('@/pages/coupon'));
 const CouponDetail = lazy(() => import('@/pages/coupon/detail'));
+const CouponCreate = lazy(() => import('@/pages/coupon/create'));
 
 const suspense = (
     <Suspense fallback={<Loading />}>
@@ -28,6 +29,10 @@ const routes: RouteObject[] = [
       {
         path: 'coupons',
         element: <Coupon />,
+      },
+      {
+        path: 'coupon/create/:test',
+        element: <CouponCreate />,
       },
       {
         path: 'coupons/:id',
