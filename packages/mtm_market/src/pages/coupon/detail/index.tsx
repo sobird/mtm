@@ -10,7 +10,7 @@ import { ProForm, ProFormText, ProFormDateTimeRangePicker, ProFormDigit, ProForm
 import InputAmountRule, { validator, FieldValidator } from '@/components/pro/form/AmountRule';
 import ProFormUseTerm from '@/components/pro/form/UseTerm'
 
-import CouponService, { ICouponEntity, ECouponType } from '@/services/coupon';
+import CouponService, { ICouponEntity, CouponTypeMap } from '@/services/coupon';
 
 const formItemLayout = {
   labelCol: {
@@ -34,7 +34,7 @@ const CouponDetail: React.FC = () => {
       <ProForm layout="horizontal" {...formItemLayout} form={form} request={() => CouponService.detail(123)} onFinish={onFinish}>
         <ProFormText readonly getValueProps={(value) => {
           return {
-            value: ECouponType[value]
+            value: CouponTypeMap.get(value)
           }
         }} width="md" name="type" label="优惠券类型" />
 

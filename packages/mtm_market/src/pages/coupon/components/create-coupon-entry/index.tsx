@@ -8,7 +8,7 @@ import React, { useState, PropsWithChildren, ComponentProps } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classnames from 'classnames';
 import { Button, Modal } from 'antd';
-import { ECouponTarget } from '@/services/coupon';
+import { CouponTargetEnum } from '@/services/coupon';
 
 import IconCouponTarget1 from './images/coupon_target_1.png';
 import IconCouponTarget2 from './images/coupon_target_2.png';
@@ -42,10 +42,10 @@ const CreateCouponEntry: React.FC<PropsWithChildren<ComponentProps<typeof Button
       >
         <div
           className={classnames('coupon-target-item', {
-            'coupon-target-active': couponTarget === ECouponTarget.店铺商品券,
+            'coupon-target-active': couponTarget === CouponTargetEnum.店铺商品券,
           })}
           onClick={() => {
-            setCouponTarget(ECouponTarget.店铺商品券);
+            setCouponTarget(CouponTargetEnum.店铺商品券);
           }}
         >
           <div className='target-icon'>
@@ -61,10 +61,10 @@ const CreateCouponEntry: React.FC<PropsWithChildren<ComponentProps<typeof Button
 
         <div
           className={classnames('coupon-target-item', {
-            'coupon-target-active': couponTarget === ECouponTarget.店铺通用券,
+            'coupon-target-active': couponTarget === CouponTargetEnum.店铺通用券,
           })}
           onClick={() => {
-            setCouponTarget(ECouponTarget.店铺通用券);
+            setCouponTarget(CouponTargetEnum.店铺通用券);
           }}
         >
           <div className='target-icon'>
@@ -79,10 +79,10 @@ const CreateCouponEntry: React.FC<PropsWithChildren<ComponentProps<typeof Button
 
         <div
           className={classnames('coupon-target-item', {
-            'coupon-target-active': couponTarget === ECouponTarget.店铺客服体验券,
+            'coupon-target-active': couponTarget === CouponTargetEnum.店铺客服体验券,
           })}
           onClick={() => {
-            setCouponTarget(ECouponTarget.店铺客服体验券);
+            setCouponTarget(CouponTargetEnum.店铺客服体验券);
           }}
         >
           <div className='target-icon'>

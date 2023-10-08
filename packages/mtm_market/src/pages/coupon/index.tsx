@@ -5,18 +5,18 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Button, Table, Tag, Popconfirm, Space, Form, DatePicker, Radio, Row, Col } from 'antd';
+import { Button, Table, Tag, Popconfirm, Space, Form, DatePicker, Radio, Row, Col, Badge } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
 import dayjs from '@/utils/dayjs';
 import CouponService, {
   ICouponEntity,
   ICouponPagination,
-  ECouponType,
-  ECouponTarget,
-  ECouponStatus,
-  ECouponStatusColor,
-  CouponStatusOption,
+  CouponTypeMap,
+  CouponTargetEnum,
+  CouponStatusEnum,
+  CouponStatusMap,
+  CouponStatusColorMap,
 } from '@/services/coupon';
 import { Range_Picker_Presets } from '@/utils/constant';
 import SearchForm from '@/components/search-form';
@@ -82,7 +82,10 @@ const Coupons: React.FC = () => {
                       <Radio.Group
                         defaultValue={-1}
                         buttonStyle='solid'
-                        options={CouponStatusOption}
+                        options={[...CouponStatusMap].map(item => ({
+                          value: item[0],
+                          label: item[1],
+                        }))}
                         optionType='button'
                       />
                     </Form.Item>
@@ -141,7 +144,7 @@ const Coupons: React.FC = () => {
             dataIndex='type'
             width={80}
             render={text => {
-              return ECouponType[text];
+              return CouponTypeMap.get(text);
             }}
           />
           <Column
@@ -149,7 +152,7 @@ const Coupons: React.FC = () => {
             dataIndex='target'
             width={120}
             render={text => {
-              return ECouponTarget[text];
+              return CouponTargetEnum[text];
             }}
           />
           <Column title='发放时段' width={180} dataIndex='putTerm' />
@@ -163,7 +166,7 @@ const Coupons: React.FC = () => {
             fixed='right'
             width={80}
             render={text => {
-              return <Tag color={ECouponStatusColor[text]}>{ECouponStatus[text]}</Tag>;
+              return <Badge color={CouponStatusColorMap.get(text)} status={text === CouponStatusEnum.进行中 ? "processing" : "default"} text={CouponStatusMap.get(text)} />
             }}
           />
           <Column<ICouponEntity>

@@ -1,11 +1,11 @@
 /**
  * 优惠券服务
- * 
+ *
  * sobird<i@sobird.me> at 2023/09/15 21:58:06 created.
  */
 
-import http from "@mtm/shared/utils/http";
-import dayjs from "@/utils/dayjs";
+import http from '@mtm/shared/utils/http';
+import dayjs from '@/utils/dayjs';
 
 interface ISpu {
   /** SPU ID */
@@ -37,12 +37,12 @@ export interface ICouponEntity {
     stime: number;
     /** 优惠券发放结束日期 */
     etime: number;
-  },
+  };
   /** 优惠券 门槛&面额 */
   amountRule: {
     amount: number;
     discount: number;
-  },
+  };
   /** 优惠券库存 */
   stock: number;
   /** 优惠券门槛 单位: 元 */
@@ -51,9 +51,9 @@ export interface ICouponEntity {
   discount: number;
   /** 每人限领张数 */
   limitCount: number;
-  /** 
+  /**
    * 使用期限 单位: 天
-   * 
+   *
    * 先判断useTerm[0]的值，该值 >0 认为 是券领取X天内有效;
    * 该值<=0 或 false，认为是在useTerm[1]到useTerm[2]期间券可以进行使用
    */
@@ -88,49 +88,57 @@ export interface ICouponEntity {
   /** SPU ID 列表 */
   spuIds: [];
   /** 商家ID列表 */
-  wmPoiIds: number[]
+  wmPoiIds: number[];
 }
 
 export interface ICouponPagination {
   ps?: number;
   pn?: number;
   total: number;
-  list: ICouponEntity[]
+  list: ICouponEntity[];
 }
 
-export enum ECouponType {
-  "满减券" = 0,
-  "折扣券" = 1
+export const CouponTypeMap = new Map([
+  [0, '满减券'],
+  [1, '折扣券']
+]);
+
+export enum CouponTargetEnum {
+  '店铺商品券' = 1,
+  '店铺通用券' = 2,
+  '店铺客服体验券' = 3,
 }
 
-export enum ECouponTarget {
-  "店铺商品券" = 1,
-  "店铺通用券" = 2,
-  "店铺客服体验券" = 3
+export enum CouponStatusEnum {
+  '全部' = -1,
+  '未开始' = 0,
+  '进行中' = 1,
+  '已结束' = 2,
+  '已下线' = 6,
 }
 
-export enum ECouponStatus {
-  "全部" = -1,
-  "未开始" = 0,
-  "进行中" = 1,
-  "已结束" = 2,
-  "已下线" = 6
-}
+export const CouponStatusMap = new Map([
+  [-1, '全部'],
+  [0, '未开始'],
+  [1, '进行中'],
+  [2, '已结束'],
+  [6, '已下线'],
+]);
 
-export const CouponStatusOption = [
-  { value: -1, label: "全部"},
-  { value: 0, label: "未开始"},
-  { value: 1, label: "进行中"},
-  { value: 2, label: "已结束"},
-  { value: 6, label: "已下线"}
-];
+export const CouponStatusColorMap = new Map([
+  [-1, ''],
+  [0, 'gray'],
+  [1, 'green'],
+  [2, 'blue'],
+  [6, 'red'],
+]);
 
-export enum ECouponStatusColor {
-  "gray" = 0,
-  "green" = 1,
-  "blue" = 2,
-  "red" = 6
-}
+export const CouponLimitCountMap = new Map([
+  [1, '1张'],
+  [2, '2张'],
+  [3, '3张'],
+  [4, '不限'],
+]);
 
 export interface ICouponsParams {
   ps?: number;
@@ -146,7 +154,7 @@ const CouponService = {
       const { list = [] } = res;
 
       res.list = list.map(item => {
-        const { ctime, } = item;
+        const { ctime } = item;
         item.ctimeLabel = dayjs(ctime).format();
         return item;
       });
@@ -165,7 +173,7 @@ const CouponService = {
   },
   update(data: ICouponEntity) {
     return http.patch<ICouponEntity>('/merchant/coupons', data);
-  }
-}
+  },
+};
 
 export default CouponService;

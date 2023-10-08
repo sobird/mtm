@@ -30,6 +30,12 @@ const App: React.FC<AppProps> = ({ master = {} }) => {
             linkHoverColor: defaultToken.blue,
             separatorColor: '#c0c4cc',
           },
+          Form: {
+            itemMarginBottom: 20,
+          },
+          Badge: {
+            textFontSize: 12,
+          }
         },
       }}
     >
