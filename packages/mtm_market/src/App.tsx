@@ -20,6 +20,10 @@ const App: React.FC<AppProps> = ({ master = {} }) => {
       locale={zhCN}
       prefixCls='mtm'
       theme={{
+        token: {
+          borderRadius: 3,
+          // controlHeight: 28
+        },
         components: {
           Breadcrumb: {
             /* here is your component tokens */

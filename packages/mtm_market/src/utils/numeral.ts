@@ -60,7 +60,7 @@ declare module 'numeral' {
   }
 }
 
-numeral.register('locale', 'zh', {
+export const LOCALE = {
   delimiters: {
     thousands: ',',
     decimal: '.',
@@ -77,7 +77,9 @@ numeral.register('locale', 'zh', {
   currency: {
     symbol: '¥',
   },
-});
+};
+
+numeral.register('locale', 'zh', LOCALE);
 numeral.locale('zh');
 //numeral.zeroFormat('零');
 numeral.nullFormat('');

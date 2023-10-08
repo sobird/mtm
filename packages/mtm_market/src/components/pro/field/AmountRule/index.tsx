@@ -8,6 +8,8 @@ import React, { useState } from 'react';
 import { InputNumber, Space, Form } from 'antd';
 import type { ProFieldFC } from '@ant-design/pro-components';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
+import { LOCALE } from '@/utils/numeral';
+
 type ValidateStatus = Parameters<typeof Form.Item>[0]['validateStatus'];
 // 兼容代码-----------
 import 'antd/lib/input-number/style';
@@ -50,7 +52,7 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
   if (mode === 'read') {
     const dom = (
       <span ref={ref}>
-        满{text[0]}减{text[1]}
+        满 {text[0] || '-'}元 减 {text[1] || '-'}元
       </span>
     );
     if (render) {
@@ -111,7 +113,7 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
         >
           <InputNumber
             style={{width: '100%'}}
-            prefix="￥"
+            prefix={LOCALE.currency.symbol}
             min={0}
             max={5000}
             {...restFieldProps}
@@ -130,8 +132,8 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
           help={validate[1]?.help}
         >
           <InputNumber
-            prefix="￥"
             style={{width: '100%'}}
+            prefix={LOCALE.currency.symbol}
             min={0}
             max={5000}
             {...restFieldProps}
