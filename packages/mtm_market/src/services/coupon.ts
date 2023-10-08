@@ -5,7 +5,6 @@
  */
 
 import http from '@mtm/shared/utils/http';
-import dayjs from '@/utils/dayjs';
 
 interface ISpu {
   /** SPU ID */
@@ -31,48 +30,29 @@ export interface ICouponEntity {
   displayName: string;
   /** 优惠券类型; 0:满减券, 1:折扣券 */
   type: 0 | 1;
-  /** 发放时间段 */
-  putTerm: {
-    /** 优惠券发放开始日期 */
-    stime: number;
-    /** 优惠券发放结束日期 */
-    etime: number;
-  };
-  /** 优惠券 门槛&面额 */
-  amountRule: {
-    amount: number;
-    discount: number;
-  };
+  /** 发券目标 */
+  target: 1 | 2 | 3;
+  /** 优惠券 门槛, 面额 */
+  rule: [number, number];
   /** 优惠券库存 */
   stock: number;
-  /** 优惠券门槛 单位: 元 */
-  price: number;
-  /** 优惠券面额 单位: 元 */
-  discount: number;
   /** 每人限领张数 */
-  limitCount: number;
+  limit: number;
+  /** 发放时间段 开始时间, 结束时间 */
+  putTerm: [number, number];
+  /** 投放目标人群 -1:全部用户 新老客, 1:老客, 2:新老客 */
+  putCrowd: -1 | 1 | 2;
   /**
    * 使用期限 单位: 天
    *
    * 先判断useTerm[0]的值，该值 >0 认为 是券领取X天内有效;
    * 该值<=0 或 false，认为是在useTerm[1]到useTerm[2]期间券可以进行使用
    */
-  useTerm: {
-    /** 优惠券领取X天内有效 */
-    periodDay: number;
-    stime: number;
-    etime: number;
-  };
-  /** 发券目标 */
-  target: 11 | 12;
-  /** 投放目标人群 -1:全部用户 新老客, 1:老客, 2:新老客 */
-  putTarget: -1 | 1 | 2;
+  useTerm: [number, [number, number]];
   /** 使用人群 */
-  useTarget: -1 | 1 | 2;
+  useCrowd: -1 | 1 | 2;
   /** 投放位置 */
   position: number;
-  /** 使用范围 */
-  useScope: string;
   /** 发放数量 */
   sendCount: number;
   /** 当前余量 */
@@ -81,8 +61,6 @@ export interface ICouponEntity {
   status: 0 | 1 | 2 | 6;
   /** 创建时间 时间戳 */
   ctime: number;
-  /** 创建时间 格式化 形如 2022-01-21 17:15:08 */
-  ctimeLabel: string;
   /** 优惠券商品列表 */
   spuList: ISpu[];
   /** SPU ID 列表 */
@@ -100,7 +78,7 @@ export interface ICouponPagination {
 
 export const CouponTypeMap = new Map([
   [0, '满减券'],
-  [1, '折扣券']
+  [1, '折扣券'],
 ]);
 
 export enum CouponTargetEnum {
@@ -150,17 +128,7 @@ export interface ICouponsParams {
 
 const CouponService = {
   async list(params?: ICouponsParams) {
-    return http.get<ICouponPagination>('/merchant/coupons', params).then(res => {
-      const { list = [] } = res;
-
-      res.list = list.map(item => {
-        const { ctime } = item;
-        item.ctimeLabel = dayjs(ctime).format();
-        return item;
-      });
-
-      return res;
-    });
+    return http.get<ICouponPagination>('/merchant/coupons', params);
   },
   detail(id: number) {
     return http.get<ICouponEntity>('/merchant/coupons', { id });

@@ -4,18 +4,15 @@
  * sobird<i@sobird.me> at 2023/10/07 10:58:46 created.
  */
 
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Button, Space } from 'antd';
 import {
   ProForm,
   ProFormText,
   ProFormDateTimeRangePicker,
   ProFormDigit,
-  ProFormDigitRange,
-  FooterToolbar,
   ProFormSelect,
 } from '@ant-design/pro-components';
-import { PlusCircleOutlined } from '@ant-design/icons';
 import PageContainer from '@/layout/page-container';
 import InputAmountRule, { validator, FieldValidator } from '@/components/pro/form/AmountRule';
 import ProFormUseTerm from '@/components/pro/form/UseTerm';
@@ -48,10 +45,9 @@ const BreadcrumbItem = [
 
 const CouponCreate = () => {
   const [form] = ProForm.useForm();
-  const params = useParams();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const target = searchParams.get('target');
-  console.log('params', params, target);
 
   const onFinish = async values => {
     // form.validateFields();
@@ -65,7 +61,7 @@ const CouponCreate = () => {
       }}
       title='创建优惠券'
       // icon={<PlusCircleOutlined />}
-      extra={[<Button>返回</Button>]}
+      extra={[<Button onClick={() => navigate(-1)}>返回</Button>]}
     >
       <div className='coupon-create-page'>
         <ProForm

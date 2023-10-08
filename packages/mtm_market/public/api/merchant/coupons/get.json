@@ -21,6 +21,7 @@
         "sendCount": 0,
         "leftCount": 50,
         "status": 6,
+        "useTerm": [3, [1642608000, 1643644799]],
         "ctime": 1642756508
       },
       {
@@ -38,6 +39,7 @@
         "sendCount": 0,
         "leftCount": 50,
         "status": 1,
+        "useTerm": [3, [1642608000, 1643644799]],
         "ctime": 1642756178
       },
       {
@@ -55,6 +57,7 @@
         "sendCount": 0,
         "leftCount": 50,
         "status": 2,
+        "useTerm": [3, [1642608000, 1643644799]],
         "ctime": 1642755647
       },
       {
@@ -72,6 +75,7 @@
         "sendCount": 0,
         "leftCount": 50,
         "status": 6,
+        "useTerm": [3, [1642608000, 1643644799]],
         "ctime": 1642755117
       },
       {
@@ -89,6 +93,7 @@
         "sendCount": 0,
         "leftCount": 50,
         "status": 2,
+        "useTerm": [3, [1642608000, 1643644799]],
         "ctime": 1642754807
       },
       {
@@ -106,6 +111,7 @@
         "sendCount": 0,
         "leftCount": 50,
         "status": 6,
+        "useTerm": [3, [1642608000, 1643644799]],
         "ctime": 1642754606
       },
       {
@@ -123,6 +129,7 @@
         "sendCount": 0,
         "leftCount": 50,
         "status": 0,
+        "useTerm": [3, [1642608000, 1643644799]],
         "ctime": 1642751269
       },
       {
@@ -140,6 +147,7 @@
         "sendCount": 0,
         "leftCount": 50,
         "status": 6,
+        "useTerm": [3, [1642608000, 1643644799]],
         "ctime": 1642743061
       },
       {
@@ -157,6 +165,7 @@
         "sendCount": 0,
         "leftCount": 50,
         "status": 0,
+        "useTerm": [3, [1642608000, 1643644799]],
         "ctime": 1642742722
       },
       {
@@ -174,6 +183,7 @@
         "sendCount": 0,
         "leftCount": 50,
         "status": 6,
+        "useTerm": [3, [1642608000, 1643644799]],
         "ctime": 1642742514
       }
     ]

@@ -23,6 +23,9 @@ import SearchForm from '@/components/search-form';
 import MTable from '@/components/table';
 import CreateCouponEntry from './components/create-coupon-entry';
 import PageContainer from '@/layout/page-container';
+
+import FieldUseTerm from '@/components/pro/field/UseTerm';
+
 const { Column } = Table;
 const { RangePicker } = DatePicker;
 
@@ -156,7 +159,11 @@ const Coupons: React.FC = () => {
             }}
           />
           <Column title='发放时段' width={180} dataIndex='putTerm' />
-          <Column title='使用时间' width={150} dataIndex='validDays' />
+          <Column title='使用时间' width={150} dataIndex='useTerm' render={text => {
+            console.log('text', text)
+            // return text;
+            return <FieldUseTerm text={text} mode='read' fieldProps={{value: text,  format: 'YYYY'}}></FieldUseTerm>
+          }} />
           <Column title='发放数量' width={100} dataIndex='sendCount' />
           <Column title='当前余量' width={100} dataIndex='leftCount' />
           <Column title='创建时间' dataIndex='ctimeLabel' width={160} />

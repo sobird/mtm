@@ -16,7 +16,7 @@ import dayjs, { Dayjs } from 'dayjs';
 const { RangePicker } = DatePicker;
 
 export type Value = string | number | undefined | null;
-export type FieldValue = [number | undefined, [Dayjs, Dayjs] | undefined];
+export type FieldValue = [number, [string, string]?];
 export type RadioValue = 1 | 2;
 
 export type FieldProps = {
@@ -28,7 +28,7 @@ const FieldUseTerm: ProFieldFC<FieldProps> = ({
   mode,
   fieldProps,
   render,
-  renderFormItem
+  renderFormItem,
 }) => {
   const { value = [], onChange, defaultValue } = fieldProps;
   const newValue = [...value] as FieldValue;

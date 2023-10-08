@@ -10,18 +10,21 @@ export const WrappedProFormField = (ProFieldComponent: React.ElementType, valueT
     proFieldProps,
     ...rest
   }: ProFormFieldItemProps<InputProps, InputRef>) => {
-    console.log(valueType, fieldProps, proFieldProps, rest)
     return (
       <ProField
         valueType={valueType}
-        render={(text: any, fieldProps: any) => {
-          const { mode } = fieldProps;
-          return <ProFieldComponent text={text} mode={mode} fieldProps={fieldProps} />;
-        }}
-        renderFormItem={(text: any, fieldProps: any) => {
-          const { mode } = fieldProps;
-          return <ProFieldComponent text={text} mode={mode} fieldProps={fieldProps} />;
-        }}
+        render={
+          ((text: any, fieldProps: any, dom: React.ReactNode) => {
+            const { mode } = fieldProps;
+            return <ProFieldComponent text={text} mode={mode} fieldProps={fieldProps} />;
+          }) as any
+        }
+        renderFormItem={
+          ((text: any, fieldProps: any, dom: React.ReactNode) => {
+            const { mode } = fieldProps;
+            return <ProFieldComponent text={text} mode={mode} fieldProps={fieldProps} />;
+          }) as any
+        }
         fieldProps={fieldProps}
         // filedConfig={
         //   {
@@ -33,6 +36,6 @@ export const WrappedProFormField = (ProFieldComponent: React.ElementType, valueT
       />
     );
   };
-  
+
   return ProFormField;
 };
