@@ -44,7 +44,7 @@ const CouponUpdate: React.FC = () => {
       setInitialValues(res);
       form.resetFields();
     });
-  }, []);
+  }, [form]);
 
   return (
     <PageContainer
