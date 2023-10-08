@@ -105,15 +105,11 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
       <Space size={10} 
         // onBlur={handleGroupBlur} 
         className={className}>
-        <Form.Item
-          label="满"
-          htmlFor={`${id}-0`}
-          validateStatus={validate[0]?.status}
-          help={validate[0]?.help}
-        >
+       
           <InputNumber
             style={{width: '100%'}}
-            prefix={LOCALE.currency.symbol}
+            addonBefore="满"
+            addonAfter={LOCALE.currency.symbol}
             min={0}
             max={5000}
             {...restFieldProps}
@@ -123,17 +119,11 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
             defaultValue={defaultValue?.[0]}
             onChange={(changedValue) => handleChange(0, changedValue)}
           />
-        </Form.Item>
 
-        <Form.Item
-          label="减"
-          htmlFor={`${id}-1`}
-          validateStatus={validate[1]?.status}
-          help={validate[1]?.help}
-        >
           <InputNumber
             style={{width: '100%'}}
-            prefix={LOCALE.currency.symbol}
+            addonBefore="减"
+            addonAfter={LOCALE.currency.symbol}
             min={0}
             max={5000}
             {...restFieldProps}
@@ -143,7 +133,6 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
             defaultValue={defaultValue?.[1]}
             onChange={(changedValue) => handleChange(1, changedValue)}
           />
-        </Form.Item>
       
         {/* <label htmlFor={`${id}-0`}>满</label>
         <InputNumber<number>

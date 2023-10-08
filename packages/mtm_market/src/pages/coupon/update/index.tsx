@@ -1,10 +1,10 @@
 /**
- * 优惠券详情页
+ * 优惠券编辑页
  *
- * sobird<i@sobird.me> at 2023/09/16 11:12:40 created.
+ * sobird<i@sobird.me> at 2023/10/08 21:39:11 created.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button } from 'antd';
 import { ProFormDatePicker } from '@ant-design/pro-components';
@@ -28,19 +28,21 @@ const BreadcrumbItem = [
     path: 'coupons',
   },
   {
-    title: '优惠券详情',
-    path: 'detail',
+    title: '编辑优惠券',
+    path: 'update',
   },
 ];
 
-const CouponDetail: React.FC = () => {
+const CouponUpdate: React.FC = () => {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
   const [form] = Form.useForm();
+  const [initialValues, setInitialValues] = useState({});
 
   useEffect(() => {
     CouponService.detail(params.id).then(res => {
-      form.setFieldsValue(res);
+      setInitialValues(res);
+      form.resetFields();
     });
   }, []);
 
@@ -49,17 +51,12 @@ const CouponDetail: React.FC = () => {
       breadcrumb={{
         items: BreadcrumbItem,
       }}
-      title='优惠券详情'
+      title='编辑优惠券'
       // icon={<PlusCircleOutlined />}
-      extra={[
-        <Button onClick={() => navigate(-1)}>返回</Button>,
-        <Button type='primary' icon={<EditOutlined />} onClick={() => navigate(`/coupon/update/${params.id}`)}>
-          编辑
-        </Button>,
-      ]}
+      extra={[<Button onClick={() => navigate(-1)}>返回</Button>]}
     >
       <div className='page-coupon-detail'>
-        <CouponForm form={form} submitter={false} disabled>
+        <CouponForm form={form} initialValues={initialValues}>
           <ProFormDatePicker label='创建日期' width='lg' name='ctime' />
         </CouponForm>
       </div>
@@ -67,4 +64,4 @@ const CouponDetail: React.FC = () => {
   );
 };
 
-export default CouponDetail;
+export default CouponUpdate;

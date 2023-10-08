@@ -130,10 +130,10 @@ const CouponService = {
   async list(params?: ICouponsParams) {
     return http.get<ICouponPagination>('/merchant/coupons', params);
   },
-  detail(id: number) {
+  detail(id: string) {
     return http.get<ICouponEntity>('/merchant/coupons', { id });
   },
-  delete(id: number) {
+  delete(id: string) {
     return http.delete<ICouponEntity>('/merchant/coupons', { id });
   },
   create(data: ICouponEntity) {

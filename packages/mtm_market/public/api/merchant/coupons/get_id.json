@@ -3,8 +3,8 @@
   "msg": "success",
   "data": {
     "id": "1070734573",
-    "name": "测试",
-    "displayName": null,
+    "name": "新建优惠券",
+    "displayName": "XX 店铺客服体验券",
     "type": 0,
     "target": 1,
     "rule": [100, 10],

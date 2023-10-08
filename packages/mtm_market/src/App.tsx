@@ -23,6 +23,10 @@ const App: React.FC<AppProps> = ({ master = {} }) => {
         token: {
           borderRadius: 3,
           // controlHeight: 28
+
+          // disabled
+          colorBgContainerDisabled: '#fff',
+          colorTextDisabled: '#444',
         },
         components: {
           Breadcrumb: {
@@ -32,6 +36,7 @@ const App: React.FC<AppProps> = ({ master = {} }) => {
           },
           Form: {
             itemMarginBottom: 20,
+            labelColor: "#333"
           },
           Badge: {
             textFontSize: 12,

@@ -139,7 +139,7 @@ const Coupons: React.FC = () => {
             title='优惠券名称'
             dataIndex='name'
             render={(text, record) => {
-              return <Link to={`/coupons/${record.id}`}>{text}</Link>;
+              return <Link to={`/coupon/${record.id}`}>{text}</Link>;
             }}
           />
           <Column
@@ -184,7 +184,7 @@ const Coupons: React.FC = () => {
             render={(text, record) => {
               return (
                 <Space>
-                  <Link to={`/coupons/${record.id}`}>查看</Link>
+                  <Link to={`/coupon/${record.id}`}>查看</Link>
                   {text < 2 && (
                     <Button type='link' style={{ padding: 0 }}>
                       编辑
