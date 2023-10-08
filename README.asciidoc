@@ -692,4 +692,3 @@ module.exports = {
   },
 }
 ```
-

@@ -38,3 +38,5 @@ jobs:
         branch: gh-pages
         folder: packages/mtm_market/dist
         clean: true
+        clean-exclude: |
+          mtm_market/..
