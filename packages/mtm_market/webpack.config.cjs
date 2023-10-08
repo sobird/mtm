@@ -26,7 +26,7 @@ const pkg = require('./package.json');
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
-const outputPath = path.resolve(__dirname, `dist/${pkg.name}`);
+const outputPath = path.resolve(__dirname, './dist');
 const publicUrl = isProduction ? `/${pkg.name}/` : '';
 
 const config = {
