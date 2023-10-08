@@ -160,8 +160,6 @@ const Coupons: React.FC = () => {
           />
           <Column title='发放时段' width={180} dataIndex='putTerm' />
           <Column title='使用时间' width={150} dataIndex='useTerm' render={text => {
-            console.log('text', text)
-            // return text;
             return <FieldUseTerm text={text} mode='read' fieldProps={{value: text,  format: 'YYYY'}}></FieldUseTerm>
           }} />
           <Column title='发放数量' width={100} dataIndex='sendCount' />
@@ -186,9 +184,7 @@ const Coupons: React.FC = () => {
                 <Space>
                   <Link to={`/coupon/${record.id}`}>查看</Link>
                   {text < 2 && (
-                    <Button type='link' style={{ padding: 0 }}>
-                      编辑
-                    </Button>
+                    <Link to={`/coupon/update/${record.id}`}>编辑</Link>
                   )}
                   {text < 2 && (
                     <Popconfirm

@@ -8,7 +8,7 @@ import http from '@mtm/shared/utils/http';
 
 interface ISpu {
   /** SPU ID */
-  id: number;
+  id: string;
   /** SPU名称 */
   name: string;
   /** SPU状态; 0:已下架, 1:已上架 */
@@ -23,7 +23,7 @@ interface ISpu {
 
 export interface ICouponEntity {
   /** 优惠券ID */
-  id: number;
+  id: string;
   /** 优惠券名称 */
   name: string;
   /** 优惠券文案 */
