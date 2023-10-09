@@ -74,6 +74,8 @@ export class Http {
         filenames.push(Object.keys(params).sort().join('&'))
       }
 
+      config.data = undefined;
+
       // url 模拟适配 全部转为get请求
       config.url = url + '/' + filenames.join('_') +'.json';
       config.method = 'get';

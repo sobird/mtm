@@ -6,9 +6,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Form, Button } from 'antd';
+import { Form, Button, message } from 'antd';
 import { ProFormDatePicker } from '@ant-design/pro-components';
-import { EditOutlined } from '@ant-design/icons';
 
 import CouponService from '@/services/coupon';
 import PageContainer from '@/layout/page-container';
@@ -37,6 +36,7 @@ const CouponUpdate: React.FC = () => {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
   const [form] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
   const [initialValues, setInitialValues] = useState({});
 
   useEffect(() => {
@@ -44,7 +44,15 @@ const CouponUpdate: React.FC = () => {
       setInitialValues(res);
       form.resetFields();
     });
-  }, [form]);
+  }, []);
+
+  const onFinish = async (values) => {
+    CouponService.update(values).then(() => {
+      messageApi.success('更新优惠券成功', 1, () => {
+        navigate(-1);
+      });
+    });
+  };
 
   return (
     <PageContainer
@@ -55,8 +63,9 @@ const CouponUpdate: React.FC = () => {
       // icon={<PlusCircleOutlined />}
       extra={[<Button onClick={() => navigate(-1)}>返回</Button>]}
     >
+      {contextHolder}
       <div className='page-coupon-detail'>
-        <CouponForm form={form} initialValues={initialValues}>
+        <CouponForm form={form} initialValues={initialValues} onFinish={onFinish}>
           <ProFormDatePicker label='创建日期' width='lg' name='ctime' />
         </CouponForm>
       </div>

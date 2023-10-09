@@ -1,0 +1,14 @@
+/**
+ * antd 表单输入组件禁用样式 reset
+ * 
+ * sobird<i@sobird.me> at 2023/10/09 10:01:07 created.
+ */
+ 
+.#{$prefix-cls}-form-item-control {
+  .#{$prefix-cls} {
+    // DatePicker
+    &-picker-disabled {
+      border-color: $primary;
+    }
+  }
+}

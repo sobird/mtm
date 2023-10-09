@@ -1,0 +1,145 @@
+:root {
+  --primary: #{$primary};
+  --secondary: #{$secondary};
+  --brand: #{$brand};
+  --success: #{$success};
+  --info: #{$info};
+  --warning: #{$warning};
+  --danger: #{$danger};
+  --light: #{$light};
+  --dark: #{$dark};
+
+  --active: #{$active-global};
+
+  --gray-100: #{$gray-100};
+  --gray-200: #{$gray-200};
+  --gray-300: #{$gray-300};
+  --gray-400: #{$gray-400};
+  --gray-500: #{$gray-500};
+  --gray-600: #{$gray-600};
+
+  --font-family-base: #{$font-family-base};
+  --font-size-sm: #{$font-size-sm};
+  --font-size-base: #{$font-size-base};
+  --font-size-heading: #{$font-size-heading};
+  --font-size-lg: #{$font-size-lg};
+  --font-size-xl: #{$font-size-xl};
+
+  --text-color-base: #{$text-color-base};
+  --text-color-secondary: #{$text-color-secondary};
+  --text-color-weak: #{$text-color-weak};
+  --text-color-lighten: #{$text-color-lighten};
+
+  --border-color: #{$border-color};
+  --line-color: #{$line-color};
+  --disabled-color: #{$disabled-color};
+
+  --page-background: #{$page-background};
+  --card-background: #{$card-background};
+
+  --text-dark: #{$yiq-text-dark};
+  --text-light: #{$yiq-text-light};
+
+  --link-color: #{$link-color};
+  --link-decoration: #{$link-decoration};
+  --link-hover-color: #{$link-hover-color};
+  --link-hover-decoration: #{$link-hover-decoration};
+
+  --border-radius: #{$border-radius};
+
+
+  --default-height: #{$input-height-base};
+}
+
+
+@mixin colorGroup($name, $value) {
+  .#{$prefix-cls}-#{$name}-text {
+      color: $value !important;
+  }
+  .#{$prefix-cls}-#{$name}-bg {
+      background-color: $value !important;
+  }
+  .#{$prefix-cls}-#{$name}-bc {
+      border-color: $value !important;
+  }
+}
+
+
+
+// @each $color, $value in $theme-colors {
+//   @include colorGroup($color, $value)
+// }
+
+@include colorGroup('active', $active-global);
+
+// font size
+.#{$prefix-cls}-font-family {
+  font-family: $font-family-base !important;
+}
+
+.#{$prefix-cls}-font-size-sm {
+  font-size: $font-size-sm !important;
+}
+
+.#{$prefix-cls}-font-size {
+  font-size: $font-size-base !important;
+}
+
+.#{$prefix-cls}-font-size-heading {
+  font-size: $font-size-heading !important;
+}
+
+.#{$prefix-cls}-font-size-lg {
+  font-size: $font-size-lg !important;
+}
+
+.#{$prefix-cls}-font-size-xl {
+  font-size: $font-size-xl !important;
+}
+
+
+// font color
+.#{$prefix-cls}-font-color {
+  color: $text-color-base !important;
+}
+.#{$prefix-cls}-font-color-secondary {
+  color: $text-color-secondary !important;
+}
+.#{$prefix-cls}-font-color-weak {
+  color: $text-color-weak !important;
+}
+.#{$prefix-cls}-font-color-lighten {
+  color: $text-color-lighten !important;
+}
+.#{$prefix-cls}-font-color-dark {
+  color: $yiq-text-dark !important;
+}
+.#{$prefix-cls}-font-color-light {
+  color: $yiq-text-light !important;
+}
+
+// 辅助线
+.#{$prefix-cls}-border-color {
+  border-color: $border-color !important;
+}
+.#{$prefix-cls}-ling-color {
+  border-color: $line-color !important;
+}
+.#{$prefix-cls}-disabled-color {
+  background-color: $disabled-color !important;
+}
+.#{$prefix-cls}-page-bg {
+  background-color: $page-background !important;
+}
+.#{$prefix-cls}-card-bg {
+  background-color: $card-background !important;
+}
+
+
+.#{$prefix-cls}-border-radius {
+  border-radius: $border-radius !important;
+}
+
+.#{$prefix-cls}-default-height {
+  height: $input-height-base !important;
+}
