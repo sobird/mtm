@@ -3,12 +3,55 @@
  * 
  * sobird<i@sobird.me> at 2023/10/09 10:01:07 created.
  */
- 
+
+$disabled-border-color: transparent !default;
+$disabled-background-color: #fff !default;
+
 .#{$prefix-cls}-form-item-control {
-  .#{$prefix-cls} {
+  .#{$prefix-cls}- {
+
+    &input-affix-wrapper-disabled {
+      border-color: $disabled-border-color;
+      background-color: $disabled-background-color;
+
+      .#{$prefix-cls}-input[disabled] {}
+    }
+
+    &input-number-wrapper-disabled {
+      .#{$prefix-cls}-input-number-group-addon {
+        border-color: $disabled-border-color;
+        background-color: $disabled-background-color;
+
+        &:hover {
+          border-color: $disabled-border-color;
+        }
+      }
+    }
+
+    &input-number-disabled {
+      border-color: $disabled-border-color;
+      background-color: $disabled-background-color;
+    }
+
     // DatePicker
-    &-picker-disabled {
-      border-color: $primary;
+    &picker-disabled {
+      border-color: $disabled-border-color;
+      background-color: $disabled-background-color;
+    }
+
+    // Select
+    &select-disabled {
+
+      .#{$prefix-cls}- {
+        &select-selector {
+          border-color: $disabled-border-color;
+          background-color: $disabled-background-color;
+        }
+
+        &select-arrow {
+          display: none;
+        }
+      }
     }
   }
 }

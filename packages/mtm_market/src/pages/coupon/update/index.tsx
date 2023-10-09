@@ -13,7 +13,6 @@ import PageContainer from '@/layout/page-container';
 import CouponForm from '../components/coupon-form';
 import CouponService from '@/services/coupon';
 
-
 const BreadcrumbItem = [
   {
     title: '首页',
@@ -45,11 +44,11 @@ const CouponUpdate: React.FC = () => {
       setFormData(res);
       setTimeout(() => {
         form.resetFields();
-      },0);
+      }, 0);
     });
   }, []);
 
-  const onFinish = async (values) => {
+  const onFinish = async values => {
     CouponService.update(values).then(() => {
       msg.success('更新优惠券成功', 1, () => {
         navigate(-1);
@@ -68,7 +67,7 @@ const CouponUpdate: React.FC = () => {
     >
       {contextHolder}
       <div className='page-coupon-detail'>
-        <CouponForm form={form} initialValues={formData} onFinish={onFinish}>
+        <CouponForm form={form} initialValues={formData} onFinish={onFinish} mode='update'>
           <ProFormText hidden label='优惠券ID' width='lg' name='id' />
         </CouponForm>
       </div>

@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/10/08 19:54:11 created.
  */
 import React, { PropsWithChildren, ComponentProps } from 'react';
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom';
 import { Space } from 'antd';
 import {
   ProForm,
@@ -12,10 +12,15 @@ import {
   ProFormDateTimeRangePicker,
   ProFormDigit,
   ProFormSelect,
+  ProFormProps,
 } from '@ant-design/pro-components';
 import ProFormCouponRule, { FieldValidator } from '@/components/pro/form/AmountRule';
 import ProFormUseTerm from '@/components/pro/form/UseTerm';
 import { CouponTargetMap, CouponLimitCountMap } from '@/services/coupon';
+
+interface CouponFormProps extends ProFormProps {
+  mode?: 'create' | 'update' | 'detail';
+}
 
 const formItemLayout = {
   labelCol: {
@@ -23,7 +28,7 @@ const formItemLayout = {
   },
 };
 
-const CouponForm: React.FC<PropsWithChildren<ComponentProps<typeof ProForm>>> = ({ children, ...props }) => {
+const CouponForm: React.FC<PropsWithChildren<CouponFormProps>> = ({ children, mode, ...props }) => {
   const [, setSearchParams] = useSearchParams();
   return (
     <ProForm
@@ -32,7 +37,7 @@ const CouponForm: React.FC<PropsWithChildren<ComponentProps<typeof ProForm>>> = 
       submitter={{
         render: (_, doms) => {
           return <Space style={{ marginLeft: 110 }}>{doms}</Space>;
-        }
+        },
       }}
       {...props}
     >
@@ -43,18 +48,18 @@ const CouponForm: React.FC<PropsWithChildren<ComponentProps<typeof ProForm>>> = 
         placeholder='请选择'
         width='lg'
         allowClear={false}
-        // getValueFromEvent={(value) => {
-        //   console.log('value', value)
-        //   // return JSON.stringify(value);
-        // }}
-
+        // 编辑态 不可用
+        disabled={mode && mode === 'update'}
         onChange={(target: string) => {
-          setSearchParams((prev) => {
-            prev.set('target', target);
-            return prev;
-          }, {
-            replace: true
-          })
+          setSearchParams(
+            prev => {
+              prev.set('target', target);
+              return prev;
+            },
+            {
+              replace: true,
+            }
+          );
         }}
       />
       {/* <ProFormText
@@ -93,7 +98,7 @@ const CouponForm: React.FC<PropsWithChildren<ComponentProps<typeof ProForm>>> = 
         label='发放张数'
         name='stock'
         placeholder='请输入1-1,000,000的正整数'
-        width='sm'
+        width='lg'
         min={1}
         max={1000000}
         rules={[{ required: true, message: '请填写发放张数' }]}
@@ -111,7 +116,7 @@ const CouponForm: React.FC<PropsWithChildren<ComponentProps<typeof ProForm>>> = 
         label='每人限领张数'
         valueEnum={CouponLimitCountMap}
         placeholder='请选择'
-        width='sm'
+        width='lg'
         rules={[{ required: true, message: '请选择每人限领张数' }]}
       />
       <ProFormUseTerm name='useTerm' label='使用时间' width='lg' required />
