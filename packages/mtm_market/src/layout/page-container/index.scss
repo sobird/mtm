@@ -9,7 +9,7 @@
 .micro-page-header {
   // background-color: rgba(110, 116, 224, 0.1);
   margin: -15px;
-  padding: 15px;
+  padding: 15px 15px 10px;
   margin-bottom: 20px;
   background-color: #fdfdfd;
   box-shadow: 0 1px 3px 0 rgba(0,0,0,.15);
@@ -28,9 +28,10 @@
 
   .micro-page-header-heading {
     h2 {
+      font-size: 20px;
       font-weight: 400;
       color: #1f2f3d;
-      margin-bottom: 5px;
+      margin-bottom: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

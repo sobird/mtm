@@ -9,9 +9,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button, message } from 'antd';
 import { ProFormText } from '@ant-design/pro-components';
 
-import CouponService from '@/services/coupon';
 import PageContainer from '@/layout/page-container';
 import CouponForm from '../components/coupon-form';
+import CouponService from '@/services/coupon';
+
 
 const BreadcrumbItem = [
   {
@@ -36,20 +37,21 @@ const CouponUpdate: React.FC = () => {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
   const [form] = Form.useForm();
-  const [messageApi, contextHolder] = message.useMessage();
-  const [initialValues, setInitialValues] = useState({});
+  const [msg, contextHolder] = message.useMessage();
+  const [formData, setFormData] = useState();
 
   useEffect(() => {
     CouponService.detail(params.id).then(res => {
-      setInitialValues(res);
-      form.resetFields();
+      setFormData(res);
+      setTimeout(() => {
+        form.resetFields();
+      },0);
     });
   }, []);
 
   const onFinish = async (values) => {
     CouponService.update(values).then(() => {
-      console.log('values', values)
-      messageApi.success('更新优惠券成功', 1, () => {
+      msg.success('更新优惠券成功', 1, () => {
         navigate(-1);
       });
     });
@@ -66,7 +68,7 @@ const CouponUpdate: React.FC = () => {
     >
       {contextHolder}
       <div className='page-coupon-detail'>
-        <CouponForm form={form} initialValues={initialValues} onFinish={onFinish}>
+        <CouponForm form={form} initialValues={formData} onFinish={onFinish}>
           <ProFormText hidden label='优惠券ID' width='lg' name='id' />
         </CouponForm>
       </div>
