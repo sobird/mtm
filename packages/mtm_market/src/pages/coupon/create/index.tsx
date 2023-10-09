@@ -9,6 +9,7 @@ import { Button, Form, message } from 'antd';
 import PageContainer from '@/layout/page-container';
 import CouponForm from '../components/coupon-form';
 import CouponService, { CouponTargetEnum } from '@/services/coupon';
+import { useEffect } from 'react';
 
 const BreadcrumbItem = [
   {
@@ -38,9 +39,13 @@ const CouponCreate = () => {
 
   // 表单初始化值
   const initialValues = {
-    target,
+    target: Number(target) || 1,
     displayName: 'xx ' + CouponTargetEnum[target],
   }
+
+  useEffect(() => {
+    form.resetFields();
+  }, [target]);
 
   const onFinish = async values => {
     CouponService.create(values).then(() => {

@@ -4,6 +4,7 @@
  * sobird<i@sobird.me> at 2023/10/08 19:54:11 created.
  */
 import React, { PropsWithChildren, ComponentProps } from 'react';
+import { useSearchParams } from 'react-router-dom'
 import { Space } from 'antd';
 import {
   ProForm,
@@ -14,7 +15,7 @@ import {
 } from '@ant-design/pro-components';
 import ProFormCouponRule, { FieldValidator } from '@/components/pro/form/AmountRule';
 import ProFormUseTerm from '@/components/pro/form/UseTerm';
-import { CouponTargetEnum, CouponLimitCountMap } from '@/services/coupon';
+import { CouponTargetMap, CouponLimitCountMap } from '@/services/coupon';
 
 const formItemLayout = {
   labelCol: {
@@ -23,6 +24,7 @@ const formItemLayout = {
 };
 
 const CouponForm: React.FC<PropsWithChildren<ComponentProps<typeof ProForm>>> = ({ children, ...props }) => {
+  const [, setSearchParams] = useSearchParams();
   return (
     <ProForm
       layout='horizontal'
@@ -34,7 +36,28 @@ const CouponForm: React.FC<PropsWithChildren<ComponentProps<typeof ProForm>>> = 
       }}
       {...props}
     >
-      <ProFormText
+      <ProFormSelect
+        name='target'
+        label='优惠券类型'
+        valueEnum={CouponTargetMap}
+        placeholder='请选择'
+        width='lg'
+        allowClear={false}
+        // getValueFromEvent={(value) => {
+        //   console.log('value', value)
+        //   // return JSON.stringify(value);
+        // }}
+
+        onChange={(target: string) => {
+          setSearchParams((prev) => {
+            prev.set('target', target);
+            return prev;
+          }, {
+            replace: true
+          })
+        }}
+      />
+      {/* <ProFormText
         readonly
         getValueProps={value => {
           return {
@@ -44,7 +67,7 @@ const CouponForm: React.FC<PropsWithChildren<ComponentProps<typeof ProForm>>> = 
         width='md'
         name='target'
         label='优惠券类型'
-      />
+      /> */}
 
       <ProFormText
         width='lg'
@@ -56,7 +79,7 @@ const CouponForm: React.FC<PropsWithChildren<ComponentProps<typeof ProForm>>> = 
           { max: 10, message: '优惠券名称最多填写10个字' },
         ]}
       />
-      <ProFormText readonly width='md' name='displayName' label='优惠券文案' />
+      <ProFormText readonly width='lg' name='displayName' label='优惠券文案' />
 
       {/* 发放设置 */}
       <ProFormDateTimeRangePicker

@@ -87,6 +87,12 @@ export enum CouponTargetEnum {
   '店铺客服体验券' = 3,
 }
 
+export const CouponTargetMap = new Map([
+  [1, '店铺商品券'],
+  [2, '店铺通用券'],
+  [3, '店铺客服体验券'],
+]);
+
 export enum CouponStatusEnum {
   '全部' = -1,
   '未开始' = 0,
