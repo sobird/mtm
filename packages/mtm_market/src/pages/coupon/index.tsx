@@ -10,6 +10,7 @@ import { PlusCircleOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
 import dayjs from '@/utils/dayjs';
 import CouponService, {
+  isEdit,
   ICouponEntity,
   ICouponPagination,
   CouponTypeMap,
@@ -186,7 +187,7 @@ const Coupons: React.FC = () => {
                   {text < 2 && (
                     <Link to={`/coupon/update/${record.id}`}>编辑</Link>
                   )}
-                  {text < 2 && (
+                  {isEdit(text) && (
                     <Popconfirm
                       title='您确定要下线该优惠券吗？'
                       onConfirm={() => {

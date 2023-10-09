@@ -5,10 +5,10 @@
  */
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Button, Form } from 'antd';
+import { Button, Form, message } from 'antd';
 import PageContainer from '@/layout/page-container';
 import CouponForm from '../components/coupon-form';
-import { CouponTargetEnum } from '@/services/coupon';
+import CouponService, { CouponTargetEnum } from '@/services/coupon';
 
 const BreadcrumbItem = [
   {
@@ -30,8 +30,9 @@ const BreadcrumbItem = [
 ];
 
 const CouponCreate = () => {
-  const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const [msg, contextHolder] = message.useMessage();
   const [searchParams] = useSearchParams();
   const target = searchParams.get('target');
 
@@ -42,8 +43,11 @@ const CouponCreate = () => {
   }
 
   const onFinish = async values => {
-    // form.validateFields();
-    console.log('values', values);
+    CouponService.create(values).then(() => {
+      msg.success('创建优惠券成功', 1, () => {
+        navigate(-1);
+      });
+    });
   };
 
   return (
@@ -55,6 +59,7 @@ const CouponCreate = () => {
       // icon={<PlusCircleOutlined />}
       extra={[<Button onClick={() => navigate(-1)}>返回</Button>]}
     >
+      {contextHolder}
       <div className='coupon-create-page'>
         <CouponForm form={form} initialValues={initialValues} onFinish={onFinish}></CouponForm>
       </div>

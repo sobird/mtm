@@ -144,4 +144,10 @@ const CouponService = {
   },
 };
 
+// utils
+
+export const isEdit = (status = 10) => {
+  return status < 2;
+}
+
 export default CouponService;
