@@ -8,10 +8,12 @@
  */
 
 import { useState } from 'react';
+import classNames from 'classnames';
 import { Space, Radio, DatePicker, InputNumber } from 'antd';
 import type { RadioChangeEvent } from 'antd';
 import type { ProFieldFC } from '@ant-design/pro-components';
 import dayjs, { Dayjs } from 'dayjs';
+import './index.scss';
 
 const { RangePicker } = DatePicker;
 
@@ -80,34 +82,29 @@ const FieldUseTerm: ProFieldFC<FieldProps> = ({ text, mode, fieldProps, render, 
     const { className } = fieldProps;
 
     const dom = (
-      <Radio.Group className={className} value={radioValue} onChange={onRadioChange}>
-        <Space direction='vertical' style={{ width: '100%' }}>
-          <Radio value={1} style={{ width: '100%' }}>
-            <Space>
-              <span>领取后</span>
-              <InputNumber
-                style={{ width: '100%' }}
-                addonAfter='天'
-                min={1}
-                max={30}
-                value={fieldValue?.[0]}
-                defaultValue={defaultValue?.[0]}
-                onChange={changedValue => handleChange(0, changedValue)}
-              />
-            </Space>
-          </Radio>
+      <Radio.Group className={classNames('input-use-term', className)} value={radioValue} onChange={onRadioChange}>
+        <Radio value={1}>
+          <span>领取后</span>
+          <InputNumber
+            style={{ flex: 1 }}
+            addonAfter='天'
+            min={1}
+            max={30}
+            value={fieldValue?.[0]}
+            defaultValue={defaultValue?.[0]}
+            onChange={changedValue => handleChange(0, changedValue)}
+          />
+        </Radio>
 
-          <Radio value={2}>
-            <Space>
-              <span>自定义</span>
-              <RangePicker
-                value={fieldValue?.[1]}
-                defaultValue={defaultValue?.[1]}
-                onChange={changedValue => handleChange(1, changedValue)}
-              />
-            </Space>
-          </Radio>
-        </Space>
+        <Radio value={2}>
+          <span>自定义</span>
+          <RangePicker
+            style={{ flex: 1 }}
+            value={fieldValue?.[1]}
+            defaultValue={defaultValue?.[1]}
+            onChange={changedValue => handleChange(1, changedValue)}
+          />
+        </Radio>
       </Radio.Group>
     );
 
