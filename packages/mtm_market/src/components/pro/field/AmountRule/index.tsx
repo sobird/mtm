@@ -5,7 +5,8 @@
  */
 
 import React, { useState } from 'react';
-import { InputNumber, Space, Form } from 'antd';
+import classNames from 'classnames';
+import { InputNumber, Form } from 'antd';
 import type { ProFieldFC } from '@ant-design/pro-components';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import { LOCALE } from '@/utils/numeral';
@@ -13,6 +14,7 @@ import { LOCALE } from '@/utils/numeral';
 type ValidateStatus = Parameters<typeof Form.Item>[0]['validateStatus'];
 // 兼容代码-----------
 import 'antd/lib/input-number/style';
+import './index.scss';
 
 export type Value = string | number | undefined | null;
 
@@ -102,9 +104,9 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
     const { className, ...restFieldProps } = fieldProps;
 
     const dom = (
-      <Space size={10} 
+      <div
         // onBlur={handleGroupBlur} 
-        className={className}>
+        className={classNames('input-amount-rule', className)}>
        
           <InputNumber
             style={{width: '100%'}}
@@ -133,32 +135,7 @@ const FieldAmountRule: ProFieldFC<FieldAmountRuleProps> = (
             defaultValue={defaultValue?.[1]}
             onChange={(changedValue) => handleChange(1, changedValue)}
           />
-      
-        {/* <label htmlFor={`${id}-0`}>满</label>
-        <InputNumber<number>
-          prefix="￥"
-          style={{width: '100%'}}
-          min={0}
-          {...restFieldProps}
-          placeholder={getInputNumberPlaceholder(0)}
-          id={`${id}-0`}
-          value={valuePair?.[0]}
-          defaultValue={defaultValue?.[0]}
-          onChange={(changedValue) => handleChange(0, changedValue)}
-        />
-        <label htmlFor={`${id}-1`}>减</label>
-        <InputNumber<number>
-          prefix="￥"
-          style={{width: '100%'}}
-          min={0}
-          {...restFieldProps}
-          placeholder={getInputNumberPlaceholder(1)}
-          id={`${id}-1`}
-          value={valuePair?.[1]}
-          defaultValue={defaultValue?.[1]}
-          onChange={(changedValue) => handleChange(1, changedValue)}
-        /> */}
-      </Space>
+      </div>
     );
 
     if (renderFormItem) {

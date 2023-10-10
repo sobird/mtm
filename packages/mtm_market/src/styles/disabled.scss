@@ -5,7 +5,7 @@
  */
 
 $disabled-border-color: transparent !default;
-$disabled-background-color: #fff !default;
+$disabled-background-color: $gray-600;
 
 .#{$prefix-cls}-form-item-control {
   .#{$prefix-cls}- {
@@ -45,7 +45,7 @@ $disabled-background-color: #fff !default;
       .#{$prefix-cls}- {
         &select-selector {
           border-color: $disabled-border-color;
-          background-color: $disabled-background-color;
+          background-color: $disabled-background-color !important;
         }
 
         &select-arrow {
