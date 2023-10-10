@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { nanoid } from 'nanoid';
 import { Button, Menu } from "antd";
 import { Link, useLocation } from "react-router-dom";
-import MenusService from "@/services/menus";
+import MenuService from "@/services/menu";
 
 import { IStoreState } from "@/store/reducers";
 import { toggleAside } from "@/store/actions/app";
@@ -119,11 +119,11 @@ const Aside: React.FunctionComponent = () => {
   const { collapsed } = useSelector((state: IStoreState) => state.app);
 
   useEffect(() => {
-    MenusService.list().then(res => {
+    MenuService.list().then(res => {
       setMenus(res);
     });
 
-    MenusService.badges().then(res => {
+    MenuService.badges().then(res => {
       setBadgeMap(res);
     })
   }, []);

@@ -6,7 +6,7 @@
 
 import React, { ReactNode, PropsWithChildren } from 'react';
 import { Link, createHashRouter } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbProps, Col, Row, Space } from 'antd';
+import { Breadcrumb, BreadcrumbProps, Col, Row, Space, Card } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import './index.scss';
 
@@ -85,7 +85,7 @@ const PageContainer: React.FC<PropsWithChildren<PageContainerProps>> = ({
         </Row>
         {description && <div className='micro-page-header-description'>{description}</div>}
       </div>
-      <div className='micor-page-content'>{children}</div>
+      <Card bodyStyle={{padding: 16}} className='micor-page-content'>{children}</Card>
     </div>
   );
 };

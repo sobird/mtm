@@ -7,9 +7,6 @@
 import { listToTree } from "@/utils";
 import http from "@/utils/http";
 
-/**
- * 主营类目
- */
 export interface IMenuItem {
   title: string;
   icon: string;
@@ -37,7 +34,6 @@ export interface IMenuBadge {
   noticeContent: string;
 }
 
-
 const FavoriteFold: IMenuItem = {
   title: '常用功能',
   code: "favorite-sub-menu",
@@ -52,7 +48,7 @@ const FavoriteFold: IMenuItem = {
   url: '/favorite-sub-menu',
 };
 
-const MenusService = {
+const MenuService = {
   async list(parentId?: number) {
     return http.get<IMenus>('/menus', { parentId }).then(res => {
       const menus = res.menus.sort((a: any, b: any) => a.index - b.index);
@@ -88,4 +84,4 @@ const MenusService = {
   },
 }
 
-export default MenusService;
+export default MenuService;

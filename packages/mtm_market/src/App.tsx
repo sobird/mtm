@@ -40,7 +40,7 @@ const App: React.FC<AppProps> = ({ master = {} }) => {
           },
           Badge: {
             textFontSize: 12,
-          }
+          },
         },
       }}
     >

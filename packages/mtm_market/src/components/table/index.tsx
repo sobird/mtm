@@ -14,7 +14,6 @@ const MTable: React.FC<ComponentProps<typeof Table>> = ({ children, pagination, 
 
   return (
     <Table
-      bordered
       rowKey='id'
       scroll={{ x: 1400 }}
       size='middle'
