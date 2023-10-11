@@ -7,7 +7,7 @@
   "scripts": {
     "start": "webpack serve --node-env=development",
     "build": "webpack --mode=production --node-env=production",
-    "build:local": "webpack --mode=production --node-env=local",
+    "build:local": "webpack --mode=production --node-env=production --env local",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "keywords": [],
