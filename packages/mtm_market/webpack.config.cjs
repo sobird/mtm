@@ -111,19 +111,19 @@ module.exports = (env) => {
       new webpack.ProgressPlugin({
         activeModules: true,
       }),
-      // new ModuleFederationPlugin({
-      //   name: pkg.name,
-      //   filename: 'remoteEntry.js',
-      //   // library: { 
-      //   //   type: 'umd', 
-      //   //   name: pkg.name
-      //   // },
-      //   exposes: {
-      //     './Campaign': './src/remotes/campaign',
-      //     './newReact': require.resolve('react'),
-      //     './newReactDOM': require.resolve('react-dom/client')
-      //   },
-      // }),
+      new ModuleFederationPlugin({
+        name: pkg.name,
+        filename: 'remoteEntry.js',
+        library: { 
+          type: 'umd', 
+          name: pkg.name
+        },
+        exposes: {
+          './Campaign': './src/remotes/campaign',
+          './newReact': require.resolve('react'),
+          './newReactDOM': require.resolve('react-dom/client')
+        },
+      }),
       // new PurgeCSSPlugin({
       //   paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
       //   whitelist: ['html', 'body']

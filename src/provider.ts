@@ -9,7 +9,7 @@ import * as ReactRouterDOM from 'react-router-dom';
 import * as Antd from 'antd';
 import * as AntdProComponents from '@ant-design/pro-components';
 import * as AntdIcons from '@ant-design/icons';
-import IntersectionObserveWrapper from '../../../../src/hooks/useIntersectionObserver';
+import IntersectionObserveWrapper from '@/hooks/useIntersectionObserver';
 
 (function (root: any, deps: any) {
   Object.keys(deps).forEach(key => {
@@ -36,8 +36,10 @@ import IntersectionObserveWrapper from '../../../../src/hooks/useIntersectionObs
   },
   $thh: {
     getStore: function(key) {
-      console.log('key', key);
-      return {}
+      console.log('key $thh', key);
+      return {
+        name: '商家名称'
+      }
     }
   },
   baseSDK: {
