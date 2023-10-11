@@ -9,7 +9,6 @@ import * as ReactRouterDOM from 'react-router-dom';
 import * as Antd from 'antd';
 import * as AntdProComponents from '@ant-design/pro-components';
 import * as AntdIcons from '@ant-design/icons';
-import IntersectionObserveWrapper from '../../../../src/hooks/useIntersectionObserver';
 
 (function (root: any, deps: any) {
   Object.keys(deps).forEach(key => {
@@ -22,28 +21,5 @@ import IntersectionObserveWrapper from '../../../../src/hooks/useIntersectionObs
     Antd,
     AntdProComponents,
     AntdIcons,
-  },
-  // todo 
-  tfe: {
-    React,
-    ReactRouterDOM,
-    Antd,
-    AntdProComponents,
-    AntdIcons,
-    components: {
-      IntersectionObserveWrapper,
-    },
-  },
-  $thh: {
-    getStore: function(key) {
-      console.log('key', key);
-      return {}
-    }
-  },
-  baseSDK: {
-    getStore: function(key) {
-      console.log('key', key);
-      return {}
-    }
   },
 });

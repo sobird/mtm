@@ -115,6 +115,7 @@ const config = {
       name: 'mtm',
       remotes: {
         market: `mtm_market@${marketHOST}/remoteEntry.js`,
+        operationApp: `operationApp@//awp-assets.meituan.net/thh/thh_feb_merchant_operation/operationRemoteEntry.js`,
         dataApp: `dataApp@//awp-assets.meituan.net/thh/thh_feb_data/dataRemoteEntry.js`,
         marketApp: `marketApp@//awp-assets.meituan.net/thh/thh_feb_market/marketRemoteEntry.js`
       }
