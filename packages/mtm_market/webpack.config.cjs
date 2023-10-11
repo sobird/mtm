@@ -23,11 +23,30 @@ const { ModuleFederationPlugin } = require('webpack').container;
 const externals = require('@mtm/shared/utils/externals.js');
 const pkg = require('./package.json');
 
+const PORT = 3001;
+const envs = new Map([
+  ['local', {
+    outputPath: path.resolve(__dirname, `../../dist/${pkg.name}`),
+    publicPath: `/${pkg.name}/`,
+  }],
+  [
+    'development', {
+      outputPath: path.resolve(__dirname, './dist'),
+      publicPath: `http://localhost:${PORT}/`,
+    }
+  ],
+  [
+    'production', {
+      outputPath: path.resolve(__dirname, './dist'),
+      publicPath: `/${pkg.name}/`,
+    }
+  ]
+]);
+
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
-const outputPath = path.resolve(__dirname, './dist');
-const publicUrl = isProduction ? `/${pkg.name}/` : '';
+const env = envs.get(process.env.NODE_ENV);
 
 const config = {
   devtool: isProduction ? false : 'inline-source-map',
@@ -38,8 +57,8 @@ const config = {
   },
   target: 'web',
   output: {
-    path: outputPath,
-    publicPath: publicUrl,
+    path: env.outputPath,
+    publicPath: env.publicPath,
     filename: '[name].[contenthash].js',
     chunkFilename: '[name].[contenthash].chunk.js',
     assetModuleFilename: 'assets/[contenthash][ext][query]',
@@ -52,7 +71,7 @@ const config = {
   devServer: {
     open: true,
     host: '0.0.0.0',
-    port: 3001,
+    port: PORT,
     hot: true, // 开启HMR功能
     historyApiFallback: true,
     static: {
@@ -81,7 +100,7 @@ const config = {
         {
           context: path.resolve(__dirname, './public'),
           from: '**/*',
-          to: outputPath,
+          to: env.outputPath,
           toType: 'dir',
           globOptions: {
             dot: false,

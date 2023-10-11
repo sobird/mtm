@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "NODE_ENV=development webpack serve",
+    "start": "webpack serve --node-env=development",
     "build": "webpack --mode=production --node-env=production",
+    "build:local": "webpack --mode=production --node-env=local",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "keywords": [],

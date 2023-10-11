@@ -41,7 +41,12 @@ const config = {
     chunkFilename: '[name].[contenthash].chunk.js',
     assetModuleFilename: 'assets/[contenthash][ext][query]',
     publicPath: '/',
-    clean: true,
+    clean: {
+      keep(asset) {
+        console.log('asset', asset)
+        return asset.includes('mtm_market');
+      },
+    },
     // library: `${package.name}`,
     libraryTarget: 'umd',
     chunkLoadingGlobal: `webpackJsonp_${package.name}`,
@@ -109,7 +114,8 @@ const config = {
     new ModuleFederationPlugin({
       name: 'mtm',
       remotes: {
-        market: `mtm_market@${marketHOST}/remoteEntry.js`
+        market: `mtm_market@${marketHOST}/remoteEntry.js`,
+        market: `operationApp@//awp-assets.meituan.net/thh/thh_feb_merchant_operation/operationRemoteEntry.js`
       }
     }),
     // new PurgeCSSPlugin({

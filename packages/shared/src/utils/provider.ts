@@ -22,4 +22,12 @@ import * as AntdIcons from '@ant-design/icons';
     AntdProComponents,
     AntdIcons,
   },
+  // todo 
+  tfe: {
+    React,
+    ReactRouterDOM,
+    Antd,
+    AntdProComponents,
+    AntdIcons,
+  },
 });
