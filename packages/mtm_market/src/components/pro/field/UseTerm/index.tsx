@@ -39,7 +39,7 @@ const FieldUseTerm: ProFieldFC<FieldProps> = ({ text, mode, fieldProps, render, 
 
   if (mode === 'read') {
     const dom = (
-      <span>{rangePickerValue ? newValue[1].map(item => item.format()).join(' 到 ') : `领取后 ${day || '-'} 天`}</span>
+      <span>{rangePickerValue ? newValue[1].map(item => item.format('YYYY-MM-DD')).join(' 到 ') : `领取后 ${day || '-'} 天`}</span>
     );
     if (render) {
       return render(text, { mode, ...fieldProps }, dom);

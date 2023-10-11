@@ -5,7 +5,8 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Button, Table, Tag, Popconfirm, Space, Form, DatePicker, Radio, Row, Col, Badge } from 'antd';
+import { Button, Table, Popconfirm, Space, Form, DatePicker, Radio, Row, Col, Badge } from 'antd';
+import {FieldDatePicker} from '@ant-design/pro-field/es/index'
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
 import dayjs from '@/utils/dayjs';
@@ -160,12 +161,17 @@ const Coupons: React.FC = () => {
             }}
           />
           <Column title='发放时段' width={180} dataIndex='putTerm' />
-          <Column title='使用时间' width={150} dataIndex='useTerm' render={text => {
-            return <FieldUseTerm text={text} mode='read' fieldProps={{value: text,  format: 'YYYY'}}></FieldUseTerm>
+          <Column title='使用时间' width={200} dataIndex='useTerm' 
+          render={text => {
+            return <FieldUseTerm text={text} mode='read' fieldProps={{value: text}}></FieldUseTerm>
           }} />
-          <Column title='发放数量' width={100} dataIndex='sendCount' />
-          <Column title='当前余量' width={100} dataIndex='leftCount' />
-          <Column title='创建时间' dataIndex='ctimeLabel' width={160} />
+          <Column title='发放数量' width={80} dataIndex='sendCount' />
+          <Column title='当前余量' width={80} dataIndex='leftCount' />
+          <Column title='创建时间' dataIndex='ctime' width={160} 
+          render={text => {
+            return <FieldDatePicker text={text} mode='read' format='YYYY-MM-DD HH:mm:ss' fieldProps={{value: text}} ></FieldDatePicker>
+          }} 
+          />
           <Column
             title='状态'
             dataIndex='status'
