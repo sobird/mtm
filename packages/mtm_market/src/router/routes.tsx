@@ -10,6 +10,8 @@ import { default as MTMLayout } from '@/layout';
 import Loading from '@/components/loading';
 import NoneSupport from '@mtm/shared/components/none-support';
 
+import Home from '@/pages/home';
+
 const Coupon = lazy(() => import('@/pages/coupon'));
 const CouponCreate = lazy(() => import('@/pages/coupon/create'));
 const CouponDetail = lazy(() => import('@/pages/coupon/detail'));
@@ -49,7 +51,10 @@ const routes: RouteObject[] = [
       },
     ],
   },
-  ,
+  {
+    path: '/home',
+    element: <Home />,
+  }
 ];
 
 export default routes;
