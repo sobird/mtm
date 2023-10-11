@@ -32,6 +32,7 @@ const CouponForm: React.FC<PropsWithChildren<CouponFormProps>> = ({ children, mo
   const [, setSearchParams] = useSearchParams();
   return (
     <ProForm
+      colon={false}
       layout='horizontal'
       {...formItemLayout}
       submitter={{
@@ -84,7 +85,7 @@ const CouponForm: React.FC<PropsWithChildren<CouponFormProps>> = ({ children, mo
           { max: 10, message: '优惠券名称最多填写10个字' },
         ]}
       />
-      <ProFormText readonly width='lg' name='displayName' label='优惠券文案' />
+      <ProFormText name='displayName' label='优惠券文案' disabled width='lg' />
 
       {/* 发放设置 */}
       <ProFormDateTimeRangePicker

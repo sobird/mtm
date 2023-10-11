@@ -35,11 +35,11 @@ const CouponCreate = () => {
   const [form] = Form.useForm();
   const [msg, contextHolder] = message.useMessage();
   const [searchParams] = useSearchParams();
-  const target = searchParams.get('target');
+  const target = searchParams.get('target') || 1;
 
   // 表单初始化值
   const initialValues = {
-    target: Number(target) || 1,
+    target: Number(target),
     displayName: 'xx ' + CouponTargetEnum[target],
   }
 

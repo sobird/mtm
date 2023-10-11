@@ -41,8 +41,9 @@ const CouponDetail: React.FC = () => {
 
   useEffect(() => {
     CouponService.detail(params.id).then(res => {
-      form.setFieldsValue(res);
+      //form.setFieldsValue(res);
       setFormData(res);
+      form.resetFields();
     });
   }, []);
 
@@ -63,7 +64,7 @@ const CouponDetail: React.FC = () => {
       extra={[<Button onClick={() => navigate(-1)}>返回</Button>, EditButton]}
     >
       <div className='page-coupon-detail'>
-        <CouponForm form={form} submitter={false} disabled>
+        <CouponForm form={form} initialValues={formData} submitter={false} disabled>
           <ProFormDatePicker label='创建日期' width='lg' name='ctime' />
         </CouponForm>
       </div>
