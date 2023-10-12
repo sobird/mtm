@@ -1,0 +1,24 @@
+{
+  "code": 0,
+  "msg": "SUCCESS",
+  "data": [
+    {
+      "id": "1",
+      "type": 3,
+      "title": "最新消息标题一",
+      "publishTime": 1617001200
+    },
+    {
+      "id": "2",
+      "type": 3,
+      "title": "最新消息标题二",
+      "publishTime": 1617001200
+    },
+    {
+      "id": "3",
+      "type": 3,
+      "title": "最新消息标题三",
+      "publishTime": 1617001200
+    }
+  ]
+}
