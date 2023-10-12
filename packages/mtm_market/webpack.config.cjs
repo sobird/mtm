@@ -79,6 +79,7 @@ module.exports = (env) => {
         },
         inject: true,
         title: pkg.description,
+        chunks: [ 'app' ]
       }),
       new CopyPlugin({
         patterns: [
@@ -224,7 +225,7 @@ module.exports = (env) => {
     // }));
     config.externals = externals;
   } else {
-    // config.externals = externals;
+    config.externals = externals;
   }
 
   if (env.local) {
