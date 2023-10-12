@@ -210,8 +210,6 @@ module.exports = (env) => {
     // },
   };
 
-
-
   // config.mode = env.WEBPACK_SERVE ? 'development' : 'production';
 
   if (isProduction) {
@@ -228,7 +226,6 @@ module.exports = (env) => {
   } else {
     // config.externals = externals;
   }
-
 
   if (env.local) {
     config.output.publicPath = `/${pkg.name}/`;

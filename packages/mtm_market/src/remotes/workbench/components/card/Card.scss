@@ -1,0 +1,61 @@
+/**
+ * 卡片样式
+ * 
+ * sobird<i@sobird.me> at 2023/10/12 9:20:30 created.
+ */
+
+$prefixCls: 'mix' !default;
+
+.#{$prefixCls}-card {
+  background-color: #fff;
+  border-radius: 2px;
+
+  &-head {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    border-bottom: 1px solid #EBEBEB;
+
+    &-title {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      gap: 8px;
+
+      font-size: 16px;
+      font-weight: 500;
+
+      &-sub {
+        font-size: 14px;
+        color: #999;
+        font-weight: normal;
+      }
+    }
+
+    &-extra {
+      font-weight: normal;
+      font-size: 14px;
+    }
+  }
+
+  &-body {}
+
+  &-grid {
+    display: flex;
+    flex: 1;
+    box-sizing: border-box;
+    height: 100%;
+    &-hoverable {
+      &:hover{
+        background-color: #FBFBFB;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &-contain-grid {
+    .#{$prefixCls}-card-body {
+      display: flex;
+    }
+  }
+}

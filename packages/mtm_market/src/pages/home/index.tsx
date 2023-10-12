@@ -6,12 +6,17 @@
 import { Row, Col, Card } from 'antd';
 import Campaign from '@/remotes/campaign';
 import LatestNews from '@/remotes/latest-news';
+import RealData from '@/remotes/workbench/realdata';
 
 const Home = () => {
   return (
     <Row gutter={[10, 10]}>
       <Col span={24}>
         <Card title="最新动态"><LatestNews/></Card>
+      </Col>
+
+      <Col span={12}>
+        <Card title="实时数据" extra={<a>数据中心</a>}><RealData/></Card>
       </Col>
       <Col span={12}>
         <Card title='营销活动'>
