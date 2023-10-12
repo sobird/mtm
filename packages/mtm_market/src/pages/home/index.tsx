@@ -7,12 +7,17 @@ import { Row, Col, Card } from 'antd';
 import Campaign from '@/remotes/campaign';
 import LatestNews from '@/remotes/latest-news';
 import RealData from '@/remotes/workbench/realdata';
+import OverView from '@/remotes/workbench/overview';
 
 const Home = () => {
   return (
     <Row gutter={[10, 10]}>
       <Col span={24}>
         <Card title="最新动态"><LatestNews/></Card>
+      </Col>
+
+      <Col span={24}>
+        <Card title="订单概况"><OverView /></Card>
       </Col>
 
       <Col span={12}>
