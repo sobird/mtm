@@ -8,11 +8,6 @@ import React from 'react';
 import classNames from 'classnames';
 import { Tooltip, TooltipProps } from 'antd';
 
-
-interface ViewTooltipProps extends Omit<TooltipProps, 'title'> {
-  title: React.ReactNode;
-}
-
 export interface CardViewProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   prefixCls?: string;
   className?: string;
@@ -23,7 +18,7 @@ export interface CardViewProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   value: React.ReactNode;
   extra?: React.ReactNode;
   bordered?: true;
-  tooltip?: ViewTooltipProps;
+  tooltip?: TooltipProps;
 }
 
 const View: React.FC<CardViewProps> = ({
@@ -46,7 +41,7 @@ const View: React.FC<CardViewProps> = ({
     <div {...props} className={classString}>
       <div className={`${prefixCls}-card-view-title`}>
         {tooltip?.title ? (
-          <Tooltip title={<span style={{ color: '#333', fontSize: 12 }}>{tooltip.title}</span>} color='#fff'>
+          <Tooltip overlayInnerStyle={{ color: '#333', fontSize: 12 }} color='#fff' {...tooltip}>
             <span>{title}</span>
           </Tooltip>
         ) : (

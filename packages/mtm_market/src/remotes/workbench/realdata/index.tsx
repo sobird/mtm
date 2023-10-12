@@ -93,11 +93,10 @@ const RealData = () => {
         {realDataConfigRow1.map(item => (
           <Card.View
             key={item.key}
-            title={
-              <Tooltip title={<span style={{ color: '#333', fontSize: 12 }}>{item.tips}</span>} color='#fff'>
-                {item.title}
-              </Tooltip>
-            }
+            title={item.title}
+            tooltip={{
+              title: item.tips
+            }}
             unit={item.unit}
             value={realdata[item.key]}
             extra={item.extra}
@@ -109,11 +108,10 @@ const RealData = () => {
         {realDataConfigRow2.map(item => (
           <Card.View
             key={item.key}
-            title={
-              <Tooltip title={<span style={{ color: '#333', fontSize: 12 }}>{item.tips}</span>} color='#fff'>
-                {item.title}
-              </Tooltip>
-            }
+            title={item.title}
+            tooltip={{
+              title: item.tips
+            }}
             unit={item.unit}
             value={realdata[item.key]}
             extra={item.extra}

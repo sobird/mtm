@@ -35,10 +35,28 @@ export interface IWorkbench {
   };
 }
 
+interface IOperation {
+  scorePlatform: {
+    serverScoreJudge: number;
+    shopScoreJudge: number;
+    serverScore: number;
+    shopScore: number;
+  };
+  ratePlatform: {
+    customerReplyRate: number;
+    collectOnTimeRate: number;
+    addReviewCount: number;
+  };
+}
 
 const AnalysisService = {
+  /** 商家工作台 */
   workbench(poiId: number) {
     return http.get<IWorkbench>('/analysis/workbench', { poiId });
+  },
+  /** 商家运营 数据 */
+  operation(poiId: number) {
+    return http.get<IOperation>('/analysis/operation', { poiId });
   },
 };
 

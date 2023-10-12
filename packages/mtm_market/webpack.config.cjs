@@ -225,7 +225,7 @@ module.exports = (env) => {
     // }));
     config.externals = externals;
   } else {
-    config.externals = externals;
+    // config.externals = externals;
   }
 
   if (env.local) {
