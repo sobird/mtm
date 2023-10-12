@@ -82,8 +82,11 @@ $prefixCls: 'mix' !default;
       font-size: 14px;
       line-height: 1;
       color: #666;
-      padding-bottom: 1px;
+      padding-bottom: 2px;
       margin-bottom: 12px;
+      span {
+        border-bottom: 1px dotted #DBDBDB;
+      }
     }
 
     &-value {

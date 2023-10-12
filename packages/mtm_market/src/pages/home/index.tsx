@@ -28,11 +28,6 @@ const Home = () => {
           <Campaign />
         </Card>
       </Col>
-      <Col span={12}>
-        <Card title='营销活动'>
-          <Campaign />
-        </Card>
-      </Col>
     </Row>
   );
 };

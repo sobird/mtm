@@ -6,6 +6,12 @@
 
 import React from 'react';
 import classNames from 'classnames';
+import { Tooltip, TooltipProps } from 'antd';
+
+
+interface ViewTooltipProps extends Omit<TooltipProps, 'title'> {
+  title: React.ReactNode;
+}
 
 export interface CardViewProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   prefixCls?: string;
@@ -17,6 +23,7 @@ export interface CardViewProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   value: React.ReactNode;
   extra?: React.ReactNode;
   bordered?: true;
+  tooltip?: ViewTooltipProps;
 }
 
 const View: React.FC<CardViewProps> = ({
@@ -28,6 +35,7 @@ const View: React.FC<CardViewProps> = ({
   unit,
   extra,
   bordered,
+  tooltip,
   ...props
 }) => {
   const classString = classNames(`${prefixCls}-card-view`, className, {
@@ -36,9 +44,17 @@ const View: React.FC<CardViewProps> = ({
   });
   return (
     <div {...props} className={classString}>
-      <div className={`${prefixCls}-card-view-title`}>{title}</div>
+      <div className={`${prefixCls}-card-view-title`}>
+        {tooltip?.title ? (
+          <Tooltip title={<span style={{ color: '#333', fontSize: 12 }}>{tooltip.title}</span>} color='#fff'>
+            <span>{title}</span>
+          </Tooltip>
+        ) : (
+          title
+        )}
+      </div>
       <div className={`${prefixCls}-card-view-content`}>
-        <span className={`${prefixCls}-card-view-value`}>{value || "--"}</span>
+        <span className={`${prefixCls}-card-view-value`}>{value || '--'}</span>
         <span className={`${prefixCls}-card-view-unit`}>{unit}</span>
       </div>
       <div className={`${prefixCls}-card-view-extra`}>{extra}</div>

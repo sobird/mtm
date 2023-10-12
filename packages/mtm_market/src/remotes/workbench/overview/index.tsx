@@ -1,3 +1,13 @@
+/**
+ * 订单概况
+ * 
+ * @todo
+ * 完善点击跳转
+ * 
+ * sobird<i@sobird.me> at 2023/10/12 18:08:57 created.
+ */
+
+
 import { Tooltip } from 'antd';
 import Card from '../components/card';
 import useWorkbench from '../hooks/useWorkbench';
@@ -5,7 +15,7 @@ import './index.scss';
 
 interface OverViewProps {
   title: string;
-  tips: string;
+  tips?: string;
   key: string;
   unit?: string;
   orderStatus?: number;
@@ -16,7 +26,7 @@ interface OverViewProps {
 const OverViewConfig: OverViewProps[] = [
   {
     title: '待付款',
-    tips: '所有当前进入支付页但未支付的订单数',
+   //  tips: '所有当前进入支付页但未支付的订单数',
     key: 'unpaidOrderCount',
     unit: '单',
     orderStatus: 9,
@@ -60,11 +70,10 @@ const OverView = () => {
         {OverViewConfig.map(item => (
           <Card.View
             key={item.key}
-            title={
-              <Tooltip title={<span style={{ color: '#333', fontSize: 12 }}>{item.tips}</span>} color='#fff'>
-                {item.title}
-              </Tooltip>
-            }
+            title={item.title}
+            tooltip={{
+              title: item.tips
+            }}
             unit={item.unit}
             value={overview[item.key]}
             extra={item.extra}
