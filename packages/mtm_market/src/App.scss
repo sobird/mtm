@@ -6,3 +6,6 @@
 
  @import "./styles/presets";
  
+ body {
+  -webkit-font-smoothing: antialiased;
+ }
