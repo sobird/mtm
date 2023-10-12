@@ -37,8 +37,8 @@ export interface IWorkbench {
 
 
 const AnalysisService = {
-  workbench() {
-    return http.get<IWorkbench>('/analysis/workbench');
+  workbench(poiId: number) {
+    return http.get<IWorkbench>('/analysis/workbench', { poiId });
   },
 };
 

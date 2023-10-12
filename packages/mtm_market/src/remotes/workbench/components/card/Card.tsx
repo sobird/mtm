@@ -40,7 +40,7 @@ const Card: React.FC<PropsWithChildren<CardProps>> = ({
     });
     return containGrid;
   }, [children]);
-  console.log('isContainGrid', isContainGrid);
+
   let head: React.ReactNode;
   if (title || subTitle || extra) {
     head = (

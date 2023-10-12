@@ -64,6 +64,14 @@ $prefixCls: 'mix' !default;
     padding-top: 20px;
     padding-left: 16px;
     padding-bottom: 16px;
+    flex: 1;
+
+    &-hoverable {
+      &:hover {
+        background-color: #FBFBFB;
+        cursor: pointer;
+      }
+    }
 
     &-content {
       margin-bottom: 4px;

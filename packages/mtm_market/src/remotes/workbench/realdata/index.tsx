@@ -5,12 +5,76 @@
  */
 import Card from '../components/card';
 import { Tooltip } from 'antd';
+import useWorkbench from '../hooks/useWorkbench';
+import './index.scss';
 
-const gridStyle: React.CSSProperties = {
-  width: '25%',
-};
+interface RealDataConfigProps {
+  title: string;
+  tips: string;
+  key: string;
+  unit: string;
+  format?: string;
+  dealType: string;
+  extra?: React.ReactNode;
+}
+
+const realDataConfigRow1: RealDataConfigProps[] = [
+  {
+    title: '支付金额',
+    tips: '该店铺支付订单的总金额，包含买家实际支付和使用平台优惠券的总金额，未剔除售后订单',
+    key: 'paidAmount',
+    unit: '元',
+    format: 'money',
+    dealType: 'paidAmount',
+  },
+  {
+    title: '支付订单数',
+    tips: '店铺全部支付的订单数，一个支付订单对应唯一订单号，一个买家在统计时间内支付多个订单则记为多次',
+    key: 'paidOrderCount',
+    unit: '单',
+    format: 'number',
+    dealType: 'paidOrderCount',
+  },
+  {
+    title: '支付人数',
+    tips: '该店铺所有支付买家的去重人数，即一个买家多次支付，仅记一人，未剔除售后订单',
+    key: 'paidUserCount',
+    unit: '人',
+    format: 'number',
+    dealType: 'paidUserCount',
+  },
+];
+
+const realDataConfigRow2: RealDataConfigProps[] = [
+  {
+    title: '商品访客数',
+    tips: '统计周期内，访问店铺所有商品的去重人数',
+    key: 'itemUniqueVisitor',
+    unit: '人',
+    format: 'number',
+    dealType: 'itemUniqueVisitor',
+  },
+  {
+    title: '商品浏览量',
+    tips: '统计周期内，该店铺内所有商品详情页的被访问累加人次',
+    key: 'itemPaveView',
+    unit: '次',
+    format: 'number',
+    dealType: 'itemPaveView',
+  },
+  {
+    title: '支付转化率',
+    tips: '统计周期内，支付买家数/访客数，即访客用户数转化为支付买家的比例',
+    key: 'conversionRate',
+    unit: '%',
+    dealType: 'conversionRate',
+    extra: <a>如何提高转化率</a>,
+  },
+];
 
 const RealData = () => {
+  const { loading, realdata } = useWorkbench();
+  console.log('realdata', realdata, loading);
   return (
     <Card
       title='实时数据'
@@ -18,36 +82,41 @@ const RealData = () => {
       extra={<a>数据中心</a>}
       bodyStyle={
         {
-          // height: 90
+          // height: 110,
         }
       }
     >
-      <Card.Grid style={gridStyle}>
-        <Card.View
-          title={
-            <Tooltip title={<span style={{ color: '#333', fontSize: 12 }}>所有当前进入支付页但未支付的订单数</span>} color='#fff'>
-              <span>待付款</span>
-            </Tooltip>
-          }
-          unit='元'
-          value={23}
-          extra={<a>如何提高转化率</a>}
-        ></Card.View>
-      </Card.Grid>
-      <Card.Grid style={gridStyle}>
-        <Card.View
-          title={
-            <Tooltip title={<span style={{ color: '#333', fontSize: 12 }}>近90天内的所有待发货订单数</span>} color='#fff'>
-              <span>待发货</span>
-            </Tooltip>
-          }
-          unit='单'
-          value={68}
-        ></Card.View>
-      </Card.Grid>
-      <Card.Grid style={gridStyle}>
-        实时数据<div>ddd</div>
-      </Card.Grid>
+      <div className='real-data-panel'>
+        {realDataConfigRow1.map(item => (
+          <Card.View
+            key={item.key}
+            title={
+              <Tooltip title={<span style={{ color: '#333', fontSize: 12 }}>{item.tips}</span>} color='#fff'>
+                {item.title}
+              </Tooltip>
+            }
+            unit={item.unit}
+            value={realdata[item.key]}
+            extra={item.extra}
+          ></Card.View>
+        ))}
+      </div>
+
+      <div className='real-data-panel'>
+        {realDataConfigRow2.map(item => (
+          <Card.View
+            key={item.key}
+            title={
+              <Tooltip title={<span style={{ color: '#333', fontSize: 12 }}>{item.tips}</span>} color='#fff'>
+                {item.title}
+              </Tooltip>
+            }
+            unit={item.unit}
+            value={realdata[item.key]}
+            extra={item.extra}
+          ></Card.View>
+        ))}
+      </div>
     </Card>
   );
 };

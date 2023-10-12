@@ -32,6 +32,7 @@ const View: React.FC<CardViewProps> = ({
 }) => {
   const classString = classNames(`${prefixCls}-card-view`, className, {
     [`${prefixCls}-card-view-bordered`]: bordered,
+    [`${prefixCls}-card-view-hoverable`]: hoverable,
   });
   return (
     <div {...props} className={classString}>
