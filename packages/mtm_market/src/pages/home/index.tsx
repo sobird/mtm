@@ -11,6 +11,7 @@ import OverView from '@/remotes/workbench/overview';
 import MerchantGrowth from '@/remotes/merchant-growth';
 import Violations from '@/remotes/violations';
 import ProductManage from '@/remotes/product-manage';
+import TrendingChart from '@/remotes/trending-chart';
 
 const Home = () => {
   return (
@@ -34,6 +35,9 @@ const Home = () => {
       </Col>
       <Col span={12}>
         <Card title="商品管理"><ProductManage className="test" /></Card>
+      </Col>
+      <Col span={12}>
+        <Card title="经营趋势"><TrendingChart /></Card>
       </Col>
       <Col span={12}>
         <Card title='营销活动'>

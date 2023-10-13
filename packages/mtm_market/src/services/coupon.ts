@@ -134,19 +134,19 @@ export interface ICouponsParams {
 
 const CouponService = {
   async list(params?: ICouponsParams) {
-    return http.get<ICouponPagination>('/merchant/coupons', params);
+    return http.get<ICouponPagination>('/merchant/coupon', params);
   },
   detail(id: string) {
-    return http.get<ICouponEntity>('/merchant/coupons', { id });
+    return http.get<ICouponEntity>('/merchant/coupons/detail', { id });
   },
   delete(id: string) {
-    return http.delete<ICouponEntity>('/merchant/coupons', { id });
+    return http.delete<ICouponEntity>('/merchant/coupon', { id });
   },
   create(data: ICouponEntity) {
-    return http.post<ICouponEntity>('/merchant/coupons', data);
+    return http.post<ICouponEntity>('/merchant/coupon', data);
   },
   update(data: ICouponEntity) {
-    return http.patch<ICouponEntity>('/merchant/coupons', data);
+    return http.patch<ICouponEntity>('/merchant/coupon', data);
   },
 };
 

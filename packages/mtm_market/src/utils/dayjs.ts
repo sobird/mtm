@@ -11,8 +11,9 @@
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
-import weekday from 'dayjs/plugin/weekday'
-import localeData from 'dayjs/plugin/localeData'
+import weekday from 'dayjs/plugin/weekday';
+import localeData from 'dayjs/plugin/localeData';
+import duration from 'dayjs/plugin/duration';
 
 const { parse, format } = dayjs.prototype;
 
@@ -32,10 +33,11 @@ dayjs.prototype.parse = function (config: any) {
 
 dayjs.prototype.format = function (formatStr: string = 'YYYY-MM-DD HH:mm:ss') {
   return format.bind(this)(formatStr);
-}
+};
 
-dayjs.extend(weekday)
-dayjs.extend(localeData)
+dayjs.extend(weekday);
+dayjs.extend(localeData);
+dayjs.extend(duration);
 
 /**
  * 设置默认的日期格式化

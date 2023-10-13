@@ -5,8 +5,9 @@
  */
 
 import http from '@mtm/shared/utils/http';
+import dayjs from '@/utils/dayjs';
 
-export interface IWorkbench {
+export interface IWorkbenchResponse {
   overview: {
     /** 待付款 未支付订单数 */
     unpaidOrderCount: number;
@@ -35,7 +36,7 @@ export interface IWorkbench {
   };
 }
 
-export interface IOperation {
+export interface IOperationResponse {
   scoreSet: {
     serviceScoreJudge: number;
     overallScoreJudge: number;
@@ -49,14 +50,55 @@ export interface IOperation {
   };
 }
 
+interface ITrendingParams {
+  poiId?: number;
+  startTime: number;
+  endTime: number;
+}
+
+interface ILineChartData {
+  xField?: string;
+  yField?: number;
+}
+/** 商家经营趋势 */
+export interface ITrendingResponse {
+  transactionLine: ILineChartData[];
+  paymentAmountLine: ILineChartData[];
+  reviewLine: ILineChartData[];
+  serviceReplyRateLine: ILineChartData[];
+}
+
+function mockTrending(duration = 30, size: number = 100) {
+  return Array.from({ length: duration }, (_, index: number) => ({
+    date: dayjs()
+      .subtract(duration - index, 'day')
+      .format('YYYY-MM-DD'),
+    value: Math.round(Math.random() * size),
+  }));
+}
+
 const AnalysisService = {
   /** 商家工作台 */
   workbench(poiId: number) {
-    return http.get<IWorkbench>('/analysis/workbench', { poiId });
+    return http.get<IWorkbenchResponse>('/analysis/workbench', { poiId });
   },
   /** 商家运营 数据 */
   operation(poiId: number) {
-    return http.get<IOperation>('/analysis/operation', { poiId });
+    return http.get<IOperationResponse>('/analysis/operation', { poiId });
+  },
+  /** 经营趋势 */
+  trending(params: ITrendingParams) {
+    return http.get<ITrendingResponse>('/analysis/trending', params).then(res => {
+      // mock 数据
+      const duration = dayjs.duration(dayjs(params?.endTime).diff(dayjs(params?.startTime))).days();
+
+      return {
+        transactionLine: mockTrending(duration, 100),
+        paymentAmountLine: mockTrending(duration, 10000),
+        reviewLine: mockTrending(duration, 200),
+        serviceReplyRateLine: mockTrending(duration, 100),
+      } as ITrendingResponse;
+    });
   },
 };
 
