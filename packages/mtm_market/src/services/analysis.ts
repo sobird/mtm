@@ -51,9 +51,9 @@ export interface IOperationResponse {
 }
 
 interface ITrendingParams {
-  poiId?: number;
-  startTime: number;
-  endTime: number;
+  poiId?: number | string;
+  startTime: number | string;
+  endTime: number | string;
 }
 
 interface ILineChartData {
@@ -69,6 +69,7 @@ export interface ITrendingResponse {
 }
 
 function mockTrending(duration = 30, size: number = 100) {
+  console.log('duration', duration)
   return Array.from({ length: duration }, (_, index: number) => ({
     date: dayjs()
       .subtract(duration - index, 'day')
@@ -89,8 +90,9 @@ const AnalysisService = {
   /** 经营趋势 */
   trending(params: ITrendingParams) {
     return http.get<ITrendingResponse>('/analysis/trending', params).then(res => {
+      const {startTime, endTime} = params;
       // mock 数据
-      const duration = dayjs.duration(dayjs(params?.endTime).diff(dayjs(params?.startTime))).days();
+      const duration = dayjs.duration(dayjs(String(endTime)).diff(dayjs(String(startTime)))).days();
 
       return {
         transactionLine: mockTrending(duration, 100),

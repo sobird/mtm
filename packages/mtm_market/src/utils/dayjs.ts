@@ -45,3 +45,4 @@ dayjs.extend(duration);
 // dayjs.defaultFormat = 'YYYY-MM-DD HH:mm:ss';
 
 export default dayjs;
+

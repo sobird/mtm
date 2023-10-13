@@ -1,51 +1,10 @@
-.home-component-manage-tendency {
-  padding-bottom: 20px;
-  background-color: #fff;
-  border-radius: 2px;
-  height: 343px;
-  .g2-tooltip-tendency {
-    position: absolute;
-    background: rgba(63, 65, 86, 0.98);
-    box-shadow: 0 0 3px 0 rgba(190, 198, 218, 0.8);
-    border-radius: 1px;
-    padding: 8px 12px;
-    p {
-      line-height: 20px;
-      font-size: 12px;
-      color: #e8e8e8;
-      margin-bottom: 3px;
-    }
-  }
-  .radio-button {
-    &:first-child {
-      margin-right: 8px;
-    }
-  }
-  .roo-btn-radio-active {
-    background: #ffffff !important;
-    border: 1px solid #0080ff !important;
-    color: #0080ff !important;
-  }
-  .type-select {
-    padding: 24px 0 24px 16px;
-  }
-  .roo-chart-container {
-    padding: 0 28px;
-  }
-  .roo-radio {
-    margin-right: 36px !important;
-    .custom-radio {
-      margin-right: 8px !important;
-    }
-  }
-  .custom-radio {
-    margin-bottom: 1px;
-  }
-  .roo-btn {
-    border-radius: 2px !important;
-  }
-  .roo-btn:hover {
-    border-color: #0080ff !important;
-    color: #0080ff !important;
-  }
+/**
+ * 经营趋势 卡片组件 样式
+ * 
+ * sobird<i@sobird.me> at 2023/10/13 19:20:09 created.
+ */
+
+
+.trending-line-chart-card {
+
 }
