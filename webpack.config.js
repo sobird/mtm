@@ -79,6 +79,20 @@ const config = {
       inject: true,
       title: package.description,
     }),
+
+    new HtmlPlugin({
+      template: path.resolve('public/jump.html'),
+      filename: 'jump.html',
+      cache: false,
+      inject: false,
+      minify: {
+        collapseWhitespace: true,
+        removeComments: true,
+        minifyJS: true,
+        minifyCSS: true,
+      },
+    }),
+
     new CopyPlugin({
       patterns: [
         {
