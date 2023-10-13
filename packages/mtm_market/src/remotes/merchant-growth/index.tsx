@@ -216,28 +216,7 @@ const MerchantGrowth: React.FC = () => {
   const pathMap = {};
   const [loading, setLoading] = useState(true);
   const [countSet, setCountSet] = useState({ taskCount: 0, awardCount: 0 });
-
-  const ewmUrlByEnv = {
-    test: `https://mshop.fe.test.sankuai.com/datacenter/middle.html?env=test&poiId=${poiId}&g_source=682`,
-    st: `https://mshop.fe.st.sankuai.com/datacenter/middle.html?env=st&poiId=${poiId}&g_source=682`,
-    prod: `https://mtm.meituan.com/datacenter/middle.html?env=prod&poiId=${poiId}&g_source=682`,
-  };
-
-  const getDrawUrl = () => {
-    const hostname = window.location.hostname;
-    switch (hostname) {
-      case 'mshop.fe.test.sankuai.com':
-        return ewmUrlByEnv.test;
-      case 'mshop.fe.st.sankuai.com':
-        return ewmUrlByEnv.st;
-      case 'mtm.meituan.com':
-        return ewmUrlByEnv.prod;
-      default:
-        return ewmUrlByEnv.prod;
-    }
-  };
-
-  const drawUrl = getDrawUrl();
+  const SHOP_JUMP_URL = `${process.env.SHOP_JUMP_URL}?env=prod&poiId=${poiId}&g_source=682`
 
   /**
    * 获取任务和奖励总数
@@ -260,16 +239,11 @@ const MerchantGrowth: React.FC = () => {
    * @param btnName 按钮名字
    */
   const taskPageJump = (path: string, btnIndex: number, btnName: string) => {
-    // mc('b_group_mall_b_hd8aobvc_mc', {
-    //   poi_id: poiId,
-    //   btn_index: btnIndex,
-    //   btn_name: btnName,
-    // });
     if (!pathMap[path]) {
       message.error('当前跳转页面无权限，请联系主账户进行开通');
       return;
     }
-    //openNewTab(path, '服务分');
+    //openNewTab(path, '综合评价分');
   };
 
   /**
@@ -279,16 +253,11 @@ const MerchantGrowth: React.FC = () => {
    * @param btnName
    */
   const scorePageJump = (path: string, btnIndex: number, btnName: string) => {
-    // mc('b_group_mall_b_2vhj0nqd_mc', {
-    //   poi_id: poiId,
-    //   btn_index: btnIndex,
-    //   btn_name: btnName,
-    // });
     if (!pathMap[path]) {
       message.error('当前跳转页面无权限，请联系主账户进行开通');
       return;
     }
-    // openNewTab(path, '服务分');
+    // openNewTab(path, '服务评价分');
   };
 
   useEffect(() => {
@@ -296,9 +265,6 @@ const MerchantGrowth: React.FC = () => {
       return;
     }
     getTaskAndAwardCount(poiId);
-    const params = {
-      poiId,
-    };
     AnalysisService.operation(poiId)
       .then(res => {
         console.log('res', res);
@@ -339,7 +305,7 @@ const MerchantGrowth: React.FC = () => {
                 <p className='merchant-shop-qrcode-title'>{shopName || '店铺二维码'}</p>
                 <p className='merchant-shop-qrcode-desc'>打开美团App扫码查看店铺详情</p>
                 <div className='qrcode-box'>
-                  <QRCode size={100} value={drawUrl} />
+                  <QRCode size={100} value={SHOP_JUMP_URL} />
                 </div>
               </div>
             </div>

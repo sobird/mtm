@@ -7,5 +7,7 @@ declare let process: {
   env: {
     NODE_ENV: string;
     HOST: string;
+    /** 商家店铺扫码跳转页 */
+    SHOP_JUMP_URL: string;
   };
 };
