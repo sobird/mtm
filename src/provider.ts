@@ -67,8 +67,8 @@ export enum MicroAPPSType {
     getStore: function(key) {
       console.log('key $thh', key);
       return {
-        name: '商家名称',
-        defaultAddressList: {}
+        poiId: 148568,
+        name: '小米妈妈家居旗舰店'
       }
     }
   },
@@ -78,7 +78,10 @@ export enum MicroAPPSType {
     Request: http,
     getStore: function(key) {
       console.log('key', key);
-      return {}
+      return {
+        poiId: 148568,
+        name: '小米妈妈家居旗舰店'
+      }
     }
   },
 });

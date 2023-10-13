@@ -1,0 +1,44 @@
+/**
+ * 商品管理 卡片组件 样式
+ * 
+ * sobird<i@sobird.me> at 2023/10/13 18:20:25 created.
+ */
+
+.product-manage {
+  .mix-card-body {
+    margin-top: 12px;
+    height: 104px;
+    gap: 12px;
+
+    .item {
+      flex: 1;
+      background: #fbfbfb;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      &:hover {
+        background: #F8F8F8;
+      }
+
+      img {
+        width: 44px;
+        height: 44px;
+      }
+
+      .on-sale {
+        font-weight: 500;
+        font-size: 24px;
+        margin-right: 4px;
+      }
+
+      .on-sale-text {
+        margin-top: 6px;
+      }
+
+      .create-product-text {
+        margin-top: 8px;
+      }
+    }
+  }
+}

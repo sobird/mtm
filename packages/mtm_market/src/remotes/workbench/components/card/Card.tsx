@@ -55,9 +55,13 @@ const Card: React.FC<PropsWithChildren<CardProps>> = ({
   }
   return (
     <div
-      className={classNames('mix-card', className, {
-        [`${prefixCls}-card-contain-grid`]: isContainGrid,
-      })}
+      className={classNames(
+        'mix-card',
+        {
+          [`${prefixCls}-card-contain-grid`]: isContainGrid,
+        },
+        className
+      )}
       {...props}
     >
       {head}

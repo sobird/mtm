@@ -9,6 +9,8 @@ import LatestNews from '@/remotes/latest-news';
 import RealData from '@/remotes/workbench/realdata';
 import OverView from '@/remotes/workbench/overview';
 import MerchantGrowth from '@/remotes/merchant-growth';
+import Violations from '@/remotes/violations';
+import ProductManage from '@/remotes/product-manage';
 
 const Home = () => {
   return (
@@ -25,7 +27,13 @@ const Home = () => {
         <Card title="实时数据" extra={<a>数据中心</a>}><RealData/></Card>
       </Col>
       <Col span={12}>
-        <Card title="商家成长"><MerchantGrowth /></Card>
+        <Card title="店铺提升"><MerchantGrowth /></Card>
+      </Col>
+      <Col span={12}>
+        <Card title="违规情况"><Violations /></Card>
+      </Col>
+      <Col span={12}>
+        <Card title="商品管理"><ProductManage className="test" /></Card>
       </Col>
       <Col span={12}>
         <Card title='营销活动'>
