@@ -1,0 +1,42 @@
+/**
+ * index.scss
+ * 
+ * @todo
+ * .item 样式重复 注意优化  类同 商品管理组件
+ *
+ * sobird<i@sobird.me> at 2023/10/14 0:41:08 created.
+ */
+
+.fund-manage-card {
+  height: 180px;
+
+  .mix-card-body {
+    display: flex;
+    margin-top: 12px;
+    gap: 12px;
+    height: 104px;
+
+    .item {
+      flex: 1;
+      background: #fbfbfb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      &:hover {
+        background: #F8F8F8;
+      }
+
+      img {
+        width: 44px;
+        height: 44px;
+      }
+
+      span {
+        margin-top: 8px;
+      }
+    }
+  }
+}

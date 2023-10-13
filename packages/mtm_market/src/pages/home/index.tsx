@@ -12,6 +12,7 @@ import MerchantGrowth from '@/remotes/merchant-growth';
 import Violations from '@/remotes/violations';
 import ProductManage from '@/remotes/product-manage';
 import TrendingChart from '@/remotes/trending-chart';
+import FundManage from '@/remotes/fund-manage';
 
 const Home = () => {
   return (
@@ -38,6 +39,9 @@ const Home = () => {
       </Col>
       <Col span={12}>
         <Card title="经营趋势"><TrendingChart /></Card>
+      </Col>
+      <Col span={12}>
+        <Card title="资金管理"><FundManage /></Card>
       </Col>
       <Col span={12}>
         <Card title='营销活动'>
