@@ -2,16 +2,16 @@
   "code": 0,
   "msg": "SUCCESS",
   "data": {
-    "scorePlatform": {
-      "serverScoreJudge": 4,
-      "shopScoreJudge": 4,
-      "serverScore": 4,
-      "shopScore": 3
+    "scoreSet": {
+      "serviceScoreJudge": 4,
+      "overallScoreJudge": 4,
+      "serviceScore": 3,
+      "overallScore": 3
     },
-    "ratePlatform": {
+    "rateSet": {
       "customerReplyRate": 0.3,
       "collectOnTimeRate": 0.6,
-      "addReviewCount": 100
+      "newlyReviewCount": 100
     }
   }
 }

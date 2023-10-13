@@ -35,17 +35,17 @@ export interface IWorkbench {
   };
 }
 
-interface IOperation {
-  scorePlatform: {
-    serverScoreJudge: number;
-    shopScoreJudge: number;
-    serverScore: number;
-    shopScore: number;
+export interface IOperation {
+  scoreSet: {
+    serviceScoreJudge: number;
+    overallScoreJudge: number;
+    serviceScore: number;
+    overallScore: number;
   };
-  ratePlatform: {
+  rateSet: {
     customerReplyRate: number;
     collectOnTimeRate: number;
-    addReviewCount: number;
+    newlyReviewCount: number;
   };
 }
 

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>美团电商商家店铺</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: url('./assets/thh_jump_bg.png') no-repeat center;
+      background-size: 100%;
+
+    }
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .child {
+      display: inline-block;
+      width: 50vw;
+      height: 10vh;
+      line-height: 10vh;
+      text-align: center;
+      font-size: 16px;
+      color: #333333;
+      border: 1px dotted #ccc;
+      box-shadow: 0px 0px 17px -5px;
+    }
+  </style>
+  <script>
+    // window.onerror = function(err){
+    //   alert(err)
+    // }
+  </script>
+</head>
+<body>
+  <div class="container" id='container'></div>
+  <script>
+    function createNode(txt, tagType) {
+      const template = `<${tagType} class='child'>${txt}</${tagType}>`;
+      let tempNode = document.createElement('div');
+      tempNode.innerHTML = template;
+      return tempNode;
+    }
+    function IsWeixinOrMeituan(poild, env, g_source) {
+      var ua = window.navigator.userAgent.toLowerCase();
+      let container = document.getElementById('container');
+      // 判断是不是美团
+      if (ua.match(/meituan/i) == 'meituan') {
+        let meituanUrl = `imeituan://www.meituan.com/mmp?checkUpdateUrl=https%3A%2F%2Fmsstest-corp.sankuai.com%2Fv1%2Fmss_YYj7uWYVx0aZutA5O5LKww%3D%3D%2Fmmp%2FcheckUpdate.3f06858f113586abdde8b1ccc5f51b94.json&reload=true&shareEnv=release&targetPath=%2FmtMall%2Fsub_pages%2FshopHome%2Findex%3FpoiId%3D${poild}&g_source=${g_source}&appId=mmp_87dffc23944d`;
+        let a = document.createElement('a');
+        a.classList.add('child');
+        a.setAttribute('href', meituanUrl);
+        a.innerText = "打开美团电商商家"
+        container.appendChild(a);
+        a.click();
+      } else {
+        container.appendChild(createNode('请用美团app扫码', 'span'));
+      }
+    }
+    IsWeixinOrMeituan(getParams('poiId'), getParams('env'), getParams('g_source'));
+    function getParams(param) {
+      var reg = new RegExp("(^|&)" + param + "=([^&]*)(&|$)");
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) return unescape(r[2]); return null;
+    }
+  </script>
+</body>
+</html>

@@ -1,11 +1,14 @@
 /**
  * 商家成长 组件
- * 
+ *
+ * @todo
+ * shopInfo 获取
+ * 路由跳转权限判断
+ *
  * sobird<i@sobird.me> at 2023/10/12 22:40:17 created.
  */
 
-
-import React, { useEffect, useState } from 'react';
+import React, { ComponentProps, useEffect, useState } from 'react';
 import { Tooltip } from 'antd';
 import QRCode from 'qrcode.react';
 import { message } from 'antd';
@@ -14,24 +17,19 @@ import Card from '../workbench/components/card';
 import ewmImg from './assets/erweima.svg';
 import './index.scss';
 
-import AnalysisService from '@/services/analysis';
+import AnalysisService, { IOperation } from '@/services/analysis';
 import MerchantService from '@/services/merchant';
 
+type MerchantGrowthData = Partial<Pick<IOperation, 'scoreSet' | 'rateSet'>>;
+
 enum CARD_TYPE {
-  serverScore = 'serverScore',
-  shopScore = 'shopScore'
+  serviceScore = 'serviceScore',
+  overallScore = 'overallScore',
 }
 
-type dataKey = 'serverScore' | 'shopScore'
+type dataKey = 'serviceScore' | 'overallScore';
 
-interface CardTypes {
-  type: dataKey;
-  data: {[key: string]: any};
-  handleClick?: (p?: any) => void;
-  loading: boolean;
-}
-
-const tagStyles = {
+const TAG_STYLES = {
   normal: {
     color: '#0080FF',
     backgroundColor: 'rgba(0,128,255,0.08)',
@@ -50,132 +48,174 @@ const tagStyles = {
   },
 };
 
-const cardConfig: {[key in dataKey]: any} = {
-  serverScore: {
-    title: '服务分',
+const cardConfig: { [key in dataKey]: any } = {
+  serviceScore: {
+    title: '服务评价分',
+    tips: (
+      <div>
+        平台从售后、物流、客服、纠纷 四个维度对商家的整体服务分进行评估的数据指标
+        <div style={{ height: 10 }} />
+        服务分达到4分及以上的商家为优秀商家
+      </div>
+    ),
     subData: [
       {
         title: '近30天3分钟回复率',
-        dataKey: 'customerReplyRate',
+        key: 'customerReplyRate',
         unit: '%',
       },
       {
         title: '近30天发货及揽收准时率',
-        dataKey: 'collectOnTimeRate',
+        key: 'collectOnTimeRate',
         unit: '%',
       },
     ],
   },
-  shopScore: {
+  overallScore: {
     title: '综合评价分',
+    tips: (
+      <div>
+        综合评价分为近30天店铺下所有主动评价的订单分数的平均值
+        <div style={{ height: 10 }} />
+        对于近30天店铺的有效评价数不足的20个的店铺，暂不统计评分，综合评价分为0
+        <div style={{ height: 10 }} />
+        综合评价分低于4.0分 属于异常
+        <div style={{ height: 10 }} />
+        商家需要重点关注。如不及时调整会影响店铺的正常经营
+      </div>
+    ),
     subData: [
       {
         title: '新增评价数',
-        dataKey: 'addReviewCount',
+        key: 'newlyReviewCount',
         unit: '条',
       },
     ],
   },
 };
 
-const ManageCard = ({
-  type, data, handleClick, loading,
-}: CardTypes) => {
-  const isServerCard = type === CARD_TYPE.serverScore;
+const formatRate = (data: string | number, unit: string) => {
+  if (data === 0) {
+    return `${data}${unit}`;
+  }
+  if (!data) {
+    return `--${unit}`;
+  }
+  if (unit === '%') {
+    return `${(+data * 100).toFixed(2)}${unit}`;
+  }
+  return `${data}${unit}`;
+};
+
+const formatScore = (score: number) => {
+  if (score === undefined || score === null) {
+    return '--';
+  }
+  return score.toFixed(2);
+};
+
+interface GrowthCardProps extends ComponentProps<'div'> {
+  type: dataKey;
+  data: MerchantGrowthData;
+  loading: boolean;
+}
+
+/** 成长卡片 */
+const GrowthCard = ({ type, data, loading, ...props }: GrowthCardProps) => {
+  const { scoreSet, rateSet } = data;
+  const isService = type === CARD_TYPE.serviceScore;
   const subData = cardConfig[type].subData;
-  const serverScoreJudge = data?.scorePlatform?.serverScoreJudge || 4;
-  const shopScoreJudge = data?.scorePlatform?.shopScoreJudge || 4;
-  const hoverWords = isServerCard ? <div>平台从售后、物流、客服、纠纷 四个维度对商家的整体服务分进行评估的数据指标<div style={{ height: 10 }} />服务分达到4分及以上的商家为优秀商家</div>
-    : <div>综合评价分为近30天店铺下所有主动评价的订单分数的平均值<div style={{ height: 10 }} />对于近30天店铺的有效评价数不足的20个的店铺，暂不统计评分，综合评价分为0<div style={{ height: 10 }} />综合评价分低于4.0分 属于异常<div style={{ height: 10 }} />商家需要重点关注。如不及时调整会影响店铺的正常经营</div>;
-  let statusStyle = {};
+  const serviceScoreJudge = scoreSet?.serviceScoreJudge || 4;
+  const overallScoreJudge = scoreSet?.overallScoreJudge || 4;
+
+  let tagStyle = {};
   let tagName = '';
-  if (data?.scorePlatform?.[type] === null || data?.scorePlatform?.[type] === undefined) {
+  if (scoreSet?.[type] === null || scoreSet?.[type] === undefined) {
     tagName = '';
-    statusStyle = tagStyles.noData;
-  } else if (isServerCard) {
-    if (data?.scorePlatform?.[type] >= serverScoreJudge) {
+    tagStyle = TAG_STYLES.noData;
+  } else if (isService) {
+    if (scoreSet?.[type] >= serviceScoreJudge) {
       tagName = '已达到优秀商家';
-      statusStyle = tagStyles.excellent;
+      tagStyle = TAG_STYLES.excellent;
     }
-    if (data?.scorePlatform?.[type] < serverScoreJudge) {
+    if (scoreSet?.[type] < serviceScoreJudge) {
       tagName = '未达到优秀商家';
-      statusStyle = tagStyles.bad;
+      tagStyle = TAG_STYLES.bad;
     }
   } else {
-    if (data?.scorePlatform?.[type] >= shopScoreJudge) {
+    if (scoreSet?.[type] >= overallScoreJudge) {
       tagName = '正常';
-      statusStyle = tagStyles.excellent;
+      tagStyle = TAG_STYLES.excellent;
     }
-    if (data?.scorePlatform?.[type] < shopScoreJudge) {
+    if (scoreSet?.[type] < overallScoreJudge) {
       tagName = '预警';
-      statusStyle = tagStyles.bad;
+      tagStyle = TAG_STYLES.bad;
     }
-    if (data?.scorePlatform?.[type] === 0) {
+    if (scoreSet?.[type] === 0) {
       tagName = '暂未统计';
-      statusStyle = tagStyles.noData;
+      tagStyle = TAG_STYLES.noData;
     }
   }
 
-  const handleData = (data: string| number, unit: string) => {
-    if (data === 0) {
-      return `${data}${unit}`;
-    }
-    if (!data) {
-      return `--${unit}`;
-    }
-    if (unit === '%') {
-      return `${((+data) * 100).toFixed(2)}${unit}`;
-    }
-    return `${data}${unit}`;
-  };
-
-  const handleScore = (score: number) => {
-    if (score === undefined || score === null) {
-      return '--';
-    }
-    return score.toFixed(2);
-  };
-
   return (
-    <div className="manage-card" onClick={handleClick || null}>
-      { tagName ? <span className="tag" style={{ ...statusStyle }}>{tagName}</span> : null}
-      <p className="name">{cardConfig[type].title}</p>
-      <div className="score-wrap">
-        <Tooltip placement="top" title={hoverWords} popupClassName="home-page-tool-tip">
-          <div className="score">
-            {
-              loading ? (
-                <div className="loading">
-                  {/* <Icon type="loading" style={{ fontSize: 23, color: '#0080ff' }} spin /> */}
-                </div>
-              ) : (handleScore(data?.scorePlatform?.[type]))
-            }
+    <div className='growth-card' {...props}>
+      <div className='growth-card-title'>
+        <span className='growth-card-title-name'>{cardConfig[type].title}</span>
+
+        {tagName ? (
+          <span className='growth-card-title-tag' style={{ ...tagStyle }}>
+            {tagName}
+          </span>
+        ) : null}
+      </div>
+
+      <div className='score-wrap'>
+        <Tooltip
+          title={cardConfig[type].tips}
+          overlayClassName='home-page-tool-tip'
+          color='#fff'
+          overlayInnerStyle={{ fontSize: 12, color: '#333' }}
+        >
+          <div className='score'>
+            {loading ? (
+              <div className='loading'>
+                {/* <Icon type="loading" style={{ fontSize: 23, color: '#0080ff' }} spin /> */}
+              </div>
+            ) : (
+              formatScore(scoreSet?.[type])
+            )}
             <span>分</span>
           </div>
         </Tooltip>
-        { (typeof data?.scorePlatform?.[type] !== 'number') ? (
-          <p className="no-data">（计算中...）</p>
-        ) : null }
+        {typeof scoreSet?.[type] !== 'number' ? <p className='no-data'>（计算中...）</p> : null}
       </div>
-      <p className="tip">请重点关注以下数据:</p>
-      <>
-        {
-          subData.map((item: any) => (
-            <p className="important-data" key={item.title}>{`${item.title}: ${handleData(data?.ratePlatform?.[item.dataKey], item.unit)}`}</p>
-          ))
-        }
-      </>
+
+      <div className='notes-wrap'>
+        <div className='tip'>请重点关注以下数据:</div>
+
+        {subData.map((item: any) => (
+          <p className='important-data' key={item.key}>{`${item.title}: ${formatRate(
+            rateSet?.[item.key],
+            item.unit
+          )}`}</p>
+        ))}
+      </div>
     </div>
   );
 };
 
-const MerchantGrowth = () => {
-  const [data, setData] = useState({});
-  const shopInfo = {};
+/** 商家成长 */
+const MerchantGrowth: React.FC = () => {
+  const [data, setData] = useState<MerchantGrowthData>({});
+  const shopInfo = {
+    poiId: 148568,
+    name: '小米妈妈家居旗舰店'
+  };
+  const {poiId, name: shopName} = shopInfo;
+  // 路由权限判断
   const pathMap = {};
   const [loading, setLoading] = useState(true);
   const [countSet, setCountSet] = useState({ taskCount: 0, awardCount: 0 });
-  const poiId = 123;
 
   const ewmUrlByEnv = {
     test: `https://mshop.fe.test.sankuai.com/datacenter/middle.html?env=test&poiId=${poiId}&g_source=682`,
@@ -205,11 +245,11 @@ const MerchantGrowth = () => {
    */
   const getTaskAndAwardCount = (poiId: number) => {
     MerchantService.tasks(poiId).then((res: any) => {
-        const { curTaskCount, curAwardCount } = res;
-        setCountSet({
-          taskCount: curTaskCount || 0,
-          awardCount: curAwardCount || 0,
-        });
+      const { curTaskCount, curAwardCount } = res;
+      setCountSet({
+        taskCount: curTaskCount || 0,
+        awardCount: curAwardCount || 0,
+      });
     });
   };
 
@@ -259,12 +299,14 @@ const MerchantGrowth = () => {
     const params = {
       poiId,
     };
-    AnalysisService.operation(poiId).then(res => {
-      console.log('res', res)
+    AnalysisService.operation(poiId)
+      .then(res => {
+        console.log('res', res);
         setData(res || {});
-    }).finally(() => {
-      setLoading(false);
-    });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [poiId]);
 
   /**
@@ -272,11 +314,11 @@ const MerchantGrowth = () => {
    * @param title 待处理的商家名称
    * @returns { string }
    */
-  const handleTitleWordsOverflow = (title: string): string| JSX.Element => {
+  const handleTitleWordsOverflow = (title: string): string | JSX.Element => {
     if (!title) return '商家经营';
     if (title.length > 10) {
       return (
-        <Tooltip popupClassName="home-page-tool-tip" key="tool-tip" placement="top" title={title}>
+        <Tooltip overlayInnerStyle={{ color: '#333', fontSize: 12 }} color='#fff' placement='top' title={title}>
           <span>{`${title.substring(0, 10)}...`}</span>
         </Tooltip>
       );
@@ -285,65 +327,65 @@ const MerchantGrowth = () => {
   };
 
   return (
-    <div className="home-page-component-merchant-manage" style={{ position: 'relative' }}>
-      <Card
-        className="real-data-card"
-        title={handleTitleWordsOverflow(shopInfo?.name)}
-        subTitle={(
-          <Tooltip
-          trigger="click"
-          overlayStyle={{background: 'red'}}
-          overlayInnerStyle={{color: 'red'}}
-          overlayClassName="home-page-tool-tip-ewm"
+    <Card
+      className='merchant-growth'
+      title={handleTitleWordsOverflow(shopName)}
+      subTitle={
+        <Tooltip
           color='#fff'
-            // effect="light"
-            title={(
-              <div className="home-merchant-manage-ewm-box">
-                <div className="merchat-ewm-wrap">
-                  <p className="ewm-title">{shopInfo?.name || '店铺二维码'}</p>
-                  <p className="desc">打开美团App扫码查看店铺详情</p>
-                  <div className="qr-code-box">
-                    <QRCode size={100} value={drawUrl} />
-                  </div>
-                  <div className="arrow" />
+          title={
+            <div className='merchant-shop-qrcode'>
+              <div className='merchant-shop-qrcode-wrap'>
+                <p className='merchant-shop-qrcode-title'>{shopName || '店铺二维码'}</p>
+                <p className='merchant-shop-qrcode-desc'>打开美团App扫码查看店铺详情</p>
+                <div className='qrcode-box'>
+                  <QRCode size={100} value={drawUrl} />
                 </div>
               </div>
-            )}
-          >
-            <img className="erweima" src={ewmImg} alt="" />
-          </Tooltip>
-        )}
-        extra={(
-          <div>
-            <span>
-              {
-                countSet.taskCount ? (
-                  <>
-                    <a onClick={() => taskPageJump('/merchant-growing/growing-task', 0, '待做任务')}>有{countSet.taskCount}个任务待完成</a>
-                  </>
-                ) : null
-              }
-              {
-                (countSet.taskCount && countSet.awardCount) ? '，' : null
-              }
-              {
-                countSet.awardCount ? (
-                  <a onClick={() => taskPageJump('/merchant-growing/reward-center', 1, '待领奖励')}>有{countSet.awardCount}个奖励待查看</a>
-                ) : null
-              }
-              {
-                (!countSet.taskCount && !countSet.awardCount) ? <a onClick={() => taskPageJump('/merchant-growing/growing-task', 2, '商家成长')}>商家成长</a> : null
-              }
-            </span>
-          </div>
-        )}
-      >
-        <div className="card-wrap">
-          <ManageCard loading={loading} handleClick={() => scorePageJump('/data/center/service-analysis', 0, '服务分析')} type={CARD_TYPE.serverScore} data={data} />
-          <ManageCard loading={loading} handleClick={() => scorePageJump('/customer-manage/comment', 1, '综合评价分')} type={CARD_TYPE.shopScore} data={data} />
+            </div>
+          }
+        >
+          <img className='erweima' src={ewmImg} alt='' />
+        </Tooltip>
+      }
+      extra={
+        <div>
+          <span>
+            {countSet.taskCount ? (
+              <>
+                <a onClick={() => taskPageJump('/merchant-growing/growing-task', 0, '待做任务')}>
+                  有{countSet.taskCount}个任务待完成
+                </a>
+              </>
+            ) : null}
+            {countSet.taskCount && countSet.awardCount ? '，' : null}
+            {countSet.awardCount ? (
+              <a onClick={() => taskPageJump('/merchant-growing/reward-center', 1, '待领奖励')}>
+                有{countSet.awardCount}个奖励待查看
+              </a>
+            ) : null}
+            {!countSet.taskCount && !countSet.awardCount ? (
+              <a onClick={() => taskPageJump('/merchant-growing/growing-task', 2, '商家成长')}>商家成长</a>
+            ) : null}
+          </span>
         </div>
-      </Card>
-    </div>
+      }
+    >
+      <div className='growth-card-wrap'>
+        <GrowthCard
+          loading={loading}
+          onClick={() => scorePageJump('/data/center/service-analysis', 0, '服务分析')}
+          type={CARD_TYPE.serviceScore}
+          data={data}
+        />
+        <GrowthCard
+          loading={loading}
+          onClick={() => scorePageJump('/customer-manage/comment', 1, '综合评价分')}
+          type={CARD_TYPE.overallScore}
+          data={data}
+        />
+      </div>
+    </Card>
   );
 };
 

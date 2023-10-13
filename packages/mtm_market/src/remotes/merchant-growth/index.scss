@@ -1,186 +1,134 @@
-// @import url(../common.less);
+/**
+ * 商家成长
+ * 
+ * sobird<i@sobird.me> at 2023/10/12 23:36:43 created.
+ */
+
 $baseFontColor: #333333;
 $titleColor: #666;
-.home-page-component-merchant-manage {
-  height: 256px;
-  background-color: #fff;
-  .manage-card{
-    padding: 12px!important;
-  }
-  .real-data-card{
-    .title{
-      .title-ele{
-        .erweima{
-          display: block;
-          width: 16px;
-          height: 16px;
-          cursor: pointer;
-          transform: translateY(3px);
-        }
-      }
-      .OME-img{
-        margin-right: 10px;
-        margin-bottom: 4px;
-      }
+
+.growth-card-wrap {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  padding-top: 12px;
+  position: relative;
+
+  .growth-card {
+    flex: 1;
+    background: #FBFBFB;
+    border-radius: 2px;
+    padding: 12px;
+    position: relative;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    &:hover {
+      background-color: #F8F8F8;
     }
-    .card-wrap{
+
+    &-title {
       display: flex;
-      flex-direction: row;
-      padding-top: 12px;
-      position: relative;
-      height: 180px;
-      .tag{
-        position: absolute;
-        right: 16px;
-        top: 16px;
+      align-items: center;
+      margin-bottom: 5px;
+
+      &-name {
+        font-size: 14px;
+        color: $titleColor;
+        line-height: 20px;
+        flex: 1;
+      }
+
+      &-tag {
         font-size: 12px;
         color: #FF4338;
-        background: rgba(255,67,56, 0.08);
+        background: rgba(255, 67, 56, 0.08);
         border-radius: 2px;
         height: 20px;
         line-height: 20px;
         padding: 0 4px;
       }
-      .manage-card{
-        flex: 1;
-        background: #FBFBFB;
-        border-radius: 2px;
-        padding: 16px;
-        position: relative;
-        cursor: pointer;
-        height: 180px;
-        box-sizing: border-box;
-        &:hover{
-          background-color: #F8F8F8;
-        }
-        &:first-child{
-          margin-right: 12px;
-        }
+    }
+  }
+
+  .score-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+
+    .no-data {
+      font-size: 14px;
+      color: #999999;
+      margin-left: 8px;
+    }
+
+    .score {
+      color: $baseFontColor;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 28px;
+      height: 28px;
+      width: fit-content;
+      border-bottom: 1px dotted #D8D8D8;
+      margin-bottom: 20px;
+      cursor: pointer;
+
+      .loading {
+        display: inline-block;
+        margin-right: 18px;
       }
-      .name{
+
+      span {
+        padding-left: 4px;
+        font-weight: 400;
         font-size: 14px;
         color: $titleColor;
-        margin-bottom: 12px;
-        line-height: 20px;
-      }
-      .score-wrap{
-        display: flex;
-        flex-direction: row;
-        align-items: baseline;
-        .no-data{
-          font-size: 14px;
-          color: #999999;
-          margin-left: 8px;
-        }
-        .score{
-          color: $baseFontColor;
-          font-weight: 500;
-          font-size: 24px;
-          line-height: 28px;
-          height: 28px;
-          width: fit-content;
-          border-bottom: 1px dotted #D8D8D8;
-          margin-bottom: 20px;
-          cursor: pointer;
-          .loading{
-            display: inline-block;
-            margin-right: 18px;
-          }
-          span{
-            padding-left: 4px;
-            font-weight: 400;
-            font-size: 14px;
-            color: $titleColor;
-          }
-        }
-      }
-      .tip{
-        font-size: 14px;
-        color: #999999;
-        line-height: 20px;
-        margin-bottom: 4px;
-      }
-      .important-data{
-        line-height: 20px;
-        height: 20px;
-        font-size: 14px;
-        color: $baseFontColor;
-        margin-bottom: 4px;
       }
     }
   }
-  .real-data-wrap{
-    border: none!important;
+
+  .notes-wrap {
+    font-size: 13px;
+
+    .tip {
+      color: #999;
+      line-height: 20px;
+      margin: 6px 0;
+    }
+
+    .important-data {
+      line-height: 20px;
+      color: $baseFontColor;
+      margin: 0;
+    }
   }
 }
 
-.home-merchant-manage-ewm-box{
-  position: relative;
-  display: inline-block;
-  height: fit-content;
-  .merchat-ewm-wrap{
+// 商家店铺二维码样式
+.merchant-shop-qrcode {
+  color: $baseFontColor;
+  font-size: 12px;
+  text-align: center;
+
+  &-wrap {
     background: #FFFFFF;
     padding: 0 12px;
     align-items: center;
     bottom: 24px;
-    .ewm-title{
-      font-size: 12px;
-      color:$baseFontColor;
-      margin-bottom: 4px;
-      line-height: 17px;
-      text-align: center;
-      font-weight: 500;
-    }
-    .desc{
-      font-size: 12px;
-      line-height: 17px;
-      color: #999999;
-      margin-bottom: 8px;
-      text-align: center;
-    }
-    .qr-code-box{
-      width: fit-content;
-      margin: 0 auto;
-    }
-    .arrow{
-      width: 6px;
-      height: 6px;
-      background-color: #fff;
-      transform: rotate(45deg);
-      position: absolute;
-      bottom: -4px;
-      left: 98px;
-    }
   }
-  
-  &:hover{
-    .merchat-ewm-wrap{
-      display: block;
-    }
-  }
-}
 
-.home-page-tool-tip-ewm{
-  .roo-tooltip-inner{
-    padding-top: 8px!important;
-    padding-left: 0!important;
-    padding-right: 0!important;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  &-title {
+    margin-bottom: 4px;
+    font-weight: 500;
   }
- 
-}
 
-.home-page-tool-tip-ewm.roo-tooltip-top{
-  .roo-tooltip-arrow{
-    border-width: 5px 5px 0!important;
+  &-desc {
+    color: #999;
+    margin-bottom: 8px;
   }
-}
 
-.home-page-tool-tip-ewm.roo-tooltip-bottom{
-  .roo-tooltip-arrow{
-    border-width:0 5px 5px!important;
+  .qrcode-box {
+    width: fit-content;
+    margin: 0 auto;
   }
 }
