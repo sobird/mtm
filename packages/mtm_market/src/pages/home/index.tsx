@@ -13,6 +13,7 @@ import Violations from '@/remotes/violations';
 import ProductManage from '@/remotes/product-manage';
 import TrendingChart from '@/remotes/trending-chart';
 import FundManage from '@/remotes/fund-manage';
+import GoldMerchantHome from '@/remotes/gold-merchant';
 
 const Home = () => {
   return (
@@ -42,6 +43,9 @@ const Home = () => {
       </Col>
       <Col span={12}>
         <Card title="资金管理"><FundManage /></Card>
+      </Col>
+      <Col span={12}>
+        <Card title="金牌商家"><GoldMerchantHome /></Card>
       </Col>
       <Col span={12}>
         <Card title='营销活动'>

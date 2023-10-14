@@ -1,0 +1,124 @@
+/**
+ * 金牌商家 卡片组件
+ * 
+ * sobird<i@sobird.me> at 2023/10/14 1:04:09 created.
+ */
+
+@import "@/styles/variables";
+
+.gold-merchant-card {
+  .#{$prefixCls}-card-body {
+    margin-top: 12px;
+
+    .gold-head {
+      background: #fbfbfb;
+      border-radius: 2px;
+      padding: 11px 16px;
+      display: flex;
+      align-items: center;
+      &-logo {
+        width: 78px;
+      }
+
+      &-text {
+        margin-left: 12px;
+
+        &-title {
+          display: flex;
+          padding-top: 6px;
+          gap: 8px;
+          align-items: center;
+          h3 {
+            font-size: 24px;
+            line-height: 24px;
+            letter-spacing: 0;
+            display: inline-block;
+            margin: 0;
+          }
+
+          span {
+            font-size: 12px;
+            color: #fff;
+            font-weight: 500;
+            padding: 2px 4px;
+            line-height: normal;
+            height: fit-content;
+            border-radius: 2px;
+          }
+        }
+
+        &-cycle {
+          font-size: 14px;
+          line-height: 36px;
+
+          span {
+          }
+
+          &-range {
+            color: #666;
+          }
+
+          &-status {
+            margin-left: 8px;
+            color: #ff6a00;
+          }
+        }
+      }
+    }
+
+    .gold-body {
+      margin-top: 12px;
+
+      &-head {
+        font-weight: 400;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        margin-bottom: 12px;
+        overflow: hidden;
+
+        span {
+          display: inline-block;
+        }
+
+        &-title {
+          color: #333333;
+          float: left;
+        }
+
+        &-desc {
+          color: #999999;
+          margin-left: 8px;
+          float: left;
+        }
+
+        &-more {
+          float: right;
+        }
+      }
+
+      &-bottom {
+        .roo-table-main {
+          .roo-table-body {
+            .roo-table {
+              thead {
+                tr {
+                  th {
+                    span {
+                      color: #333 !important;
+                    }
+                  }
+                }
+              }
+
+              tbody {
+                tr {
+                  height: 47px !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
