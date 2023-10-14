@@ -9,8 +9,6 @@ import { Table } from 'antd';
 import dayjs from 'dayjs';
 
 import Card from '../workbench/components/card';
-import Done from './assets/green_hook.png';
-import UnDo from './assets/gray_hook.png';
 import GoldLogoInshow from './assets/gold_logo_inshow.png';
 import GoldLogoNoshow from './assets/gold_logo_noshow.png';
 
@@ -83,13 +81,13 @@ const GoldMerchantCard: React.FC<GoldMerchantCardProps> = ({ callback, ...props 
 
   return (
     <Card
+      classCard='gold-merchant-card'
       title='金牌商家'
       extra={
         <a target='_blank' href='https://rules-center.meituan.com/rules-detail/445?commonType=2'>
           查看详情
         </a>
       }
-      className='gold-merchant-card'
       {...props}
     >
       <div className='gold-head'>
@@ -134,10 +132,8 @@ const GoldMerchantCard: React.FC<GoldMerchantCardProps> = ({ callback, ...props 
           <Table.Column
             title='是否达标'
             dataIndex='qualified'
-            render={(text, record) => {
-              return (
-                <img src={record.qualified === 1 ? Done : UnDo} alt='' style={{ width: '16px', height: '16px' }} />
-              );
+            render={(text) => {
+              return <i className='icon iconfont icon-check-circle-filled' style={{color: text === 1 ? '#00b94b' : '#dbdbdb'}}></i>;
             }}
           />
         </Table>
