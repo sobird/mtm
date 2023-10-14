@@ -1,0 +1,12 @@
+/**
+ * 违规情况 卡片组件
+ * 
+ * sobird<i@sobird.me> at 2023/10/14 13:36:47 created.
+ */
+ @import "@/styles/variables";
+
+.violations-card {
+  .#{$prefixCls}-card-body {
+    display: flex;
+  }
+}
