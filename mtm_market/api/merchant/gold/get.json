@@ -1,0 +1,59 @@
+{
+  "code": 0,
+  "msg": "SUCCESS",
+  "data": {
+    "lastPeriodStatus": 3,
+    "currentPeriodSTime": "2023-09-10",
+    "currentPeriodETime": "2023-10-10",
+    "standards": [
+      {
+        "key": "SHOP_STATUS",
+        "name": "店铺状态",
+        "desc": "在线",
+        "progress": "",
+        "url": "",
+        "qualified": 1
+      },
+      {
+        "key": "SERVICE_SCORE",
+        "name": "服务分",
+        "desc": "≥4.5",
+        "progress": "",
+        "url": "",
+        "qualified": 0
+      },
+      {
+        "key": "OVAEALL_SCORE",
+        "name": "综合评价分",
+        "desc": "≥4.5",
+        "progress": "",
+        "url": "",
+        "qualified": 0
+      },
+      {
+        "key": "ONLINE_TIME",
+        "name": "入驻上线时间",
+        "desc": "≥60天",
+        "progress": "",
+        "url": "",
+        "qualified": 1
+      },
+      {
+        "key": "ONLINE_PRODUCT_COUNT",
+        "name": "在线商品数",
+        "desc": "≥1",
+        "progress": "",
+        "url": "",
+        "qualified": 1
+      },
+      {
+        "key": "PER_DAY_ORDER_COUNT",
+        "name": "日均订单量",
+        "desc": "≥50",
+        "progress": "",
+        "url": "",
+        "qualified": 0
+      }
+    ]
+  }
+}
