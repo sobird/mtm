@@ -106,7 +106,7 @@ const config = {
             // https://github.com/webpack-contrib/copy-webpack-plugin/issues/689
             // ignore: ['**/index.html'],
           },
-          filter:(filepath) => {
+          filter: (filepath) => {
             return !/public\/.*\.html$/.test(filepath);
           }
         },
@@ -120,9 +120,6 @@ const config = {
       expand: true,
       allowEmptyValues: true,
       defaults: path.join(__dirname, '.env.defaults'),
-    }),
-    new webpack.ProgressPlugin({
-      activeModules: true,
     }),
     // new WebpackBar(),
     new ModuleFederationPlugin({
@@ -242,6 +239,9 @@ module.exports = (conf) => {
     // }));
   } else {
     config.mode = 'development';
+    config.plugins.push(new webpack.ProgressPlugin({
+      activeModules: true,
+    }));
   }
   return config;
 }
