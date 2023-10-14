@@ -14,7 +14,6 @@ $prefixCls: 'mix' !default;
 
   &-head {
     display: flex;
-    flex: 1;
     align-items: center;
     min-height: 48px;
     border-bottom: 1px solid #EBEBEB;
@@ -42,7 +41,6 @@ $prefixCls: 'mix' !default;
   }
 
   &-body {
-    flex: 1;
   }
 
   &-grid {
