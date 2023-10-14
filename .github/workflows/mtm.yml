@@ -35,9 +35,9 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSHKEY }}
+        key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
-        source: dist
+        source: dist/*
         target: ${{ secrets.TARGET }}
     # - name: Deploy 🚀
     #   uses: JamesIves/github-pages-deploy-action@v4
