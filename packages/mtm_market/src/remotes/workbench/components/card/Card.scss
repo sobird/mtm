@@ -9,9 +9,12 @@ $prefixCls: 'mix' !default;
 .#{$prefixCls}-card {
   background-color: #fff;
   border-radius: 2px;
+  flex-direction: column;
+  display: flex;
 
   &-head {
     display: flex;
+    flex: 1;
     align-items: center;
     min-height: 48px;
     border-bottom: 1px solid #EBEBEB;
@@ -38,7 +41,9 @@ $prefixCls: 'mix' !default;
     }
   }
 
-  &-body {}
+  &-body {
+    flex: 1;
+  }
 
   &-grid {
     display: flex;

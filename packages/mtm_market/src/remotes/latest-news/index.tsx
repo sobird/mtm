@@ -1,17 +1,22 @@
 /**
- * 最新动态
- * 
+ * 最新动态 卡片组件
+ *
  * sobird<i@sobird.me> at 2023/10/11 19:17:53 created.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ComponentProps } from 'react';
 import { Link } from 'react-router-dom';
 import { RightOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import MessageService from '@/services/message';
+import Card from '../workbench/components/card';
 import './index.scss';
 
-const LatestNews: React.FunctionComponent = () => {
+export interface LatestNewsCardProps extends ComponentProps<typeof Card> {
+  callback?: (data: any) => any;
+}
+
+const LatestNewsCard: React.FunctionComponent<LatestNewsCardProps> = ({callback, ...props}) => {
   const [tabNoticeList, setTabNoticeList] = useState([]);
   // const [noticeTitleMaxWidthList, setNoticeTitleMaxWidthList] = useState<number[]>(new Array(3).fill(0));
 
@@ -69,6 +74,7 @@ const LatestNews: React.FunctionComponent = () => {
   useEffect(() => {
     MessageService.latestNews().then(res => {
       setTabNoticeList(res || []);
+      callback?.(res);
     });
   }, []);
 
@@ -76,24 +82,30 @@ const LatestNews: React.FunctionComponent = () => {
     return null;
   }
   return (
-    <div className='home-latest-news'>
-      <label>最新动态</label>
-      <div className='news-list'>
-        {tabNoticeList.map((item) => (
-          <div className='news-brief' id={item?.id}>
-            <Link
-              className='news-title'
-              to={`/site-notice/detail/${item?.id}?catagoryName=${item?.catagoryName}`}
-            >
-              {item.title}
-            </Link>
-            <span className='news-date'>{dayjs(item.publishTime * 1000).format('MM-DD')}</span>
-          </div>
-        ))}
-      </div>
-
-      <Link to="/site-notice/" className='news-more'>更多<RightOutlined /></Link>
-    </div>
+    <Card
+      classCard='latest-news-card'
+      headStyle={{ borderBottom: 0, minHeight: 40 }}
+      title='最新动态'
+      subTitle={
+        <div className='news-list'>
+          {tabNoticeList.map(item => (
+            <div className='news-brief' id={item?.id}>
+              <Link className='news-title' to={`/site-notice/detail/${item?.id}?catagoryName=${item?.catagoryName}`}>
+                {item.title}
+              </Link>
+              <span className='news-date'>{dayjs(item.publishTime * 1000).format('MM-DD')}</span>
+            </div>
+          ))}
+        </div>
+      }
+      extra={
+        <Link to='/site-notice/' className='news-more'>
+          更多
+          <RightOutlined />
+        </Link>
+      }
+      {...props}
+    />
   );
 };
-export default LatestNews;
+export default LatestNewsCard;

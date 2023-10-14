@@ -1,14 +1,4 @@
-.home-latest-news {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  height: 40px;
-
-  label {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--primary);
-  }
+.latest-news-card {
 
   .news-list {
     display: flex;

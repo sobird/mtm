@@ -68,9 +68,12 @@ const Card: React.FC<PropsWithChildren<CardProps>> = ({
       {...props}
     >
       {head}
-      <div className={`${prefixCls}-card-body`} style={bodyStyle}>
-        {children}
-      </div>
+
+      {children && (
+        <div className={`${prefixCls}-card-body`} style={bodyStyle}>
+          {children}
+        </div>
+      )}
     </div>
   );
 };
