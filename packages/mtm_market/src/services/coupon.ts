@@ -137,7 +137,7 @@ const CouponService = {
     return http.get<ICouponPagination>('/merchant/coupon', params);
   },
   detail(id: string) {
-    return http.get<ICouponEntity>('/merchant/coupons/detail', { id });
+    return http.get<ICouponEntity>('/merchant/coupon/detail', { id });
   },
   delete(id: string) {
     return http.delete<ICouponEntity>('/merchant/coupon', { id });
