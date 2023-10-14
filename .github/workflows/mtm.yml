@@ -31,12 +31,22 @@ jobs:
         yarn build
 
     - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@v4
+      uses: appleboy/scp-action@v0.1.4
       with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
-        folder: dist
-        clean: true
-        clean-exclude: |
-          mtm_market
-        #commit-message: "${{ github.event.head_commit.message }} Updated By Github"
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSHKEY }}
+        port: ${{ secrets.PORT }}
+        source: dist
+        target: ${{ secrets.TARGET }}
+    # - name: Deploy 🚀
+    #   uses: JamesIves/github-pages-deploy-action@v4
+    #   with:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     branch: gh-pages
+    #     folder: dist
+    #     clean: true
+    #     clean-exclude: |
+    #       mtm_market
+    #     #commit-message: "${{ github.event.head_commit.message }} Updated By Github"
+    

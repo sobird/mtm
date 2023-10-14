@@ -98,7 +98,7 @@ const MarketActivityCard: React.FC<MarketActivityCardProps> = ({ callback, max =
           ))}
         </div>
       ) : (
-        <Empty style={{ margin: '116px 0' }} description={`暂无${type === '1' ? '报名中' : '我报名'}的活动`}></Empty>
+        <Empty style={{ margin: '30px 0' }} description={`暂无${type === '1' ? '报名中' : '我报名'}的活动`}></Empty>
       )}
     </Card>
   );

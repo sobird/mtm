@@ -396,7 +396,7 @@
       {
         "title": "后台首页",
         "icon": "home-fill",
-        "url": "/home",
+        "url": "/",
         "id": "1370",
         "parentId": "-1",
         "code": "774abb03-f0ff-4df1-a3b8-0e3be042b13e",
