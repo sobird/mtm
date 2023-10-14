@@ -4,19 +4,15 @@
  * sobird<i@sobird.me> at 2023/10/14 1:04:09 created.
  */
 
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Table, Tooltip } from 'antd';
+import React, { useEffect, useState, ComponentProps } from 'react';
+import { Table } from 'antd';
+import dayjs from 'dayjs';
+
 import Card from '../workbench/components/card';
-// import { mc } from '@util/report/wrapper';
-// import * as api from '@api/gold-merchant';
 import Done from './assets/green_hook.png';
 import UnDo from './assets/gray_hook.png';
-import GoldInshow from './assets/gold_inshow.png';
-import GoldNoshow from './assets/gold_noshow.png';
-import OnlineInshow from './assets/online_inshow.png';
-import OnlineNotshow from './assets/online_notshow.png';
-import OnlineWithdraw from './assets/online_withdraw.png';
+import GoldLogoInshow from './assets/gold_logo_inshow.png';
+import GoldLogoNoshow from './assets/gold_logo_noshow.png';
 
 import MerchantService, { IGoldResponse } from '@/services/merchant';
 
@@ -66,50 +62,25 @@ const TagConfig: TagConfigProps[] = [
   },
 ];
 
-const GoldMerchantHome: React.FC = (props: any) => {
+export interface GoldMerchantCardProps extends ComponentProps<typeof Card> {
+  callback?: () => any;
+}
+const GoldMerchantCard: React.FC<GoldMerchantCardProps> = ({ callback, ...props }) => {
   const [data, setData] = useState<Partial<IGoldResponse>>({});
-  const [ifOnline, setIfOnline] = useState();
+  const poild = 123;
 
-  const { getGoldData } = props;
-
-  const goldMerchantLogo = data.lastPeriodStatus === 1 ? GoldInshow : GoldNoshow;
+  const goldMerchantLogo = data.lastPeriodStatus === 1 ? GoldLogoInshow : GoldLogoNoshow;
   const tagInfo = TagConfig.find(item => item.value === data.lastPeriodStatus);
 
   useEffect(() => {
-    const getMerchantData = async () => {
-      const params = {
-        poild: 123,
-        periodType: 1,
-      };
-      const res = await MerchantService.gold(params);
-      getGoldData?.(res);
+    MerchantService.gold({
+      poild,
+      periodType: 1,
+    }).then(res => {
       setData(res);
+    });
+  }, [poild]);
 
-      function ifOnline() {
-        const { lastPeriodStatus } = res;
-        let ifOnlinePic: any;
-        if (lastPeriodStatus === 1) {
-          ifOnlinePic = OnlineInshow;
-        } else if (lastPeriodStatus === 2 || lastPeriodStatus === 4) {
-          ifOnlinePic = OnlineNotshow;
-        } else if (lastPeriodStatus === 3) {
-          ifOnlinePic = OnlineWithdraw;
-        }
-        return ifOnlinePic;
-      }
-      setIfOnline(ifOnline());
-    };
-    getMerchantData();
-  }, []);
-
-  function viewMoreDetail() {
-    window.open(`${window.location.origin}/merchant-growing/gold-merchant`, '_blank');
-    // mc('b_group_mall_b_xiwpxw2k_mc', { poi_id: window?.$thh?.poi_id });
-  }
-
-  function getTimeTransfer(time: string) {
-    return time?.replace(/-/g, '.').substring(5);
-  }
   return (
     <Card
       title='金牌商家'
@@ -119,6 +90,7 @@ const GoldMerchantHome: React.FC = (props: any) => {
         </a>
       }
       className='gold-merchant-card'
+      {...props}
     >
       <div className='gold-head'>
         <img className='gold-head-logo' src={goldMerchantLogo} alt='金牌商家' />
@@ -129,7 +101,8 @@ const GoldMerchantHome: React.FC = (props: any) => {
           </div>
           <div className='gold-head-text-cycle'>
             <span className='gold-head-text-cycle-range'>
-              当前考核周期:{getTimeTransfer(data?.currentPeriodSTime)} - {getTimeTransfer(data?.currentPeriodETime)}
+              当前考核周期:{dayjs(data?.currentPeriodSTime).format('MM-DD')} -{' '}
+              {dayjs(data?.currentPeriodETime).format('MM-DD')}
             </span>
             <span className='gold-head-text-cycle-status'>正在考核中</span>
           </div>
@@ -139,7 +112,7 @@ const GoldMerchantHome: React.FC = (props: any) => {
         <div className='gold-body-head'>
           <span className='gold-body-head-title'>当前考核详情</span>
           <span className='gold-body-head-desc'>以下仅是部分指标</span>
-          <a href="#/merchant-growing/gold-merchant" target='_blank' className='gold-body-head-more'>
+          <a href='#/merchant-growing/gold-merchant' target='_blank' className='gold-body-head-more'>
             查看更多指标细节
           </a>
         </div>
@@ -172,4 +145,4 @@ const GoldMerchantHome: React.FC = (props: any) => {
     </Card>
   );
 };
-export default GoldMerchantHome;
+export default GoldMerchantCard;

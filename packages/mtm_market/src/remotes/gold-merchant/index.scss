@@ -95,30 +95,6 @@
           float: right;
         }
       }
-
-      &-bottom {
-        .roo-table-main {
-          .roo-table-body {
-            .roo-table {
-              thead {
-                tr {
-                  th {
-                    span {
-                      color: #333 !important;
-                    }
-                  }
-                }
-              }
-
-              tbody {
-                tr {
-                  height: 47px !important;
-                }
-              }
-            }
-          }
-        }
-      }
     }
   }
 }
