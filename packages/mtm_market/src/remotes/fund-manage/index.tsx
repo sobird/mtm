@@ -2,25 +2,22 @@
  * 资金管理 卡片组件
  * 
  * @todo
- * icon 替换 优化
+ * 路由跳转拦截权限判断
  * 
  * sobird<i@sobird.me> at 2023/10/14 0:41:08 created.
  */
 
-
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import {message} from 'antd'
 import Card from '../workbench/components/card';
 // import { openNewTab } from '@util/agent';
-import MyWalletSvg from './assets/my-wallet.svg';
-import StatementSvg from './assets/statement.svg';
 import './index.scss';
 
-const FundManage: React.FunctionComponent = () => {
+const FundManage: React.FC<ComponentProps<typeof Card>> = (props) => {
   const pathMap = {};
   const poiId = 123;
   return (
-    <Card className="fund-manage-card" title="资金管理">
+    <Card classCard="fund-manage-card" title="资金管理" {...props}>
       <Card.Grid
         className="item"
         onClick={() => {
@@ -36,7 +33,7 @@ const FundManage: React.FunctionComponent = () => {
           // openNewTab('/account/wallet');
         }}
       >
-        <img src={MyWalletSvg} />
+        <i className='icon iconfont icon-wallet'></i>
         <span>我的钱包</span>
       </Card.Grid>
       <Card.Grid
@@ -54,7 +51,7 @@ const FundManage: React.FunctionComponent = () => {
           // openNewTab('/account/statement');
         }}
       >
-        <img src={StatementSvg} />
+        <i className='icon iconfont icon-bill'></i>
         <span>对账单</span>
       </Card.Grid>
     </Card>
