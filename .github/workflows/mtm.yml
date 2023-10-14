@@ -30,14 +30,14 @@ jobs:
         yarn
         yarn build
 
-    - name: Deploy 🚀
+    - name: Deploy VPS 🚀
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
-        source: dist/*
+        source: dist/**
         target: ${{ secrets.TARGET }}
     # - name: Deploy 🚀
     #   uses: JamesIves/github-pages-deploy-action@v4
