@@ -9,7 +9,8 @@ import http from "@mtm/shared/utils/http";
 export interface ICampaignListQuery {
   ps?: number;
   pn?: number;
-  status?: string;
+  type?: string;
+  max?: number;
 }
 
 export interface ICampaignEntity {
@@ -49,7 +50,10 @@ export interface ICampaignListResponse {
 
 const CampaignService = {
   async list(query?: ICampaignListQuery) {
-    return http.get<ICampaignListResponse>('/merchant/campaigns', query);
+    return http.get<ICampaignListResponse>('/merchant/campaigns', query).then(res => {
+      res.list = res.list?.slice(0, query.max);
+      return res;
+    });
   },
 
   async detail(id: number) {

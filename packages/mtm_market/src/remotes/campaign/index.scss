@@ -1,20 +1,25 @@
 /**
- * 营销活动 模块联邦组件样式
+ * 营销活动 卡片组件 样式
  * 
  * sobird<i@sobird.me> at 2023/09/14 1:53:19 created.
  */
 
-.mtm-market-campaign {
+.market-activity-card {
   background-color: #fff;
-  &-tabs {
-    position: relative;
-  }
 
+  .mtm-tabs-nav {
+    margin-bottom: -3px;
+
+    &::before {
+      content: none;
+    }
+  }
 
   &-list {
     padding: 12px 0 0;
     overflow: hidden;
   }
+
   &-item {
     display: flex;
     align-items: center;
@@ -23,10 +28,12 @@
     &:last-child {
       margin-bottom: 0;
     }
+
     .campaign-info {
       flex: 1;
       display: flex;
       align-items: center;
+
       .campaign-icon {
         width: 48px;
         height: 48px;
@@ -36,21 +43,27 @@
         background-size: cover;
         background-repeat: no-repeat;
       }
+
       .campaign-icon-16 {
         background-image: url(./images/16.png);
       }
+
       .campaign-icon-66 {
         background-image: url(./images/66.png);
       }
+
       .campaign-icon-67 {
         background-image: url(./images/67.png);
       }
+
       .campaign-icon-68 {
         background-image: url(./images/68.png);
       }
+
       .campaign-icon-69 {
         background-image: url(./images/69.png);
       }
+
       .campaign-icon-70 {
         background-image: url(./images/70.png);
       }
@@ -60,6 +73,7 @@
         flex: 1;
         margin-right: 20px;
         font-size: 14px;
+
         .campaign-title {
           overflow: hidden;
           text-overflow: ellipsis;
@@ -68,13 +82,14 @@
           -webkit-box-orient: vertical;
           word-break: break-all;
         }
+
         .campaign-extra {
           color: #999;
           font-size: 12px;
         }
       }
     }
-    .campaign-side {
-    }
+
+    .campaign-side {}
   }
 }
