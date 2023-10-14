@@ -4,7 +4,7 @@
  * @todo
  * 完善点击跳转
  * poiId 获取
- * 
+ *
  * sobird<i@sobird.me> at 2023/10/12 9:23:24 created.
  */
 import Card from '../components/card';
@@ -78,9 +78,9 @@ const realDataConfigRow2: RealDataConfigProps[] = [
 
 const RealData = () => {
   const { loading, realdata } = useWorkbench();
-  console.log('realdata', realdata, loading);
   return (
     <Card
+      classCard='real-data-card'
       title='实时数据'
       subTitle='数据计算可能会存在5-10分钟左右的延迟'
       extra={<a>数据中心</a>}
@@ -96,7 +96,7 @@ const RealData = () => {
             key={item.key}
             title={item.title}
             tooltip={{
-              title: item.tips
+              title: item.tips,
             }}
             unit={item.unit}
             value={realdata[item.key]}
@@ -111,7 +111,7 @@ const RealData = () => {
             key={item.key}
             title={item.title}
             tooltip={{
-              title: item.tips
+              title: item.tips,
             }}
             unit={item.unit}
             value={realdata[item.key]}

@@ -48,7 +48,7 @@ const ViolationsCard: React.FC<ViolationsCardProps> = ({ callback, ...props}) =>
 
   return (
     <Card
-      className='violations-card'
+      classCard='violations-card'
       title='违规情况'
       extra={
         <a href='#/violation/info' target='_blank'>

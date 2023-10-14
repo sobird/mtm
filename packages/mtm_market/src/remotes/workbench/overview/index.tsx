@@ -66,7 +66,7 @@ const OverView = () => {
   const { loading, overview } = useWorkbench();
 
   return (
-    <Card>
+    <Card classCard='over-view-card'>
       <div className='over-view-panel'>
         {OverViewConfig.map(item => (
           <Card.View

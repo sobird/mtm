@@ -103,11 +103,10 @@ const linechartTooltip = (selectedData: LineChartItem, value: any) => {
   };
 };
 
-const TrendingLineChart = () => {
+const TrendingLineChartCard = () => {
   const [data, setData] = useState<Partial<ITrendingResponse>>({});
   const [lineChartType, setLineChartType] = useState(LineChartConfig[0].key);
   const [dateRangeType, setDateRangeType] = useState(DateRangeConfig[1].key);
-  const [selectedData, setSelectedData] = useState(LineChartConfig[0]);
   const poiId = 123;
 
   const currentData = data[lineChartType] || [];
@@ -139,7 +138,7 @@ const TrendingLineChart = () => {
 
   return (
     <Card
-      className='trending-line-chart-card'
+      classCard='trending-line-chart-card'
       title='经营趋势'
       extra={
         <Radio.Group onChange={dataRangeChange} value={dateRangeType} size='small'>
@@ -184,4 +183,4 @@ const TrendingLineChart = () => {
   );
 };
 
-export default TrendingLineChart;
+export default TrendingLineChartCard;

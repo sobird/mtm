@@ -297,7 +297,7 @@ const MerchantGrowthCard: React.FC<MerchantGrowthCardProps> = ({ callback, ...pr
 
   return (
     <Card
-      className='merchant-growth-card'
+      classCard='merchant-growth-card'
       title={handleTitleWordsOverflow(shopName)}
       subTitle={
         <Tooltip
