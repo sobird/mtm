@@ -31,9 +31,6 @@ jobs:
         yarn
         yarn build
 
-    - name: List folders
-      run: ls -al .
-
     - name: Deploy VPS 🚀
       uses: appleboy/scp-action@v0.1.4
       with:
@@ -41,7 +38,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
-        source: dist/**
+        source: packages/mtm_market/dist/**
         target: "${{ secrets.TARGET }}/mtm_market"
         strip_components: 1
 
