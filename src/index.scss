@@ -1,6 +1,7 @@
 
 // @see https://www.npmjs.com/package/normalize.css
 @import 'antd/dist/reset.css';
+@import "./assets/font/iconfont.css";
 
 html,
 body {
@@ -19,110 +20,4 @@ body {
 #root {
   height: 100%;
   width: 100%;
-}
-
-
-/* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
-@font-face {
-  font-family: 'iconfont';  /* Project id 4264481 */
-  src: url('//at.alicdn.com/t/c/font_4264481_vlf73kfkuro.woff2?t=1696692721615') format('woff2'),
-       url('//at.alicdn.com/t/c/font_4264481_vlf73kfkuro.woff?t=1696692721615') format('woff'),
-       url('//at.alicdn.com/t/c/font_4264481_vlf73kfkuro.ttf?t=1696692721615') format('truetype'),
-       url('//at.alicdn.com/t/c/font_4264481_vlf73kfkuro.svg?t=1696692721615#iconfont') format('svg');
-}
-
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.icon-coupon:before {
-  content: "\e624";
-}
-
-.icon-cargo:before {
-  content: "\e7bb";
-}
-
-.icon-bars:before {
-  content: "\e60e";
-}
-
-.icon-favorite:before {
-  content: "\e607";
-}
-
-.icon-shopping:before {
-  content: "\e602";
-}
-
-.icon-home-fill:before {
-  content: "\e6ca";
-}
-
-.icon-express:before {
-  content: "\e708";
-}
-
-.icon-message-center:before {
-  content: "\e886";
-}
-
-.icon-home:before {
-  content: "\e61e";
-}
-
-.icon-customer-service:before {
-  content: "\e616";
-}
-
-.icon-message:before {
-  content: "\e668";
-}
-
-.icon-marketing:before {
-  content: "\e62d";
-}
-
-.icon-rule:before {
-  content: "\e601";
-}
-
-.icon-verified-user:before {
-  content: "\e600";
-}
-
-.icon-customer:before {
-  content: "\e64d";
-}
-
-.icon-woman:before {
-  content: "\e63c";
-}
-
-.icon-data:before {
-  content: "\e664";
-}
-
-.icon-shop:before {
-  content: "\e6b6";
-}
-
-.icon-fund:before {
-  content: "\e63e";
-}
-
-.icon-commodity:before {
-  content: "\e62c";
-}
-
-.icon-service:before {
-  content: "\e62e";
-}
-
-.icon-growth:before {
-  content: "\e61f";
 }

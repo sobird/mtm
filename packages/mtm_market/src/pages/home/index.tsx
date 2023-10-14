@@ -30,10 +30,14 @@ const Home = () => {
         <Card title="实时数据" extra={<a>数据中心</a>}><RealData/></Card>
       </Col>
       <Col span={12}>
-        <Card title="店铺提升"><MerchantGrowth /></Card>
+        <Card title="店铺提升"><MerchantGrowth callback={(res) => {
+          console.log('店铺提升', res);
+        }} /></Card>
       </Col>
       <Col span={12}>
-        <Card title="违规情况"><Violations /></Card>
+        <Card title="违规情况"><Violations callback={(data) => {
+          console.log('违规情况', data)
+        } } /></Card>
       </Col>
       <Col span={12}>
         <Card title="商品管理"><ProductManage className="test" /></Card>

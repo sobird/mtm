@@ -7,6 +7,12 @@
 $baseFontColor: #333333;
 $titleColor: #666;
 
+.merchant-growth-card {
+  .icon-qrcode {
+    color: var(--primary);
+  }
+}
+
 .growth-card-wrap {
   display: flex;
   flex-direction: row;

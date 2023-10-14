@@ -1,5 +1,5 @@
 /**
- * 商家成长 组件
+ * 商家成长 卡片组件
  *
  * @todo
  * shopInfo 获取
@@ -14,7 +14,6 @@ import QRCode from 'qrcode.react';
 import { message } from 'antd';
 // import { openNewTab } from '@util/agent';
 import Card from '../workbench/components/card';
-import ewmImg from './assets/erweima.svg';
 import './index.scss';
 
 import AnalysisService, { IOperation } from '@/services/analysis';
@@ -204,33 +203,23 @@ const GrowthCard = ({ type, data, loading, ...props }: GrowthCardProps) => {
   );
 };
 
+export interface MerchantGrowthCardProps extends ComponentProps<typeof Card> {
+  callback?: (data: any[]) => any;
+}
+
 /** 商家成长 */
-const MerchantGrowth: React.FC = () => {
+const MerchantGrowthCard: React.FC<MerchantGrowthCardProps> = ({ callback, ...props }) => {
   const [data, setData] = useState<MerchantGrowthData>({});
   const shopInfo = {
     poiId: 148568,
-    name: '小米妈妈家居旗舰店'
+    name: '小米妈妈家居旗舰店',
   };
-  const {poiId, name: shopName} = shopInfo;
+  const { poiId, name: shopName } = shopInfo;
   // 路由权限判断
   const pathMap = {};
   const [loading, setLoading] = useState(true);
   const [countSet, setCountSet] = useState({ taskCount: 0, awardCount: 0 });
-  const SHOP_JUMP_URL = `${process.env.SHOP_JUMP_URL}?env=prod&poiId=${poiId}&g_source=682`
-
-  /**
-   * 获取任务和奖励总数
-   * @param poiId 门店id
-   */
-  const getTaskAndAwardCount = (poiId: number) => {
-    MerchantService.tasks(poiId).then((res: any) => {
-      const { curTaskCount, curAwardCount } = res;
-      setCountSet({
-        taskCount: curTaskCount || 0,
-        awardCount: curAwardCount || 0,
-      });
-    });
-  };
+  const SHOP_JUMP_URL = `${process.env.SHOP_JUMP_URL}?env=prod&poiId=${poiId}&g_source=682`;
 
   /**
    * 任务跳转页面
@@ -264,15 +253,29 @@ const MerchantGrowth: React.FC = () => {
     if (!poiId) {
       return;
     }
-    getTaskAndAwardCount(poiId);
-    AnalysisService.operation(poiId)
+    // 获取任务和奖励总数
+    const tasks = MerchantService.tasks(poiId).then((res: any) => {
+      const { curTaskCount, curAwardCount } = res;
+      setCountSet({
+        taskCount: curTaskCount || 0,
+        awardCount: curAwardCount || 0,
+      });
+
+      return res;
+    });
+    const operation = AnalysisService.operation(poiId)
       .then(res => {
         console.log('res', res);
         setData(res || {});
+        return res;
       })
       .finally(() => {
         setLoading(false);
       });
+
+    Promise.all([tasks, operation]).then(res => {
+      callback?.(res);
+    });
   }, [poiId]);
 
   /**
@@ -294,7 +297,7 @@ const MerchantGrowth: React.FC = () => {
 
   return (
     <Card
-      className='merchant-growth'
+      className='merchant-growth-card'
       title={handleTitleWordsOverflow(shopName)}
       subTitle={
         <Tooltip
@@ -311,7 +314,7 @@ const MerchantGrowth: React.FC = () => {
             </div>
           }
         >
-          <img className='erweima' src={ewmImg} alt='' />
+          <i className='icon iconfont icon-qrcode'></i>
         </Tooltip>
       }
       extra={
@@ -336,6 +339,7 @@ const MerchantGrowth: React.FC = () => {
           </span>
         </div>
       }
+      {...props}
     >
       <div className='growth-card-wrap'>
         <GrowthCard
@@ -355,4 +359,4 @@ const MerchantGrowth: React.FC = () => {
   );
 };
 
-export default MerchantGrowth;
+export default MerchantGrowthCard;
