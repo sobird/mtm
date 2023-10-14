@@ -31,6 +31,9 @@ jobs:
         yarn
         yarn build
 
+    - name: List folders
+      run: ls -al .
+
     - name: Deploy VPS 🚀
       uses: appleboy/scp-action@v0.1.4
       with:
