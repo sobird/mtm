@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/10/13 18:20:25 created.
  */
 
-.product-manage {
+.product-manage-card {
   .mix-card-body {
     margin-top: 12px;
     height: 104px;
@@ -36,8 +36,10 @@
         margin-top: 6px;
       }
 
-      .create-product-text {
-        margin-top: 8px;
+      .icon-new-add {
+        font-size: 32px;
+        margin-right: 5px;
+        color: #666;
       }
     }
   }

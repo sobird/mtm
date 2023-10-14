@@ -18,6 +18,7 @@ export interface CardProps extends Omit<ComponentProps<'div'>, 'title'> {
   bordered?: boolean;
   headStyle?: React.CSSProperties;
   bodyStyle?: React.CSSProperties;
+  classCard?: string;
 }
 
 const Card: React.FC<PropsWithChildren<CardProps>> = ({
@@ -26,6 +27,7 @@ const Card: React.FC<PropsWithChildren<CardProps>> = ({
   subTitle,
   extra,
   className,
+  classCard,
   headStyle,
   bodyStyle,
   children,
@@ -57,6 +59,7 @@ const Card: React.FC<PropsWithChildren<CardProps>> = ({
     <div
       className={classNames(
         'mix-card',
+        classCard,
         {
           [`${prefixCls}-card-contain-grid`]: isContainGrid,
         },
