@@ -17,6 +17,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const CompressionPlugin = require("compression-webpack-plugin");
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
 const { ModuleFederationPlugin } = require('webpack').container;
@@ -109,9 +110,9 @@ module.exports = (env) => {
         allowEmptyValues: true,
         defaults: path.join(__dirname, '.env.defaults'),
       }),
-      new webpack.ProgressPlugin({
-        activeModules: true,
-      }),
+      // new webpack.ProgressPlugin({
+      //   activeModules: true,
+      // }),
       new ModuleFederationPlugin({
         name: pkg.name,
         filename: 'remoteEntry.js',
@@ -223,8 +224,12 @@ module.exports = (env) => {
     //   filename: '[file].map',
     //   publicPath: '/',
     // }));
+    config.plugins.push(new CompressionPlugin());
     config.externals = externals;
   } else {
+    config.plugins.push(new webpack.ProgressPlugin({
+      activeModules: true,
+    }));
     config.externals = externals;
   }
 

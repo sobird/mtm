@@ -16,6 +16,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const CompressionPlugin = require("compression-webpack-plugin");
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
 // const WebpackBar = require('webpackbar');
@@ -237,6 +238,8 @@ module.exports = (conf) => {
     //   filename: '[file].map',
     //   publicPath: '/',
     // }));
+
+    config.plugins.push(new CompressionPlugin());
   } else {
     config.mode = 'development';
     config.plugins.push(new webpack.ProgressPlugin({

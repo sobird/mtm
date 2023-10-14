@@ -31,11 +31,22 @@ jobs:
         yarn
         yarn build
 
-    - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@v4
+    - name: Deploy VPS 🚀
+      uses: appleboy/scp-action@v0.1.4
       with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
-        folder: packages/mtm_market/dist
-        target-folder: mtm_market
-        clean: true
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        source: dist/**
+        target: ${{ secrets.TARGET }}/mtm_market
+        strip_components: 1
+
+    # - name: Deploy 🚀
+    #   uses: JamesIves/github-pages-deploy-action@v4
+    #   with:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     branch: gh-pages
+    #     folder: packages/mtm_market/dist
+    #     target-folder: mtm_market
+    #     clean: true
