@@ -40,7 +40,7 @@ jobs:
         port: ${{ secrets.PORT }}
         source: packages/mtm_market/dist/**
         target: "${{ secrets.TARGET }}/mtm_market"
-        strip_components: 1
+        strip_components: 3
 
     # - name: Deploy 🚀
     #   uses: JamesIves/github-pages-deploy-action@v4

@@ -94,4 +94,3 @@ export default App;
 * https://preview.pro.ant.design/
 * https://admincloud.iviewui.com/
 * https://www.zhihu.com/question/604668868[前端新增，修改，详情应该用一个页面吗？]
-
