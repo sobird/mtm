@@ -12,6 +12,7 @@ const glob = require('glob');
 const webpack = require('webpack');
 const HtmlPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
@@ -195,11 +196,38 @@ const config = {
     },
   },
   optimization: {
+    chunkIds: isProduction ? 'deterministic' : 'named',
     // minimize: false,
     minimizer: [
       // 在 webpack@5 中，你可以使用 `...` 语法来扩展现有的 minimizer（即 `terser-webpack-plugin`），将下一行取消注释
       // `...`,
       new CssMinimizerPlugin(),
+      // new TerserPlugin({
+      //   terserOptions: {
+      //     parse: {
+      //       ecma: 8,
+      //     },
+      //     compress: {
+      //       ecma: 5,
+      //       warnings: false,
+      //       comparisons: false,
+      //       inline: 2,
+      //       drop_console: isProduction,
+      //     },
+      //     mangle: {
+      //       safari10: true,
+      //     },
+      //     keep_classnames: isProduction,
+      //     keep_fnames: isProduction,
+      //     output: {
+      //       ecma: 5,
+      //       comments: false,
+      //       ascii_only: true,
+      //     },
+      //   },
+      //   parallel: true,
+      //   extractComments: false,
+      // }),
       new EsbuildPlugin({
         // target: 'es2018',
         css: true, // 优化CSS
@@ -210,6 +238,39 @@ const config = {
         legalComments: 'none', // 去掉注释
       })
     ],
+    splitChunks: {
+      chunks: 'all',
+      // 生成 chunk 的最小体积, 以 bytes 为单位
+      minSize: 100 * 1024,
+      // 告诉 webpack 尝试将大于 maxSize 个字节的 chunk 分割成较小的部分。 这些较小的部分在体积上至少为 minSize
+      maxSize: 1000 * 1024,
+      minChunks: 2,
+      maxAsyncRequests: 5, //按需加载时并行请求的最大数目。
+      maxInitialRequests: 3, //入口点的最大并行请求数
+      cacheGroups: {
+        // vendors: {
+        //   name: 'chunk-vendors',
+        //   test(module) {
+        //     const commonVendorModuleList = [
+        //       'react', 'react-dom', 'react-router-dom', 'redux', 'react-redux', 'axios', 'history',
+        //     ].map(name => path.join('node_modules', name));
+        //     return commonVendorModuleList.some(vendorPath => module.resource && module.resource.includes(vendorPath));
+        //   },
+        //   priority: -10,
+        // },
+        commons: {
+          test(module) {
+            return /node_modules/.test(module.context);
+          },
+          priority: -20,
+        },
+        default: {
+          minChunks: 2,
+          priority: -30,
+          reuseExistingChunk: true,
+        },
+      },
+    },
   },
   // cache: {
   //   type: 'filesystem',
