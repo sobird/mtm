@@ -5,6 +5,7 @@ import zhCN from 'antd/lib/locale/zh_CN';
 import router from '@/router';
 import { MasterContext } from '@/utils/context';
 import './App.scss';
+import Empty from './components/UI/empty';
 
 interface AppProps {
   master: any;
@@ -19,6 +20,10 @@ const App: React.FC<AppProps> = ({ master = {} }) => {
     <ConfigProvider
       locale={zhCN}
       prefixCls='mtm'
+      renderEmpty={(componentName) => {
+        console.log('componentName', componentName);
+        return <Empty></Empty>
+      }}
       theme={{
         token: {
           borderRadius: 3,

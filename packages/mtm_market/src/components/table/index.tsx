@@ -7,6 +7,7 @@
 import React, { ComponentProps } from 'react';
 import { Table } from 'antd';
 import useSearchParamsState from '@/hooks/useSearchParamsState';
+import Empty from '../UI/empty';
 
 const MTable: React.FC<ComponentProps<typeof Table>> = ({ children, pagination, ...props }) => {
   const [searchParamPn, setSearchParamPn] = useSearchParamsState('pn', '1');
@@ -17,6 +18,9 @@ const MTable: React.FC<ComponentProps<typeof Table>> = ({ children, pagination, 
       rowKey='id'
       scroll={{ x: 1400 }}
       size='middle'
+      locale={{
+        emptyText: <Empty></Empty>
+      }}
       pagination={{
         position: ['bottomCenter'],
         current: Number(searchParamPn),
