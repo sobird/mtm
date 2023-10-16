@@ -16,7 +16,7 @@ import './index.scss';
 
 export interface MarketActivityCardProps extends ComponentProps<typeof Card> {
   callback?: (data: any) => any;
-  max: number;
+  max?: number;
 }
 
 const MarketActivityCard: React.FC<MarketActivityCardProps> = ({ callback, max = 5, ...props }) => {

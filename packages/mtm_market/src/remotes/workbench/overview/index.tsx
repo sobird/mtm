@@ -13,6 +13,7 @@ import { Tooltip } from 'antd';
 import Card from '../components/card';
 import useWorkbench from '../hooks/useWorkbench';
 import './index.scss';
+import { ComponentProps } from 'react';
 
 interface OverViewProps {
   title: string;
@@ -62,11 +63,11 @@ const OverViewConfig: OverViewProps[] = [
   },
 ];
 
-const OverView = () => {
+const OverView: React.FC<ComponentProps<typeof Card>> = (props) => {
   const { loading, overview } = useWorkbench();
 
   return (
-    <Card classCard='over-view-card'>
+    <Card classCard='over-view-card' {...props}>
       <div className='over-view-panel'>
         {OverViewConfig.map(item => (
           <Card.View

@@ -121,9 +121,20 @@ module.exports = (env) => {
           name: pkg.name
         },
         exposes: {
-          './Campaign': './src/remotes/campaign',
-          './newReact': require.resolve('react'),
-          './newReactDOM': require.resolve('react-dom/client')
+          './remotes': './src/remotes/index',
+          './market-activity': './src/remotes/market-activity',
+          './fund-manage': './src/remotes/fund-manage',
+          './gold-merchant': './src/remotes/gold-merchant',
+          './latest-news': './src/remotes/latest-news',
+          './merchant-growth': './src/remotes/merchant-growth',
+          './product-manage': './src/remotes/product-manage',
+          './trending-chart': './src/remotes/trending-chart',
+          './violations': './src/remotes/violations',
+          './overview': './src/remotes/workbench/overview',
+          './realdata': './src/remotes/workbench/realdata',
+
+          // './newReact': require.resolve('react'),
+          // './newReactDOM': require.resolve('react-dom/client')
         },
       }),
       // new PurgeCSSPlugin({
@@ -230,7 +241,7 @@ module.exports = (env) => {
     config.plugins.push(new webpack.ProgressPlugin({
       activeModules: true,
     }));
-    // config.externals = externals;
+    config.externals = externals;
   }
 
   if (env.local) {

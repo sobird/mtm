@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/10/11 19:11:13 created.
  */
 import { Row, Col, Card } from 'antd';
-import Campaign from '@/remotes/campaign';
+import MarketActivityCard from '@/remotes/market-activity';
 import LatestNews from '@/remotes/latest-news';
 import RealData from '@/remotes/workbench/realdata';
 import OverView from '@/remotes/workbench/overview';
@@ -53,7 +53,7 @@ const Home = () => {
       </Col>
       <Col span={12}>
         <Card title='营销活动'>
-          <Campaign />
+          <MarketActivityCard />
         </Card>
       </Col>
     </Row>

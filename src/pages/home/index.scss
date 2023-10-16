@@ -1,0 +1,16 @@
+/**
+ * 后台首页 样式
+ * 
+ * sobird<i@sobird.me> at 2023/10/16 17:40:06 created.
+ */
+
+.page-home {
+  max-width: 1600px;
+  margin: 0 auto;
+
+  &-card {
+    padding: 0 16px;
+    border-radius: 3px;
+    background-color: #fff;
+  }
+}

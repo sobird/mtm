@@ -7,10 +7,12 @@
  *
  * sobird<i@sobird.me> at 2023/10/12 9:23:24 created.
  */
-import Card from '../components/card';
+
+import { ComponentProps } from 'react';
 import { Tooltip } from 'antd';
 import useWorkbench from '../hooks/useWorkbench';
 import './index.scss';
+import Card from '../components/card';
 
 interface RealDataConfigProps {
   title: string;
@@ -76,7 +78,7 @@ const realDataConfigRow2: RealDataConfigProps[] = [
   },
 ];
 
-const RealData = () => {
+const RealData: React.FC<ComponentProps<typeof Card>> = (props) => {
   const { loading, realdata } = useWorkbench();
   return (
     <Card
@@ -89,6 +91,7 @@ const RealData = () => {
           // height: 110,
         }
       }
+      {...props}
     >
       <div className='real-data-panel'>
         {realDataConfigRow1.map(item => (
