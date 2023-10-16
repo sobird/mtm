@@ -1,0 +1,25 @@
+
+
+$prefixCls: 'mix' !default;
+
+.#{$prefixCls}-card {
+  &-grid {
+    display: flex;
+    flex: 1;
+    box-sizing: border-box;
+    height: 100%;
+
+    &-hoverable {
+      &:hover {
+        background-color: #FBFBFB;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &-contain-grid {
+    .#{$prefixCls}-card-body {
+      display: flex;
+    }
+  }
+}

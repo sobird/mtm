@@ -11,6 +11,7 @@ $prefixCls: 'mix' !default;
   border-radius: 2px;
   flex-direction: column;
   display: flex;
+  padding: 0 16px 16px 16px;
 
   &-head {
     display: flex;
@@ -42,74 +43,5 @@ $prefixCls: 'mix' !default;
   }
 
   &-body {
-  }
-
-  &-grid {
-    display: flex;
-    flex: 1;
-    box-sizing: border-box;
-    height: 100%;
-
-    &-hoverable {
-      &:hover {
-        background-color: #FBFBFB;
-        cursor: pointer;
-      }
-    }
-  }
-
-  &-contain-grid {
-    .#{$prefixCls}-card-body {
-      display: flex;
-    }
-  }
-
-  &-view {
-    padding-top: 20px;
-    padding-left: 16px;
-    padding-bottom: 16px;
-    flex: 1;
-
-    &-hoverable {
-      &:hover {
-        background-color: #FBFBFB;
-        cursor: pointer;
-      }
-    }
-
-    &-content {
-      margin-bottom: 4px;
-    }
-
-    &-title {
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 1;
-      color: #666;
-      padding-bottom: 2px;
-      margin-bottom: 12px;
-      span {
-        border-bottom: 1px dotted #DBDBDB;
-      }
-    }
-
-    &-value {
-      font-size: 24px;
-      color: #333;
-      height: 100%;
-      font-weight: 500;
-      letter-spacing: 0;
-      line-height: 1;
-      margin-right: 4px;
-    }
-
-    &-unit {
-      font-size: 14px;
-      color: #666;
-      line-height: 1;
-    }
-    &-extra {
-      font-size: 12px;
-    }
   }
 }

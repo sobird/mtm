@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import * as React from 'react';
+import './Grid.scss';
 
 export interface CardGridProps extends React.HTMLAttributes<HTMLDivElement> {
   prefixCls?: string;

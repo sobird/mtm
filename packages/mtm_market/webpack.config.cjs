@@ -80,7 +80,7 @@ module.exports = (env) => {
         },
         inject: true,
         title: pkg.description,
-        chunks: [ 'app' ]
+        chunks: ['app']
       }),
       new CopyPlugin({
         patterns: [
@@ -116,8 +116,8 @@ module.exports = (env) => {
       new ModuleFederationPlugin({
         name: pkg.name,
         filename: 'remoteEntry.js',
-        library: { 
-          type: 'umd', 
+        library: {
+          type: 'umd',
           name: pkg.name
         },
         exposes: {
@@ -141,6 +141,7 @@ module.exports = (env) => {
       //   paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),
       //   whitelist: ['html', 'body']
       // }),
+
       // new BundleAnalyzerPlugin({
       //   analyzerMode: 'static',
       //   analyzerHost: '127.0.0.1',

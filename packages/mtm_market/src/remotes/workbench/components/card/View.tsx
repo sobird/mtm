@@ -1,5 +1,5 @@
 /**
- * View 业务级组件
+ * View 数据展示组件
  *
  * sobird<i@sobird.me> at 2023/10/12 16:01:11 created.
  */
@@ -7,6 +7,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Tooltip, TooltipProps } from 'antd';
+import './View.scss';
 
 export interface CardViewProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   prefixCls?: string;

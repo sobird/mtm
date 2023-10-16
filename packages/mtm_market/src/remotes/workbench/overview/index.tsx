@@ -79,6 +79,9 @@ const OverView: React.FC<ComponentProps<typeof Card>> = (props) => {
             unit={item.unit}
             value={overview[item.key]}
             extra={item.extra}
+
+            // hoverable={false}
+            bordered
           ></Card.View>
         ))}
       </div>

@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/10/13 19:20:09 created.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ComponentProps } from 'react';
 import { Radio, RadioChangeEvent } from 'antd';
 import { Line } from '@ant-design/charts';
 import Card from '../workbench/components/card';
@@ -79,10 +79,7 @@ const formatterLineChartY = (val: any, unit: string) => {
   return val >= 10000 ? `${val / 10000}万` : val;
 };
 
-/**
- * 自定义linechart hover框内容
- * @param data hover数据
- */
+// 自定义linechart hover框内容
 const linechartTooltip = (selectedData: LineChartItem, value: any) => {
   let content: string;
   const { unit, title } = selectedData;
@@ -96,14 +93,17 @@ const linechartTooltip = (selectedData: LineChartItem, value: any) => {
     default:
       content = value;
   }
-  // return `${title} ${content}${unit}`;
   return {
     name: title,
     value: `${content}${unit}`,
   };
 };
 
-const TrendingLineChartCard = () => {
+interface TrendingLineChartCardProps extends ComponentProps<typeof Card> {
+  callback?: (data: any) => any;
+}
+
+const TrendingLineChartCard: React.FC<TrendingLineChartCardProps> = ({callback, ...props}) => {
   const [data, setData] = useState<Partial<ITrendingResponse>>({});
   const [lineChartType, setLineChartType] = useState(LineChartConfig[0].key);
   const [dateRangeType, setDateRangeType] = useState(DateRangeConfig[1].key);
@@ -126,6 +126,8 @@ const TrendingLineChartCard = () => {
       endTime,
     }).then(res => {
       setData(res);
+
+      callback?.(res);
     });
   }, [poiId, dateRangeType]);
 
@@ -149,6 +151,7 @@ const TrendingLineChartCard = () => {
           ))}
         </Radio.Group>
       }
+      {...props}
     >
       <Radio.Group value={lineChartType} onChange={lineChartChange} style={{padding: '20px 0'}}>
         {LineChartConfig.map((item: LineChartItem) => (

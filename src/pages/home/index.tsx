@@ -51,11 +51,11 @@ const Home: React.FC = () => {
   return (
     <Row className='page-home' gutter={[15, 15]}>
       <Col span={24}>
-        <LatestNewsCard className='page-home-card'/>
+        <LatestNewsCard />
       </Col>
 
       <Col span={24}>
-        <OverviewCard className='page-home-card' />
+        <OverviewCard className='page-home-card' style={{padding: '0px'}} />
       </Col>
 
       <Col span={12}>
@@ -75,10 +75,6 @@ const Home: React.FC = () => {
       <Col span={12}>
         <ViolationsCard className='page-home-card' />
       </Col>
-      <Col span={12}>
-        <RealTimeData className='page-home-card' />
-      </Col>
-
 
       <Col span={12}>
         <MarketActivityCard className='page-home-card' />
@@ -90,9 +86,6 @@ const Home: React.FC = () => {
       <Col span={24}>
         <TrendingChartCard className='page-home-card' />
       </Col>
-
-
-
 
       {/* <Suspense fallback="loading">
         <FundManageCard />

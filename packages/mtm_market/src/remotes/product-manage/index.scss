@@ -11,11 +11,9 @@
     gap: 12px;
 
     .item {
-      flex: 1;
       background: #fbfbfb;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
 
       &:hover {
         background: #F8F8F8;
