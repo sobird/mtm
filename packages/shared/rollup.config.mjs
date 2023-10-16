@@ -12,11 +12,13 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
 import commonjs from '@rollup/plugin-commonjs';
 import { babel } from '@rollup/plugin-babel';
+import postcss from 'rollup-plugin-postcss';
 import terser from '@rollup/plugin-terser';
 import image from '@rollup/plugin-image';
 import json from '@rollup/plugin-json';
 import copy from 'rollup-plugin-copy';
 import clear from 'rollup-plugin-clear';
+import Sass from 'sass';
 
 const files = glob.sync('src/**/*.js').reduce((map, filename) => {
   map[filename] = filename;
@@ -30,7 +32,8 @@ export default {
     'utils/provider': 'src/utils/provider.ts',
     // 'utils/externals': 'src/utils/externals.ts',
     'layout/index': 'src/layout/index.tsx',
-    'components/none-support/index': 'src/components/none-support/index.tsx'
+    'components/none-support/index': 'src/components/none-support/index.tsx',
+    'components/index': 'src/components/index.ts'
   },
   output: {
     //preserveModules: true,
@@ -89,6 +92,10 @@ export default {
     babel({ 
       babelHelpers: 'bundled',
       presets: ['@babel/preset-env']
+    }),
+    postcss({
+      extract: true,
+      // plugins: []
     }),
     json(),
     image(),
