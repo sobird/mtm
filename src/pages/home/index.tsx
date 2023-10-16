@@ -6,7 +6,6 @@
 
 import React, { Suspense } from 'react';
 import { Row, Col } from 'antd';
-
 import useFederatedComponent from '@/hooks/useFederatedComponent';
 
 import './index.scss';
@@ -22,72 +21,55 @@ const TrendingChartCard = React.lazy(() => import('market/trending-chart'));
 const ViolationsCard = React.lazy(() => import('market/violations'));
 const GoldMerchantCard = React.lazy(() => import('market/gold-merchant'));
 
-// 经营趋势模块
-const ManageTendencyChart = React.lazy(() => import('dataApp/manage-tendency-chart'));
-// 首页-顶部付款-发货
-const WorkSpace = React.lazy(() => import('dataApp/work-space'));
-
-// 实时数据
-const RealTimeData = React.lazy(() => import('dataApp/real-time-data'));
-
-// 金牌商家
-const GoldMerchant = React.lazy(() => import('dataApp/gold-merchant'));
-
-// 商家成长
-const MerchantManage = React.lazy(() => import('dataApp/merchant-manage'));
-
-const LatestNews = React.lazy(() => import('operationApp/latest-news'));
-const ProductManage = React.lazy(() => import('operationApp/product-manage'));
-const FundManage = React.lazy(() => import('operationApp/fund-manage'));
-
-// 商家学习
-const StudyCenter = React.lazy(() => import('operationApp/study-center'));
-
-const MarketActivity = React.lazy(() => import('marketApp/market-activity'));
-
 const Home: React.FC = () => {
   // const { Component: FederatedComponent, errorLoading } = useFederatedComponent('//awp-assets.meituan.net/thh/thh_feb_market/marketRemoteEntry.js', 'marketApp', './market-activity');
 
   return (
-    <Row className='page-home' gutter={[15, 15]}>
-      <Col span={24}>
-        <LatestNewsCard />
-      </Col>
+    <div className='page-home'>
+      <Row gutter={[15, 15]}>
+        <Col span={24}>
+          <LatestNewsCard style={{paddingBottom: 0}}/>
+        </Col>
 
-      <Col span={24}>
-        <OverviewCard className='page-home-card' style={{padding: '0px'}} />
-      </Col>
+        <Col span={24}>
+          <OverviewCard className='page-home-card' style={{padding: '0px'}} />
+        </Col>
 
-      <Col span={12}>
-        <RealdataCard className='page-home-card' />
-      </Col>
-      <Col span={12}>
-        <MerchantGrowthCard className='page-home-card' />
-      </Col>
+        <Col span={12}>
+          <RealdataCard bodyStyle={{height: 198}} />
+        </Col>
+        <Col span={12}>
+          <MerchantGrowthCard bodyStyle={{height: 198}}/>
+        </Col>
 
-      <Col span={12}>
-        <ProductManageCard className='page-home-card' />
-      </Col>
-      <Col span={12}>
-        <FundManageCard className='page-home-card' />
-      </Col>
+        <Col span={12}>
+          <ProductManageCard />
+        </Col>
+        <Col span={12}>
+          <FundManageCard />
+        </Col>
 
-      <Col span={12}>
-        <ViolationsCard className='page-home-card' />
-      </Col>
+      
 
-      <Col span={12}>
-        <MarketActivityCard className='page-home-card' />
-      </Col>
-      <Col span={12}>
-        <GoldMerchantCard className='page-home-card' />
-      </Col>
+      
+        <Col span={12}>
+          <GoldMerchantCard />
+        </Col>
 
-      <Col span={24}>
-        <TrendingChartCard className='page-home-card' />
-      </Col>
+        <Col span={12}>
+          <Row gutter={[0, 15]}>
+            <Col span={24}>
+              <MarketActivityCard max={4} bodyStyle={{paddingTop: 6}} />
+            </Col>
+            <Col span={24}><ViolationsCard bodyStyle={{paddingTop: 16}}/></Col>
+          </Row>
+        </Col>
 
-      {/* <Suspense fallback="loading">
+        <Col span={24}>
+          <TrendingChartCard />
+        </Col>
+
+        {/* <Suspense fallback="loading">
         <FundManageCard />
         <h3>营销活动模块</h3>
         <MarketActivityCard />
@@ -110,7 +92,8 @@ const Home: React.FC = () => {
         <h3>商家学习</h3>
         <StudyCenter />
       </Suspense> */}
-    </Row>
+      </Row>
+    </div>
   );
 };
 

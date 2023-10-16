@@ -18,7 +18,6 @@ import image from '@rollup/plugin-image';
 import json from '@rollup/plugin-json';
 import copy from 'rollup-plugin-copy';
 import clear from 'rollup-plugin-clear';
-import Sass from 'sass';
 
 const files = glob.sync('src/**/*.js').reduce((map, filename) => {
   map[filename] = filename;
