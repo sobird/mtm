@@ -44,6 +44,7 @@
     "cssnano": "^6.0.1",
     "glob": "^10.3.10",
     "gulp": "^4.0.2",
+    "postcss": "^8.4.31",
     "postcss-csso": "^6.0.1",
     "postcss-preset-env": "^9.2.0",
     "react": "^18.2.0",
