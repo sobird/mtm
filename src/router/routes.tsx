@@ -8,7 +8,7 @@ import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 
 import LayoutAdmin from '@/layout/admin';
-import NoneSupport from '@/pages/none-support';
+import NoneSupport from '@mtm/shared/components/none-support';
 import Login from '@/pages/login';
 import Register from '@/pages/register';
 import RegisterSuccess from '@/pages/register/success';

@@ -230,7 +230,7 @@ module.exports = (env) => {
     config.plugins.push(new webpack.ProgressPlugin({
       activeModules: true,
     }));
-    config.externals = externals;
+    // config.externals = externals;
   }
 
   if (env.local) {
