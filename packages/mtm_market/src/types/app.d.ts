@@ -5,8 +5,9 @@ declare interface Window {
 
 declare let process: {
   env: {
-    NODE_ENV: string;
-    HOST: string;
+    NODE_ENV: 'development' | 'production';
+    /** axios baseURL */
+    baseURL: string;
     /** 商家店铺扫码跳转页 */
     SHOP_JUMP_URL: string;
   };

@@ -153,7 +153,7 @@ export class Http {
 export const defaults: CreateAxiosDefaults = {
   // withCredentials: true,
   timeout: 10 * 1000,
-  baseURL: process.env.HOST,
+  baseURL: process.env.baseURL,
   headers: {
     // 'X-Requested-With': 'XMLHttpRequest',
     'Content-Type': 'application/json;charset=UTF-8',

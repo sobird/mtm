@@ -24,7 +24,7 @@ const loader = (loading) => {
 const apps: RegistrableApp<any>[] = [
   {
     name: 'mtm_market',
-    entry: process.env.MICRO_MTM_MARKET_HOST,
+    entry: process.env.MICRO_MTM_MARKET_URL,
     container: '#micro-container',
     loader,
     activeRule: getActiveRule('#/market'),

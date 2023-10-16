@@ -7,8 +7,8 @@ declare interface Window {
 
 declare let process: {
   env: {
-    NODE_ENV: string;
+    NODE_ENV: 'development' | 'production';
     HOST: string;
-    MICRO_MTM_MARKET_HOST: string;
+    MICRO_MTM_MARKET_URL: string;
   };
 };
