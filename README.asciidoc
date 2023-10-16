@@ -1,6 +1,15 @@
 # 商家电商管理后台系统
 :toc:
 
+## @mtm/shared
+
+```
+cd packages/shared
+yarn link
+
+cd -
+yarn link @mtm/shared
+```
 
 ## FAQ
 

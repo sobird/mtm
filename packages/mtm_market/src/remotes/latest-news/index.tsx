@@ -89,7 +89,7 @@ const LatestNewsCard: React.FunctionComponent<LatestNewsCardProps> = ({callback,
       subTitle={
         <div className='news-list'>
           {tabNoticeList.map(item => (
-            <div className='news-brief' id={item?.id}>
+            <div className='news-brief' key={item?.id}>
               <Link className='news-title' to={`/site-notice/detail/${item?.id}?catagoryName=${item?.catagoryName}`}>
                 {item.title}
               </Link>
