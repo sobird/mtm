@@ -13,6 +13,8 @@ import MenuService from "@/services/menu";
 
 import { IStoreState } from "@/store/reducers";
 import { toggleAside } from "@/store/actions/app";
+import { fetchMenu } from "@/store/actions/menu";
+import store from "@/store";
 
 import TitleWithBadge from "./components/title-with-badge";
 
@@ -123,10 +125,12 @@ const Aside: React.FunctionComponent = () => {
       setMenus(res);
     });
 
+    dispatch(fetchMenu())
+
     MenuService.badges().then(res => {
       setBadgeMap(res);
     })
-  }, []);
+  }, [dispatch]);
 
   const asideMenu = renderMenu(menus, badgeMap);
   const currentURL = location.pathname + location.search;

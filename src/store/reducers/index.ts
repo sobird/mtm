@@ -5,6 +5,7 @@
  */
 
 import app, { IAppState } from './app';
+import menu from './menu';
 
 export interface IStoreState {
   app: IAppState
@@ -12,4 +13,5 @@ export interface IStoreState {
 
 export default {
   app,
+  menu,
 };
