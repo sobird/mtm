@@ -13,7 +13,7 @@ import MenuService from "@/services/menu";
 
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { toggleAside } from "@/store/actions/app";
-import { updateMenuThunkAction } from "@/store/actions/menu";
+import { fetchMenuThunkAction } from "@/store/actions/menu";
 
 import TitleWithBadge from "./components/title-with-badge";
 
@@ -120,7 +120,7 @@ const Aside: React.FunctionComponent = () => {
   const { menuTrees } = useAppSelector((state) => state.menu);
 
   useEffect(() => {
-    dispatch(updateMenuThunkAction)
+    dispatch(fetchMenuThunkAction)
 
     MenuService.badges().then(res => {
       setBadgeMap(res);

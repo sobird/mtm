@@ -7,15 +7,14 @@ import { ThunkAction } from 'redux-thunk';
 import { IMenuState, IMenuAction } from '@/store/reducers/menu';
 import MenuService from '@/services/menu';
 
-type MenuThunkAction = ThunkAction<void, IMenuState, any, IMenuAction>;
+type MenuThunkAction = ThunkAction<any, IMenuState, any, IMenuAction>;
 
 export const UPDATE_MENU = 'UPDATE_MENU';
 
 // updateMenu Action Creator
 export const updateMenuAction = (payload: IMenuState) => ({ type: UPDATE_MENU, payload });
 
-//
-export const updateMenuThunkAction: MenuThunkAction = async (dispatch, getState, extraArgument) => {
+export const fetchMenuThunkAction: MenuThunkAction = async (dispatch, getState, extraArgument) => {
   const state = getState();
   console.log('extraArgument', extraArgument, state);
 
