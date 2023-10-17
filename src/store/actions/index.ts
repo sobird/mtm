@@ -6,5 +6,5 @@
 
 export interface IAction {
   type: string;
-  payload: unknown;
+  payload: any;
 }

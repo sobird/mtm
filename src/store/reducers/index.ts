@@ -1,14 +1,15 @@
 /**
  * Reducers
- * 
+ *
  * sobird<i@sobird.me> at 2023/05/08 23:19:26 created.
  */
 
 import app, { IAppState } from './app';
-import menu from './menu';
+import menu, { IMenuState } from './menu';
 
 export interface IStoreState {
-  app: IAppState
+  app: IAppState;
+  menu: IMenuState;
 }
 
 export default {

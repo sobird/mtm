@@ -4,17 +4,16 @@
  * sobird<i@sobird.me> at 2023/09/12 15:46:42 created.
  */
 
-import React, { useCallback, useEffect, useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from "react";
+
 import { nanoid } from 'nanoid';
 import { Button, Menu } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import MenuService from "@/services/menu";
 
-import { IStoreState } from "@/store/reducers";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { toggleAside } from "@/store/actions/app";
-import { fetchMenu } from "@/store/actions/menu";
-import store from "@/store";
+import { updateMenuThunkAction } from "@/store/actions/menu";
 
 import TitleWithBadge from "./components/title-with-badge";
 
@@ -114,25 +113,21 @@ function renderMenu(routes, badgeMap) {
 
 const Aside: React.FunctionComponent = () => {
   const location = useLocation();
-  const [menus, setMenus] = useState([]);
   const [badgeMap, setBadgeMap] = useState({});
+  const dispatch = useAppDispatch();
 
-  const dispatch = useDispatch();
-  const { collapsed } = useSelector((state: IStoreState) => state.app);
+  const { collapsed } = useAppSelector((state) => state.app);
+  const { menuTrees } = useAppSelector((state) => state.menu);
 
   useEffect(() => {
-    MenuService.list().then(res => {
-      setMenus(res);
-    });
-
-    dispatch(fetchMenu())
+    dispatch(updateMenuThunkAction)
 
     MenuService.badges().then(res => {
       setBadgeMap(res);
     })
   }, [dispatch]);
 
-  const asideMenu = renderMenu(menus, badgeMap);
+  const asideMenu = renderMenu(menuTrees, badgeMap);
   const currentURL = location.pathname + location.search;
 
   return (
