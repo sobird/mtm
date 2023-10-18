@@ -357,3 +357,42 @@
     }
   }
 }
+
+
+// 收藏夹
+.fav-submenu {
+  &> div {
+    cursor: default !important;
+  }
+  
+  &-setting {
+    color: rgba(0,0,0,.6);
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  &-count {
+    color: rgba(0,0,0,.4);
+    font-size: 12px;
+  }
+
+  .mtm-menu-submenu-arrow {
+    display: none;
+  }
+}
+
+.mtm-menu-title-content {
+  display: flex;
+  align-items: center;
+}
+
+.submenu-title {
+  display: flex;
+  align-items: center;
+
+  flex: 1;
+
+  .submenu-title-text {
+    margin-right: 5px;
+  }
+}

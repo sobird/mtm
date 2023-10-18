@@ -1,23 +1,23 @@
 /**
  * 侧边栏导航组件
- * 
+ *
  * sobird<i@sobird.me> at 2023/09/12 15:46:42 created.
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 import { nanoid } from 'nanoid';
-import { Button, Menu } from "antd";
-import { Link, useLocation } from "react-router-dom";
-import MenuService from "@/services/menu";
+import { Button, Menu } from 'antd';
+import { Link, useLocation } from 'react-router-dom';
+import MenuService, { Favorites } from '@/services/menu';
 
-import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { toggleAside } from "@/store/actions/app";
-import { fetchMenuThunkAction } from "@/store/actions/menu";
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { toggleAside } from '@/store/actions/app';
+import { fetchMenuThunkAction } from '@/store/actions/menu';
 
-import TitleWithBadge from "./components/title-with-badge";
+import TitleWithBadge from './components/title-with-badge';
 
-import "./index.scss";
+import './index.scss';
 
 const { Item, SubMenu, Divider } = Menu;
 
@@ -28,7 +28,9 @@ const { Item, SubMenu, Divider } = Menu;
  * @param route
  * @returns
  */
-const isMenu = (route): {
+const isMenu = (
+  route
+): {
   menu: boolean;
   child?: boolean;
 } => {
@@ -41,7 +43,7 @@ const isMenu = (route): {
   if (route?.children?.length) {
     return {
       menu: true,
-      child: route.children.some((child) => isMenu(child).menu),
+      child: route.children.some(child => isMenu(child).menu),
     };
   }
 
@@ -60,9 +62,7 @@ const isMenu = (route): {
 function renderMenu(routes, badgeMap) {
   const defaultOpenKeys: any[] = [];
   const menu = routes.map(route => {
-    const {
-      title: name, icon, children,
-    } = route;
+    const { title: name, icon, children } = route;
 
     const IS_MENU = isMenu(route);
 
@@ -77,27 +77,44 @@ function renderMenu(routes, badgeMap) {
     if (children && children.length) {
       defaultOpenKeys.push(route.id);
 
+      const isFavorites = route.code === Favorites.code;
+
       return [
         <SubMenu
+          className={isFavorites && 'fav-submenu'}
           key={route.id}
-          title={(
+          title={
             <>
-              {icon ? <i className={`icon iconfont icon-${icon}`} /> : null}
-              <span>{name}</span>
+              <span className='submenu-title'>
+                {icon ? <i className={`icon iconfont icon-${icon}`} /> : null}
+                <span className='submenu-title-text'>{name}</span>
+                <span className='fav-submenu-count'>已添加3/10</span>
+              </span>
+
+              {isFavorites && <span className='fav-submenu-setting' onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                
+              }}>管理</span>}
             </>
-          )}
+          }
+          // icon={<i className={`icon iconfont icon-${icon}`} />}
         >
           {children.length && renderMenu(children, badgeMap).menu}
         </SubMenu>,
-        <Divider />];
+        <Divider />,
+      ];
     } else {
       const badge = badgeMap && badgeMap.get && badgeMap.get(route.id);
-      
+
       return [
         <Item key={pathname}>
           <Link to={pathname}>
             {<i className={`icon iconfont icon-${icon}`} />}
-            <TitleWithBadge badge={badge}><span>{name}</span></TitleWithBadge>
+            <TitleWithBadge badge={badge}>
+              <span>{name}</span>
+            </TitleWithBadge>
           </Link>
         </Item>,
         <Divider />,
@@ -116,26 +133,26 @@ const Aside: React.FunctionComponent = () => {
   const [badgeMap, setBadgeMap] = useState({});
   const dispatch = useAppDispatch();
 
-  const { collapsed } = useAppSelector((state) => state.app);
-  const { menuTrees } = useAppSelector((state) => state.menu);
+  const { collapsed } = useAppSelector(state => state.app);
+  const { menuTrees } = useAppSelector(state => state.menu);
 
   useEffect(() => {
-    dispatch(fetchMenuThunkAction)
+    dispatch(fetchMenuThunkAction);
 
     MenuService.badges().then(res => {
       setBadgeMap(res);
-    })
+    });
   }, [dispatch]);
 
   const asideMenu = renderMenu(menuTrees, badgeMap);
   const currentURL = location.pathname + location.search;
 
   return (
-    <aside className="app-aside">
-      <div className="app-menu">
-        {asideMenu.menu.length === 0 ? null : 
+    <aside className='app-aside'>
+      <div className='app-menu'>
+        {asideMenu.menu.length === 0 ? null : (
           <Menu
-            mode="inline"
+            mode='inline'
             inlineCollapsed={collapsed}
             selectedKeys={[currentURL, location.pathname]}
             defaultOpenKeys={collapsed ? [] : asideMenu.defaultOpenKeys}
@@ -143,14 +160,15 @@ const Aside: React.FunctionComponent = () => {
             inlineIndent={0}
           >
             {asideMenu.menu}
-          </Menu>}
+          </Menu>
+        )}
       </div>
 
-      <Button type="text" className="hamburger" onClick={() => dispatch(toggleAside())}>
-        <i className="icon iconfont icon-bars" />
+      <Button type='text' className='hamburger' onClick={() => dispatch(toggleAside())}>
+        <i className='icon iconfont icon-bars' />
       </Button>
     </aside>
-  )
-}
+  );
+};
 
 export default Aside;

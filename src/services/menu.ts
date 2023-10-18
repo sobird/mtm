@@ -34,7 +34,7 @@ export interface IMenuBadge {
   noticeContent: string;
 }
 
-const Favorites: IMenuItem = {
+export const Favorites: IMenuItem = {
   title: '常用功能',
   code: 'favorite-sub-menu',
   icon: 'favorite',
