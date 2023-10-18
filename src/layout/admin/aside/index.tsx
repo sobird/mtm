@@ -112,7 +112,19 @@ const Aside: React.FunctionComponent = () => {
                               e.preventDefault();
                               e.stopPropagation();
 
-                              setEditMode(state => !state);
+                              
+
+                              if(editMode) {
+                                MenuService.update({
+                                  favorites
+                                }).finally(() => {
+                                  setEditMode(false);
+                                })
+                              } else {
+                                setEditMode(true);
+                              }
+
+                              
                             }}
                           >
                             {editMode ? '保存' : '管理'}

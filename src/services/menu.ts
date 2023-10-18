@@ -67,8 +67,8 @@ const MenuService = {
     });
   },
 
-  async update(favorites?: Partial<IMenuItem>[]) {
-    return http.patch('/menu', { favorites });
+  async update(data: Partial<IMenuListResponse>) {
+    return http.patch('/menu', data);
   },
 
   /** 可将此接口合并到 /menu */
