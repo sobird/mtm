@@ -153,8 +153,10 @@
         .iconfont {
           // margin-right: 5px;
         }
+
         .mtm-badge {
           color: inherit;
+
           .mtm-badge-count {
             zoom: 0.55;
             padding: 0 5px;
@@ -163,10 +165,11 @@
       }
     }
 
-    .mtm-menu-item-selected{
+    .mtm-menu-item-selected {
       font-weight: 500;
-      
+
     }
+
     .mtm-menu-submenu-selected {
       .mtm-menu-submenu-title {
         color: #1677ff;
@@ -181,12 +184,14 @@
 
 
   .mtm-menu-root {
+
     // 根菜单项
     &>.mtm-menu-item {
       background-color: transparent;
       line-height: normal;
       height: auto;
       display: inline-block;
+
       .iconfont {
         margin-right: 5px;
       }
@@ -289,9 +294,11 @@
         }
       }
     }
+
     .mtm-badge {
       font-size: 12px;
       color: inherit;
+
       .mtm-badge-count {
         zoom: 0.55;
         padding: 0 5px;
@@ -344,13 +351,16 @@
   .iconfont {
     margin-right: 5px;
   }
+
   .mtm-badge {
     color: inherit;
   }
 }
+
 .mtm-menu-submenu-popup {
   .mtm-badge {
     color: inherit;
+
     .mtm-badge-count {
       zoom: 0.55;
       padding: 0 5px;
@@ -361,12 +371,12 @@
 
 // 收藏夹
 .fav-submenu {
-  &> div {
+  &>div {
     cursor: default !important;
   }
-  
+
   &-setting {
-    color: rgba(0,0,0,.6);
+    color: rgba(0, 0, 0, .6);
     font-size: 12px;
     cursor: pointer;
 
@@ -374,6 +384,7 @@
       color: var(--primary);
     }
   }
+
   &-save {
     color: var(--primary);
     font-size: 12px;
@@ -381,7 +392,7 @@
   }
 
   &-count {
-    color: rgba(0,0,0,.4);
+    color: rgba(0, 0, 0, .4);
     font-size: 12px;
   }
 
@@ -412,4 +423,43 @@
   text-align: center;
   line-height: normal;
   width: 100%;
+}
+
+.fav-item-edit {
+  .mtm-menu-title-content {
+    display: flex;
+
+    .anticon {
+      font-size: 12px;
+      position: absolute;
+      right: 0;
+      color: var(--primary);    
+    }
+  }
+
+  
+
+  .filled {
+    display: none;
+  }
+
+  &:hover {
+    .anticon {  
+      
+    }
+    .filled {
+      display: block;
+    }
+    .outlined {
+      display: none;
+    }
+  }
+}
+
+.fav-item-added {
+  .mtm-menu-title-content {
+    .anticon {
+      color: var(--danger);
+    }
+  }
 }

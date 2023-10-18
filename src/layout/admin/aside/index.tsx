@@ -132,8 +132,8 @@ const Aside: React.FunctionComponent = () => {
                           return (
                             <Item
                               key={item.url}
-                              className={classNames('edit', {
-                                isfav: added,
+                              className={classNames('fav-item-edit', {
+                                'fav-item-added': added,
                               })}
 
                               onClick={() => {
@@ -155,9 +155,9 @@ const Aside: React.FunctionComponent = () => {
                               </TitleWithBadge>
 
                               {added ? (
-                                <MinusCircleOutlined />
+                                <><MinusCircleOutlined className='outlined' /><MinusCircleFilled className='filled' /></>
                               ) : (
-                                <PlusCircleOutlined />
+                                <><PlusCircleOutlined className='outlined' /><PlusCircleFilled  className='filled' /></>
                               )}
                             </Item>
                           );
