@@ -9,13 +9,16 @@ import { UPDATE_MENU } from '../actions/menu';
 import { IMenuItem } from '@/services/menu';
 
 export interface IMenuState {
-  firstItem?: IMenuItem;
+  /** 收藏夹列表 */
   favorites?: IMenuItem[];
+  /** 菜单原始列表 */
   menuItems?: IMenuItem[];
+  /** 菜单树 用来渲染导航菜单 */
   menuTrees?: IMenuItem[];
   pathMap?: {
     [key in string]: IMenuItem
-  }
+  },
+  defaultOpenKeys?: string[];
 }
 
 export interface IMenuAction extends Action {
@@ -25,11 +28,11 @@ export interface IMenuAction extends Action {
 
 // defaultState
 const initialState: IMenuState = {
-  firstItem: null,
   favorites: [],
   menuItems: [],
   menuTrees: [],
   pathMap: {},
+  defaultOpenKeys: [],
 };
 
 export default (state = initialState, action: IMenuAction) => {

@@ -11,7 +11,7 @@ export interface IMenuItem {
   title: string;
   icon: string;
   url: string;
-  id: number | string;
+  id: string;
   parentId: string;
   code: string;
   auth: boolean;
@@ -20,6 +20,8 @@ export interface IMenuItem {
   sortId: number;
   toolMenu: boolean;
   children?: IMenuItem[];
+
+  last?: boolean;
 }
 
 export interface IMenuListResponse {
@@ -43,8 +45,8 @@ export const Favorites: IMenuItem = {
   level: 0,
   parentId: '-1',
   sortId: 0,
-  auth: false,
-  toolMenu: false,
+  auth: true,
+  toolMenu: true,
   url: '/favorite-sub-menu',
 };
 
@@ -52,14 +54,16 @@ const MenuService = {
   async list(parentId?: number) {
     return http.get<IMenuListResponse>('/menu', { parentId }).then(({menuItems = [], favorites = []}) => {
       const items = menuItems.sort((a: any, b: any) => a.index - b.index);
-      const [First, ...Others] = listToTree(items);
+      const menuTrees = listToTree(items);
+      // 标记最后一项
+      menuTrees[menuTrees.length - 1]['last'] = true;
 
-      Favorites.children = favorites.map(item => {
-        item.url = item.url + '?fav';
-        return item;
-      });
+      // Favorites.children = favorites.map(item => {
+      //   item.url = item.url + '?fav';
+      //   return item;
+      // });
 
-      return [First, Favorites, Others, menuItems, favorites];
+      return [menuTrees, menuItems, favorites];
     });
   },
 
