@@ -5,6 +5,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import {message} from 'antd';
 import classNames from 'classnames';
 
 import { PlusCircleOutlined, MinusCircleOutlined, PlusCircleFilled, MinusCircleFilled } from '@ant-design/icons';
@@ -32,12 +33,16 @@ const Aside: React.FunctionComponent = () => {
   const { collapsed } = useAppSelector(state => state.app);
   const { menuTrees: [First, ...Others], favorites, defaultOpenKeys } = useAppSelector(state => state.menu);
 
-  defaultOpenKeys.push(Favorites.id);
+  // defaultOpenKeys.push(Favorites.id);
+
+  const dok = [...defaultOpenKeys];
+  dok.push(Favorites.id);
 
   // 收藏夹
   Favorites.children = favorites.map(item => {
-    item.url = item.url + '?fav';
-    return item;
+    const _item = {...item};
+    _item.url = _item.url + '?fav';
+    return _item;
   });
 
   const menuTrees = [Favorites, ...Others];
@@ -62,7 +67,7 @@ const Aside: React.FunctionComponent = () => {
             mode='inline'
             inlineCollapsed={collapsed}
             selectedKeys={[currentURL, location.pathname]}
-            defaultOpenKeys={collapsed ? [] : defaultOpenKeys}
+            defaultOpenKeys={collapsed ? [] : dok}
             // items={items}
             inlineIndent={0}
             forceSubMenuRender={true}
@@ -81,9 +86,10 @@ const Aside: React.FunctionComponent = () => {
 
             {menuTrees.map(submenu => {
               const isFavorites = submenu.code === Favorites.code;
+              const isEditMode = isFavorites && editMode;
               const badge = badgeMap && badgeMap.get && badgeMap.get(submenu.id);
 
-              if (submenu?.children?.length > 0) {
+              if (submenu?.children?.length > 0 || isFavorites) {
                 return [
                   <SubMenu
                     className={isFavorites && 'fav-submenu'}
@@ -119,7 +125,7 @@ const Aside: React.FunctionComponent = () => {
                     {submenu?.children &&
                       submenu?.children.map(item => {
                         const badge = badgeMap && badgeMap.get && badgeMap.get(item.id);
-                        const isFav = favorites.find(fav => fav.id === item.id);
+                        const added = !!favorites.find(fav => fav.id === item.id);
 
                         // 编辑模式
                         if (editMode) {
@@ -127,28 +133,31 @@ const Aside: React.FunctionComponent = () => {
                             <Item
                               key={item.url}
                               className={classNames('edit', {
-                                isfav: isFav,
+                                isfav: added,
                               })}
+
+                              onClick={() => {
+                                console.log(item, added);
+
+                                if(added) {
+                                  dispatch(removeFavMenuItem(item));
+                                } else {
+                                  if (favorites.length >= 10) {
+                                    message.error('已达最大添加限制');
+                                    return;
+                                  }
+                                  dispatch(insertFavMenuItem(item));
+                                }
+                              }}
                             >
                               <TitleWithBadge badge={badge}>
                                 <span>{item.title}</span>
                               </TitleWithBadge>
 
-                              {isFav ? (
-                                <MinusCircleOutlined
-                                  onClick={() => {
-                                    //
-
-                                    dispatch(removeFavMenuItem(item));
-                                  }}
-                                />
+                              {added ? (
+                                <MinusCircleOutlined />
                               ) : (
-                                <PlusCircleOutlined
-                                  onClick={() => {
-                                    //
-                                    dispatch(insertFavMenuItem(item));
-                                  }}
-                                />
+                                <PlusCircleOutlined />
                               )}
                             </Item>
                           );
@@ -166,6 +175,7 @@ const Aside: React.FunctionComponent = () => {
                         );
                       })}
                   </SubMenu>,
+                  isEditMode && <li className='nav-edit-hint'>点击下方功能入口即可添加</li>,
                   !submenu.last && <Divider />,
                 ];
               }

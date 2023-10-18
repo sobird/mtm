@@ -33,4 +33,6 @@ export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = ThunkDispatch<string, number, any>;
 
+window.store = store;
+
 export default store;

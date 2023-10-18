@@ -50,7 +50,7 @@ export const removeFavMenuItem = (menuItem: IMenuItem) => {
      * @todo 可调用接口更新到后端
      */
     dispatch(updateMenuAction({
-      favorites,
+      favorites: [...favorites]
     }))
   };
 
@@ -68,7 +68,7 @@ export const insertFavMenuItem = (menuItem: IMenuItem) => {
      * @todo 可调用接口更新到后端
      */
     dispatch(updateMenuAction({
-      favorites,
+      favorites: [...favorites]
     }))
   };
 
