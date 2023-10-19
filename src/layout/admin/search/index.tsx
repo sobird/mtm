@@ -131,7 +131,12 @@ const Search: React.FC = () => {
     []
   );
 
-  // 记录历史
+  /**
+   * 记录历史
+   * 
+   * @todo 
+   * 待测试 保证 搜索历史为最新10条记录
+   */
   const recordHistory = useCallback(record => {
     const _searchHistory = [...searchHistory];
     const index = _searchHistory.findIndex(item => item.path === record.path);
@@ -141,7 +146,7 @@ const Search: React.FC = () => {
       _searchHistory.splice(index, 1);
     }
 
-    if (_searchHistory.length > 10) {
+    if (_searchHistory.length >= 10) {
       _searchHistory.pop();
     }
 
