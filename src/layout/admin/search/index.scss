@@ -14,3 +14,66 @@
     min-width: 350px
   }
 }
+
+.search-select-dropdown {
+  padding: 0;
+
+  &-suggest {
+    padding: 10px 0;
+
+    &-item {
+      display: block;
+      cursor: pointer;
+      padding: 5px 15px;
+
+      &:hover {
+        background-color: #E3E5E7;
+      }
+    }
+  }
+
+  &-history {
+    padding: 15px;
+
+    .search-history-head {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+
+      &-title {
+        height: 24px;
+        font-size: 16px;
+        line-height: 24px;
+        font-weight: 500;
+        flex: 1;
+      }
+
+      &-clear {
+
+      }
+    }
+
+    .search-history-tag {
+     
+      cursor: pointer;
+      a {
+        color: #333;
+        &:hover {
+          color: var(--primary);
+        }
+      }
+      .mtm-tag-close-icon {
+        position: absolute;
+        right: -5px;
+        top: -10px;
+        display: none;
+      }
+
+      &:hover {
+        .mtm-tag-close-icon {
+          display: block;
+        }
+      }
+    }
+  }
+}
