@@ -6,6 +6,8 @@
 
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
+import { ConfigProvider } from 'antd';
+import theme from '@/styles/theme';
 
 import LayoutAdmin from '@/layout/admin';
 import NoneSupport from '@mtm/shared/components/none-support';
@@ -47,8 +49,8 @@ const routes: RouteObject[] = [
 
   //   ],
   // },
-  { path: '/login', element: <Login /> },
-  { path: '/register', element: <Register /> },
+  { path: '/login', element: <ConfigProvider componentSize="large" theme={theme}><Login /></ConfigProvider> },
+  { path: '/register', element: <ConfigProvider componentSize="large" theme={theme}><Register /></ConfigProvider> },
   { path: '/register/success', element: <RegisterSuccess /> },
   { path: '/settleinpc', element: <SettleInpc /> },
   { path: '/settleinjx/home', element: <EntryHome /> },

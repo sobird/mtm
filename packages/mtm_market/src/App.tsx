@@ -11,8 +11,9 @@ interface AppProps {
   master: any;
 }
 
-console.log('antdTheme', theme.getDesignToken(), theme.defaultConfig.token);
-
+/**
+ * @todo 全局配置建议移至主工程
+ */
 const defaultToken = theme.defaultConfig.token;
 
 const App: React.FC<AppProps> = ({ master = {} }) => {

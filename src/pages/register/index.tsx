@@ -116,7 +116,7 @@ function Register() {
               return (
                 <>
                   <ProForm.Item>
-                    <Button loading={loading} type='primary' htmlType='submit' className='base-submit-btn' size='large'>
+                    <Button loading={loading} type='primary' htmlType='submit' className='base-submit-btn'>
                       注册
                     </Button>
                   </ProForm.Item>
