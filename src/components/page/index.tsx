@@ -1,12 +1,10 @@
 /**
- * 页面头组件
- * @todo
- * 移动到主工程 @mtm/shared/components
+ * 页面容器
  *
  * sobird<i@sobird.me> at 2023/10/07 15:39:45 created.
  */
 
-import React, { ReactNode, PropsWithChildren } from 'react';
+import React, { ReactNode, CSSProperties, PropsWithChildren } from 'react';
 import { Link, createHashRouter } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbProps, Col, Row, Space, Card } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
@@ -14,12 +12,15 @@ import './index.scss';
 
 const router = createHashRouter([{}]);
 
-interface PageContainerProps {
+interface PageProps {
+  prefixCls?: string;
   title?: ReactNode;
   breadcrumb?: BreadcrumbProps;
   description?: string;
   extra?: ReactNode[];
-  icon?: ReactNode;
+  titleIcon?: ReactNode;
+  headStyle?: CSSProperties;
+  bodyStyle?: CSSProperties;
 }
 
 function itemRender(item, params, items, paths: string[]) {
@@ -58,38 +59,44 @@ function itemRender(item, params, items, paths: string[]) {
   );
 }
 
-const PageContainer: React.FC<PropsWithChildren<PageContainerProps>> = ({
-  children,
-  breadcrumb,
+const Page: React.FC<PropsWithChildren<PageProps>> = ({
+  prefixCls = 'mix',
   title,
-  icon,
+  titleIcon,
   description,
+  breadcrumb,
   extra,
+  children,
+  headStyle,
+  bodyStyle,
   ...props
 }) => {
-
-  return (
-    <div className='micro-page-container' {...props}>
-      <div className='micro-page-header'>
-        <Breadcrumb
-          className='micro-breadcrumb'
+  let head: React.ReactNode;
+  if (title || description || extra || breadcrumb) {
+    head = (
+      <div className={`${prefixCls}-page-head`} style={headStyle}>
+        {breadcrumb && <Breadcrumb
+          className={`${prefixCls}-page-head-breadcrumb`} 
           separator={<RightOutlined />}
           itemRender={itemRender}
           {...breadcrumb}
-        />
-        <Row className='micro-page-header-heading' align='middle'>
-          <Col flex={1}>
-            <h2>{typeof icon === 'string' ? <i className={`iconfont icon-${icon}`} /> : icon}{title}</h2>
-          </Col>
-          <Col>
-            <Space>{extra}</Space>
-          </Col>
-        </Row>
-        {description && <div className='micro-page-header-description'>{description}</div>}
+        />}
+
+        <div className={`${prefixCls}-page-head-title`} >
+          <h2>{typeof titleIcon === 'string' ? <i className={`iconfont icon-${titleIcon}`} /> : titleIcon}{title}</h2>
+          {extra && <div className={`${prefixCls}-page-head-extra`}>{extra}</div>}
+        </div>
+
+        {description && <div className={`${prefixCls}-page-head-description`} >{description}</div>}
       </div>
-      <Card bodyStyle={{padding: 16}} className='micor-page-content'>{children}</Card>
+    );
+  }
+  return (
+    <div className={`${prefixCls}-page`} {...props}>
+      {head}
+      <div style={bodyStyle} className={`${prefixCls}-page-body`}>{children}</div>
     </div>
   );
 };
 
-export default PageContainer;
+export default Page;

@@ -11,7 +11,7 @@ import './App.css';
 const theme = {
   token: {
     // colorPrimary: '#ffd100',
-    // borderRadius: 2,
+    borderRadius: 3,
     // colorWhite: '#333',
     motion: false,
   },

@@ -17,6 +17,7 @@ import RegisterSuccess from '@/pages/register/success';
 
 // const Home = lazy(() => import('@/pages/home'));
 import Home from '@/pages/home';
+import Setting from '@/pages/setting';
 const SettleInpc = lazy(() => import('@/pages/settleinpc'));
 const EntryHome = lazy(() => import('@/pages/settleinjx/home'));
 const EntryShop = lazy(() => import('@/pages/settleinjx/shop'));
@@ -31,6 +32,10 @@ const routes: RouteObject[] = [
         index: true,
         // path: 'home',
         element: <Home />,
+      },
+      {
+        path: 'setting',
+        element: <Setting />,
       },
       {
         path: '*',
