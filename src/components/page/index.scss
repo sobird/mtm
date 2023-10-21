@@ -64,6 +64,8 @@ $prefixCls: 'mix' !default;
     background-color: #fff;
 
     border-radius: 3px;
+    display: flex;
+    flex-direction: column;
   }
 }
 

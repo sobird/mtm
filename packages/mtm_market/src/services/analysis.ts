@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/10/12 7:49:38 created.
  */
 
-import http from '@mtm/shared/utils/http';
+import { http } from '@mtm/shared';
 import dayjs from '@/utils/dayjs';
 
 export interface IWorkbenchResponse {
@@ -69,7 +69,7 @@ export interface ITrendingResponse {
 }
 
 function mockTrending(duration = 30, size: number = 100) {
-  console.log('duration', duration)
+  console.log('duration', duration);
   return Array.from({ length: duration }, (_, index: number) => ({
     date: dayjs()
       .subtract(duration - index, 'day')
@@ -90,7 +90,7 @@ const AnalysisService = {
   /** 经营趋势 */
   trending(params: ITrendingParams) {
     return http.get<ITrendingResponse>('/analysis/trending', params).then(res => {
-      const {startTime, endTime} = params;
+      const { startTime, endTime } = params;
       // mock 数据
       const duration = dayjs.duration(dayjs(String(endTime)).diff(dayjs(String(startTime)))).days();
 

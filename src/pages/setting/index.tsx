@@ -3,9 +3,15 @@
  *
  * sobird<i@sobird.me> at 2023/10/20 20:04:32 created.
  */
+import { Outlet } from 'react-router-dom';
+
 import { Menu, Button } from 'antd';
 import type { MenuProps } from 'antd';
 import PageContainer from '@/components/page';
+
+import { http } from '@mtm/shared';
+
+console.log('http', http)
 
 const items: MenuProps['items'] = [
   {
@@ -49,8 +55,15 @@ const Setting = () => {
       }}
       title='账户设置'
       extra={[<Button>操作</Button>]}
+      bodyStyle={{
+        flexDirection: "row",
+        gap: 15
+      }}
     >
       <Menu style={{ width: 200 }} defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={items} />
+
+
+      <Outlet />
     </PageContainer>
   );
 };

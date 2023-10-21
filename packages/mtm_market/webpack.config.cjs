@@ -21,7 +21,7 @@ const CompressionPlugin = require("compression-webpack-plugin");
 const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
 const { ModuleFederationPlugin } = require('webpack').container;
-const externals = require('@mtm/shared/utils/externals.js');
+const externals = require('@mtm/shared/lib/utils/externals');
 const pkg = require('./package.json');
 
 const PORT = 3001;
