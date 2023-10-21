@@ -7,3 +7,5 @@
 export { default as http } from './utils/http';
 export { default as externals } from './utils/externals';
 export { default as Layout } from './layout';
+
+export * from './components';

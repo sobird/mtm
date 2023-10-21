@@ -4,14 +4,9 @@
  * sobird<i@sobird.me> at 2023/10/20 20:04:32 created.
  */
 import { Outlet } from 'react-router-dom';
-
 import { Menu, Button } from 'antd';
 import type { MenuProps } from 'antd';
-import PageContainer from '@/components/page';
-
-import { http } from '@mtm/shared';
-
-console.log('http', http)
+import { Page } from '@mtm/shared'
 
 const items: MenuProps['items'] = [
   {
@@ -49,7 +44,7 @@ const BreadcrumbItem = [
 
 const Setting = () => {
   return (
-    <PageContainer
+    <Page
       breadcrumb={{
         items: BreadcrumbItem,
       }}
@@ -64,7 +59,7 @@ const Setting = () => {
 
 
       <Outlet />
-    </PageContainer>
+    </Page>
   );
 };
 

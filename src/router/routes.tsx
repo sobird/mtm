@@ -10,7 +10,7 @@ import { ConfigProvider } from 'antd';
 import theme from '@/styles/theme';
 
 import LayoutAdmin from '@/layout/admin';
-import NoneSupport from '@mtm/shared/components/none-support';
+import { NoneSupport } from '@mtm/shared';
 import Login from '@/pages/login';
 import Register from '@/pages/register';
 import RegisterSuccess from '@/pages/register/success';
@@ -41,9 +41,9 @@ const routes: RouteObject[] = [
         children: [
           {
             index: true,
-            element: <SettingProfile />
-          }
-        ]
+            element: <SettingProfile />,
+          },
+        ],
       },
       {
         path: '*',
@@ -62,8 +62,22 @@ const routes: RouteObject[] = [
 
   //   ],
   // },
-  { path: '/login', element: <ConfigProvider componentSize="large" theme={theme}><Login /></ConfigProvider> },
-  { path: '/register', element: <ConfigProvider componentSize="large" theme={theme}><Register /></ConfigProvider> },
+  {
+    path: '/login',
+    element: (
+      <ConfigProvider componentSize='large' theme={theme}>
+        <Login />
+      </ConfigProvider>
+    ),
+  },
+  {
+    path: '/register',
+    element: (
+      <ConfigProvider componentSize='large' theme={theme}>
+        <Register />
+      </ConfigProvider>
+    ),
+  },
   { path: '/register/success', element: <RegisterSuccess /> },
   { path: '/settleinpc', element: <SettleInpc /> },
   { path: '/settleinjx/home', element: <EntryHome /> },

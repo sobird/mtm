@@ -12,7 +12,7 @@ import './index.scss';
 
 const router = createHashRouter([{}]);
 
-interface PageProps {
+export interface PageProps {
   prefixCls?: string;
   title?: ReactNode;
   breadcrumb?: BreadcrumbProps;

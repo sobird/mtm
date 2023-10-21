@@ -1,0 +1,71 @@
+/*
+ * index.scss
+ * 
+ * sobird<i@sobird.me> at 2023/10/07 15:39:51 created.
+ */
+
+$prefixCls: 'mix' !default;
+
+.#{$prefixCls}-page {
+
+  &-head {
+    // background-color: rgba(110, 116, 224, 0.1);
+    margin: -15px;
+    padding: 15px 15px 10px;
+    margin-bottom: 20px;
+    background-color: #fdfdfd;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .15);
+
+    &-breadcrumb {
+      line-height: 1;
+      margin-bottom: 15px;
+
+      a {
+        height: auto;
+
+        &:hover {
+          background-color: inherit;
+          font-weight: 500;
+        }
+      }
+    }
+
+    &-title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      h2 {
+        flex: 1;
+        font-size: 20px;
+        font-weight: 400;
+        color: #1f2f3d;
+        margin-bottom: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+  
+        .iconfont,
+        .anticon {
+          margin-right: 5px;
+          font-size: inherit;
+        }
+      }
+    }
+
+    &-extra {}
+
+    &-description {}
+  }
+
+  &-body {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 15px;
+    background-color: #fff;
+
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
