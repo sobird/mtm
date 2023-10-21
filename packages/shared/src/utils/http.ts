@@ -34,7 +34,6 @@ import axios, {
   InternalAxiosRequestConfig,
   AxiosError,
 } from 'axios';
-import { message } from 'antd';
 
 export type ResponseParser<T = unknown> = (response: AxiosResponse) => T;
 
