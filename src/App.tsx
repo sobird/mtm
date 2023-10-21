@@ -5,6 +5,7 @@ import zhCN from 'antd/lib/locale/zh_CN';
 import router from '@/router';
 import store from '@/store';
 import '@mtm/shared/es/utils/provider';
+// import "@mtm/shared/es/index.css";
 
 import './App.css';
 

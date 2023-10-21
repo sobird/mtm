@@ -10,7 +10,7 @@ import { Watermark } from 'antd';
 import classNames from 'classnames';
 import Header from './header';
 import Aside from './aside';
-import ErrorBoundary from "@/components/error-boundary";
+import { ErrorBoundary } from "@mtm/shared";
 import Loading from '@/components/loading';
 import { IStoreState } from "@/store/reducers";
 import startQiankun from '@/router/micro';
