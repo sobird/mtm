@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/09/14 15:24:37 created.
  */
 
-import http from "@mtm/shared/utils/http";
+import { http } from '@mtm/shared';
 
 export interface ICampaignListQuery {
   ps?: number;

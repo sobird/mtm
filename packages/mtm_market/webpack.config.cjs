@@ -230,6 +230,7 @@ module.exports = (env) => {
     config.plugins.push(new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
       chunkFilename: '[id].[contenthash].css',
+      ignoreOrder: true,
     }));
     // config.plugins.push(new webpack.SourceMapDevToolPlugin({
     //   test: /\.(tsx|jsx|js)$/,

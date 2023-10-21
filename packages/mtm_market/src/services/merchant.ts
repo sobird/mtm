@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/10/13 0:21:44 created.
  */
 
-import http from '@mtm/shared/utils/http';
+import { http } from '@mtm/shared';
 
 interface GoldParams {
   poild: number;

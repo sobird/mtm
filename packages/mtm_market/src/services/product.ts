@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/10/13 18:57:07 created.
  */
 
-import http from '@mtm/shared/utils/http';
+import { http } from '@mtm/shared';
 
 interface ISellingProduct {
   total: number;

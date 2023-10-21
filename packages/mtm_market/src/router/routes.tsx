@@ -8,7 +8,7 @@ import { lazy, Suspense } from 'react';
 import { RouteObject, Outlet } from 'react-router-dom';
 import { default as MTMLayout } from '@/layout';
 import Loading from '@/components/loading';
-import NoneSupport from '@mtm/shared/components/none-support';
+import { NoneSupport } from '@mtm/shared';
 
 import Home from '@/pages/home';
 

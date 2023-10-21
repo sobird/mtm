@@ -3,7 +3,7 @@
  * 
  * sobird<i@sobird.me> at 2023/10/11 20:28:37 created.
  */
-import http from '@mtm/shared/utils/http';
+import { http } from '@mtm/shared';
 
 export interface IMessageAction {
   type: number;

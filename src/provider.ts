@@ -1,5 +1,8 @@
 /**
  * MTM微前端通用包
+ * 
+ * @todo
+ * 迁移到@mtm/shared
  *
  * sobird<i@sobird.me> at 2023/09/13 21:31:48 created.
  */

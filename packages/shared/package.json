@@ -26,7 +26,6 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.23.0",
     "@babel/preset-env": "^7.22.20",
@@ -67,5 +66,13 @@
     "@ant-design/pro-components": "^2.6.28",
     "antd": "^5.6.1",
     "axios": "^1.5.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sobird/mtm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sobird/mtm/issues"
+  },
+  "homepage": "https://github.com/sobird/mtm#readme"
 }
