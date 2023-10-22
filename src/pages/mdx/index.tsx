@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import Editor from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
 import * as Antd from 'antd';
-
 import { Page } from '@mtm/shared';
-// import Mdx from './mdx.tsx';
 import Mdx from '@/components/mdx';
-
 import defaultMdxText from '!raw-loader!./index.mdx';
+
+const monacoConfig = {
+  paths: {
+    vs: 'https://unpkg.com/monaco-editor@0.44.0/min/vs'
+  }
+};
+
+loader.config(monacoConfig);
+
 
 export default function MdxTest() {
   const [value, setValue] = useState();
