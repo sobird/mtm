@@ -96,7 +96,7 @@ export default (env) => {
       output: {
         //preserveModules: true,
         dir: "dist/es",
-        format: "es"
+        format: "es",
       },
       plugins: plugins({
         clear: {
