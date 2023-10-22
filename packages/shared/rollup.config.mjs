@@ -20,23 +20,30 @@ import image from '@rollup/plugin-image';
 import json from '@rollup/plugin-json';
 import copy from 'rollup-plugin-copy';
 import clear from 'rollup-plugin-clear';
+import mdx from '@mdx-js/rollup';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const isProduction = process.env.NODE_ENV === 'production';
 
-// .ts 和 index.tsx 作为入口
-const input = glob.sync(['src/**/*.{ts,}', 'src/**/index.tsx'], {
-  ignore: ['src/**/*.d.ts'],
-  cwd: __dirname,
-  absolute: false,
-}).reduce((map, filename) => {
-  map[relative(
-    'src',
-    filename.slice(0, filename.length - extname(filename).length)
-  )] = filename;
-  return map;
-}, {});
+
+
+function input(pattern) {
+  return glob.sync(pattern, {
+    ignore: ['src/**/*.d.ts'],
+    cwd: __dirname,
+    absolute: false,
+  }).reduce((map, filename) => {
+    map[relative(
+      'src',
+      filename.slice(0, filename.length - extname(filename).length)
+    )] = filename;
+    return map;
+  }, {});
+}
+
+const mainInput = input(['src/**/*.{ts,}', 'src/**/index.tsx']);
+const mdxInput = input(['src/**/*.{mdx,}']);
 
 function plugins(options = {}, env = {}) {
   const defaultPlugins = {
@@ -92,7 +99,7 @@ function plugins(options = {}, env = {}) {
 export default (env) => {
   return [
     { // es module
-      input,
+      input: mainInput,
       output: {
         //preserveModules: true,
         dir: "dist/es",
@@ -106,7 +113,7 @@ export default (env) => {
     },
 
     { // cjs module
-      input,
+      input: mainInput,
       output: {
         dir: 'dist/lib',
         format: 'cjs',
@@ -144,6 +151,18 @@ export default (env) => {
         },
         terser: false,
       }, env),
-    }
+    },
+
+    { // mdx
+      input: mdxInput,
+      output: {
+        //preserveModules: true,
+        dir: "dist/mdx",
+        format: "es",
+      },
+      plugins: [
+        mdx()
+      ],
+    },
   ];
 }

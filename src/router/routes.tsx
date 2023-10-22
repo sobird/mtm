@@ -19,6 +19,7 @@ import RegisterSuccess from '@/pages/register/success';
 import Home from '@/pages/home';
 import Setting from '@/pages/setting';
 import SettingProfile from '@/pages/setting/profile';
+import MdxTest from '@/pages/mdx';
 
 const SettleInpc = lazy(() => import('@/pages/settleinpc'));
 const EntryHome = lazy(() => import('@/pages/settleinjx/home'));
@@ -44,6 +45,10 @@ const routes: RouteObject[] = [
             element: <SettingProfile />,
           },
         ],
+      },
+      {
+        path: 'mdx',
+        element: <MdxTest />,
       },
       {
         path: '*',

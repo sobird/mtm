@@ -6,7 +6,7 @@
 import { Outlet } from 'react-router-dom';
 import { Menu, Button } from 'antd';
 import type { MenuProps } from 'antd';
-import { Page } from '@mtm/shared'
+import { Page } from '@mtm/shared';
 
 const items: MenuProps['items'] = [
   {
@@ -56,8 +56,6 @@ const Setting = () => {
       }}
     >
       <Menu style={{ width: 200 }} defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={items} />
-
-
       <Outlet />
     </Page>
   );
