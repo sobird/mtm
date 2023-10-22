@@ -57,7 +57,7 @@ function plugins(options = {}, env = {}) {
       presets: ['@babel/preset-env']
     },
     postcss: {
-      extract: isProduction,
+      extract: true,
       minimize: isProduction,
       // plugins: [] // @see postcss.config.js
     },

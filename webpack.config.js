@@ -55,7 +55,7 @@ const config = {
     globalObject: 'window',
   },
   devServer: {
-    open: true,
+    // open: true,
     host: '0.0.0.0',
     port: 3000,
     hot: true, // 开启HMR功能

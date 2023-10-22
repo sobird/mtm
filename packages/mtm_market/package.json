@@ -18,14 +18,16 @@
     "@ant-design/charts": "^1.4.2",
     "@ant-design/icons": "^5.2.6",
     "@ant-design/pro-components": "^2.6.21",
+    "@mtm/shared": "file:../shared/dist",
     "antd": "^5.6.1",
+    "axios": "^1.5.1",
     "classnames": "^2.3.2",
     "dayjs": "^1.11.10",
     "numeral": "^2.0.6",
     "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.16.0"
+    "react-router-dom": "^6.17.0"
   },
   "devDependencies": {
     "@types/numeral": "^2.0.3",
@@ -58,8 +60,5 @@
     "webpack-bundle-analyzer": "^4.9.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
-  },
-  "workspaces": [
-    "../shared/dist"
-  ]
+  }
 }
