@@ -26,8 +26,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const isProduction = process.env.NODE_ENV === 'production';
 
-
-
 function input(pattern) {
   return glob.sync(pattern, {
     ignore: ['src/**/*.d.ts'],
@@ -153,16 +151,16 @@ export default (env) => {
       }, env),
     },
 
-    { // mdx
-      input: mdxInput,
-      output: {
-        //preserveModules: true,
-        dir: "dist/mdx",
-        format: "es",
-      },
-      plugins: [
-        mdx()
-      ],
-    },
+    // { // mdx
+    //   input: mdxInput,
+    //   output: {
+    //     //preserveModules: true,
+    //     dir: "dist/mdx",
+    //     format: "es",
+    //   },
+    //   plugins: [
+    //     mdx()
+    //   ],
+    // },
   ];
 }

@@ -1,0 +1,63 @@
+{/** 
+ * 这是Mdx的在线练习场，您可以此编辑器中，编辑Mdx格式内容，右侧将会实时显示渲染效果。
+ * 此处，支持所有Ant Design组件，您可以直接使用。
+ * 
+ * sobird<i@sobird.me> at 2023/10/22 22:29:02 created.
+*/}
+
+
+# Mdx Playground
+
+## MDX 是什么？
+MDX 赋予你在 markdown 内容当中使用 JSX 的能力。
+你可以导入（import）如见，例如交互式图标或警告框，并将它们嵌入 到你所书写的内容当中。
+这让利用组件来编写较长的内容成为了一场革命。 🚀
+实际上，MDX 可以看作是一种融合了 markdown 和 JSX 的格式，就像下面的示例：
+
+<div style={{backgroundColor: 'violet', padding: '1rem'}}>
+  尝试将背景颜色更改为 `tomato`.
+</div>
+
+{
+  // 打印props
+  console.log('props', props)
+}
+
+## MDX 语法
+> A blockquote with *some* emphasis.
+
+* Unordered
+* List
+
+1. Ordered
+2. List
+
+A paragraph, introducing a thematic break:
+
+---
+
+```js
+some.code()
+```
+
+a [link](https://example.com), an ![image](./image.png), some *emphasis*,
+something **strong**, and finally a little `code()`.
+
+## 表达式
+
+Two 🍰 is: {Math.PI * 2}
+
+## ESM
+MDX支持从JavaScript导入和导出语句
+
+import React from "https://esm.sh/react@17.0.2";
+
+## 使用 Ant Design
+
+  <Space wrap>
+    <Button type="primary">Primary Button</Button>
+    <Button>Default Button</Button>
+    <Button type="dashed">Dashed Button</Button>
+    <Button type="text">Text Button</Button>
+    <Button type="link">Link Button</Button>
+  </Space>
