@@ -5,6 +5,7 @@ import zhCN from 'antd/lib/locale/zh_CN';
 import router from '@/router';
 import store from '@/store';
 import '@mtm/shared/es/utils/provider';
+import { Empty } from '@mtm/shared'
 import './App.css';
 
 const theme = {
@@ -23,7 +24,14 @@ ConfigProvider.config({
 
 function App() {
   return (
-    <ConfigProvider locale={zhCN} prefixCls='mtm' theme={theme}>
+    <ConfigProvider
+      locale={zhCN}
+      prefixCls='mtm'
+      renderEmpty={componentName => {
+        return <Empty />;
+      }}
+      theme={theme}
+    >
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>

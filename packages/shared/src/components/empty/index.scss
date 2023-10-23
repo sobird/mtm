@@ -1,0 +1,23 @@
+
+$prefixCls: 'mix' !default;
+$empty: '#{$prefixCls}-empty';
+
+.#{$empty} {
+  text-align: center;
+
+  &-image {
+    height: 50px;
+    margin-bottom: 8px;
+    img {
+      height: 100%;
+      max-width: 100%;
+    }
+  }
+
+  &-description {
+    font-size: 12px;
+  }
+  &-footer {
+    margin-top: 16px;
+  }
+}

@@ -6,8 +6,8 @@
 
 import React, { ComponentProps } from 'react';
 import { Table } from 'antd';
+import { Empty } from '@mtm/shared';
 import useSearchParamsState from '@/hooks/useSearchParamsState';
-import Empty from '../UI/empty';
 
 const MTable: React.FC<ComponentProps<typeof Table>> = ({ children, pagination, ...props }) => {
   const [searchParamPn, setSearchParamPn] = useSearchParamsState('pn', '1');

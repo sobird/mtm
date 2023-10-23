@@ -20,7 +20,7 @@ import image from '@rollup/plugin-image';
 import json from '@rollup/plugin-json';
 import copy from 'rollup-plugin-copy';
 import clear from 'rollup-plugin-clear';
-import mdx from '@mdx-js/rollup';
+// import mdx from '@mdx-js/rollup';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

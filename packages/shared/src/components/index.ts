@@ -9,3 +9,6 @@ export type { ErrorBoundaryProps } from './error-boundary';
 
 export { default as NoneSupport } from './none-support';
 export type { NoneSupportProps } from './none-support';
+
+export { default as Empty } from './empty';
+export type { EmptyProps } from './empty';

@@ -8,7 +8,7 @@
 
 import React, { ComponentProps, useEffect, useState } from 'react';
 import { Button, Tabs } from 'antd';
-import Empty from '@/components/UI/empty';
+import { Empty } from '@mtm/shared';
 import CampaignService, { ICampaignListResponse } from '@/services/campaign';
 import { Card } from '@mtm/shared';
 

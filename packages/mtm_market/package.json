@@ -9,6 +9,7 @@
     "start": "webpack serve --node-env=development",
     "build": "webpack --mode=production --node-env=production",
     "build:local": "webpack --mode=production --node-env=production --env local",
+    "shared": "yarn remove @mtm/shared && yarn add file:../shared/dist",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "keywords": [],
