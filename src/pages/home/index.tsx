@@ -53,7 +53,7 @@ const Home: React.FC = () => {
 
       
         <Col span={12}>
-          <GoldMerchantCard />
+          <GoldMerchantCard bodyStyle={{height: 465}}/>
         </Col>
 
         <Col span={12}>

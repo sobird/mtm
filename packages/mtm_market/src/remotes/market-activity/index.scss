@@ -17,13 +17,17 @@
 
   &-list {
     padding: 12px 0 0;
-    overflow: hidden;
+    margin: 0 -16px;
   }
 
   &-item {
     display: flex;
     align-items: center;
-    margin-bottom: 12px;
+    cursor: pointer;
+    padding: 10px 16px;
+    &:hover {
+      background: #fbfbfb;
+    }
 
     &:last-child {
       margin-bottom: 0;
@@ -45,27 +49,27 @@
       }
 
       .campaign-icon-16 {
-        background-image: url(./images/16.png);
+        background-image: url(./assets/16.png);
       }
 
       .campaign-icon-66 {
-        background-image: url(./images/66.png);
+        background-image: url(./assets/66.png);
       }
 
       .campaign-icon-67 {
-        background-image: url(./images/67.png);
+        background-image: url(./assets/67.png);
       }
 
       .campaign-icon-68 {
-        background-image: url(./images/68.png);
+        background-image: url(./assets/68.png);
       }
 
       .campaign-icon-69 {
-        background-image: url(./images/69.png);
+        background-image: url(./assets/69.png);
       }
 
       .campaign-icon-70 {
-        background-image: url(./images/70.png);
+        background-image: url(./assets/70.png);
       }
 
       .campaign-text {
@@ -86,6 +90,7 @@
         .campaign-extra {
           color: #999;
           font-size: 12px;
+          margin-top: 8px;
         }
       }
     }
