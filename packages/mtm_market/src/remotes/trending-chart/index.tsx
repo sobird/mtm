@@ -7,7 +7,7 @@
 import React, { useState, useEffect, ComponentProps } from 'react';
 import { Radio, RadioChangeEvent } from 'antd';
 import { Line } from '@ant-design/charts';
-import Card from '../workbench/components/card';
+import { Card } from '@mtm/shared';;
 import './index.scss';
 
 import AnalysisService, { ITrendingResponse } from '@/services/analysis';

@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/10/07 15:39:45 created.
  */
 
-import React, { ReactNode, CSSProperties, PropsWithChildren } from 'react';
+import React, { ReactNode, CSSProperties, PropsWithChildren, ComponentProps } from 'react';
 import { Link, createHashRouter } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbProps } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
@@ -12,7 +12,7 @@ import './index.scss';
 
 const router = createHashRouter([{}]);
 
-export interface PageProps {
+export interface PageProps extends Omit<ComponentProps<'div'>, 'title'> {
   prefixCls?: string;
   title?: ReactNode;
   breadcrumb?: BreadcrumbProps;

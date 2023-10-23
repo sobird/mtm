@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { RightOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import MessageService from '@/services/message';
-import Card from '../workbench/components/card';
+import { Card } from '@mtm/shared';;
 import './index.scss';
 
 export interface LatestNewsCardProps extends ComponentProps<typeof Card> {

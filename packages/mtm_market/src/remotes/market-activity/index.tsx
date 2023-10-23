@@ -10,7 +10,7 @@ import React, { ComponentProps, useEffect, useState } from 'react';
 import { Button, Tabs } from 'antd';
 import Empty from '@/components/UI/empty';
 import CampaignService, { ICampaignListResponse } from '@/services/campaign';
-import Card from '../workbench/components/card/Card';
+import { Card } from '@mtm/shared';
 
 import './index.scss';
 

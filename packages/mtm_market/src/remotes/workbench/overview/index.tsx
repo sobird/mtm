@@ -8,12 +8,10 @@
  * sobird<i@sobird.me> at 2023/10/12 18:08:57 created.
  */
 
-
-import { Tooltip } from 'antd';
-import Card from '../components/card';
+import { ComponentProps } from 'react';
+import { Card } from '@mtm/shared';
 import useWorkbench from '../hooks/useWorkbench';
 import './index.scss';
-import { ComponentProps } from 'react';
 
 interface OverViewProps {
   title: string;

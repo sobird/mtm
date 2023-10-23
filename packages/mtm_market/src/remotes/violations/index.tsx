@@ -5,7 +5,7 @@
  */
 
 import React, {ComponentProps} from 'react';
-import Card from '../workbench/components/card';
+import { Card } from '@mtm/shared';;
 import ViolationService, { IViolationOverviewResponse } from '@/services/violation';
 import './index.scss';
 import { useEffect, useState } from 'react';

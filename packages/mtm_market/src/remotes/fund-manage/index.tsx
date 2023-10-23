@@ -9,7 +9,8 @@
 
 import React, { ComponentProps } from 'react';
 import {message} from 'antd'
-import Card from '../workbench/components/card';
+import { Card } from '@mtm/shared';;
+
 // import { openNewTab } from '@util/agent';
 import './index.scss';
 

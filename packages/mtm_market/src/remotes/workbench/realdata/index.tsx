@@ -10,9 +10,9 @@
 
 import { ComponentProps } from 'react';
 import { Tooltip } from 'antd';
+import { Card } from '@mtm/shared';
 import useWorkbench from '../hooks/useWorkbench';
 import './index.scss';
-import Card from '../components/card';
 
 interface RealDataConfigProps {
   title: string;

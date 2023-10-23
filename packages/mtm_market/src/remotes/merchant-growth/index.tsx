@@ -13,7 +13,7 @@ import { Tooltip } from 'antd';
 import QRCode from 'qrcode.react';
 import { message } from 'antd';
 // import { openNewTab } from '@util/agent';
-import Card from '../workbench/components/card';
+import { Card } from '@mtm/shared';;
 import './index.scss';
 
 import AnalysisService, { IOperation } from '@/services/analysis';

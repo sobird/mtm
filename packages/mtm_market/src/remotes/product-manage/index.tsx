@@ -11,7 +11,7 @@
 import React, { ComponentProps, useEffect, useState } from 'react';
 import { message } from 'antd';
 // import { openNewTab } from '@util/agent';
-import Card from '../workbench/components/card';
+import { Card } from '@mtm/shared';;
 import ProductService from '@/services/product';
 
 import './index.scss';

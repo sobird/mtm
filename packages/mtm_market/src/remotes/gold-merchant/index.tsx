@@ -8,7 +8,7 @@ import React, { useEffect, useState, ComponentProps } from 'react';
 import { Table } from 'antd';
 import dayjs from 'dayjs';
 
-import Card from '../workbench/components/card';
+import { Card } from '@mtm/shared';;
 import GoldLogoInshow from './assets/gold_logo_inshow.png';
 import GoldLogoNoshow from './assets/gold_logo_noshow.png';
 

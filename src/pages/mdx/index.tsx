@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Editor, { loader } from '@monaco-editor/react';
 import * as Antd from 'antd';
-import { Page } from '@mtm/shared';
+import { Page, ErrorBoundary } from '@mtm/shared';
 import Mdx from '@/components/mdx';
 import defaultMdxText from '!raw-loader!./index.mdx';
 
@@ -41,9 +41,11 @@ export default function MdxTest() {
       />
 
       <div className='mdx-playground' style={{ width: '40%' }}>
-        <Mdx value={value || defaultMdxText as unknown as string} components={{
-          ...Antd
-        }} />
+        <ErrorBoundary>
+          <Mdx value={value || defaultMdxText as unknown as string} components={{
+            ...Antd
+          }} />
+        </ErrorBoundary>
       </div>
     </Page>
   );
