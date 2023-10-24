@@ -80,6 +80,7 @@ export class Http {
         config.url = url + '/' + method?.toLocaleLowerCase() + '.json';
         config.method = 'get';
 
+        console.log('HttpRequestConfig', config)
         return config;
       },
       (error: HttpError) => {
@@ -148,7 +149,7 @@ export class Http {
     return this.service.delete(url, { params, ...config }) as Promise<T>;
   }
   upload<T>(url: string, data: object = {}, config: HttpRequestConfig = {}) {
-    const { headers } = config;
+    const { headers, ...others } = config;
     const formData = new FormData();
 
     Object.keys(data).map(key => {
@@ -160,7 +161,7 @@ export class Http {
         'content-type': 'multipart/form-data',
         ...headers
       },
-      ...config
+      ...others
     }) as Promise<T>;
   }
 }

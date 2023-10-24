@@ -1,0 +1,93 @@
+{
+  "code": 0,
+  "data": {
+    "legalPersonInfo": {
+      "idCardPhotos": [
+        "https://p0.meituan.net/credentials/32bfc5e4232a7222475764a5cbeb2a9a94426.png?token=1.1610075554.pdd4qp8bh6qwhw4r0000000000a5c200.ef41d0b92b3f7f57bfcfee178650df8a",
+        "https://p0.meituan.net/credentials/f89b34439df080736a88387b4d588b2d321279.png?token=1.1610075554.pdd4qp8bh6qwhw4r0000000000a5c200.acc2623963f1eb406acdd881ad83cc47"
+      ],
+      "phone": "176****3557",
+      "name": "徐伟",
+      "cardNum": "32010**********012",
+      "validate": "",
+      "cardValidateType": 1,
+      "email": ""
+    },
+    "merchantManagerInfo": {
+      "idCardPhotos": [
+        "https://p0.meituan.net/credentials/32bfc5e4232a7222475764a5cbeb2a9a94426.png?token=1.1610075554.pdd4qp8bh6qwhw4r0000000000a5c200.ef41d0b92b3f7f57bfcfee178650df8a",
+        "https://p0.meituan.net/credentials/f89b34439df080736a88387b4d588b2d321279.png?token=1.1610075554.pdd4qp8bh6qwhw4r0000000000a5c200.acc2623963f1eb406acdd881ad83cc47"
+      ],
+      "phone": "176****3557",
+      "name": "徐伟",
+      "cardNum": "32010**********012",
+      "email": "w*@qq.com",
+      "validate": "",
+      "cardValidateType": 1
+    },
+    "enteredCompanyInfo": {
+      "mainCategory": [
+        200000452
+      ],
+      "businessLicense": "https://p0.meituan.net/credentials/91d34d26123903ec8372e1c95f26ec96279166.jpg?token=1.1610075554.pdd4qp8bh6qwhw4r0000000000a5c200.a348c626706dc07d6cfee14d057cd66a",
+      "name": "金丰盛华农业科技有限公司",
+      "socialCreditCode": "91371329MA3P3P1Q9A",
+      "address": "沂山东省临沂市临沭县兴大西街19号",
+      "openingPermit": "https://p0.meituan.net/credentials/ffd2c1262d70dbba90c78819741df6fc955167.jpg?token=1.1610075554.pdd4qp8bh6qwhw4r0000000000a5c200.5034e50e373186668947d5cadc9bbbaa",
+      "type": "型其他有限责任公司",
+      "registeredCapital": "伍佰万元整",
+      "operatingRange": ");零零售快装经按研发\"及\"餐饮\"*咨询学剂1",
+      "operatingTime": "2019-01-25",
+      "operatingTimeType": 1,
+      "foundedDate": "2019-01-25",
+      "files": [
+        "https://p0.meituan.net/credentials/91d34d26123903ec8372e1c95f26ec96279166.jpg?token=1.1610075554.pdd4qp8bh6qwhw4r0000000000a5c200.a348c626706dc07d6cfee14d057cd66a"
+      ],
+      "operatingAddress": ""
+    },
+    "shopInfo": {
+      "name": "测试test5旗舰店",
+      "desc": "果品删除",
+      "bankNum": "158981*******3550",
+      "bankUname": "金丰盛华农业科技有限公司",
+      "logo": "https://p1.meituan.net/public/68d7286ef1b77bc553c3ae35895b605751120.jpg",
+      "address": "",
+      "id": 1569,
+      "auth": "企业店铺",
+      "ensureAmount": 1000000,
+      "bankPhone": "156****0187",
+      "bankMode": 1,
+      "branchId": 0,
+      "bankId": 0,
+      "branchName": "中国工商银行",
+      "returnAddress": "",
+      "eMerchantId": "",
+      "eSupplierId": "",
+      "servicePhoneNum": "18611693556",
+      "walletAccountName": "**********N0DV",
+      "walletId": "12000046822770",
+      "settleAuthInfo": {
+        "auth": 1,
+        "authTime": 1606273315,
+        "authRole": "176****3557"
+      }
+    },
+    "state": 4,
+    "incomingState": 3,
+    "reviewState": 2,
+    "settlement": 1,
+    "margin": 0,
+    "commodity": 0,
+    "contactConfirm": 1,
+    "merchantState": 4,
+    "h5ContactLink": "https://rules-center.meituan.com/m/detail/91?commonType=2",
+    "pcContactLink": "https://rules-center.meituan.com/rules?commonType=2",
+    "pubAccountId": 137438993652,
+    "bsid": "1rlfNYH3S9uRfFes-a8rrJMxISpw7_zGC6WOPiG_vkENJ0ii_tYHlBn9OR_QfY_QMlvXd-ESHOoD9ku4Bu6TQg",
+    "groupInfo": {
+      "groupNumber": 2,
+      "groupTime": "24-00-00"
+    },
+    "merchantType": 23
+  }
+}

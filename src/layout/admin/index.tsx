@@ -5,23 +5,27 @@
  */
 import React, { Suspense, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { Watermark } from 'antd';
 import classNames from 'classnames';
-import Header from './header';
-import Aside from './aside';
+import { Watermark } from 'antd';
+import startQiankun from '@/router/micro';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { ErrorBoundary } from "@mtm/shared";
 import Loading from '@/components/loading';
-import { IStoreState } from "@/store/reducers";
-import startQiankun from '@/router/micro';
+import { fetchMerchantThunkAction } from '@/store/actions/merchant';
+import Header from './header';
+import Aside from './aside';
 
 import './index.scss';
 
 const LayoutAdmin: React.FC = () => {
+  const dispatch = useAppDispatch();
   const location = useLocation();
-  const { collapsed, micro } = useSelector((state: IStoreState) => state.app);
+  const { collapsed, micro } = useAppSelector((state) => state.app);
 
   useEffect(() => {
+    // 获取商家详情
+    dispatch(fetchMerchantThunkAction);
+
     if (!window.qiankunStarted) {
       window.qiankunStarted = true;
       startQiankun();

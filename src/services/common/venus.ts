@@ -54,7 +54,7 @@ export function signature(type: IType = 1) {
  * @returns
  */
 export async function upload(file: File, config: IUploadRequestConfig = {}) {
-  const { filename = 'file', data = {}, type = 1, onProgressPercent } = config;
+  const { filename = 'file', headers, data = {}, type = 1, onProgressPercent, ...others } = config;
   const { token, bucket, expire } = await signature(type);
   const key = `${bucket}${nanoid()}-${file.name}`;
 
@@ -67,12 +67,13 @@ export async function upload(file: File, config: IUploadRequestConfig = {}) {
       Authorization: token,
       expire,
       bucket,
+      ...headers,
     },
     // responseType: 'blob',
     onUploadProgress(progressEvent) {
       onProgressPercent?.(Math.floor((progressEvent.loaded / progressEvent.total) * 100), progressEvent);
     },
-    ...config,
+    ...others,
   }).then(res => {
     onProgressPercent(100);
     return res as unknown as IVenusUploadResponse;

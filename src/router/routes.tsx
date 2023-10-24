@@ -27,6 +27,8 @@ const EntryHome = lazy(() => import('@/pages/settleinjx/home'));
 const EntryShop = lazy(() => import('@/pages/settleinjx/shop'));
 const EntryCompany = lazy(() => import('@/pages/settleinjx/company'));
 
+const ShopProfile = lazy(() => import('@/pages/shop/profile'));
+
 const routes: RouteObject[] = [
   {
     path: '/',
@@ -54,6 +56,16 @@ const routes: RouteObject[] = [
       {
         path: 'component',
         element: <Component />,
+      },
+
+      {
+        path: 'shop',
+        children: [
+          {
+            path: 'profile',
+            element: <ShopProfile />
+          }
+        ]
       },
       {
         path: '*',
