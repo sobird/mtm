@@ -5,7 +5,7 @@
  */
 
 import { Action } from 'redux';
-import { UPDATE_MENU } from '../actions/menu';
+import { UPDATE_MENU } from '@/store/actions/menu';
 import { IMenuItem } from '@/services/menu';
 
 export interface IMenuState {
