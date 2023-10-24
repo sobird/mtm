@@ -45,11 +45,11 @@ interface InternalHttpRequestConfig<T = unknown> extends InternalAxiosRequestCon
   parser?: ResponseParser;
 }
 
-interface HttpRequestConfig<T = unknown> extends AxiosRequestConfig<T> {
+export interface HttpRequestConfig<T = unknown> extends AxiosRequestConfig<T> {
   parser?: ResponseParser;
 }
 
-interface ResponseData<T = unknown> {
+export interface ResponseData<T = unknown> {
   code: number;
   message: string;
   data?: T;
@@ -146,6 +146,22 @@ export class Http {
   }
   delete<T>(url: string, params?: object, config?: HttpRequestConfig) {
     return this.service.delete(url, { params, ...config }) as Promise<T>;
+  }
+  upload<T>(url: string, data: object = {}, config: HttpRequestConfig = {}) {
+    const { headers } = config;
+    const formData = new FormData();
+
+    Object.keys(data).map(key => {
+      formData.append(key, data[key]);
+    });
+
+    return this.service.post(url, formData, {
+      headers: {
+        'content-type': 'multipart/form-data',
+        ...headers
+      },
+      ...config
+    }) as Promise<T>;
   }
 }
 
