@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/07/01 21:09:31 created.
  */
 
-import http from "@/utils/http";
+import { http } from '@mtm/shared';;
 
 
 interface IOption {

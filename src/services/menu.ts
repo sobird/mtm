@@ -5,7 +5,7 @@
  */
 
 import { listToTree } from '@/utils';
-import http from '@/utils/http';
+import { http } from '@mtm/shared';
 
 export interface IMenuItem {
   title: string;

@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/06/25 0:57:36 created.
  */
 
-import http from "@/utils/http";
+import { http } from '@mtm/shared';;
 
 /**
  * 主营类目

@@ -1,5 +1,5 @@
 
-import http from "@/utils/http";
+import { http } from '@mtm/shared';;
 
 interface IRegisterRequest {
   interCode: string;

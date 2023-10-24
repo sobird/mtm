@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/06/22 21:40:58 created.
  */
 
-import http from "@/utils/http";
+import { http } from '@mtm/shared';
 import { signJWT } from "@/utils/jwt";
 
 export interface ILoginRequest {

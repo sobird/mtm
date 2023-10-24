@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/06/20 10:35:44 created.
  */
 import Cookies from 'js-cookie';
-import http from "@/utils/http";
+import { http } from '@mtm/shared';;
 
 export interface CaptchaResponseData {
   mobile: number;

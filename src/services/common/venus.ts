@@ -1,19 +1,23 @@
 /**
  * 文件上传
- * 
+ *
  * sobird<i@sobird.me> at 2023/08/16 0:45:04 created.
  */
 
-import { nanoid } from "nanoid";
-import http from "@/utils/http";
+import { AxiosProgressEvent } from 'axios';
+import { nanoid } from 'nanoid';
+import { http, HttpRequestConfig } from '@mtm/shared';
 
+/** 1 私密; 2 公开 */
+type IType = 1 | 2;
 interface IVenusSignature {
   expire: number;
   token: string;
   bucket: string;
+  host: string;
 }
 
-interface IVenusUpload {
+export interface IVenusUploadResponse {
   md5: string;
   key: string;
   url: string;
@@ -24,39 +28,60 @@ interface IVenusUpload {
   format: string;
 }
 
-export function signature() {
-  return http.get<IVenusSignature>('/venus/sign');
+export interface IUploadRequestConfig extends HttpRequestConfig {
+  filename?: string;
+  type?: IType;
+  data?: object;
+  onProgressPercent?: (percent: number, progressEvent?: AxiosProgressEvent) => void;
 }
 
-export async function upload(file: File, progress?: (p: number) => void) {
-  const { token, bucket} = await signature();
+/**
+ * 获取签名信息
+ *
+ * @param type 上传类型 1 私密; 2 公开
+ * @returns Promise
+ */
+export function signature(type: IType = 1) {
+  return http.get<IVenusSignature>('/venus/sign', { type });
+}
 
+/**
+ * 文件上传
+ *
+ * @param file 文件对象
+ * @param type 上传类型 1 私密; 2 公开
+ * @param progress 上传进度回调函数
+ * @returns
+ */
+export async function upload(file: File, config: IUploadRequestConfig = {}) {
+  const { filename = 'file', data = {}, type = 1, onProgressPercent } = config;
+  const { token, bucket, expire } = await signature(type);
   const key = `${bucket}${nanoid()}-${file.name}`;
 
-  const formData = new FormData();
-  formData.append('key', key);
-  formData.append('file', file);
-
-  return http.service<IVenusUpload>({
-    method: 'post',
-    url: `/venus/upload`,
+  return http.upload<IVenusUploadResponse>('/venus/upload', {
+    ...data,
+    [filename]: file,
+    key,
+  },{
     headers: {
       Authorization: token,
+      expire,
+      bucket,
     },
-    data: formData,
     // responseType: 'blob',
     onUploadProgress(progressEvent) {
-      progress?.(Math.floor(progressEvent.loaded / progressEvent.total * 100))
-    }
+      onProgressPercent?.(Math.floor((progressEvent.loaded / progressEvent.total) * 100), progressEvent);
+    },
+    ...config,
   }).then(res => {
-    progress(100);
-    return res as IVenusUpload;
+    onProgressPercent(100);
+    return res as unknown as IVenusUploadResponse;
   });
 }
 
-const VenusServices = {
+const VenusService = {
   signature,
   upload,
-}
+};
 
-export default VenusServices;
+export default VenusService;

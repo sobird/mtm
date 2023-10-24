@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/08/15 23:44:11 created.
  */
 
-import http from "@/utils/http";
+import { http } from '@mtm/shared';;
 
 export interface IOcrRequestData {
   type: number;

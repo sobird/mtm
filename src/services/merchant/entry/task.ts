@@ -4,7 +4,7 @@
  * sobird<i@sobird.me> at 2023/06/30 16:39:58 created.
  */
 
-import http from "@/utils/http";
+import { http } from '@mtm/shared';;
 
 export interface IEntryTask {
   entryTaskId: number;

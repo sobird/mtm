@@ -5,7 +5,7 @@
  */
 
 
-import http from "@/utils/http";
+import { http } from '@mtm/shared';;
 
 export interface IContractSignRequest {
   captcha: number;
