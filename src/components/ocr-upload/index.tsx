@@ -8,7 +8,7 @@ import React, { PropsWithChildren, useState } from 'react';
 import { Modal, Upload } from 'antd';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { PlusOutlined } from '@ant-design/icons';
-import VenusServices from '@/services/common/venus';
+import VenusService from '@/services/common/venus';
 import OcrService from '@/services/common/ocr';
 
 interface UploadOcrProps {
@@ -71,7 +71,7 @@ const OcrUpload: React.FC<PropsWithChildren<UploadOcrProps>> = ({ value, onChang
           onChange('');
         }}
         customRequest={({ file, onProgress, onSuccess, onError}) => {
-          VenusServices.upload(file as File, (percent) => {
+          VenusService.upload(file as File, (percent) => {
             onProgress({ percent });
           }).then(res => {
             onSuccess(res);
