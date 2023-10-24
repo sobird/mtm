@@ -1,27 +1,25 @@
 /**
  * index.ts
- * 
+ *
  * sobird<i@sobird.me> at 2023/06/30 19:48:37 created.
  */
 
-import { TopNavHeader } from "@ant-design/pro-layout";
-
 /**
  * 实现表格数据相同的行合并
- * 
+ *
  * @param data any[]
  * @param key string
  * @returns
  */
-export function getRowSpans (data: any[], key: string) {
+export function getRowSpans(data: any[], key: string) {
   let sameValueLength = 0;
   const rowSpans = [];
-  for(let i = data.length - 1; i >= 0; i--){
-    if(i === 0) {
+  for (let i = data.length - 1; i >= 0; i--) {
+    if (i === 0) {
       rowSpans[i] = sameValueLength + 1;
       continue;
     }
-    if(data[i][key] === data[i-1][key]) {
+    if (data[i][key] === data[i - 1][key]) {
       rowSpans[i] = 0;
       sameValueLength++;
     } else {
@@ -42,9 +40,9 @@ export interface IList {
 
 /**
  * 将数组转换为树结构
- * 
- * @param list 
- * @returns 
+ *
+ * @param list
+ * @returns
  */
 export function listToTree(list: IList[]) {
   const result = [];
@@ -55,7 +53,7 @@ export function listToTree(list: IList[]) {
       //item.children = []
     }
     map.set(item.id, item);
-  })
+  });
 
   list.forEach(item => {
     const parent = map.get(item.parentId);
@@ -67,6 +65,14 @@ export function listToTree(list: IList[]) {
     } else {
       result.push(item);
     }
-  })
+  });
   return result;
 }
+
+export const fileToBase64 = (file: Blob | File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = error => reject(error);
+  });
