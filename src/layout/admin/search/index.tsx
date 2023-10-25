@@ -6,13 +6,15 @@
 
 import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Select, Tag, Empty, Button } from 'antd';
+import { Select, Tag, Button } from 'antd';
 import { SearchOutlined, DeleteOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import './index.scss';
 import debounce from 'lodash/debounce';
 import useLocalStorageState from '@/hooks/useLocalStorageState';
 import { useAppSelector } from '@/store/hooks';
 import { IMenuItem } from '@/services/menu';
+import { Empty } from '@mtm/shared';
+
+import './index.scss';
 
 type ResultItem = {
   name: string;
