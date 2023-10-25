@@ -70,10 +70,11 @@ function BaseInfo() {
           <span
             className="textRow-text"
             style={{ marginTop: '-1px' }}
+            id='shopId'
           >
-            { blankText}
+            123456
           </span>
-          { <Button type="text" style={{ marginTop: '-1px' }}>复制</Button>}
+          { <Button  className="clipboard" data-clipboard-target="#shopId" type="text" style={{ marginTop: '-1px' }}>复制</Button>}
         </div>
 
       </Form.Item>

@@ -13,6 +13,26 @@ cd -
 yarn link @mtm/shared
 ```
 
+## 全局文本复制
+> 已配置全局文本复制功能
+
+使用方法如下：
+
+```jsx
+// 查找id为foo的元素内容进行复制
+<span id="foo">foo</span>
+<button class="clipboard" data-clipboard-target="#foo">
+  复制
+</button>
+
+// 或者
+
+// 直接复制data-clipboard-text设置的文本内容
+<button class="clipboard" data-clipboard-text="foo">
+  复制
+</button>
+```
+
 ## FAQ
 
 ### [qiankun] lifecycle not found from xxx entry exports, fallback to get from window['xxx']
