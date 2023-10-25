@@ -4,6 +4,27 @@
  * sobird<i@sobird.me> at 2023/06/20 21:54:57 created.
  */
 
+/** 店铺类型 值枚举：企业店，个人店 */
+export enum MerchantTypeEnum {
+  个人普通店铺 = 10,
+  企业普通店铺 = 20,
+  企业专营店铺 = 21,
+  企业专卖店铺 = 22,
+  企业旗舰店铺 = 23,
+  /** 这个是虚拟的，后端没有维护这个变量 */
+  其他 = 99
+}
+
+/** 商家主营类目 */
+export interface IMerchantCategory {
+  id: number;
+  parentId: number;
+  name: string;
+  level: number;
+  leaf: number;
+  [key: string]: any;
+}
+
 /**
  * 店铺信息
  */
@@ -178,7 +199,7 @@ export interface IMerchantEntity {
     type?: 1 | 2;
   };
   /** 店铺类型 10,个人店; 20,普通店; 21,专营店; 22,专卖店; 23,旗舰店; 99,其他 */
-  merchantType?: number | string;
+  merchantType?: number;
   /** 店铺经营许可 */
   licenseList?: ILicense[];
   /** 管理人员和法人信息是否一致 */
@@ -214,4 +235,167 @@ export interface IOperatorVirtualPhone {
   virtualNumber: string;
   operatorName: string;
   effectiveTime: string;
+}
+
+/** 商家合同签约请求参数 */
+export interface IMerchantSignContractRequest {
+  captcha: number;
+  policy: boolean;
+}
+
+/** 商家入住基本信息 */
+export interface IMerchantEntryEntity {
+  entryTaskId?: number;
+  bizType?: number;
+  localCommerce?: number;
+  audit?: {
+    auditState: number;
+    rejectReason: string[];
+  };
+  base?: {
+    category: number | number[];
+    poiType: number;
+    name?: string;
+    logo?: string;
+    state?: number;
+  };
+  /**
+   * 客户信息
+   */
+  company?: {
+    // 公司类型
+    companyType: number;
+    // 销售渠道
+    distChannel: number[];
+    certificateBankOpen: string;
+    certificateTaxpayer: string;
+    officeAddress: string;
+    officePhoto: string[];
+    companyDesc: string;
+    companyFile: string[]
+    businessLicense: {
+      businessLicense: string;
+      socialCreditCode: string;
+      name: string;
+      address: string;
+      operatingTimeBegin: string;
+      operatingTimeEnd: string;
+      operatingTimeType: number;
+      legalPersonName: string;
+      type: string;
+      operatingRange: string;
+      registeredCapital: string;
+      foundedDate: string;
+      registerAreaId: number;
+      registerAreaName: string;
+    };
+    /**
+     * 法人信息
+     */
+    legalPerson: object;
+    enrichedPerson: object;
+    state: number;
+  }
+  manage?: {
+    goodsDesc: string[];
+    goodsPriceScope: string[];
+    peopleNumberYy: string;
+    peopleNumberKf: string;
+    peopleNumberCp: string;
+    operateName: string;
+    operatePhone: string;
+    verificationCode: string;
+    planSendCompanyList: string[];
+    base: {
+      poiType: number;
+      category: number;
+      name: string;
+      logo: string;
+      state: number;
+    },
+    person: {
+      isSameLegalPerson: number;
+      cardType: number;
+      idCardPhotos: string[];
+      name: string;
+      cardNum: string;
+      validateDateEnd: string;
+      cardValidateType: number;
+      phone: string;
+      verificationCode: string;
+      authLetter: string;
+      address: string;
+    },
+    state: number;
+    sameCityService: number;
+  };
+  basic?: {
+    productionAvgDay: object;
+    productionUnit: object;
+    productionLinePhoto: string[];
+    warehouseMode: number;
+    warehouseNumber: number;
+    warehouseArea: number;
+    warehouseAddress: string;
+    warehousePhoto: string[];
+    operateMode: number;
+    operateScope: number;
+    salesOnline: object;
+    salesAll: object;
+    sendGoodsMode: number;
+    sendGoodsAvgDay: object;
+    sendGoodsCertificate: string[];
+    alreadyExistPlatform: string[];
+    state: number;
+    peopleNumberGc: object;
+    warehouseManage: object;
+    sendGoodsAvgDayTotal: object;
+  };
+  qualificationAndBrand?: object;
+  customsRecord?: {
+    customsRecordList: string[];
+    state: number;
+  }
+}
+
+type IOption = {
+  [key in string]: any;
+  value: number | string;
+  name: string;
+}
+
+export interface IMerchantOptions {
+  companyTypeList: IOption[];
+  distChannelList: IOption[];
+  authLevelList: IOption[];
+  externalUrlList: IOption[];
+  goodsPriceScopeList: IOption[];
+  operateModeList: IOption[];
+  operateScopeList: IOption[];
+  planSendCompanyList: IOption[];
+  poiBrandTypeList: IOption[];
+  poiTypeList: IOption[];
+  sendGoodsModeList: IOption[];
+  trademarkRegistrantTypeList: IOption[];
+  warehouseAreaList: IOption[];
+  warehouseModeList: IOption[];
+  warehouseNumberList: IOption[];
+  bondedWarehouseList: IOption[];
+  registerAreaList: IOption[];
+  factoryPersonScaleList: IOption[];
+  warehouseManageList: IOption[];
+}
+
+/** 商家类型 */
+export interface IMerchantType {
+  poiType: number;
+  poiTypeName: string;
+  poiTypeDesc: string;
+  state: number;
+}
+
+export interface IMerchantTask {
+  entryTaskId: number;
+  bizType: number;
+  localCommerce: number;
 }
