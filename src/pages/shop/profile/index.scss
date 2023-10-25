@@ -1,0 +1,370 @@
+/*
+ * index.scss
+ * 
+ * sobird<i@sobird.me> at 2023/10/23 13:27:00 created.
+ */
+
+.shop-profile-body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+// 删除商标和删除资质许可证对话框
+.confirmDeleteModal {
+  .roo-modal-header {
+    padding-bottom: 0 !important;
+
+    .roo-modal-title {
+      font-size: 18px !important;
+      color: #3F4156 !important;
+    }
+  }
+
+  .roo-modal-footer {
+    padding-top: 0 !important;
+  }
+}
+
+.brand-info-container {
+  .trade-isOverdue {
+    font-weight: 500;
+    font-family: PingFangSC-Medium;
+    font-size: 12px;
+    color: #ffffff;
+    background: #f15757;
+    border-radius: 2px;
+    width: 44px;
+    height: 18px;
+    display: inline-block;
+    text-align: center;
+    line-height: 18px;
+    margin: 0 6px;
+  }
+}
+
+
+
+// baseInfo
+.base-info-container {
+  box-sizing: border-box;
+
+  .base-info-content {
+    box-sizing: border-box;
+    padding: 24px 20px;
+
+    // form部分
+    .base-form {
+
+      // 标题和编辑按钮
+      .toolbar {
+        box-sizing: border-box;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 21px;
+
+        .title {
+          font-size: 16px;
+          color: var(--text-color-base);
+          font-weight: 500;
+        }
+
+        .roo-btn {
+          padding: 0;
+          line-height: 32px;
+        }
+      }
+
+      .field-row {
+        padding-top: 7px;
+        padding-bottom: 7px;
+
+        .form-group {
+          margin-bottom: 0;
+
+          .control-label {
+            // margin-left: -75px;
+            padding-right: 5px;
+            font-size: 14px;
+            color: var(--text-color-weak);
+            flex: 0 0 159px;
+            white-space: nowrap;
+            min-width: 150px;
+          }
+        }
+
+        .form-group-content {
+          .textRow {
+            font-size: 14px;
+            color: var(--text-color-secondary);
+            height: 36px;
+            display: table;
+
+            .textRow-text {
+              display: table-cell;
+              vertical-align: middle;
+              // padding-left: 20px;
+            }
+          }
+
+          .textRow-blank {
+            // 值不存在的时候出现颜色
+            color: #BABCCC;
+          }
+
+          .label-fork {
+            width: 136px;
+            text-align: right;
+            font-size: 14px;
+            color: var(--text-color-weak);
+            margin-right: 20px;
+          }
+        }
+      }
+
+      .extra-links,
+      .desc {
+        width: 500px;
+      }
+
+      .desc-wrapper {
+        p {
+          color: #BDBDBD;
+        }
+      }
+    }
+
+    // 头像
+    .object-img-box {
+      box-sizing: border-box;
+      width: 100px;
+      height: 100px;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #FFFFFF;
+      border: 1px solid #EEEEEE;
+      border-radius: 3px;
+      margin-right: 6px;
+      cursor: pointer;
+
+      .defaultLogoBoxBd {
+        // position: absolute;
+        // top: 0;
+        // left: 0;
+        width: 88px;
+        height: 88px;
+        background-color: #F8B500;
+        display: table;
+
+        .defaultLogoBoxBd-text {
+          box-sizing: border-box;
+          display: table-cell;
+          vertical-align: middle;
+          padding-left: 11px;
+          padding-right: 11px;
+          width: 66px;
+          height: 66px;
+
+          img {
+            width: 66px;
+            height: 66px;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.admin-wrapper {
+  padding: 24px 20px;
+
+  .roo-alert {
+    .roo-title {
+      .admin-alert {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .extra {
+      color: rgb(162, 164, 179);
+
+      .roo-icon-close {
+        color: var(--text-color-lighten);
+      }
+    }
+  }
+
+  .toolbar {
+    box-sizing: border-box;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 21px;
+
+    .title {
+      font-size: 16px;
+      color: var(--text-color-base);
+      font-weight: 500;
+    }
+
+    .roo-btn {
+      padding: 0;
+      line-height: 32px;
+      height: 32px;
+      width: 52px;
+      font-size: 12px;
+      margin-left: 10px;
+    }
+  }
+
+  .control-label {
+    // margin-left: -75px;
+    padding-right: 5px;
+    font-size: 14px;
+    color: var(--text-color-weak);
+    flex: 0 0 159px;
+    white-space: nowrap;
+    min-width: 150px;
+  }
+
+  .id-card-prompt {
+    color: var(--text-color-secondary);
+  }
+
+  .value {
+    line-height: 35px;
+    color: var(--text-color-secondary);
+  }
+
+  .roo-input-group {
+    width: 500px;
+  }
+
+  .roo-input {
+    width: 500px;
+  }
+
+  .id-card-box {
+    display: flex;
+    width: 260px;
+    justify-content: space-between;
+
+    .roo-upload-card-item {
+      width: 120px;
+    }
+  }
+
+  .flex-box {
+    display: flex;
+    width: 500px;
+    justify-content: space-between;
+
+    .roo-input-group {
+      width: 376px;
+    }
+  }
+
+  .auth-letter {
+    display: flex;
+    width: 500px;
+
+    .shop-license-pic {
+      font-weight: 400;
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: var(--text-color-weak);
+      letter-spacing: 0;
+      line-height: 20px;
+      float: right;
+      position: relative;
+      margin-left: 30px;
+
+      >p {
+        margin: 0;
+      }
+
+      .down-load {
+        cursor: pointer;
+        font-weight: 400;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: var(--primary);
+        letter-spacing: 0;
+        line-height: 20px;
+      }
+    }
+  }
+
+  .certificate-type {
+    font-weight: 400;
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: var(--text-color-base);
+    line-height: 36px;
+
+    span {
+      font-weight: 400;
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: var(--text-color-weak);
+      letter-spacing: 0;
+    }
+  }
+
+  .roo-breadcrumb>li.active span {
+    color: #222222;
+  }
+
+  .roo-alert {
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    margin: 0 0 10px 0;
+  }
+
+  .upload-image .roo-upload-container .roo-upload-card-item {
+    width: 120px;
+  }
+}
+
+.audit-admin-warpper {
+  position: relative;
+  padding: 24px 0 0 24px;
+
+  .rejection-reason {
+    max-height: 100px;
+    overflow-y: scroll;
+    margin-left: 12px;
+  }
+}
+
+.contact-wrapper {
+  padding-top: 35px;
+
+  .roo-input {
+    width: 500px;
+  }
+
+  .flex-box {
+    display: flex;
+    align-items: center;
+    width: 500px;
+    justify-content: space-between;
+
+    .roo-input {
+      width: 375px;
+    }
+  }
+}
+
+.textRow-blank {
+  // 值不存在的时候出现颜色
+  color: #BABCCC;
+}
