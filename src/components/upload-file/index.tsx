@@ -6,8 +6,7 @@
 
 import React, { useState, PropsWithChildren, ComponentProps } from 'react';
 import { Upload, Modal } from 'antd';
-import type { RcFile } from 'antd/es/upload';
-import type { UploadFile } from 'antd/es/upload/interface';
+import type { RcFile, UploadFile } from 'antd/es/upload';
 import VenusService, { IVenusUploadResponse } from '@/services/common/venus';
 import { fileToBase64 } from '@/utils';
 

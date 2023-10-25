@@ -9,12 +9,13 @@
 
 import React, { useState, FC, ComponentProps } from 'react';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
-import { Button, Alert, Space } from 'antd';
-import type { UploadFile as AntdUploadFile } from 'antd/es/upload/interface';
+import { message, Upload, Space } from 'antd';
+import type { UploadFile as AntdUploadFile, RcFile } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
 import Tooltip from '@/components/tooltip';
 import UploadFile from '@/components/upload-file';
 import { MerchantLogoAuditStatusEnum } from '@/services/merchant';
+import { fileToBase64 } from '@/utils';
 
 import './index.scss';
 
@@ -37,6 +38,42 @@ const uploadButton = (
 const reviewTips = '您已申请修改店铺标志，当前处于审核中，审核通过前，会向消费者展示原来的店铺标志，感谢您的耐心等待';
 const normalTips = '新上传的店铺标志通过审核后，会替换掉原有的店铺标志，点击右上角的保存后上传';
 
+const fileValidator = async (file: RcFile) => {
+  if (!file) {
+    return;
+  }
+  if (file.size > 10000000) {
+    message.error('照片大小不能超过10MB');
+    return false;
+  }
+
+  try {
+    const base64 = await fileToBase64(file);
+    return await new Promise((resolve) => {
+      const img = new Image();
+      img.src = base64;
+      img.onload = () => {
+        const width = img.naturalWidth || img.width;
+        const height = img.naturalHeight || img.height;
+
+        console.log('width', width)
+        console.log('height', height)
+        if (width !== height) {
+          message.error('请上传正方形的店铺标志图片');
+          resolve(false);
+        }
+        if (width < 200) {
+          message.error('店铺标志图片需要大于100*100像素');
+          resolve(false);
+        }
+        resolve(true);
+      };
+    });
+  } catch (e) {
+    message.error(e.msg || e.message);
+  }
+};
+
 const FieldMerchantLogo: FC<FieldMerchantLogoProps> = ({ value, defaultValue = [], onChange, status }) => {
   const [valuePair, setValuePair] = useMergedState(() => defaultValue, {
     value,
@@ -50,8 +87,6 @@ const FieldMerchantLogo: FC<FieldMerchantLogoProps> = ({ value, defaultValue = [
   const [updatedFileList, setUpdatedFileList] = useState<AntdUploadFile[]>(
     updatedUrl ? [{ url: updatedUrl, status: 'done', uid: updatedUrl, name: updatedUrl }] : []
   );
-
-  const disabled = false;
 
   const tips = status === MerchantLogoAuditStatusEnum.审核中 ? reviewTips : normalTips;
 
@@ -67,6 +102,13 @@ const FieldMerchantLogo: FC<FieldMerchantLogoProps> = ({ value, defaultValue = [
           onUploadSuccess={({ url }) => {
             valuePair[0] = url;
             setValuePair(valuePair);
+          }}
+          beforeUpload={async (file) => {
+            const result = await fileValidator(file);
+
+            if(!result) {
+              return Upload.LIST_IGNORE;
+            }
           }}
           // 已上传则不允许此处再次编辑
           disabled={currentFileList.length >= 1}
