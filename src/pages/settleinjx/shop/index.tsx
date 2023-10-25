@@ -1,17 +1,19 @@
-/*
- * index.tsx
- * 
+/**
+ * 商家入住 店铺类型及主营类目 设置
+ *
  * sobird<i@sobird.me> at 2023/06/22 22:41:07 created.
  */
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Card, Button, Alert, Radio, Cascader, Modal, message, Table } from 'antd';
-import LayoutEntry from "@/layout/entry";
-import CategoryService, { ICategory } from '@/services/merchant/category';
-import EntryTask, { IEntryTask } from '@/services/merchant/entry/task';
-import EntryType, { IEntryType } from '@/services/merchant/entry/type';
-import Entry, { IEntry } from '@/services/merchant/entry';
+import LayoutEntry from '@/layout/entry';
+import MerchantService, {
+  IMerchantCategory,
+  IMerchantEntryEntity,
+  IMerchantTask,
+  IMerchantType,
+} from '@/services/merchant';
 import { getRowSpans, listToTree } from '@/utils';
 
 const { Column } = Table;
@@ -20,59 +22,59 @@ import './index.scss';
 
 function EntryShop() {
   const navigate = useNavigate();
-  const [categoryOptions, setCategoryOptions] = useState<ICategory[]>([]);
-  const [entryType, setEntryType] = useState<IEntryType[]>([]);
-  const [entryTask, setEntryTask] = useState<IEntryTask>();
+  const [categoryOptions, setCategoryOptions] = useState<IMerchantCategory[]>([]);
+  const [entryType, setEntryType] = useState<IMerchantType[]>([]);
+  const [entryTask, setEntryTask] = useState<IMerchantTask>();
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
-    Promise.all([CategoryService.get(), EntryTask.get()]).then(([categoryList, entryTask] ) => {
+    Promise.all([MerchantService.category(), MerchantService.task()]).then(([categoryList, entryTask]) => {
       const categoryTree = listToTree(categoryList);
       setCategoryOptions(categoryTree);
 
-      Entry.get(entryTask.entryTaskId).then(({baseInfo}) => {
-        const categoryId = baseInfo.category;
+      MerchantService.entryDetail(entryTask.entryTaskId).then(({ base }) => {
+        const categoryId = base.category;
         const categoryValues = [categoryId];
 
-        const categoryItem = categoryList.find(item =>  item.id === baseInfo.category);
+        const categoryItem = categoryList.find(item => item.id === base.category);
         let categoryParentId = categoryItem.parentId;
 
-        while(categoryParentId) {
-          const categoryItem = categoryList.find(item =>  item.id === categoryParentId);
+        while (categoryParentId) {
+          const categoryItem = categoryList.find(item => item.id === categoryParentId);
           categoryValues.unshift(categoryItem.id);
           categoryParentId = categoryItem.parentId;
         }
 
-        form.setFieldsValue({...baseInfo, category: categoryValues, entryTaskId: entryTask.entryTaskId});
+        form.setFieldsValue({ ...base, category: categoryValues, entryTaskId: entryTask.entryTaskId });
       });
-    })
+    });
 
     // 获取店铺类型
-    EntryType.get().then(res => {
+    MerchantService.type().then(res => {
       setEntryType(res);
     });
   }, []);
 
   // 表单提交
-  const onFinish = (values: IEntry['baseInfo']) => {
+  const onFinish = (values: IMerchantEntryEntity['base']) => {
     const { category, poiType } = values;
 
-    if(!category) {
+    if (!category) {
       message.error('请选择主营类目');
       return;
     }
 
-    if(!poiType) {
+    if (!poiType) {
       message.error('请选择店铺类型');
       return;
     }
-    
-    Entry.patch({
-      baseInfo: {
+
+    MerchantService.updateEntry({
+      base: {
         category: category[(category as number[]).length],
         poiType,
-      }
+      },
     }).then(() => {
       navigate('/settleinjx/company');
     });
@@ -81,8 +83,13 @@ function EntryShop() {
   const options = entryType.map(item => {
     return {
       value: item.poiType,
-      label: (<><span className='title'>企业{item.poiTypeName}</span><span className='desc'>{item.poiTypeDesc}</span></>)
-    }
+      label: (
+        <>
+          <span className='title'>企业{item.poiTypeName}</span>
+          <span className='desc'>{item.poiTypeDesc}</span>
+        </>
+      ),
+    };
   });
 
   const data = [
@@ -143,78 +150,102 @@ function EntryShop() {
     },
   ];
 
-  const  rowSpans = getRowSpans(data, 'poiTypeName')
+  const rowSpans = getRowSpans(data, 'poiTypeName');
 
   return (
     <LayoutEntry>
-      <div className="entry-shop">
-        <div className="entry-shop-tips">
-          <Alert message="目前平台仅开放数码家电/办公、宠物生活、母婴玩具、服饰鞋包、运动户外、汽配摩托、医药健康类目的商家自入驻，其余类目邀约制入驻请勿提交申请。入驻审核时效预计在7个工作日内，感谢支持。" type="info" showIcon />
+      <div className='entry-shop'>
+        <div className='entry-shop-tips'>
+          <Alert
+            message='目前平台仅开放数码家电/办公、宠物生活、母婴玩具、服饰鞋包、运动户外、汽配摩托、医药健康类目的商家自入驻，其余类目邀约制入驻请勿提交申请。入驻审核时效预计在7个工作日内，感谢支持。'
+            type='info'
+            showIcon
+          />
         </div>
-        
-        <div className="entry-shop-main">
+
+        <div className='entry-shop-main'>
           <h2>请选择您的店铺类型及主营类目</h2>
 
           <Card>
-            <Form
-              form={form}
-              onFinish={onFinish}
-              layout="vertical"
-            >
-              <Form.Item name="category" label="主营类目">
-                <Cascader options={categoryOptions} fieldNames={{label: 'name', value: 'id'}} placeholder="主营类目决定您店铺的经营范围，请谨慎选择" style={{width: 430}} />
+            <Form form={form} onFinish={onFinish} layout='vertical'>
+              <Form.Item name='category' label='主营类目'>
+                <Cascader
+                  options={categoryOptions}
+                  fieldNames={{ label: 'name', value: 'id' }}
+                  placeholder='主营类目决定您店铺的经营范围，请谨慎选择'
+                  style={{ width: 430 }}
+                />
               </Form.Item>
-              <Form.Item name="poiType" label={(<>店铺类型<Button onClick={() => setOpen(true)} type='link' className="how-select">该如何选择？</Button></>)}>
-                <Radio.Group 
-                  onChange={(event) => {
+              <Form.Item
+                name='poiType'
+                label={
+                  <>
+                    店铺类型
+                    <Button onClick={() => setOpen(true)} type='link' className='how-select'>
+                      该如何选择？
+                    </Button>
+                  </>
+                }
+              >
+                <Radio.Group
+                  onChange={event => {
                     const { value } = event.target;
                     const poi = entryType.find(item => item.poiType == value);
-                    
+
                     Modal.warning({
                       title: `确定更改店铺类型为 ${poi.poiTypeName} ？`,
                       content: '温馨提示：如果更换店铺类型，店铺名称会被清空，需重新上传',
                       okText: '确定',
                     });
-                  }} 
-                  options={options} 
-                  className='shop-type-radio'/>
+                  }}
+                  options={options}
+                  className='shop-type-radio'
+                />
               </Form.Item>
             </Form>
           </Card>
         </div>
 
-        <div className="entry-footer">
-          <Button type="primary" onClick={() => {
-            form.submit();
-          }}>下一步</Button>
+        <div className='entry-footer'>
+          <Button
+            type='primary'
+            onClick={() => {
+              form.submit();
+            }}
+          >
+            下一步
+          </Button>
         </div>
       </div>
 
       <Modal
-        title="企业店铺类型和资质说明"
+        title='企业店铺类型和资质说明'
         centered
         open={open}
         onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
         width={1000}
-        okText="我知道了"
+        okText='我知道了'
       >
         <Table bordered pagination={false} dataSource={data}>
-          <Column title="店铺类型" dataIndex="poiTypeName" key="poiTypeName"
+          <Column
+            title='店铺类型'
+            dataIndex='poiTypeName'
+            key='poiTypeName'
             render={(text, _record, index) => {
               return {
                 children: text,
                 props: {
-                  rowSpan: rowSpans[index]
-                }
+                  rowSpan: rowSpans[index],
+                },
               };
             }}
           />
-          <Column title="店铺说明" dataIndex="poiTypeDesc" key="poiTypeDesc" />
+          <Column title='店铺说明' dataIndex='poiTypeDesc' key='poiTypeDesc' />
         </Table>
       </Modal>
     </LayoutEntry>
-  )
+  );
 }
 
 export default EntryShop;

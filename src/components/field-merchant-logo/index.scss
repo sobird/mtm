@@ -1,0 +1,144 @@
+.field-merchant-logo {
+  .mtm-upload-list {
+    .mtm-upload-list-item-container, .mtm-upload-select {
+      margin: 0 !important;
+     }
+
+     .mtm-upload-list-item {
+      position: relative;
+     }
+  }
+   
+  .updated-label {
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+  }
+
+  .merchant-logo-status {
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    height: fit-content;
+    line-height: normal;
+    padding: 0px 4px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+    z-index: 100;
+
+    &-4 {
+      // 审核中
+      background-color: var(--primary);
+    }
+    &-5 {
+      background-color: var(--danger);
+    }
+    &-6 {
+      background-color: var(--success);
+    }
+  }
+
+  .description {
+    color: var(--text-color-weak);
+    line-height: 20px;
+    font-size: 12px;
+    margin-left: 12px;
+  }
+}
+
+
+
+
+.merchant-logo-wrapper{
+  display: flex;
+  width: max-content;
+  flex-direction: column;
+  .content{
+    display:flex;
+    justify-content: space-between;
+  }
+  .upload-image{
+    width:100px;
+    text-align:center;
+    .roo-upload-card-item{
+      width:100px;
+      height:100px;
+      margin:0;
+    }
+  }
+  .operate-btn{
+    width:100px;
+    font-size: 12px;
+    color:#222222;
+    border: 1px solid var(--text-color-weak);
+    border-radius: 2px;
+    margin-top:12px;
+  }
+  .disabled-btn{
+    background: #F7F8FA;
+    border: 1px solid #BABCCC;
+    border-radius: 2px;
+    color:var(--text-color-weak);
+  }
+  .desc{
+    color:var(--text-color-weak);
+    line-height: 20px;
+    font-size: 12px;
+    margin-left: 12px;
+  }
+  .divider-text{    
+    padding-top: 40px;
+    margin:0 12px;
+    color:#3F4156;
+    .roo-icon{
+      color: #D8D8D8;
+      vertical-align: text-top;
+    }
+  }
+  .divider{
+    width:1px;
+    border-right:1px solid #D8D8D8;
+    margin: 20px 36px;
+  }
+  .change-desc{
+    padding-left: 12px;
+    max-width: 343px;
+    transform: translateY(25%);
+  }
+  .on-use-label{
+    background:var(--success);
+  }
+  .on-audit-label{
+    background:var(--warning);
+  }
+  .on-reject-label{
+    background: var(--danger);
+  }
+  .on-audit-alert{
+    display: flex;
+    max-width:400px;
+    margin-top:3px;
+    .title{
+      display: flex;
+    }
+    .roo-icon{
+      display: inline-block;
+      margin-top:2px;
+    }
+  }
+  .rejection-reason{
+    position: relative;
+    top:0;
+    right:0;
+    max-height: 100px;
+    overflow-y: scroll;
+    margin-left: 12px;
+  }
+}

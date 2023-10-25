@@ -14,9 +14,11 @@ import { fileToBase64 } from '@/utils';
 export interface UploadFileProps extends ComponentProps<typeof Upload> {
   privatible?: boolean;
   onUploadSuccess?: (res: IVenusUploadResponse) => void;
+  /** 文件数量超过 maxCount 自动隐藏上传按钮 */
+  autoHidden?: boolean;
 }
 
-const UploadFile: React.FC<PropsWithChildren<UploadFileProps>> = ({ privatible = false, onUploadSuccess, children, ...props }) => {
+const UploadFile: React.FC<PropsWithChildren<UploadFileProps>> = ({ fileList, maxCount, privatible = false, onUploadSuccess, autoHidden, children, ...props }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState({
     src: '',
@@ -38,6 +40,7 @@ const UploadFile: React.FC<PropsWithChildren<UploadFileProps>> = ({ privatible =
   return (
     <>
       <Upload
+        fileList={fileList}
         customRequest={({ file, action, onSuccess, onProgress, onError, ...options }) => {
           const config: {[key in string]: unknown} = {...options}
           if(action) {
@@ -57,10 +60,10 @@ const UploadFile: React.FC<PropsWithChildren<UploadFileProps>> = ({ privatible =
         onPreview={onPreview}
         {...props}
       >
-        {children}
+        {maxCount && fileList?.length >= maxCount && autoHidden ? null : children}
       </Upload>
       <Modal open={previewOpen} title={previewImage.alt} footer={null} onCancel={() => setPreviewOpen(false)}>
-        <img alt="example" style={{ width: '100%' }} src={previewImage.src} />
+        <img alt={previewImage.alt} style={{ width: '100%' }} src={previewImage.src} />
       </Modal>
     </>
   );

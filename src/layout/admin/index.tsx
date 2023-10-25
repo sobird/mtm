@@ -14,6 +14,7 @@ import Loading from '@/components/loading';
 import { fetchMerchantThunkAction } from '@/store/actions/merchant';
 import Header from './header';
 import Aside from './aside';
+import { palyAudio } from '@/utils';
 
 import './index.scss';
 
@@ -25,6 +26,14 @@ const LayoutAdmin: React.FC = () => {
   useEffect(() => {
     // 获取商家详情
     dispatch(fetchMerchantThunkAction);
+    // palyAudio();
+
+    window.palyAudio = palyAudio;
+
+    setTimeout(() => {
+      palyAudio();
+    }, 3000);
+    
 
     if (!window.qiankunStarted) {
       window.qiankunStarted = true;

@@ -8,8 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Steps, theme, Button, message, Result } from 'antd';
 import LayoutEntry from "@/layout/entry";
-import EntryEnumService, { IEntryEnum } from '@/services/merchant/entry/enum';
-import EntryService from '@/services/merchant/entry';
+import MerchantService, {IMerchantOptions} from '@/services/merchant';
 
 import Step1 from './components/step1';
 import Step2 from './components/step2';
@@ -20,7 +19,7 @@ function EntryCompany() {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [current, setCurrent] = useState(0);
-  const [option, setOption] = useState<IEntryEnum>();
+  const [option, setOption] = useState<IMerchantOptions>();
 
   const steps = [
     {
@@ -42,12 +41,12 @@ function EntryCompany() {
   ];
 
   useEffect(() => {
-    EntryEnumService.get().then(res => {
+    MerchantService.options().then(res => {
       console.log('res', res)
       setOption(res);
     });
 
-    EntryService.get().then(({ company }) => {
+    MerchantService.entryDetail().then(({ company }) => {
       form.setFieldValue('company', company);
     });
   }, []);

@@ -11,7 +11,7 @@ import { ProFormCaptcha, ProFormCheckbox } from '@ant-design/pro-components';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
 import CaptchaService from '@/services/common/captcha';
-import ContractService from '@/services/merchant/contract';
+import MerchantService from '@/services/merchant';
 
 import './index.scss';
 
@@ -47,7 +47,7 @@ export default function ContractSign({ config } : ContractSignProps) {
     }
 
     setLoading(true);
-    ContractService.sign(values).then(() => {
+    MerchantService.signContract(values).then(() => {
       message.success({
         content: '恭喜您与平台达成合作',
         duration: 1,
