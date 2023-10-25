@@ -10,6 +10,8 @@ import FieldMerchantLogo from '@/components/field-merchant-logo';
 import BaseInfo from './base-info';
 import './index.scss';
 
+import { useAppSelector } from '@/store/hooks';
+
 const {TabPane} = Tabs;
 
 const BreadcrumbItem = [
@@ -28,6 +30,8 @@ const BreadcrumbItem = [
 ];
 
 const ShopProfile = () => {
+  const merchant = useAppSelector((state) => state.merchant);
+  console.log('merchant', merchant)
   return (
     <Page
       breadcrumb={{
@@ -36,7 +40,6 @@ const ShopProfile = () => {
       title='店铺信息'
       className='page-shop-profile'
     >
-      <FieldMerchantLogo status={6} defaultValue={['https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png', 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png']} />
       <div className="shop-profile-body">
         <Tabs className="shop-profile-tabs" type="line">
           <TabPane tab="基本信息" tabKey="baseInfo">

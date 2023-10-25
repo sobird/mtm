@@ -20,7 +20,7 @@ const formItemLayout = {
 };
 
 function BaseInfo() {
-  const [editable, setEditable] = useState();
+  const [editable, setEditable] = useState(true);
   const [form] = Form.useForm();
 
   const basicData = {

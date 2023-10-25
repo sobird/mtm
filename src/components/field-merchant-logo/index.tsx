@@ -46,7 +46,6 @@ const fileValidator = async (file: RcFile) => {
     message.error('照片大小不能超过10MB');
     return false;
   }
-
   try {
     const base64 = await fileToBase64(file);
     return await new Promise((resolve) => {
@@ -55,9 +54,6 @@ const fileValidator = async (file: RcFile) => {
       img.onload = () => {
         const width = img.naturalWidth || img.width;
         const height = img.naturalHeight || img.height;
-
-        console.log('width', width)
-        console.log('height', height)
         if (width !== height) {
           message.error('请上传正方形的店铺标志图片');
           resolve(false);
@@ -111,7 +107,7 @@ const FieldMerchantLogo: FC<FieldMerchantLogoProps> = ({ value, defaultValue = [
             }
           }}
           // 已上传则不允许此处再次编辑
-          disabled={currentFileList.length >= 1}
+          disabled={currentFileList.length >= 1 && status === MerchantLogoAuditStatusEnum.审核通过}
           autoHidden
           maxCount={1}
           listType='picture-card'
