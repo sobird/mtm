@@ -11,6 +11,8 @@ import { useAppSelector } from '@/store/hooks';
 import FieldMerchantLogo from '@/components/field-merchant-logo';
 import MerchantService,  { getCategoryPath, MerchantTypeEnum } from '@/services/merchant';
 
+import BaseAdmin from './admin';
+
 import './index.scss';
 
 const blankText = '暂未填写';
@@ -61,6 +63,7 @@ function BaseInfo() {
         form={form}
         onFinish={values => {
           console.log('values', values);
+          // todo 
         }}
       >
         <Form.Item label='店铺编号' shouldUpdate={(pre, cur) => pre.shopId !== cur.shopId}>
@@ -113,7 +116,7 @@ function BaseInfo() {
             },
           ]}
         >
-          <FieldMerchantLogo />
+          <FieldMerchantLogo status={6}/>
         </Form.Item>
         <Form.Item
           label='店铺简介'
@@ -157,6 +160,8 @@ function BaseInfo() {
           </Button>
         </Space>
       </Form>
+
+      <BaseAdmin />
     </div>
   );
 }

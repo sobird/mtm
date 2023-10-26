@@ -1,0 +1,10 @@
+.id-type-text {
+  font-weight: 500;
+  color: var(--text-color-base);
+
+  span {
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--text-color-weak);
+  }
+}

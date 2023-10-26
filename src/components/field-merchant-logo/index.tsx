@@ -10,10 +10,10 @@
 import React, { useState, FC, ComponentProps } from 'react';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import { message, Upload, Space } from 'antd';
-import type { UploadFile as AntdUploadFile, RcFile } from 'antd/es/upload';
+import type { UploadFile, RcFile } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
 import Tooltip from '@/components/tooltip';
-import UploadFile from '@/components/upload-file';
+import FieldUploadFile from '@/components/field-upload-file';
 import { MerchantLogoAuditStatusEnum } from '@/services/merchant';
 import { fileToBase64 } from '@/utils';
 
@@ -76,28 +76,18 @@ const FieldMerchantLogo: FC<FieldMerchantLogoProps> = ({ value, defaultValue = [
     onChange,
   });
 
-  const [currentUrl, updatedUrl] = valuePair;
-  const [currentFileList, setCurrentFileList] = useState<AntdUploadFile[]>(
-    currentUrl ? [{ url: currentUrl, status: 'done', uid: currentUrl, name: currentUrl }] : []
-  );
-  const [updatedFileList, setUpdatedFileList] = useState<AntdUploadFile[]>(
-    updatedUrl ? [{ url: updatedUrl, status: 'done', uid: updatedUrl, name: updatedUrl }] : []
-  );
 
   const tips = status === MerchantLogoAuditStatusEnum.审核中 ? reviewTips : normalTips;
 
   return (
     <div className='field-merchant-logo'>
       <Space>
-        <UploadFile
+        <FieldUploadFile
           className='upload-logo-current'
-          fileList={currentFileList}
-          onChange={({ fileList }) => {
-            setCurrentFileList(fileList);
-          }}
-          onUploadSuccess={({ url }) => {
-            valuePair[0] = url;
-            setValuePair(valuePair);
+          value={[valuePair[0]]}
+          onChange={(value) => {
+            valuePair[0] = value[0]
+            setValuePair([...valuePair])
           }}
           beforeUpload={async (file) => {
             const result = await fileValidator(file);
@@ -107,32 +97,26 @@ const FieldMerchantLogo: FC<FieldMerchantLogoProps> = ({ value, defaultValue = [
             }
           }}
           // 已上传则不允许此处再次编辑
-          disabled={currentFileList.length >= 1 && status === MerchantLogoAuditStatusEnum.审核通过}
+          disabled={valuePair.length >= 1 && status === MerchantLogoAuditStatusEnum.审核通过}
           autoHidden
           maxCount={1}
           listType='picture-card'
           accept='image/*,.pdf,.bpm'
         >
           {uploadButton}
-        </UploadFile>
+        </FieldUploadFile>
 
-        {currentFileList.length >= 1 && status && (
+        {valuePair.length >= 1 && status && (
           <>
             <span className='updated-label'>修改为 》</span>
-            <UploadFile
+            <FieldUploadFile
               className='upload-logo-updated'
-              fileList={updatedFileList}
-              onChange={({ fileList }) => {
-                setUpdatedFileList(fileList);
+              value={[valuePair[1]]}
+              onChange={(value) => {
+                valuePair[1] = value[0]
+                setValuePair(valuePair)
               }}
-              onRemove={() => {
-                valuePair[1] = '';
-                setValuePair(valuePair);
-              }}
-              onUploadSuccess={({ url }) => {
-                valuePair[1] = url;
-                setValuePair(valuePair);
-              }}
+
               itemRender={originNode => {
                 const { props } = originNode;
                 return (
@@ -152,7 +136,7 @@ const FieldMerchantLogo: FC<FieldMerchantLogoProps> = ({ value, defaultValue = [
               accept='image/*,.pdf,.bpm'
             >
               <Tooltip title={normalTips}>{uploadButton}</Tooltip>
-            </UploadFile>
+            </FieldUploadFile>
           </>
         )}
 

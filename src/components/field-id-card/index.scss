@@ -1,0 +1,26 @@
+.field-id-card {
+  .mtm-upload-list-item-container {
+    height: 80px !important;
+    width: 120px !important;
+  }
+  .mtm-upload-select {
+    width: 120px !important;
+    height: 80px !important;
+    overflow: hidden;
+    img {
+      margin: -1px;
+    }
+    .id-card-tips {
+      font-size: 12px;
+      position: absolute;
+      opacity: .3;
+    }
+  }
+  .mtm-upload-list-item {
+    padding: 0 !important;
+    &::before {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+}

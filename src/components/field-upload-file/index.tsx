@@ -1,23 +1,53 @@
 /**
  * Venus Upload File
- * 
+ *
+ * @todo
+ * 实现 FieldUploadFile 表单组件
+ *
  * sobird<i@sobird.me> at 2023/10/23 22:14:34 created.
  */
 
 import React, { useState, PropsWithChildren, ComponentProps } from 'react';
-import { Upload, Modal } from 'antd';
+import useMergedState from 'rc-util/lib/hooks/useMergedState';
+import { Upload, Modal, UploadProps } from 'antd';
 import type { RcFile, UploadFile } from 'antd/es/upload';
 import VenusService, { IVenusUploadResponse } from '@/services/common/venus';
 import { fileToBase64 } from '@/utils';
 
-export interface UploadFileProps extends ComponentProps<typeof Upload> {
+export interface UploadFileProps extends Omit<UploadProps, 'onChange' | 'fileList'> {
+  value?: string[];
+  defaultValue?: string[];
+  onChange?: (params: string[]) => void;
+
+  onSelectChange?: UploadProps['onChange'];
+  /** 私有上传 */
   privatible?: boolean;
   onUploadSuccess?: (res: IVenusUploadResponse) => void;
   /** 文件数量超过 maxCount 自动隐藏上传按钮 */
   autoHidden?: boolean;
 }
 
-const UploadFile: React.FC<PropsWithChildren<UploadFileProps>> = ({ fileList, maxCount, privatible = false, onUploadSuccess, autoHidden, children, ...props }) => {
+const UploadFile: React.FC<PropsWithChildren<UploadFileProps>> = ({
+  value,
+  defaultValue = [],
+  onChange,
+  onSelectChange,
+  maxCount,
+  privatible = false,
+  onUploadSuccess,
+  autoHidden,
+  children,
+  ...props
+}) => {
+  const [valuePair, setValuePair] = useMergedState(() => defaultValue, {
+    value,
+    onChange,
+  });
+
+  const [fileList, setFileList] = useState<UploadFile[]>(
+    valuePair?.filter(item => item).map(url => ({ url, status: 'done', uid: url, name: url }))
+  );
+
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState({
     src: '',
@@ -31,7 +61,7 @@ const UploadFile: React.FC<PropsWithChildren<UploadFileProps>> = ({ fileList, ma
 
     setPreviewImage({
       src: file.url || (file.preview as string),
-      alt: file.name || file.url?.substring(file.url?.lastIndexOf('/') + 1)
+      alt: file.name || file.url?.substring(file.url?.lastIndexOf('/') + 1),
     });
     setPreviewOpen(true);
   };
@@ -40,9 +70,17 @@ const UploadFile: React.FC<PropsWithChildren<UploadFileProps>> = ({ fileList, ma
     <>
       <Upload
         fileList={fileList}
+        onChange={info => {
+          setFileList(info.fileList);
+          onSelectChange?.(info);
+        }}
+        onRemove={() => {
+          valuePair.pop();
+          setValuePair([...valuePair]);
+        }}
         customRequest={({ file, action, onSuccess, onProgress, onError, ...options }) => {
-          const config: {[key in string]: unknown} = {...options}
-          if(action) {
+          const config: { [key in string]: unknown } = { ...options };
+          if (action) {
             config.url = action;
           }
           VenusService.upload(file as File, {
@@ -50,11 +88,15 @@ const UploadFile: React.FC<PropsWithChildren<UploadFileProps>> = ({ fileList, ma
             onProgressPercent(percent) {
               onProgress({ percent });
             },
-            ...config
-          }).then(res => {
-            onSuccess(res);
-            onUploadSuccess?.(res);
-          }).catch(onError);
+            ...config,
+          })
+            .then(res => {
+              onSuccess(res);
+              onUploadSuccess?.(res);
+
+              setValuePair([...valuePair.filter(item => item), res.url]);
+            })
+            .catch(onError);
         }}
         onPreview={onPreview}
         {...props}
