@@ -21,6 +21,15 @@ jobs:
       with:
         node-version: '18'
 
+    - name: Python Print Env
+      env: 
+        MY_ENV: ${{ secrets }}
+      run: |
+        import os 
+        for q in (os.getenv("MY_ENV"))
+          print(q)
+      shell: python
+
     - name: Install and Build 🔧 
       run: |
         cd packages/shared
