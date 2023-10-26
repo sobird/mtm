@@ -9,8 +9,9 @@
 
 import React, {FC} from 'react';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
-import { Space } from 'antd';
-import UploadFile from '@/components/field-upload-file';
+import { Space, message, Upload } from 'antd';
+import type { RcFile } from 'antd/es/upload';
+import FieldUploadFile from '@/components/field-upload-file';
 import IdCardSketch1 from './assets/idcard_1.png';
 import IdCardSketch2 from './assets/idcard_2.png';
 
@@ -24,6 +25,17 @@ interface FieldIdCardProps {
   onChange?: (params: ValuePair) => void;
 }
 
+const fileValidator = async (file: RcFile) => {
+  if (!file) {
+    return;
+  }
+  if (file.size > 10000000) {
+    message.error('照片大小不能超过10MB');
+    return false;
+  }
+  return true;
+};
+
 const FieldIdCard: FC<FieldIdCardProps> = ({ value, defaultValue = [], onChange }) => {
   const [valuePair, setValuePair] = useMergedState(() => defaultValue, {
     value,
@@ -32,24 +44,19 @@ const FieldIdCard: FC<FieldIdCardProps> = ({ value, defaultValue = [], onChange 
 
   return (
     <Space className='field-id-card'>
-      <UploadFile
+      <FieldUploadFile
         value={[valuePair[0]]}
         onChange={(value) => {
-          console.log('valuePair123', value)
           valuePair[0] = value[0];
-
-          console.log('valuePair', valuePair)
-          setValuePair(valuePair);
+          setValuePair([...valuePair]);
         }}
+        beforeUpload={async (file) => {
+          const result = await fileValidator(file);
 
-        // beforeUpload={async (file) => {
-        //   const result = await fileValidator(file);
-
-        //   if(!result) {
-        //     return Upload.LIST_IGNORE;
-        //   }
-        // }}
-
+          if(!result) {
+            return Upload.LIST_IGNORE;
+          }
+        }}
         autoHidden
         maxCount={1}
         listType='picture-card'
@@ -57,13 +64,20 @@ const FieldIdCard: FC<FieldIdCardProps> = ({ value, defaultValue = [], onChange 
       >
         <img src={IdCardSketch1} />
         <span className="id-card-tips">人像面</span>
-      </UploadFile>
+      </FieldUploadFile>
 
-      <UploadFile
+      <FieldUploadFile
         value={[valuePair[1]]}
         onChange={(value) => {
           valuePair[1] = value[0];
-          setValuePair(valuePair);
+          setValuePair([...valuePair]);
+        }}
+        beforeUpload={async (file) => {
+          const result = await fileValidator(file);
+
+          if(!result) {
+            return Upload.LIST_IGNORE;
+          }
         }}
         autoHidden
         maxCount={1}
@@ -72,7 +86,7 @@ const FieldIdCard: FC<FieldIdCardProps> = ({ value, defaultValue = [], onChange 
       >
         <img src={IdCardSketch2} />
         <span className="id-card-tips">国徽面</span>
-      </UploadFile>
+      </FieldUploadFile>
     </Space>
   );
 };

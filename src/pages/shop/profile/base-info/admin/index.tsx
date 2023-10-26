@@ -1,5 +1,8 @@
 /**
  * 管理员
+ * 
+ * @todo
+ * 身份证校验 正则匹配
  *
  * sobird<i@sobird.me> at 2023/10/26 15:17:34 created.
  */
@@ -9,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { Alert, Button, Form, Input, Space } from 'antd';
 import FieldIdCard from '@/components/field-id-card';
 import FieldTermPick from '@/components/field-term-picker';
+import isIdCard from '@/utils/validator/isIdCard';
 
 import './index.scss';
 
@@ -95,48 +99,71 @@ function BaseAdmin() {
         form={form}
         onFinish={values => {
           console.log('values', values);
-          // todo 
+          // todo
         }}
       >
-        <Form.Item required label='证件类型' name="idCardType">
-          <div className="id-type-text">
+        <Form.Item required label='证件类型' name='idCardType'>
+          <div className='id-type-text'>
             中国大陆居民身份证 <span>(店铺管理员仅支持大陆居民身份证申请)</span>
           </div>
         </Form.Item>
 
-        <Form.Item label='电子证件照' name="idCardPhotos">
+        <Form.Item
+          label='电子证件照'
+          name='idCardPhotos'
+          required
+          rules={[
+            {
+              async validator(rule, value: [string, string]) {
+                if (!value?.[0] && !value?.[1]) {
+                  throw new Error('电子证件照不能为空');
+                }
+                if (!value?.[0]) {
+                  throw new Error('请上传身份证人像面');
+                }
+                if (!value?.[1]) {
+                  throw new Error('请上传身份证国徽面');
+                }
+              },
+            },
+          ]}
+        >
           <FieldIdCard />
         </Form.Item>
 
-        <Form.Item label='管理员姓名' name="name">
-          <Input
-            placeholder="请保持与身份证件上的姓名一致"
-          />
+        <Form.Item label='管理员姓名' name='name' rules={[{
+          required: true,
+          message: '管理员姓名不能为空',
+        },
+        {
+          max: 30,
+          message: '姓名过长，不得超过30个字',
+        }]}>
+          <Input placeholder='请保持与身份证件上的姓名一致' />
         </Form.Item>
 
-        <Form.Item label='身份证件号' name="cardNum">
-          <Input
-            placeholder="请保持与身份证件上的证件号一致"
-          />
+        <Form.Item label='身份证件号' name='cardNum' required rules={[
+          {
+            async validator(rule, value) {
+              if (!isIdCard(value)) {
+                throw new Error('请输入正确的身份证号码');
+              }
+            },
+          },
+        ]}>
+          <Input placeholder='请保持与身份证件上的证件号一致' />
         </Form.Item>
 
-        <Form.Item
-          label='有效截止日'
-          name='description'
-        >
+        <Form.Item label='有效截止日' name='description'>
           <FieldTermPick />
         </Form.Item>
 
-        <Form.Item label='管理员手机号' name="phone">
-          <Input
-            placeholder="请填写管理员手机号"
-          />
+        <Form.Item label='管理员手机号' name='phone'>
+          <Input placeholder='请填写管理员手机号' />
         </Form.Item>
 
-        <Form.Item label='手机验证码' name="phoneCode">
-          <Input
-            placeholder="请查看手机短信，输入验证码"
-          />
+        <Form.Item label='手机验证码' name='phoneCode'>
+          <Input placeholder='请查看手机短信，输入验证码' />
         </Form.Item>
 
         <Space style={{ marginLeft: 142 }}>
