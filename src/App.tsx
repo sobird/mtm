@@ -1,7 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Clipboard from 'clipboard';
-import { ConfigProvider, theme as AntdTheme, message } from 'antd';
+import { ConfigProvider, theme as AntdTheme, message, ThemeConfig } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
 import router from '@/router';
 import store from '@/store';
@@ -23,7 +23,7 @@ clipboard.on('error', () => {
 
 const defaultToken = AntdTheme.defaultConfig.token;
 
-const theme = {
+const theme: ThemeConfig = {
   token: {
     borderRadius: 3,
     // controlHeight: 28
@@ -41,7 +41,13 @@ const theme = {
     },
     Form: {
       itemMarginBottom: 20,
-      labelColor: "#333"
+      labelColor: "#333",
+      
+    },
+    Alert: {
+      fontSize: 12,
+      fontSizeLG: 14,
+      paddingContentVerticalSM: 15,
     },
     Badge: {
       textFontSize: 12,

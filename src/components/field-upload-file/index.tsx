@@ -14,7 +14,7 @@ import type { RcFile, UploadFile } from 'antd/es/upload';
 import VenusService, { IVenusUploadResponse } from '@/services/common/venus';
 import { fileToBase64 } from '@/utils';
 
-export interface UploadFileProps extends Omit<UploadProps, 'onChange' | 'fileList'> {
+export interface FieldUploadFileProps extends Omit<UploadProps, 'onChange' | 'fileList'> {
   value?: string[];
   defaultValue?: string[];
   onChange?: (params: string[]) => void;
@@ -27,7 +27,7 @@ export interface UploadFileProps extends Omit<UploadProps, 'onChange' | 'fileLis
   autoHidden?: boolean;
 }
 
-const UploadFile: React.FC<PropsWithChildren<UploadFileProps>> = ({
+const FieldUploadFile: React.FC<PropsWithChildren<FieldUploadFileProps>> = ({
   value,
   defaultValue = [],
   onChange,
@@ -110,4 +110,4 @@ const UploadFile: React.FC<PropsWithChildren<UploadFileProps>> = ({
   );
 };
 
-export default UploadFile;
+export default FieldUploadFile;
