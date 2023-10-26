@@ -22,6 +22,7 @@ const { EsbuildPlugin } = require('esbuild-loader');
 const Dotenv = require('dotenv-webpack');
 // const WebpackBar = require('webpackbar');
 const { ModuleFederationPlugin } = require('webpack').container;
+const DeployNotifierWebpackPlugin = require('./plugins/DeployNotifierWebpackPlugin')
 const package = require('./package.json');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -73,10 +74,10 @@ const config = {
       filename: 'index.html',
       cache: false,
       minify: {
-        collapseWhitespace: true,
-        removeComments: true,
-        minifyJS: true,
-        minifyCSS: true,
+        collapseWhitespace: isProduction,
+        removeComments: isProduction,
+        minifyJS: isProduction,
+        minifyCSS: isProduction,
       },
       inject: true,
       title: package.description,
@@ -88,10 +89,10 @@ const config = {
       cache: false,
       inject: false,
       minify: {
-        collapseWhitespace: true,
-        removeComments: true,
-        minifyJS: true,
-        minifyCSS: true,
+        collapseWhitespace: isProduction,
+        removeComments: isProduction,
+        minifyJS: isProduction,
+        minifyCSS: isProduction,
       },
     }),
 
@@ -129,6 +130,9 @@ const config = {
       remotes: {
         market: `mtm_market@${marketHOST}/remoteEntry.js`,
       }
+    }),
+    new DeployNotifierWebpackPlugin({
+      appId: package.name
     }),
     // new PurgeCSSPlugin({
     //   paths: glob.sync(`${path.resolve(__dirname, './src')}/**/*.{tsx,scss,less,css}`, { nodir: true }),

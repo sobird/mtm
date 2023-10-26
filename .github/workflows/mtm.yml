@@ -25,6 +25,7 @@ jobs:
       run: |
         echo "Home: ${HOME}"
         echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
+        echo "GITHUB_RUN_ID: ${GITHUB_RUN_ID}"
         echo "GITHUB_ACTIONS: ${GITHUB_ACTIONS}"
         echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
         echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
@@ -42,7 +43,7 @@ jobs:
         yarn build
         cd - 
         yarn
-        yarn build
+        SHA=${GITHUB_SHA} FLOW_ID=${GITHUB_RUN_ID} yarn build
 
     - name: Deploy VPS 🚀
       uses: appleboy/scp-action@v0.1.4
