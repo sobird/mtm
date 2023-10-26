@@ -22,7 +22,6 @@ interface FieldIdCardProps {
   value?: ValuePair;
   defaultValue?: ValuePair;
   onChange?: (params: ValuePair) => void;
-  status: 4 | 5 | 6;
 }
 
 const FieldIdCard: FC<FieldIdCardProps> = ({ value, defaultValue = [], onChange }) => {
@@ -30,8 +29,6 @@ const FieldIdCard: FC<FieldIdCardProps> = ({ value, defaultValue = [], onChange 
     value,
     onChange,
   });
-
-  console.log('valuePair', valuePair)
 
   return (
     <Space className='field-id-card'>

@@ -8,6 +8,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Button, Form, Input, Space } from 'antd';
 import FieldIdCard from '@/components/field-id-card';
+import FieldTermPick from '@/components/field-term-picker';
 
 import './index.scss';
 
@@ -107,54 +108,35 @@ function BaseAdmin() {
           <FieldIdCard />
         </Form.Item>
 
-        <Form.Item label='店铺类型' shouldUpdate={(p, c) => p.shopTypeLabel !== c.shopTypeLabel}>
-          {({ getFieldValue }) => {
-            const shopTypeLabel = getFieldValue('shopTypeLabel');
-            return <>{shopTypeLabel}</>;
-          }}
+        <Form.Item label='管理员姓名' name="name">
+          <Input
+            placeholder="请保持与身份证件上的姓名一致"
+          />
         </Form.Item>
 
-        <Form.Item label='主营类目' shouldUpdate={(p, c) => p.categoryLabel !== c.categoryLabel}>
-          {({ getFieldValue }) => {
-            const categoryLabel = getFieldValue('categoryLabel');
-            return <>{categoryLabel}</>;
-          }}
-        </Form.Item>
-
-        <Form.Item
-          label='店铺简介'
-          name='description'
-          rules={[
-            {
-              max: 200,
-              message: '店铺简介最多200个字符',
-            },
-          ]}
-        >
-          <Input.TextArea
-            placeholder='填写店铺简介，可让消费者更了解您的店铺'
-            className='description'
-            // onChange={handleChange}
-            showCount
-            maxLength={200}
-            // resize="horizontal"
-            rows={5}
-            cols={40}
+        <Form.Item label='身份证件号' name="cardNum">
+          <Input
+            placeholder="请保持与身份证件上的证件号一致"
           />
         </Form.Item>
 
         <Form.Item
-          label='第三方平台店铺链接'
-          name='externalLink'
-          rules={[
-            {
-              // required: true,
-              max: 1000,
-              message: '第三方平台链接最多1000个字符',
-            },
-          ]}
+          label='有效截止日'
+          name='description'
         >
-          <Input className='extra-links' placeholder='填写真实的其他平台店铺链接' />
+          <FieldTermPick />
+        </Form.Item>
+
+        <Form.Item label='管理员手机号' name="phone">
+          <Input
+            placeholder="请填写管理员手机号"
+          />
+        </Form.Item>
+
+        <Form.Item label='手机验证码' name="phoneCode">
+          <Input
+            placeholder="请查看手机短信，输入验证码"
+          />
         </Form.Item>
 
         <Space style={{ marginLeft: 142 }}>

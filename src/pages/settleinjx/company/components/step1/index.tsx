@@ -8,7 +8,7 @@ import React, { PropsWithChildren, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Checkbox, Form, Input, Radio, Space, Upload, DatePicker, Button, Select, Image, FormInstance } from 'antd';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import TermPick from '@/components/term-picker';
+import TermPick from '@/components/field-term-picker';
 import { IEntryEnum } from '@/services/merchant/entry/enum';
 
 import OcrUpload from '@/components/ocr-upload';
