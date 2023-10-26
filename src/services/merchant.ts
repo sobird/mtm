@@ -22,6 +22,21 @@ export enum MerchantLogoAuditStatusEnum {
   '审核通过' = 6,
 }
 
+/** 根据categoryId获取类目路径 */
+export function getCategoryPath(categoryId: number, categoryList: IMerchantCategory[]) {
+  const item = categoryList.find(item => item.id === categoryId);
+  const category = [item];
+  let parentId = item.parentId;
+
+  while (parentId) {
+    const item = categoryList.find(item => item.id === parentId);
+    category.unshift(item);
+    parentId = item.parentId;
+  }
+
+  return category;
+}
+
 const MerchantService = {
   /** 获取当前商家详情 */
   detail() {

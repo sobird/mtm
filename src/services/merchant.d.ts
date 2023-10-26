@@ -33,9 +33,13 @@ export interface IShopEntity {
   /** 店铺名称 */
   name?: string;
   /** 店铺描述 */
-  desc?: string;
+  description?: string;
   /** 店铺Logo */
   logo?: string;
+  /** 店铺类型 */
+  type: number;
+  /** 主营类目 */
+  category: number;
   /** 钱包ID */
   walletId?: string;
   bankId?: number;
@@ -56,6 +60,7 @@ export interface IShopEntity {
     address?: string;
     phone?: string;
   };
+  externalLink?: string;
 }
 
 export interface IWalletEntity {

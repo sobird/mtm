@@ -1,7 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Clipboard from 'clipboard';
-import { ConfigProvider, message } from 'antd';
+import { ConfigProvider, theme as AntdTheme, message } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
 import router from '@/router';
 import store from '@/store';
@@ -21,12 +21,31 @@ clipboard.on('error', () => {
   // todo
 });
 
+const defaultToken = AntdTheme.defaultConfig.token;
+
 const theme = {
   token: {
-    // colorPrimary: '#ffd100',
     borderRadius: 3,
-    // colorWhite: '#333',
+    // controlHeight: 28
+
+    // disabled
+    colorBgContainerDisabled: '#fff',
+    colorTextDisabled: '#444',
     motion: false,
+  },
+  components: {
+    Breadcrumb: {
+      /* here is your component tokens */
+      linkHoverColor: defaultToken.blue,
+      separatorColor: '#c0c4cc',
+    },
+    Form: {
+      itemMarginBottom: 20,
+      labelColor: "#333"
+    },
+    Badge: {
+      textFontSize: 12,
+    },
   },
 };
 

@@ -46,6 +46,8 @@
       "bankNum": "158981*******3550",
       "bankUname": "小米妈妈家居",
       "logo": "https://mtm.sobird.me/assets/merchant/logo.jpg",
+      "type": 23,
+      "category": 200010002,
       "address": "北京市海淀区",
       "id": 148568,
       "auth": "企业店铺",

@@ -4,9 +4,13 @@
  * sobird<i@sobird.me> at 2023/10/25 19:32:29 created.
  */
 
-import React, {useState} from 'react';
-import { Form, Button, Input } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Form, Button, Input, Space } from 'antd';
+import { CopyOutlined } from '@ant-design/icons';
+import { useAppSelector } from '@/store/hooks';
 import FieldMerchantLogo from '@/components/field-merchant-logo';
+import MerchantService,  { getCategoryPath, MerchantTypeEnum } from '@/services/merchant';
+
 import './index.scss';
 
 const blankText = '暂未填写';
@@ -20,177 +24,141 @@ const formItemLayout = {
 };
 
 function BaseInfo() {
-  const [editable, setEditable] = useState(true);
   const [form] = Form.useForm();
+  const merchant = useAppSelector(state => state.merchant);
+  const {
+    shopInfo: { id, name, description, type, logo, category, externalLink },
+  } = merchant;
 
-  const basicData = {
-
+  const initialValues = {
+    shopId: id,
+    shopName: name,
+    shopTypeLabel: MerchantTypeEnum[type],
+    description,
+    logo: [logo],
+    category,
+    type,
+    externalLink,
   };
 
-  const submitForm = () => {
-    // todo 
-  }
 
-  return <div className="shop-baseinfo-panel">
-    <Form
-      className="shop-base-form"
-      {...formItemLayout}
-      // ref={this.formRef}
-      // value={formValue}
-      onFinish={(value) => {
-        if (!value) {
-          // this.submit(value, formValue); // 提交数据
-        }
-      }}
-    >
-      {/* <div className="toolbar" style={{ marginBottom: '11px' }}>
-          <div className="title">基础信息</div>
-          {
-            editable
-              ? (
-                <div>
-                  <Button type="hollow" style={{ height: '32px', width: '52px', fontSize: 12 }} onClick={() => this.cancle(resetForm, validateForm, setFieldValues, formValue)}>取消</Button>
-                  <Button
-                    type="default" style={{
-                      height: '32px', width: '52px', fontSize: 12, marginLeft: '10px',
-                    }} onClick={submitForm}
-                  >保存</Button>
-                </div>
-              )
-              : <Button type="default" style={{ height: '32px', width: '52px', fontSize: 12 }} onClick={() => this.changeEditable(true)}>编辑</Button>
-          }
-        </div> */}
+  useEffect(() => {
+    MerchantService.category().then(res => {
+      const categoryPath = getCategoryPath(category, res);
+      const categoryPathName = categoryPath.map(item => item.name);
+      const categoryLabel = categoryPathName.join(' > ');
+      console.log('categoryLabel', categoryLabel)
+      form.setFieldValue('categoryLabel', categoryLabel);
+    }) 
+  }, []);
 
-      <Form.Item
-        label="店铺编号"
-        name="shopId"
+  return (
+    <div className='shop-baseinfo-panel'>
+      <Form
+        className='shop-base-form'
+        {...formItemLayout}
+        initialValues={initialValues}
+        form={form}
+        onFinish={values => {
+          console.log('values', values);
+        }}
       >
-    
-        <div className={value ? 'textRow' : 'textRow textRow-blank'} style={{ display: 'flex', alignItems: 'center' }}>
-          <span
-            className="textRow-text"
-            style={{ marginTop: '-1px' }}
-            id='shopId'
-          >
-            123456
-          </span>
-          { <Button  className="clipboard" data-clipboard-target="#shopId" type="text" style={{ marginTop: '-1px' }}>复制</Button>}
-        </div>
+        <Form.Item label='店铺编号' shouldUpdate={(pre, cur) => pre.shopId !== cur.shopId}>
+          {({ getFieldValue }) => {
+            const shopId = getFieldValue('shopId');
+            return (
+              <>
+                {shopId} <CopyOutlined className='clipboard' data-clipboard-text={shopId} />
+              </>
+            );
+          }}
+        </Form.Item>
 
-      </Form.Item>
-        
-      <Form.Item
-        label="店铺名称"
-        name="shopName"
-      >
-        <div className={value ? 'textRow' : 'textRow textRow-blank'}>
-          <div className="textRow-text">{value || blankText}</div>
-        </div>
-      </Form.Item>
-        
-      <Form.Item
-        label="店铺类型"
-        name="merchantType"
-      >
-        <div className={value ? 'textRow' : 'textRow textRow-blank'}>
-          <div className="textRow-text">{"企业专营店铺" || blankText}</div>
-        </div>
-      </Form.Item>
-        
-      <Form.Item
-        label="主营类目"
-        name="mainCategoryText"
-      >
-        <div className={value ? 'textRow' : 'textRow textRow-blank'}>
-          <div className="textRow-text">{value || '请联系招商经理，确认该店铺的主营类目' }</div>
-        </div>
-      </Form.Item>
-        
-      <Form.Item
-        label="店铺标志"
-        name="logo"
-        required
-        // type="logo"
-        // rule={{
-        //   validator: (rule: ruleprops, value: string, callback: () => void) => {
-        //     this.logoValidator(rule, value, callback);
-        //   },
-        // }}
-      >
-        {!{logo: 1}.logo && !editable ? (
-          <span className="textRow textRow-blank">
-            <div className="textRow-text">{blankText}</div>
-          </span>
+        <Form.Item label='店铺名称' shouldUpdate={(p, c) => p.shopName !== c.shopName}>
+          {({ getFieldValue }) => {
+            const shopName = getFieldValue('shopName');
+            return <>{shopName}</>;
+          }}
+        </Form.Item>
 
-        ) : 
-          <FieldMerchantLogo
-            // value={}
+        <Form.Item label='店铺类型' shouldUpdate={(p, c) => p.shopTypeLabel !== c.shopTypeLabel}>
+          {({ getFieldValue }) => {
+            const shopTypeLabel = getFieldValue('shopTypeLabel');
+            return <>{shopTypeLabel}</>;
+          }}
+        </Form.Item>
+
+        <Form.Item label='主营类目' shouldUpdate={(p, c) => p.categoryLabel !== c.categoryLabel}>
+          {({ getFieldValue }) => {
+            const categoryLabel = getFieldValue('categoryLabel');
+            return <>{categoryLabel}</>;
+          }}
+        </Form.Item>
+
+        <Form.Item
+          label='店铺标志'
+          name='logo'
+          required
+          rules={[
+            {
+              required: true,
+              message: '请上传店铺logo',
+            },
+            {
+              validator: async (rule, value) => {
+                if (value[0] === value[1]) {
+                  throw new Error('不能与生效中的店铺标志图相同，请重新上传');
+                }
+              },
+            },
+          ]}
+        >
+          <FieldMerchantLogo />
+        </Form.Item>
+        <Form.Item
+          label='店铺简介'
+          name='description'
+          rules={[
+            {
+              max: 200,
+              message: '店铺简介最多200个字符',
+            },
+          ]}
+        >
+          <Input.TextArea
+            placeholder='填写店铺简介，可让消费者更了解您的店铺'
+            className='description'
             // onChange={handleChange}
-            status={1}
-            rejectReason={['拒绝原因']}
-            editable={editable}
-            // setDelRejectFlag={}
-            delRejectFlag={true}
+            showCount
+            maxLength={200}
+            // resize="horizontal"
+            rows={5}
+            cols={40}
           />
-        }
-      </Form.Item>
-        
-      <Form.Item
-        label="店铺简介"
-        name="desc"
-        // rule={{
-        //   validator: (rule: ruleprops, value: string, callback: () => void) => {
-        //     this.descValidator(rule, value, callback);
-        //   },
-        // }}
-      >
-        {
-          (
-            editable
-              ? (
-                <div className="desc-wrapper">
-                  <Input.TextArea
-                    placeholder="填写店铺简介，可让消费者更了解您的店铺"
-                    // value={value}
-                    className="desc"
-                    // onChange={handleChange}
-                    // statistics
-                    maxLength={200}
-                    // resize="horizontal"
-                    rows={5}
-                    cols={40}
-                  />
-                </div>
-              )
-              : (
-                <div className={value ? 'textRow' : 'textRow textRow-blank'} style={{ fontSize: '14px', width: '800px' }}>
-                  <div className="textRow-text">{value || blankText}</div>
-                </div>
-              )
-          )
-        }
-      </Form.Item>
-          
-      <Form.Item
-        label="第三方平台店铺链接"
-        name="externLinks"
-        // rule={{
-        //   validator: (rule: ruleprops, value: string, callback: () => void) => {
-        //     this.externLinksValidator(rule, value, callback);
-        //   },
-        // }}
-      >
-        {
-          editable
-            ? <Input className="extra-links" placeholder="填写真实的其他平台店铺链接" />
-            : 
-            <div className={value ? 'textRow' : 'textRow textRow-blank'} style={{ fontSize: '14px' }}>
-              <div className="textRow-text">{value || blankText}</div>
-            </div>
-        }
-      </Form.Item>
-    </Form>
-  </div>;
+        </Form.Item>
+
+        <Form.Item
+          label='第三方平台店铺链接'
+          name='externalLink'
+          rules={[
+            {
+              // required: true,
+              max: 1000,
+              message: '第三方平台链接最多1000个字符',
+            },
+          ]}
+        >
+          <Input className='extra-links' placeholder='填写真实的其他平台店铺链接' />
+        </Form.Item>
+
+        <Space style={{ marginLeft: 142 }}>
+          <Button type='primary' htmlType='submit'>
+            更新店铺基本信息
+          </Button>
+        </Space>
+      </Form>
+    </div>
+  );
 }
 
 export default BaseInfo;
