@@ -21,14 +21,19 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Python Print Env
-      env: 
-        MY_ENV: ${{ secrets }}
+    - name: echo-default-env-variables
       run: |
-        import os 
-        for q in (os.getenv("MY_ENV"))
-          print(q)
-      shell: python
+        echo "Home: ${HOME}"
+        echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
+        echo "GITHUB_ACTIONS: ${GITHUB_ACTIONS}"
+        echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
+        echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+        echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+        echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
+        echo "GITHUB_SHA: ${GITHUB_SHA}"
+        echo "GITHUB_REF: ${GITHUB_REF}"
+        echo "GITHUB_SERVER_URL: ${GITHUB_SERVER_URL}"
+        echo "GITHUB_API_URL: ${GITHUB_API_URL}"
 
     - name: Install and Build 🔧 
       run: |
