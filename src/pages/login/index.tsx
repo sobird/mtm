@@ -155,7 +155,6 @@ function Login() {
               }
               
               const res = await CaptchaService.get(mobile);
-              message.success(`【美团】${res.captcha}（商户注册验证码）。工作人员不会向您索要，请勿向任何人泄露，以免造成账户或资金损失。`, 5);
             }}
           />
         </ProForm>

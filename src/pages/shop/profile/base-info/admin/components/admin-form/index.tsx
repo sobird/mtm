@@ -8,7 +8,8 @@
 
 import React, { FC, PropsWithChildren } from 'react';
 import classNames from 'classnames';
-import { Form, Input } from 'antd';
+import { Form, Input, message } from 'antd';
+import { ProForm, ProFormText, ProFormCaptcha } from '@ant-design/pro-components';
 import type { FormProps } from 'antd';
 import FieldIdCard from '@/components/field-id-card';
 import FieldTermPick from '@/components/field-term-picker';
@@ -16,6 +17,7 @@ import isIdCard from '@/utils/validator/isIdCard';
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import FieldUploadFile from '@/components/field-upload-file';
 import VenusService from '@/services/common/venus';
+import CaptchaService from '@/services/common/captcha';
 
 import './index.scss';
 
@@ -135,7 +137,7 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, ch
 
       <Form.Item
         label='管理员手机号'
-        name='phone'
+        name='mobile'
         required
         rules={[
           {
@@ -150,19 +152,38 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, ch
         <Input placeholder='请填写管理员手机号' />
       </Form.Item>
 
-      <Form.Item
-        label='手机验证码'
-        name='phoneCode'
-        required
+      <ProFormCaptcha
+        label="验证码"
+        name="captcha"
+        // 手机号的 name，onGetCaptcha 会注入这个值
+        phoneName="mobile"
+        fieldProps={{
+          //
+        }}
+        captchaProps={{
+          size: 'small',
+          type: 'link',
+          style: { padding: 0 }
+        }}
+        placeholder="请查看手机短信，输入验证码"
         rules={[
           {
             len: 6,
             message: '手机验证码不正确，请重新输入',
           },
         ]}
-      >
-        <Input placeholder='请查看手机短信，输入验证码' />
-      </Form.Item>
+        // captchaTextRender={
+        //   (paramsTiming, paramsCount) => {
+        //     return paramsTiming ? `${paramsCount} 秒后重新获取` : '获取验证码';
+        //   }
+        // }
+
+        // 如果需要失败可以 throw 一个错误出来，onGetCaptcha 会自动停止
+        // throw new Error("获取验证码错误")
+        onGetCaptcha={async (mobile) => {
+          const res = await CaptchaService.get(mobile);
+        }}
+      />
 
       <Form.Item
         label='授权书'
