@@ -25,6 +25,9 @@ const formItemLayout = {
   labelCol: {
     flex: '0 0 142px',
   },
+  wrapperCol: {
+    span: 12
+  }
 };
 
 interface CouponFormProps extends FormProps {

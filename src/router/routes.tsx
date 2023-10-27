@@ -28,6 +28,7 @@ const EntryShop = lazy(() => import('@/pages/settleinjx/shop'));
 const EntryCompany = lazy(() => import('@/pages/settleinjx/company'));
 
 const ShopProfile = lazy(() => import('@/pages/shop/profile'));
+const ShopAdmin = lazy(() => import('@/pages/shop/admin'));
 
 const routes: RouteObject[] = [
   {
@@ -62,8 +63,13 @@ const routes: RouteObject[] = [
         path: 'shop',
         children: [
           {
-            path: 'profile',
+            index: true,
+            // path: 'profile',
             element: <ShopProfile />
+          },
+          {
+            path: 'admin',
+            element: <ShopAdmin />
           }
         ]
       },

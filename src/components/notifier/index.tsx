@@ -34,6 +34,9 @@ const Notifier = () => {
             width: 270,
           },
         });
+
+        // 仅出现一次通知
+        window.config.version = res.version;
       }
 
     });
