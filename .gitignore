@@ -13,6 +13,7 @@ dist-ssr
 *.local
 *.lock
 stats.json
+.shared
 
 # Editor directories and files
 .vscode/*

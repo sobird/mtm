@@ -1,5 +1,5 @@
 /**
- * index.tsx
+ * mdx 实时编译
  * 
  * @see https://mdxjs.com/packages/mdx/
  * @see https://esm.sh/

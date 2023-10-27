@@ -25,6 +25,7 @@ import clear from 'rollup-plugin-clear';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const isProduction = process.env.NODE_ENV === 'production';
+const dist = isProduction ? 'dist' : '../.shared'
 
 function input(pattern) {
   return glob.sync(pattern, {
@@ -71,8 +72,8 @@ function plugins(options = {}, env = {}) {
     terser: undefined,
     copy: {
       targets: [
-        { src: 'package.json', dest: 'dist' },
-        { src: 'README.asciidoc', dest: 'dist' },
+        { src: 'package.json', dest: dist },
+        { src: 'README.asciidoc', dest: dist },
       ]
     }
   };
@@ -100,12 +101,12 @@ export default (env) => {
       input: mainInput,
       output: {
         //preserveModules: true,
-        dir: "dist/es",
+        dir: `${dist}/es`,
         format: "es",
       },
       plugins: plugins({
         clear: {
-          targets: ['dist/es'],
+          targets: [`${dist}/es`],
         },
       }, env),
     },
@@ -113,12 +114,12 @@ export default (env) => {
     { // cjs module
       input: mainInput,
       output: {
-        dir: 'dist/lib',
+        dir: `${dist}/lib`,
         format: 'cjs',
       },
       plugins: plugins({
         clear: {
-          targets: ['dist/lib'],
+          targets: [`${dist}/lib`],
         }
       }, env),
     },
@@ -127,12 +128,12 @@ export default (env) => {
       input: 'src/index.ts',
       output: [
         {
-          file: 'dist/dist/mtm.js',
+          file: `${dist}/dist/mtm.js`,
           format: 'umd',
           name: 'mtm'
         },
         {
-          file: 'dist/dist/mtm.min.js',
+          file: `${dist}/dist/mtm.min.js`,
           // dir: 'dist/dist',
           format: 'umd',
           name: 'mtm',
@@ -141,7 +142,7 @@ export default (env) => {
       ],
       plugins: plugins({
         clear: {
-          targets: ['dist/dist'],
+          targets: [`${dist}/dist`],
         },
         typescript: {
           // umd 无需输出 d.ts 声明文件

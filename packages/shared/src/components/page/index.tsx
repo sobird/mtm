@@ -5,8 +5,9 @@
  */
 
 import React, { ReactNode, CSSProperties, PropsWithChildren, ComponentProps } from 'react';
+import classNames from 'classnames';
 import { Link, createHashRouter } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbProps } from 'antd';
+import { Breadcrumb, BreadcrumbProps, Tabs, TabsProps } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import './index.scss';
 
@@ -16,6 +17,7 @@ export interface PageProps extends Omit<ComponentProps<'div'>, 'title'> {
   prefixCls?: string;
   title?: ReactNode;
   breadcrumb?: BreadcrumbProps;
+  tabs?: TabsProps;
   description?: string;
   extra?: ReactNode[];
   titleIcon?: ReactNode;
@@ -64,19 +66,22 @@ const Page: React.FC<PropsWithChildren<PageProps>> = ({
   titleIcon,
   description,
   breadcrumb,
+  tabs,
   extra,
   children,
   headStyle,
   bodyStyle,
   ...props
 }) => {
+  const { className: breadcrumbClassName} = breadcrumb || {}
+  const { className: tabsClassName} = tabs || {}
   let head: React.ReactNode;
   if (title || description || extra || breadcrumb) {
     head = (
       <div className={`${prefixCls}-page-head`} style={headStyle}>
         {breadcrumb && (
           <Breadcrumb
-            className={`${prefixCls}-page-head-breadcrumb`}
+            className={classNames(`${prefixCls}-page-head-breadcrumb`, breadcrumbClassName)}
             separator={<RightOutlined />}
             itemRender={itemRender}
             {...breadcrumb}
@@ -92,6 +97,8 @@ const Page: React.FC<PropsWithChildren<PageProps>> = ({
         </div>
 
         {description && <div className={`${prefixCls}-page-head-description`}>{description}</div>}
+
+        {tabs && <Tabs className={classNames(`${prefixCls}-page-head-tabs`, tabsClassName)} {...tabs}/>}
       </div>
     );
   }

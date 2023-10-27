@@ -29,6 +29,12 @@ $prefixCls: 'mix' !default;
         }
       }
     }
+    &-tabs {
+      margin-bottom: -11px;
+      .mtm-tabs-nav {
+        margin: 0;
+      }
+    }
 
     &-title {
       display: flex;
