@@ -15,6 +15,7 @@ import FieldTermPick from '@/components/field-term-picker';
 import isIdCard from '@/utils/validator/isIdCard';
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import FieldUploadFile from '@/components/field-upload-file';
+import VenusService from '@/services/common/venus';
 
 import './index.scss';
 
@@ -28,9 +29,12 @@ interface CouponFormProps extends FormProps {
   mode?: 'create' | 'update' | 'detail';
 }
 
-const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, children, mode, ...props }) => {
+const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, children, mode, ...props }) => {
+  const [_form] = Form.useForm();
+  const formInstance = form || _form;
+
   return (
-    <Form className={classNames('admin-form', className)} {...formItemLayout} {...props}>
+    <Form form={formInstance} className={classNames('admin-form', className)} {...formItemLayout} {...props}>
       <Form.Item required label='证件类型' name='idCardType'>
         <div className='id-type-text'>
           中国大陆居民身份证 <span>(店铺管理员仅支持大陆居民身份证申请)</span>
@@ -57,7 +61,25 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, children
           },
         ]}
       >
-        <FieldIdCard />
+        <FieldIdCard onUploadSuccess={(res, index) => {
+          console.log('res', res, index)
+
+          if(index === 0) {
+            // 身份证正面才识别
+            VenusService.ocr({
+              type: 0,
+              url: res.url
+            }).then(idInfo => {
+              const {name, citizenId, validdate} = idInfo
+
+              formInstance.setFieldsValue({
+                name,
+                citizenId,
+                validdate
+              })
+            })
+          }
+        }}/>
       </Form.Item>
 
       <Form.Item
@@ -79,7 +101,7 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, children
 
       <Form.Item
         label='身份证件号'
-        name='cardNum'
+        name='citizenId'
         required
         rules={[
           {
@@ -96,7 +118,7 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, children
 
       <Form.Item
         label='有效截止日'
-        name='description'
+        name='validdate'
         required
         rules={[
           {

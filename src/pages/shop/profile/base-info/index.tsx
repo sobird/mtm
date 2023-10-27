@@ -11,7 +11,7 @@ import { useAppSelector } from '@/store/hooks';
 import FieldMerchantLogo from '@/components/field-merchant-logo';
 import MerchantService,  { getCategoryPath, MerchantTypeEnum } from '@/services/merchant';
 
-import BaseAdmin from './admin';
+import BaseAdmin from './admin/form';
 
 import './index.scss';
 

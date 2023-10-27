@@ -80,9 +80,38 @@ export async function upload(file: File, config: IUploadRequestConfig = {}) {
   });
 }
 
+
+export interface IOcrRequestData {
+  type: 0 | 1 | 3 | number;
+  url: string;
+}
+
+export interface IOcrResponseData {
+  cardInfo: {
+    [key: string]: any;
+  };
+  bzLicenseInfo: {
+    [key: string]: any;
+  };
+  brandLicenseInfo: {
+    [key: string]: any;
+  };
+}
+
+export async function ocr(params?: IOcrRequestData) {
+  return http.get<IOcrResponseData>('/venus/ocr', params).then(res => {
+    if(params?.type !== undefined) {
+      return res[params.type];
+    }
+
+    return res;
+  });
+}
+
 const VenusService = {
   signature,
   upload,
+  ocr,
 };
 
 export default VenusService;

@@ -11,7 +11,9 @@ import React, {FC} from 'react';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import { Space, message, Upload } from 'antd';
 import type { RcFile } from 'antd/es/upload';
-import FieldUploadFile from '@/components/field-upload-file';
+import FieldUploadFile, { FieldUploadFileProps } from '@/components/field-upload-file';
+import { IVenusUploadResponse } from '@/services/common/venus';
+
 import IdCardSketch1 from './assets/idcard_1.png';
 import IdCardSketch2 from './assets/idcard_2.png';
 
@@ -19,10 +21,11 @@ import './index.scss';
 
 type ValuePair = [string, string];
 
-interface FieldIdCardProps {
+interface FieldIdCardProps extends Omit<FieldUploadFileProps, "onUploadSuccess">{
   value?: ValuePair;
   defaultValue?: ValuePair;
   onChange?: (params: ValuePair) => void;
+  onUploadSuccess?: (res: IVenusUploadResponse, index: number) => void;
 }
 
 const fileValidator = async (file: RcFile) => {
@@ -36,7 +39,7 @@ const fileValidator = async (file: RcFile) => {
   return true;
 };
 
-const FieldIdCard: FC<FieldIdCardProps> = ({ value, defaultValue = [], onChange }) => {
+const FieldIdCard: FC<FieldIdCardProps> = ({ value, defaultValue = [], onChange, onUploadSuccess, ...props }) => {
   const [valuePair, setValuePair] = useMergedState(() => defaultValue, {
     value,
     onChange,
@@ -56,6 +59,9 @@ const FieldIdCard: FC<FieldIdCardProps> = ({ value, defaultValue = [], onChange 
           if(!result) {
             return Upload.LIST_IGNORE;
           }
+        }}
+        onUploadSuccess={(res) => {
+          onUploadSuccess(res, 0)
         }}
         autoHidden
         maxCount={1}
@@ -78,6 +84,9 @@ const FieldIdCard: FC<FieldIdCardProps> = ({ value, defaultValue = [], onChange 
           if(!result) {
             return Upload.LIST_IGNORE;
           }
+        }}
+        onUploadSuccess={(res) => {
+          onUploadSuccess(res, 1)
         }}
         autoHidden
         maxCount={1}

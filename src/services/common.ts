@@ -1,9 +1,8 @@
 /**
  * common.ts
- * 
+ *
  * sobird<i@sobird.me> at 2023/10/27 11:54:08 created.
  */
-
 
 import { http } from '@mtm/shared';
 
@@ -23,12 +22,15 @@ interface IVersionEntity {
 const CommonService = {
   /** 获取系统版本信息 */
   version() {
-    return http.get<IVersionEntity>('/version.json', {}, {
-      baseURL:  '/',
-      parser: res => res.data
-    });
-  }
-}
+    return http.get<IVersionEntity>(
+      '/version.json',
+      { t: +new Date() },
+      {
+        baseURL: '/',
+        parser: res => res.data,
+      }
+    );
+  },
+};
 
 export default CommonService;
-

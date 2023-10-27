@@ -9,7 +9,6 @@ import { Modal, Upload } from 'antd';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { PlusOutlined } from '@ant-design/icons';
 import VenusService from '@/services/common/venus';
-import OcrService from '@/services/common/ocr';
 
 interface UploadOcrProps {
   type?: 1 | 2 | 3;
@@ -80,11 +79,11 @@ const OcrUpload: React.FC<PropsWithChildren<UploadOcrProps>> = ({ value, onChang
             onChange(url);
           
             // 图片文字识别
-            OcrService.get({
+            VenusService.ocr({
               type,
               url: url,
             }).then(res => {
-              onUploadSuccess?.(res[type]);
+              onUploadSuccess?.(res);
             })
           }).catch(onError)
         }}

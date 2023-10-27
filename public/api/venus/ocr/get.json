@@ -3,13 +3,13 @@
   "msg": "success",
   "data": [
     {
+      "name": "韦小宝",
       "birthday": "1654年12月20日",
       "gender": "男",
-      "name": "韦小宝",
       "citizenId": "11204416541220243X",
       "nation": "汉",
       "address": "北京市东城区景山前街4号紫禁城敬事房",
-      "validdate": "",
+      "validdate": [true],
       "policeSt": ""
     },
     {
