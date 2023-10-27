@@ -1,35 +1,45 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom'
 import { notification } from 'antd';
 import useInterval from '@/hooks/useInterval';
 import CommonService from '@/services/common';
 
+import './index.scss';
+
+const message = (setSearchParams, config) => {
+  return (<>系统已更新，请及时刷新页面 <button onClick={() => {
+    setSearchParams(searchParams => {
+      searchParams.set('v', config.version)
+      return searchParams;
+    });
+
+    window.location.reload();
+  }} className="notifier-update-btn">立即更新</button></>)
+  
+}
 const Notifier = () => {
   const [api, contextHolder] = notification.useNotification();
+  const [, setSearchParams] = useSearchParams();
 
   useInterval(() => {
-    console.log('useInterval', +new Date)
-
     CommonService.version().then(res => {
-      console.log('res', res)
-    })
+      if(window.config.version !== res.version) {
+        api.open({
+          message: message(setSearchParams, res),
+          // description: '系统已更新，请及时刷新页面。',
+          duration: 0,
+          className: 'mix-notifier',
+          placement: "bottomRight",
+          style: {
+            width: 270,
+          },
+        });
+      }
 
-  }, 5000);
-
-
-  useEffect(() => {
-    api.open({
-      message: 'Notification Title',
-      description:
-        'I will never close automatically. This is a purposely very very long description that has many many characters and words.',
-      duration: 0,
     });
-  }, []);
-  
-  return (
-    <>
-      {contextHolder}
-    </>
-  )
-}
+  }, window.config.checkInterval || 300000);
 
-export default Notifier
+  return <>{contextHolder}</>;
+};
+
+export default Notifier;

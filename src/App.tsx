@@ -31,7 +31,7 @@ const theme: ThemeConfig = {
     // disabled
     colorBgContainerDisabled: '#fff',
     colorTextDisabled: '#444',
-    motion: false,
+    // motion: false,
   },
   components: {
     Breadcrumb: {
@@ -52,6 +52,9 @@ const theme: ThemeConfig = {
     Badge: {
       textFontSize: 12,
     },
+    Notification: {
+      motion: false,
+    }
   },
 };
 

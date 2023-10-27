@@ -1,0 +1,37 @@
+
+
+.mtm-notification-notice-wrapper:has(.mix-notifier) {
+  background-color: rgba(48,48,48,.8);
+  margin: 0;
+
+  .mix-notifier {
+    // background-color: rgba(48,48,48,.8);
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .notifier-update-btn {
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    color: #ff3e00;
+    cursor: pointer;
+    font-size: .875rem;
+    font-weight: 500;
+    outline: none;
+    padding: 0 8px;
+    position: relative;
+    user-select: none;
+  }
+
+  .mtm-notification-notice-message {
+    font-size: 12px;
+    margin-bottom: 0;
+    color: #fff;
+  }
+  .mtm-notification-notice-close {
+    top: 7px;
+    right: 10px;
+    color: #fff;
+  }
+}
