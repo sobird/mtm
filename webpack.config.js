@@ -46,7 +46,6 @@ const config = {
     publicPath: '/',
     clean: {
       keep(asset) {
-        console.log('asset', asset)
         return asset.includes('mtm_market');
       },
     },

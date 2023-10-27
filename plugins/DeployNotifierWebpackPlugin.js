@@ -9,7 +9,7 @@ const insert = (html, parent, content) => {
 
 class DeployNotifierWebpackPlugin {
   constructor(config = {}) {
-    this.notifierConfig = Object.assign({
+    this.config = Object.assign({
       appId: `${process.env?.APP_ID || ''}`,
       version: `${process.env?.FLOW_ID || ''}`,
       sha: `${process.env?.SHA || ''}`,
@@ -19,10 +19,10 @@ class DeployNotifierWebpackPlugin {
       checkInterval: 5 * 60 * 1000,
       forceUpdateInterval: 60 * 1000,
       forceUpdate: false,
-      server: 'https://s3plus.meituan.net/v1/mss_03d0d9cf21144ba0b7747ba1dc1acf6e/upload-notifier'
+      server: ''
     }, config);
     this.filter = config.filter || (name => name === 'index.html');
-    if (!this.notifierConfig.appId || !this.notifierConfig.template) {
+    if (!this.config.appId || !this.config.template) {
       if (process.env.NODE_ENV === 'production' || config.strict !== false ) {
         // throw new TypeError('appId or template can not be empty!');
       }
@@ -38,6 +38,12 @@ class DeployNotifierWebpackPlugin {
   }
 
   apply(compiler) {
+    console.log('compiler', Object.keys(compiler), compiler.outputFileSystem)
+    // 构建完成钩子
+    compiler.hooks.done.tap("DeployNotifierWebpackPlugin", (stats) => {
+      const { output } = stats.compilation.options;
+      compiler.outputFileSystem.appendFile(`${output.path}/verson.json`, JSON.stringify(this.config))
+    })
     compiler.hooks.compilation.tap(
       'DeployNotifierWebpackPlugin',
       compilation => {
@@ -46,7 +52,7 @@ class DeployNotifierWebpackPlugin {
         hooks.beforeEmit.tap('DeployNotifierWebpackPlugin', htmlPluginData => {
           if (this.filter(htmlPluginData.plugin.options.filename)) {
             this.addAssets(`<link rel="stylesheet" href="//awp-assets.meituan.net/set/thh_tfe_deploy_notifier/notifier.css" />`, htmlPluginData, 'head');
-            this.addAssets(`<script>window.notifierConfig = ${JSON.stringify(this.notifierConfig)}</script><script defer src="//awp-assets.meituan.net/set/thh_tfe_deploy_notifier/notifier.js?v=${this.notifierConfig.version || Date.now()}"></script>`, htmlPluginData, 'body');
+            this.addAssets(`<script>window.config = ${JSON.stringify(this.config)}</script><script defer src="//awp-assets.meituan.net/set/thh_tfe_deploy_notifier/notifier.js?v=${this.config.version || Date.now()}"></script>`, htmlPluginData, 'body');
           }
 
           return htmlPluginData;

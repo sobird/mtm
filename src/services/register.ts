@@ -1,5 +1,5 @@
 
-import { http } from '@mtm/shared';;
+import { http } from '@mtm/shared';
 
 interface IRegisterRequest {
   interCode: string;

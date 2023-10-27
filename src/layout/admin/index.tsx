@@ -11,6 +11,7 @@ import startQiankun from '@/router/micro';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { ErrorBoundary } from "@mtm/shared";
 import Loading from '@/components/loading';
+import Notifier from '@/components/notifier';
 import { fetchMerchantThunkAction } from '@/store/actions/merchant';
 import Header from './header';
 import Aside from './aside';
@@ -88,6 +89,7 @@ const LayoutAdmin: React.FC = () => {
         gap={[350, 350]}
       >
       </Watermark>
+      <Notifier />
     </>
   );
 }

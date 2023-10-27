@@ -41,7 +41,7 @@ export default function MdxTest() {
       />
 
       <div className='mdx-playground' style={{ width: '40%' }}>
-        <ErrorBoundary>
+        <ErrorBoundary onRetry={() => {/**  */}}>
           <Mdx value={value || defaultMdxText as unknown as string} components={{
             ...Antd
           }} />
