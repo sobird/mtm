@@ -6,6 +6,6 @@
 
 export const pattern = /^\d{6}$/;
 
-export default function isSmsCode(str: string) {
-  return pattern.test(str);
+export default function isSmsCode(code: string) {
+  return pattern.test(code);
 }
