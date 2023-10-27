@@ -76,8 +76,11 @@ export class Http {
 
         config.data = undefined;
 
-        // url 模拟适配 全部转为get请求
-        config.url = url + '/' + method?.toLocaleLowerCase() + '.json';
+        if(!/[^\\]*\.(\w+)$/i.test(config.url)) {
+          // url 模拟适配 全部转为get请求
+          config.url = url + '/' + method?.toLocaleLowerCase() + '.json';
+        }
+        
         config.method = 'get';
 
         console.log('HttpRequestConfig', config)
@@ -101,12 +104,10 @@ export class Http {
         }
 
         // 业务请求成功
-        if (data.code == 0) {
-          return (config.parser ? config.parser(response) : data.data) as HttpResponse;
-        }
 
+        return (config.parser ? config.parser(response) : data.data) as HttpResponse;
         // 业务级错误信息
-        throw new AxiosError(data.message, data.code as unknown as string, config, request, response);
+        // throw new AxiosError(data.message, data.code as unknown as string, config, request, response);
       },
       // 超出 2xx 范围的状态码都会触发该函数。
       (error: HttpError) => {

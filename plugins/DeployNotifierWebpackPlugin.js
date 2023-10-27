@@ -38,11 +38,10 @@ class DeployNotifierWebpackPlugin {
   }
 
   apply(compiler) {
-    console.log('compiler', Object.keys(compiler), compiler.outputFileSystem)
     // 构建完成钩子
-    compiler.hooks.done.tap("DeployNotifierWebpackPlugin", (stats) => {
+    compiler.hooks.done.tapAsync("DeployNotifierWebpackPlugin", (stats, callback) => {
       const { output } = stats.compilation.options;
-      compiler.outputFileSystem.appendFile(`${output.path}/verson.json`, JSON.stringify(this.config))
+      compiler.outputFileSystem.writeFile(`${output.path}/version.json`, JSON.stringify(this.config), callback);
     })
     compiler.hooks.compilation.tap(
       'DeployNotifierWebpackPlugin',

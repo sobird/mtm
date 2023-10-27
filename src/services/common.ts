@@ -23,7 +23,10 @@ interface IVersionEntity {
 const CommonService = {
   /** 获取系统版本信息 */
   version() {
-    return http.get<IVersionEntity>('/version');
+    return http.get<IVersionEntity>('/version.json', {}, {
+      baseURL:  '/',
+      parser: res => res.data
+    });
   }
 }
 
