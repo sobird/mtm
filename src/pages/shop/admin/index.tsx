@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { Alert, Button, Form, Input, Space } from 'antd';
 import FieldIdCard from '@/components/field-id-card';
 import FieldTermPick from '@/components/field-term-picker';
-import isIdCard from '@/utils/validator/isIdCard';
+import isIdCard from '@/utils/validator/isIdentityCard';
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import FieldUploadFile from '@/components/field-upload-file';
 import RejectionReason from '@/components/reason';

@@ -13,7 +13,7 @@ import { ProFormCaptcha } from '@ant-design/pro-components';
 import type { FormProps } from 'antd';
 import FieldIdCard from '@/components/field-id-card';
 import FieldTermPick from '@/components/field-term-picker';
-import isIdCard from '@/utils/validator/isIdCard';
+import isIdCard from '@/utils/validator/isIdentityCard';
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import FieldUploadFile from '@/components/field-upload-file';
 import VenusService from '@/services/common/venus';

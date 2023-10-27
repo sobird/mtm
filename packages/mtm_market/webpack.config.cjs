@@ -55,7 +55,7 @@ module.exports = (env) => {
       globalObject: 'window',
     },
     devServer: {
-      open: true,
+      // open: true,
       host: '0.0.0.0',
       port: PORT,
       hot: true, // 开启HMR功能

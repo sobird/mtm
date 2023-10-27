@@ -12,6 +12,7 @@ import FieldMerchantLogo from '@/components/field-merchant-logo';
 import MerchantService,  { getCategoryPath, MerchantTypeEnum } from '@/services/merchant';
 import BaseAdmin from '@/pages/shop/admin/form';
 import { Card } from '@mtm/shared';
+import ShopContact from '../../contact';
 
 import './index.scss';
 
@@ -165,6 +166,10 @@ function BaseInfo() {
 
       <Card title="管理员信息" bodyStyle={{paddingTop: 20}}>
         <BaseAdmin />
+      </Card>
+
+      <Card title="联系方式" bodyStyle={{paddingTop: 20}}>
+        <ShopContact />
       </Card>
     </div>
   );
