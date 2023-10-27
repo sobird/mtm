@@ -37,15 +37,32 @@ const ShopProfile = () => {
       breadcrumb={{
         items: BreadcrumbItem,
       }}
+      tabs={{
+        items: [{
+          key: 'base',
+          label: "基本信息"
+        },{
+          key: 'object',
+          label: "主体信息"
+        },{
+          key: "brand",
+          label: "品牌资质"
+        },{
+          label: "店铺经营许可",
+          key: "license-info"
+        }, {
+          label: "钱包信息",
+          key: "settle-info"
+        }, {
+          label: "结算信息",
+          key: "compute-info"
+        }]
+      }}
       title='店铺信息'
       className='page-shop-profile'
     >
       <div className="shop-profile-body">
-        <Tabs className="shop-profile-tabs" type="line">
-          <TabPane tab="基本信息" tabKey="baseInfo">
-            <BaseInfo />
-          </TabPane>
-        </Tabs>
+        <BaseInfo />
       </div>
     </Page>
   );
