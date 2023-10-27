@@ -7,7 +7,7 @@
  * sobird<i@sobird.me> at 2023/10/23 22:14:34 created.
  */
 
-import React, { useState, PropsWithChildren, ComponentProps } from 'react';
+import React, { useState, PropsWithChildren } from 'react';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import { Upload, Modal, UploadProps } from 'antd';
 import type { RcFile, UploadFile } from 'antd/es/upload';
@@ -99,6 +99,7 @@ const FieldUploadFile: React.FC<PropsWithChildren<FieldUploadFileProps>> = ({
             .catch(onError);
         }}
         onPreview={onPreview}
+        maxCount={maxCount}
         {...props}
       >
         {maxCount && fileList?.length >= maxCount && autoHidden ? null : children}

@@ -8,8 +8,8 @@
 
 import React, { FC, PropsWithChildren } from 'react';
 import classNames from 'classnames';
-import { Form, Input, message } from 'antd';
-import { ProForm, ProFormText, ProFormCaptcha } from '@ant-design/pro-components';
+import { Form, Input, Space } from 'antd';
+import { ProFormCaptcha } from '@ant-design/pro-components';
 import type { FormProps } from 'antd';
 import FieldIdCard from '@/components/field-id-card';
 import FieldTermPick from '@/components/field-term-picker';
@@ -166,7 +166,12 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, ch
           style: { padding: 0 }
         }}
         placeholder="请查看手机短信，输入验证码"
+        required
         rules={[
+          {
+            required: true,
+            message: '手机验证码不能为空',
+          },
           {
             len: 6,
             message: '手机验证码不正确，请重新输入',
@@ -198,8 +203,8 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, ch
         shouldUpdate
       >
         {() => (
-          <div className='auth-letter'>
-            <FieldUploadFile>上传</FieldUploadFile>
+          <Space className='auth-letter'>
+            <FieldUploadFile maxCount={1} listType="picture-card">上传1</FieldUploadFile>
             <div className='shop-license-pic'>
               <p>1.当店铺管理员与法人不一致时，请上传管理员授权书</p>
               <p>
@@ -216,7 +221,7 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, ch
               <p>3.支持上传1张文件，大小不得超过10MB</p>
               <p>4.格式支持JPG/JPEG/PNG/GIF/BPM</p>
             </div>
-          </div>
+          </Space>
         )}
       </Form.Item>
       {children}

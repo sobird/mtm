@@ -54,6 +54,9 @@ const theme: ThemeConfig = {
     },
     Notification: {
       motion: false,
+    },
+    Upload: {
+      
     }
   },
 };
