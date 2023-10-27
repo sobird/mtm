@@ -50,8 +50,8 @@ class DeployNotifierWebpackPlugin {
 
         hooks.beforeEmit.tap('DeployNotifierWebpackPlugin', htmlPluginData => {
           if (this.filter(htmlPluginData.plugin.options.filename)) {
-            this.addAssets(`<link rel="stylesheet" href="//awp-assets.meituan.net/set/thh_tfe_deploy_notifier/notifier.css" />`, htmlPluginData, 'head');
-            this.addAssets(`<script>window.config = ${JSON.stringify(this.config)}</script><script defer src="//awp-assets.meituan.net/set/thh_tfe_deploy_notifier/notifier.js?v=${this.config.version || Date.now()}"></script>`, htmlPluginData, 'body');
+            // this.addAssets(`<link rel="stylesheet" href="//awp-assets.meituan.net/set/thh_tfe_deploy_notifier/notifier.css" />`, htmlPluginData, 'head');
+            this.addAssets(`<script>window.config = ${JSON.stringify(this.config)}</script>`, htmlPluginData, 'body');
           }
 
           return htmlPluginData;
