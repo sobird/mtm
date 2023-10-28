@@ -1,0 +1,27 @@
+.label-value {
+  &>label {
+    color: var(--text-color-secondary, #666);
+
+    &::after {
+      content: "\a0";
+      position: relative;
+      margin-block: 0;
+      margin-inline: 2px 8px;
+    }
+  }
+
+  &>span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--gray-100, #333);
+  }
+
+  &-colon {
+    label {
+      &::after {
+        content: ":";
+      }
+    }
+  }
+}

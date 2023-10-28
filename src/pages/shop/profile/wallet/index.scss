@@ -1,0 +1,291 @@
+
+// 结算信息展示部分
+.settle-info-container {
+  box-sizing: border-box;
+  padding: 16px;
+  // 无钱包
+  .no-wallet-container {
+    text-align: center;
+    margin-top: 136px;
+    font-weight: 400;
+    font-size: var(--font-size-base);
+    color: var(--gray-400);
+  }
+  // 钱包
+  .wallet-box {
+    .btn-text {
+      font-size: var(--font-size-sm);
+      padding-left: 4px;
+      padding-right: 0;
+      height: 14px;
+      line-height: 14px;
+    }
+    box-sizing: border-box;
+    width: 508px;
+    border: 1px solid var(--gray-500);
+    border-radius: var(--border-radius);
+    margin-bottom: 16px;
+    // 钱包的标题栏
+    .wallet-bar {
+      height: 44px;
+      background-color: var(--card-background);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 16px;
+      padding-right: 16px;
+      border-bottom: 1px solid var(--disabled-color);
+      // 钱包名称
+      .wallet-name {
+        color: var(--text-color-weak);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+      }
+      // 曾经使用过与当前使用中，钱包标识
+      .wallet-tag {
+        width: 72px;
+        background-color: rgba(153, 153, 153, 0.1);
+        border-radius: var(--border-radius);
+        padding-left: 6px;
+        padding-right: 6px;
+        span {
+          font-weight: 400;
+          font-size: var(--font-size-sm);
+          color: var(--gray-300);
+        }
+      }
+    }
+    // 钱包内容
+    .wallet-content {
+      box-sizing: border-box;
+      padding: 16px;
+      // 内容第一行
+      .wallet-content-line-one {
+        box-sizing: border-box;
+        padding-bottom: 16px;
+        border-bottom: 1px dashed var(--line-color);
+        .line-one {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          box-sizing: border-box;
+          // 钱包余额文字
+          .remain-amount-des {
+            font-weight: 400;
+            font-size: var(--font-size-base);
+            color: var(--text-color-weak);
+            margin-bottom: 4px;
+          }
+          // 钱包余额钱数
+          .remain-amount {
+            font-size: var(--font-size-lg);
+            color: var(--text-color-weak);
+            margin-bottom: 0;
+          }
+        }
+        .line-two {
+          color: var(--text-color-weak);
+          font-size: var(--font-size-sm);
+          margin-top: 4px;
+        }
+      }
+
+      .wallet-content-line-two {
+        display: flex;
+        align-items: center;
+      }
+      // 内容第2行
+      .wallet-content-line-three {
+        padding-top: 16px;
+        color: var(--text-color-weak);
+        padding-right: 89px;
+        .line-flex {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        // 标签
+        .label {
+          width: 52px;
+          text-align: right;
+          font-size: var(--font-size-sm);
+          display: inline-block;
+          margin-right: 4px;
+        }
+        // 内容
+        .con {
+          font-weight: 400;
+          font-size: var(--font-size-sm);
+        }
+        // 省略号
+        .spill-over {
+          width: 168px;    
+          overflow: hidden;    
+          text-overflow:ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  // 当前使用中的钱包
+  .current-wallet-box {
+    .wallet-bar {
+      // 钱包名称
+      .wallet-name {
+        color: var(--text-color-base);
+      }
+      .wallet-tag {
+        background-color: rgba(0, 128, 255, 0.1);
+        span {
+          color: var(--active);
+        }
+      }
+    }
+    .wallet-content {
+      .wallet-content-line-one {
+        border-bottom: 1px dashed var(--line-color);
+        .line-one {
+          // 钱包余额文字
+          .remain-amount-des {
+            color: var(--text-color-base);
+          }
+          // 钱包余额钱数
+          .remain-amount {
+            color: var(--text-color-base);
+          }
+        }
+        .line-two {
+          color: var(--text-color-weak);
+        }
+      }
+      // 内容第2行
+      .wallet-content-line-three {
+        // 标签
+        .label {
+          color: var(--text-color-secondary);
+        }
+        // 内容
+        .con {
+          color: var(--gray-100);
+        }
+      }
+    }
+  }
+}
+
+// 变更钱包的modal
+.change-wallet-modal {
+  width: 510px !important;
+  box-sizing: border-box;
+  .roo-modal-header {
+    padding-top: 16px !important;
+  }
+  .roo-alert.roo-alert-warning {
+    .roo-icon.roo-icon-info-circle {
+      color: #F8B500 !important;
+      margin-top: -3px;
+    }
+    margin: 0;
+    background: rgba(255,169,0,0.08);
+    border: 1px solid rgba(255,169,0,0.28);
+    border-radius: 4px;
+    margin-bottom: 24px;
+  }
+  .steps-box {
+    margin-bottom: 0px;
+    padding: 0 95px;
+    li.roo-steps-item {
+      margin-bottom: 24px;
+      margin-right: 8px;
+    }
+    li.roo-steps-item .roo-steps-icon {
+      margin-right: 8px;
+    }
+    li.roo-steps-item .roo-steps-icon-content {
+      border: 1px solid var(--disabled-color);
+      color: var(--text-color-lighten);
+    }
+    li.roo-steps-item .roo-steps-item-content .roo-steps-title {
+      color: var(--text-color-secondary);
+    }
+    li.roo-steps-item.roo-steps-active .roo-steps-icon .roo-steps-icon-content {
+      border: 1px solid var(--primary);
+      color: var(--text-light);
+      background-color: var(--primary);
+    }
+    li.roo-steps-active .roo-steps-item-content .roo-steps-title {
+      color: var(--primary);
+    }
+    li.roo-steps-item .roo-steps-item-content .roo-steps-title::after {
+      border-bottom: 1px dashed var(--text-color-secondary);
+      color: var(--text-color-secondary);
+    }
+  }
+  .change-wallet-content {
+    box-sizing: border-box;
+    margin-bottom: 24px;
+    .sms-code-box {
+      .form-group {
+        margin-left: 0;
+        margin-right: 0;
+        align-items: center;
+      }
+      .control-label {
+        padding: 0;
+        flex: 0 0 70px;
+        color: var(--gray-200);
+      }
+      .form-group-content {
+        padding: 0;
+        flex: 1 0 33.33333%;
+        max-width: 70%;
+      }
+      .help-block {
+        position: absolute;
+      }
+      .help-block-msg {
+        position: absolute;
+        color: #FF4338;
+        margin-top: 4px;
+      }
+      .field-row:nth-of-type(2){
+        .form-group {
+          margin-bottom: 10px;
+        }
+      }
+      .field-row:nth-of-type(3){
+        .form-group {
+          margin-bottom: 4px;
+        }
+      }
+      .add-width {
+        .control-label {
+          max-width: 98px;
+          flex: 1 0 70px;
+        }
+      }
+    }
+  }
+  // 确认和取消按钮
+  .btn-box {
+    box-sizing: border-box;
+    text-align: right;
+  }
+  // 发送验证码按钮
+  .code-btn {
+    width: 88px;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .close {
+    color: var(--text-color-base);
+  }
+}
+
+#yoda .yoda-slider-wrapper {
+  z-index: 100000;
+  background-color: #fff;
+  border: 1px solid var(--primary);
+}

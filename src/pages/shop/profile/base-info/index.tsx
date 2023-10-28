@@ -68,7 +68,7 @@ function BaseInfo() {
           // todo 
           }}
         >
-          <Form.Item label='店铺编号' shouldUpdate={(pre, cur) => pre.shopId !== cur.shopId}>
+          <Form.Item colon={false} label='店铺编号' shouldUpdate={(pre, cur) => pre.shopId !== cur.shopId}>
             {({ getFieldValue }) => {
               const shopId = getFieldValue('shopId');
               return (

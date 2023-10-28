@@ -6,7 +6,7 @@
 
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { ErrorBoundary, Page } from '@mtm/shared';
 import { useAppSelector } from '@/store/hooks';
 import Loading from '@/components/loading';
@@ -31,12 +31,16 @@ const BreadcrumbItem = [
 
 const ShopProfile = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const params = useParams();
   const merchant = useAppSelector(state => state.merchant);
 
   // const [activeKey, setActiveKey] = useState();
 
   const activeKey = params['*'] || '';
+
+
+  console.log('location', location)
 
   return (
     <Page
@@ -46,31 +50,31 @@ const ShopProfile = () => {
       tabs={{
         items: [
           {
-            key: '',
+            key: '/shop/profile',
             label: '基本信息',
           },
           {
-            key: 'object',
+            key: '/shop/profile/company',
             label: '主体信息',
           },
           {
-            key: 'brand',
+            key: '/shop/profile/brand',
             label: '品牌资质',
           },
           {
             label: '店铺经营许可',
-            key: 'license',
+            key: '/shop/profile/license',
           },
           {
             label: '钱包信息',
-            key: 'wallet',
+            key: '/shop/profile/wallet',
           },
           {
             label: '结算信息',
-            key: 'settlement',
+            key: '/shop/profile/settlement',
           },
         ],
-        activeKey: activeKey,
+        activeKey: location.pathname,
         onChange(activeKey) {
           navigate(activeKey);
         },

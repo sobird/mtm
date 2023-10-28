@@ -1,0 +1,64 @@
+/**
+ * 店铺钱包卡片 组件样式
+ * 
+ * sobird<i@sobird.me> at 2023/10/28 13:46:19 created.
+ */
+
+.wallet-card {
+  border: 1px solid var(--gray-500);
+  border-radius: var(--border-radius);
+
+  .wallet-balance {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed var(--line-color);
+
+    &-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .wallet-balance-col {}
+
+  .wallet-balance-label {
+    font-size: var(--font-size-base);
+    color: var(--text-color-weak);
+    margin-bottom: 4px;
+  }
+
+  .wallet-balance-value {
+    color: var(--text-color-base);
+    font-size: var(--font-size-lg);
+
+    &-unit {
+      margin-right: 5px;
+    }
+
+    &-text {
+      font-weight: 500;
+    }
+  }
+
+  .wallet-note {
+    color: var(--text-color-weak);
+    font-size: var(--font-size-sm);
+    margin-top: 4px;
+  }
+
+  .wallet-meta {
+    padding-top: 16px;
+    color: var(--text-color-weak);
+    justify-content: space-between;
+    font-size: var(--font-size-sm);
+    line-height: 16px;
+  }
+
+  .btn-txt-sm {
+    font-size: var(--font-size-sm);
+    height: fit-content;
+    line-height: 1;
+    padding: 2px 0 2px 3px;
+  }
+}

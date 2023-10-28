@@ -28,8 +28,10 @@ const EntryShop = lazy(() => import('@/pages/settleinjx/shop'));
 const EntryCompany = lazy(() => import('@/pages/settleinjx/company'));
 
 import ShopProfile from '@/pages/shop/profile';
+import ShopProfileWallet from '@/pages/shop/profile/wallet';
 const ShopAdmin = lazy(() => import('@/pages/shop/admin'));
 const ShopProfileBase = lazy(() => import('@/pages/shop/profile/base-info'));
+const ShopProfileCompany = lazy(() => import('@/pages/shop/profile/company'));
 
 const shopRoutes: RouteObject[] = [];
 
@@ -78,7 +80,19 @@ const routes: RouteObject[] = [
         children: [{
           index: true,
           element: <ShopProfileBase />
-        },{
+        },
+
+        {
+          path: "company",
+          element: <ShopProfileCompany />
+        },
+
+        {
+          path: "wallet",
+          element: <ShopProfileWallet />
+        },
+        
+        {
           path: '*',
           element: <NoneSupport />,
         }]
