@@ -4,11 +4,12 @@
  * sobird<i@sobird.me> at 2023/10/23 12:26:30 created.
  */
 
+import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Tabs } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Page } from '@mtm/shared';
+import { ErrorBoundary, Page } from '@mtm/shared';
 import { useAppSelector } from '@/store/hooks';
+import Loading from '@/components/loading';
 
 import './index.scss';
 
@@ -78,7 +79,9 @@ const ShopProfile = () => {
       className='page-shop-profile'
     >
       <div className='shop-profile-body'>
-        <Outlet />
+        <ErrorBoundary>
+          <Suspense fallback={<Loading />}><Outlet /></Suspense>
+        </ErrorBoundary>
       </div>
     </Page>
   );

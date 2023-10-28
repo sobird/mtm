@@ -27,7 +27,7 @@ const EntryHome = lazy(() => import('@/pages/settleinjx/home'));
 const EntryShop = lazy(() => import('@/pages/settleinjx/shop'));
 const EntryCompany = lazy(() => import('@/pages/settleinjx/company'));
 
-const ShopProfile = lazy(() => import('@/pages/shop/profile'));
+import ShopProfile from '@/pages/shop/profile';
 const ShopAdmin = lazy(() => import('@/pages/shop/admin'));
 const ShopProfileBase = lazy(() => import('@/pages/shop/profile/base-info'));
 
@@ -83,6 +83,13 @@ const routes: RouteObject[] = [
           element: <NoneSupport />,
         }]
       },
+
+
+      // 404
+      {
+        path: '*',
+        element: <NoneSupport />,
+      }
     ],
   },
   {
