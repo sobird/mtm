@@ -4,11 +4,10 @@
  * sobird<i@sobird.me> at 2023/10/29 18:20:51 created.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Input, ButtonProps, InputProps } from 'antd';
 import type { NamePath,  } from 'antd/lib/form/interface';
 import useInterval from '@/hooks/useInterval';
-
 
 export type FieldCaptchaProps =  {
   value?: InputProps['value'];
@@ -38,14 +37,16 @@ const FieldCaptcha: React.FC<FieldCaptchaProps> = ({
   const form = Form.useFormInstance();
   const [count, setCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>();
-  const [clearInterval, startInterval] = useInterval(() => {
+  const resumeInterval = useInterval(() => {
     setCount((count) => {
       if (count <= 1) {
-        clearInterval();
+        resumeInterval(null);
       }
       return count - 1;
     });
-  }, null);
+  })
+
+
 
   const onGetCaptcha = async (mobile: string) => {
     try {
@@ -54,7 +55,7 @@ const FieldCaptcha: React.FC<FieldCaptchaProps> = ({
       setLoading(false);
 
       setCount(countDown || 60);
-      startInterval(1000);
+      resumeInterval(1000);
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -81,6 +82,8 @@ const FieldCaptcha: React.FC<FieldCaptchaProps> = ({
         style={{
           display: 'block',
         }}
+        size='small'
+        type='link'
         disabled={count > 0}
         loading={loading}
         {...buttonProps}

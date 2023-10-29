@@ -92,7 +92,7 @@ const ShopContact: FC<PropsWithChildren<ShopContactProps>> = ({ className, form,
       <FormItemCaptcha mobile='emergencyContactPhone' />
       <Form.Item  label="验证码2">
         <FieldCaptcha onCaptcha={async () => {
-          return 123;
+          return ;
         }}/>
       </Form.Item>
       {children}
