@@ -10,6 +10,7 @@ import numeral from '@/utils/numeral';
 import { Row, Col, Button, Tag } from 'antd';
 import { Card } from '@mtm/shared';
 import LabelValue from '@/components/label-value';
+import WalletAuth from '../wallet-auth';
 
 import './index.scss';
 
@@ -95,6 +96,8 @@ const WalletCard: FC<WalletCardProps> = ({ account, type, name, current = true, 
           <LabelValue label="钱包ID" value="123456" />
         </Row>
       </div>
+
+      <WalletAuth />
     </Card>
   );
 };

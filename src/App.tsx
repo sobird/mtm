@@ -32,6 +32,9 @@ const theme: ThemeConfig = {
     colorBgContainerDisabled: '#fff',
     colorTextDisabled: '#444',
     // motion: false,
+
+    fontFamily: "",
+    fontSize: 14,
   },
   components: {
     Breadcrumb: {
