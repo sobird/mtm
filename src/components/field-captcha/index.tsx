@@ -24,6 +24,13 @@ export type FieldCaptchaProps =  {
   buttonTextRender?: (count: number) => React.ReactNode;
   /** 获取验证码按钮的props */
   buttonProps?: ButtonProps;
+
+  /** 内部字段属性 */
+  fieldProps?: {
+    style?: React.CSSProperties;
+    width?: string;
+    placeholder?: string;
+  }
 };
 
 const FieldCaptcha: React.FC<FieldCaptchaProps> = ({
@@ -36,6 +43,7 @@ const FieldCaptcha: React.FC<FieldCaptchaProps> = ({
     return count ? `${count} 秒后重新获取` : '获取验证码';
   },
   buttonProps,
+  fieldProps,
 }) => {
   const form = Form.useFormInstance();
   const [count, setCount] = useState<number>(0);
@@ -72,7 +80,7 @@ const FieldCaptcha: React.FC<FieldCaptchaProps> = ({
       }}
     >
       <Input
-        // {...fieldProps}
+        {...fieldProps}
         style={{
           flex: 1,
           transition: 'width .3s',
