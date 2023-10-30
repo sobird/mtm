@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { Button, Form, Input, ButtonProps, InputProps } from 'antd';
 import type { NamePath,  } from 'antd/lib/form/interface';
 import useInterval from '@/hooks/useInterval';
+import CommonService from '@/services/common';
 
 export type FieldCaptchaProps =  {
   value?: InputProps['value'];
@@ -18,7 +19,7 @@ export type FieldCaptchaProps =  {
   /** 手机号的 name */
   phoneName?: NamePath;
   /** 获取验证码的方法 */
-  onCaptcha: (mobile: string) => Promise<void>;
+  onCaptcha?: (mobile: string) => Promise<void>;
   /** 渲染按钮的文字 */
   buttonTextRender?: (count: number) => React.ReactNode;
   /** 获取验证码按钮的props */
@@ -28,7 +29,9 @@ export type FieldCaptchaProps =  {
 const FieldCaptcha: React.FC<FieldCaptchaProps> = ({
   countDown,
   phoneName,
-  onCaptcha,
+  onCaptcha = async (mobile) => {
+    CommonService.captcha(mobile);
+  },
   buttonTextRender = (count) => {
     return count ? `${count} 秒后重新获取` : '获取验证码';
   },
@@ -46,18 +49,16 @@ const FieldCaptcha: React.FC<FieldCaptchaProps> = ({
     });
   })
 
-
-
   const onGetCaptcha = async (mobile: string) => {
     try {
       setLoading(true);
       await onCaptcha(mobile);
       setLoading(false);
-
       setCount(countDown || 60);
       resumeInterval(1000);
     } catch (error) {
       setLoading(false);
+      resumeInterval(null);
       console.log(error);
     }
   };

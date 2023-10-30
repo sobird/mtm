@@ -4,6 +4,8 @@
  * sobird<i@sobird.me> at 2023/10/27 11:54:08 created.
  */
 
+import Cookies from 'js-cookie';
+import { message } from 'antd';
 import { http } from '@mtm/shared';
 
 interface IVersionEntity {
@@ -19,9 +21,14 @@ interface IVersionEntity {
   server: string;
 }
 
+export interface ICaptchaResponse {
+  mobile: number;
+  captcha: number;
+}
+
 const CommonService = {
   /** 获取系统版本信息 */
-  version() {
+  async version() {
     return http.get<IVersionEntity>(
       '/version.json',
       { t: +new Date() },
@@ -29,8 +36,22 @@ const CommonService = {
         baseURL: '/',
         parser: res => res.data,
       }
-    );
+    )
   },
+
+  async captcha(mobile: string) {
+    // 随机六位数
+    const i = Math.random() * (999999-100000) + 100000; 
+    const captcha_num = parseInt(i as unknown as string, 10);
+    
+    return http.get<ICaptchaResponse>('/captcha', { mobile }).then(res => {
+      res.captcha = captcha_num;
+      Cookies.set('captcha', captcha_num as unknown as string);
+
+      message.success(`【美团】${res.captcha}（商户注册验证码）。工作人员不会向您索要，请勿向任何人泄露，以免造成账户或资金损失。`, 5);
+      return res;
+    });
+  }
 };
 
 export default CommonService;

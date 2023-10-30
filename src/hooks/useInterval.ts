@@ -20,6 +20,15 @@ export interface UseIntervalOptions {
   immediate?: boolean;
 }
 
+/**
+ * useInterval
+ * 
+ * @param fn 回调函数
+ * @param delay 执行间隔 ms; 当设置为非整数或小于0的值时，不会启动定时器，
+ * 此时可通过返回值resume(1000)来启动间隔1000ms的定时器，通过执行 resume(null) 清除定时器
+ * @param options 
+ * @returns 
+ */
 const useInterval = (fn: () => void, delay?: number, options: UseIntervalOptions = {}): ReturnType => {
   const { immediate = false } = options;
   const [runEffect, setRunEffect] = useState(true);

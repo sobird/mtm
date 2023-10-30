@@ -7,7 +7,7 @@
 import React, { FC, ComponentProps } from 'react';
 import { ProFormCaptcha } from '@ant-design/pro-components';
 import { isSmsCode } from '@/utils/validator';
-import CaptchaService from '@/services/common/captcha';
+import CommonService from '@/services/common';
 
 interface FormItemCaptchaProps extends Omit<ComponentProps<typeof ProFormCaptcha>, "onGetCaptcha">{
   /** 手机号的字段 name */
@@ -51,7 +51,7 @@ const FormItemCaptcha: FC<FormItemCaptchaProps> = ({ mobile = "mobile", ...props
       // 如果需要失败可以 throw 一个错误出来，onGetCaptcha 会自动停止
       // throw new Error("获取验证码错误")
       onGetCaptcha={async mobile => {
-        await CaptchaService.get(mobile);
+        await CommonService.captcha(mobile);
       }}
       {...props}
     />
