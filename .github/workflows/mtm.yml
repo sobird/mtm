@@ -44,17 +44,24 @@ jobs:
           **/node_modules
         key: ${{ runner.os }}-mtm-${{ hashFiles('**/package.json') }}
 
-    - name: Build shared 🔧 
+    - name: Install shared Dependencies 🔧 
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |
         cd packages/shared
         yarn
+
+    - name: Build shared 🔧 
+      run: |
+        cd packages/shared
         yarn build
 
-    - name: Build mtm 🔧 
+    - name: Install mtm Dependencies 🔧 
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |
         yarn
+
+    - name: Build mtm 🔧 
+      run: |
         SHA=${GITHUB_SHA} FLOW_ID=${GITHUB_RUN_ID} yarn build
 
     - name: Deploy VPS 🚀
