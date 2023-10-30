@@ -36,12 +36,14 @@ jobs:
         echo "GITHUB_SERVER_URL: ${GITHUB_SERVER_URL}"
         echo "GITHUB_API_URL: ${GITHUB_API_URL}"
 
-    - name: Install and Build 🔧 
+    - name: Build shared 🔧 
       run: |
         cd packages/shared
         yarn
         yarn build
-        cd - 
+
+    - name: Build mtm 🔧 
+      run: |
         yarn
         SHA=${GITHUB_SHA} FLOW_ID=${GITHUB_RUN_ID} yarn build
 
