@@ -42,7 +42,7 @@ jobs:
       with:
         path: |
           **/node_modules
-        key: ${{ runner.os }}-mtm-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}
+        key: ${{ runner.os }}-mtm-${{ hashFiles('**/package.json') }}
 
     - name: Build shared 🔧 
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
@@ -52,6 +52,7 @@ jobs:
         yarn build
 
     - name: Build mtm 🔧 
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |
         yarn
         SHA=${GITHUB_SHA} FLOW_ID=${GITHUB_RUN_ID} yarn build
