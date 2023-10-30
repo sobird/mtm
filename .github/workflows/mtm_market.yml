@@ -21,15 +21,35 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Install and Build 🔧 
+    - name: Cache npm packages
+      id: cache-dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          **/node_modules
+        key: ${{ runner.os }}-mtm_market-${{ hashFiles('**/package.json') }}
+
+    - name: Install shared Dependencies 🔧
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |
         cd packages/shared
         yarn
+
+    - name: Build shared 🔧
+      run: |
+        cd packages/shared
         yarn build
-        cd - 
-        cd packages/mtm_market 
+
+    - name: Install mtm_market Dependencies 🔧
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      run: |
+        cd packages/mtm_market
         yarn
-        yarn build
+
+    - name: Build mtm_market 🔧
+      run: |
+        cd packages/mtm_market
+        SHA=${GITHUB_SHA} FLOW_ID=${GITHUB_RUN_ID} yarn build
 
     - name: Deploy VPS 🚀
       uses: appleboy/scp-action@v0.1.4

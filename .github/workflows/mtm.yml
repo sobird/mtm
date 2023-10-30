@@ -21,21 +21,6 @@ jobs:
       with:
         node-version: '18'
 
-    - name: echo-default-env-variables
-      run: |
-        echo "Home: ${HOME}"
-        echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
-        echo "GITHUB_RUN_ID: ${GITHUB_RUN_ID}"
-        echo "GITHUB_ACTIONS: ${GITHUB_ACTIONS}"
-        echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
-        echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
-        echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
-        echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
-        echo "GITHUB_SHA: ${GITHUB_SHA}"
-        echo "GITHUB_REF: ${GITHUB_REF}"
-        echo "GITHUB_SERVER_URL: ${GITHUB_SERVER_URL}"
-        echo "GITHUB_API_URL: ${GITHUB_API_URL}"
-
     - name: Cache npm packages
       id: cache-dependencies
       uses: actions/cache@v3
@@ -44,23 +29,23 @@ jobs:
           **/node_modules
         key: ${{ runner.os }}-mtm-${{ hashFiles('**/package.json') }}
 
-    - name: Install shared Dependencies 🔧 
+    - name: Install shared Dependencies 🔧
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |
         cd packages/shared
         yarn
 
-    - name: Build shared 🔧 
+    - name: Build shared 🔧
       run: |
         cd packages/shared
         yarn build
 
-    - name: Install mtm Dependencies 🔧 
+    - name: Install mtm Dependencies 🔧
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |
         yarn
 
-    - name: Build mtm 🔧 
+    - name: Build mtm 🔧
       run: |
         SHA=${GITHUB_SHA} FLOW_ID=${GITHUB_RUN_ID} yarn build
 
