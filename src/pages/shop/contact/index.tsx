@@ -88,7 +88,7 @@ const ShopContact: FC<PropsWithChildren<ShopContactProps>> = ({ className, form,
       >
         <Input placeholder='请输入紧急联系人电话' />
       </Form.Item>
-      <FormItemCaptcha placeholder='请查看手机短信，输入验证码' mobile='emergencyContactPhone' />
+      <FormItemCaptcha placeholder='请查看手机短信，输入验证码' phoneName='emergencyContactPhone' />
       {children}
     </Form>
   );
