@@ -17,9 +17,10 @@ interface FormItemCaptchaProps extends FormItemProps {
   phoneName?: string | number;
   placeholder?: string;
   onCaptcha?: FieldCaptchaProps["onCaptcha"];
+  fieldProps?: FieldCaptchaProps["fieldProps"];
 }
 
-const FormItemCaptcha: FC<FormItemCaptchaProps> = ({ phoneName = 'mobile', placeholder, onCaptcha, ...props }) => {
+const FormItemCaptcha: FC<FormItemCaptchaProps> = ({ phoneName = 'mobile', placeholder, onCaptcha, fieldProps, ...props }) => {
 
   onCaptcha = onCaptcha || (async mobile => {
     await CommonService.captcha(mobile);
@@ -48,6 +49,7 @@ const FormItemCaptcha: FC<FormItemCaptchaProps> = ({ phoneName = 'mobile', place
         }}
         fieldProps={{
           placeholder: placeholder,
+          ...fieldProps
         }}
         // captchaTextRender={
         //   (paramsTiming, paramsCount) => {
