@@ -12,7 +12,6 @@ import classNames from 'classnames';
 import { Form, Input, FormProps } from 'antd';
 import { isEmail, isMobilePhone, isChineseName } from '@/utils/validator';
 import FormItemCaptcha from '@/components/form-item-captcha';
-import FieldCaptcha from '@/components/field-captcha';
 
 import './index.scss';
 
@@ -89,10 +88,7 @@ const ShopContact: FC<PropsWithChildren<ShopContactProps>> = ({ className, form,
       >
         <Input placeholder='请输入紧急联系人电话' />
       </Form.Item>
-      <FormItemCaptcha mobile='emergencyContactPhone' />
-      <Form.Item  label="验证码2">
-        <FieldCaptcha phoneName="emergencyContactPhone"/>
-      </Form.Item>
+      <FormItemCaptcha placeholder='请查看手机短信，输入验证码' mobile='emergencyContactPhone' />
       {children}
     </Form>
   );

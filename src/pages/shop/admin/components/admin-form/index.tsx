@@ -153,7 +153,7 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, ch
         <Input placeholder='请填写管理员手机号' />
       </Form.Item>
 
-      <FormItemCaptcha />
+      <FormItemCaptcha placeholder='请查看手机短信，输入验证码' mobile='mobile' />
 
       <Form.Item
         label='授权书'

@@ -34,6 +34,8 @@ export type FieldCaptchaProps =  {
 };
 
 const FieldCaptcha: React.FC<FieldCaptchaProps> = ({
+  value,
+  onChange,
   countDown,
   phoneName,
   onCaptcha = async (mobile) => {
@@ -80,6 +82,8 @@ const FieldCaptcha: React.FC<FieldCaptchaProps> = ({
       }}
     >
       <Input
+        value={value}
+        onChange={onChange}
         {...fieldProps}
         style={{
           flex: 1,

@@ -7,17 +7,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { Button, Select, message } from 'antd';
+import { Button, Select, message, Form, Input, Checkbox } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import Base from '@/layout/base';
+import FormItemCaptcha from '@/components/form-item-captcha';
 import isMobilePhone from '@/utils/validator/isMobilePhone';
 import isSmsCode from '@/utils/validator/isSmsCode';
-import CaptchaService from '@/services/common/captcha';
 import register from '@/services/register';
 
 import './index.scss';
-
-import { ProForm, ProFormText, ProFormCaptcha, ProFormCheckbox } from '@ant-design/pro-components';
 
 const { Option } = Select;
 
@@ -30,7 +28,7 @@ interface RegisterFormData {
 
 function Register() {
   const navigate = useNavigate();
-  const [form] = ProForm.useForm();
+  const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
   // 提交注册
@@ -56,7 +54,7 @@ function Register() {
   };
 
   const selectBefore = (
-    <ProForm.Item noStyle name='interCode'>
+    <Form.Item noStyle name='interCode'>
       <Select
         popupMatchSelectWidth={false}
         bordered={false}
@@ -81,14 +79,14 @@ function Register() {
           +853(中国澳门)
         </Option>
       </Select>
-    </ProForm.Item>
+    </Form.Item>
   );
 
   return (
     <Base>
       <div className='base-register'>
         <div className='base-title'>注册</div>
-        <ProForm
+        <Form
           form={form}
           name='base-form-register'
           initialValues={{ interCode: '86' }}
@@ -96,52 +94,10 @@ function Register() {
           colon={false}
           className='base-form'
           layout='horizontal'
-          submitter={{
-            // 配置按钮文本
-            searchConfig: {
-              resetText: '重置',
-              submitText: '提交',
-            },
-            // 配置按钮的属性
-            resetButtonProps: {
-              style: {
-                // 隐藏重置按钮
-                display: 'none',
-              },
-            },
-            submitButtonProps: {},
-
-            // 完全自定义整个区域
-            render: (props, doms) => {
-              return (
-                <>
-                  <ProForm.Item>
-                    <Button loading={loading} type='primary' htmlType='submit' className='base-submit-btn'>
-                      注册
-                    </Button>
-                  </ProForm.Item>
-                  <Button
-                    type='link'
-                    onClick={() => {
-                      navigate('/login');
-                    }}
-                    style={{ padding: 0, fontSize: 15, color: '#333' }}
-                  >
-                    已有账号，去登录 <RightOutlined size={18} />
-                  </Button>
-                </>
-              );
-            },
-          }}
         >
-          <ProFormText
+          <Form.Item
             label='手机号'
             name='mobile'
-            fieldProps={{
-              prefix: selectBefore,
-            }}
-            allowClear={false}
-            placeholder='账号使用者手机'
             rules={[
               {
                 validator: (_rule, value) => {
@@ -156,24 +112,14 @@ function Register() {
                 },
               },
             ]}
-          />
-          <ProFormCaptcha
+          >
+            <Input prefix={selectBefore} allowClear={false} placeholder='账号使用者手机' />
+          </Form.Item>
+          <FormItemCaptcha
             label='验证码'
             name='captcha'
-            // 手机号的 name，onGetCaptcha 会注入这个值
             phoneName='mobile'
-            fieldProps={
-              {
-                //
-              }
-            }
-            captchaProps={{
-              value: 'ddd',
-              defaultValue: 'ddd',
-              size: 'small',
-              type: 'link',
-              style: { padding: 0 },
-            }}
+            placeholder='请输入验证码'
             rules={[
               {
                 validator: (_rule, value) => {
@@ -187,32 +133,32 @@ function Register() {
                 },
               },
             ]}
-            placeholder='请输入验证码'
-            // captchaTextRender={
-            //   (paramsTiming, paramsCount) => {
-            //     return paramsTiming ? `${paramsCount} 秒后重新获取` : '获取验证码';
-            //   }
-            // }
-
-            // 如果需要失败可以 throw 一个错误出来，onGetCaptcha 会自动停止
-            // throw new Error("获取验证码错误")
-            onGetCaptcha={async mobile => {
-              const res = await CaptchaService.get(mobile);
-            }}
           />
 
-          <ProFormCheckbox
-            fieldProps={{
-              className: 'policy',
+          <Form.Item name='policy' valuePropName='checked'>
+            <Checkbox className='policy'>
+              我已阅读并同意{' '}
+              <a href='https://page.meituan.net/html/1615180237352_38ceb3/index.html' target='_blank'>
+                《团好货商家版隐私政策》
+              </a>
+            </Checkbox>
+          </Form.Item>
+
+          <Form.Item>
+            <Button loading={loading} type='primary' htmlType='submit' className='base-submit-btn'>
+              注册
+            </Button>
+          </Form.Item>
+          <Button
+            type='link'
+            onClick={() => {
+              navigate('/login');
             }}
-            name='policy'
+            style={{ padding: 0, fontSize: 15, color: '#333' }}
           >
-            我已阅读并同意{' '}
-            <a href='https://page.meituan.net/html/1615180237352_38ceb3/index.html' target='_blank'>
-              《团好货商家版隐私政策》
-            </a>
-          </ProFormCheckbox>
-        </ProForm>
+            已有账号，去登录 <RightOutlined size={18} />
+          </Button>
+        </Form>
       </div>
     </Base>
   );

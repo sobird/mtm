@@ -10,15 +10,20 @@ import React, { FC } from 'react';
 import { Form, FormItemProps } from 'antd';
 import { isSmsCode } from '@/utils/validator';
 import CommonService from '@/services/common';
-import FieldCaptcha from '@/components/field-captcha';
+import FieldCaptcha, {FieldCaptchaProps} from '@/components/field-captcha';
 
 interface FormItemCaptchaProps extends FormItemProps {
   /** 手机号的字段 name */
-  mobile?: string | number;
+  phoneName?: string | number;
   placeholder?: string;
+  onCaptcha?: FieldCaptchaProps["onCaptcha"];
 }
 
-const FormItemCaptcha: FC<FormItemCaptchaProps> = ({ mobile = 'mobile', placeholder, ...props }) => {
+const FormItemCaptcha: FC<FormItemCaptchaProps> = ({ phoneName = 'mobile', placeholder, onCaptcha, ...props }) => {
+
+  onCaptcha = onCaptcha || (async mobile => {
+    await CommonService.captcha(mobile);
+  });
   return (
     <Form.Item
       label='验证码'
@@ -37,14 +42,12 @@ const FormItemCaptcha: FC<FormItemCaptchaProps> = ({ mobile = 'mobile', placehol
     >
       <FieldCaptcha
         // 手机号的 name，onCaptcha 会注入这个值
-        phoneName={mobile}
+        phoneName={phoneName}
         buttonProps={{
-          size: 'small',
-          type: 'link',
           style: { padding: 0 },
         }}
         fieldProps={{
-          placeholder: placeholder || '请查看手机短信，输入验证码',
+          placeholder: placeholder,
         }}
         // captchaTextRender={
         //   (paramsTiming, paramsCount) => {
@@ -54,9 +57,7 @@ const FormItemCaptcha: FC<FormItemCaptchaProps> = ({ mobile = 'mobile', placehol
 
         // 如果需要失败可以 throw 一个错误出来，onGetCaptcha 会自动停止
         // throw new Error("获取验证码错误")
-        onCaptcha={async mobile => {
-          await CommonService.captcha(mobile);
-        }}
+        onCaptcha={onCaptcha}
       />
     </Form.Item>
   );
