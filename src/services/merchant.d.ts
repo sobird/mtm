@@ -404,3 +404,9 @@ export interface IMerchantTask {
   bizType: number;
   localCommerce: number;
 }
+
+/** 钱包类型，1-企业钱包  2-个人钱包 */
+export enum WalletTypeEnum {
+  "企业钱包" = 1,
+  "个人钱包" = 2,
+}

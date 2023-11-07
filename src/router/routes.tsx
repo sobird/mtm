@@ -32,8 +32,7 @@ import ShopProfileWallet from '@/pages/shop/profile/wallet';
 const ShopAdmin = lazy(() => import('@/pages/shop/admin'));
 const ShopProfileBase = lazy(() => import('@/pages/shop/profile/base-info'));
 const ShopProfileCompany = lazy(() => import('@/pages/shop/profile/company'));
-
-const shopRoutes: RouteObject[] = [];
+const ShopProfileSettlement = lazy(() => import('@/pages/shop/profile/settlement'));
 
 const routes: RouteObject[] = [
   {
@@ -90,6 +89,11 @@ const routes: RouteObject[] = [
         {
           path: "wallet",
           element: <ShopProfileWallet />
+        },
+
+        {
+          path: "settlement",
+          element: <ShopProfileSettlement />
         },
         
         {

@@ -76,6 +76,19 @@ const MerchantService = {
   task() {
     return http.get<IMerchantTask>('/merchant/entry/task');
   },
+
+  // 钱包相关接口
+
+  /** 创建钱包 */
+  createWallet() {
+    return http.post('/merchant/wallet')
+  },
+
+  /** 切换企业钱包与个人钱包 */
+  toggleWallet() {
+    return http.put('/merchant/wallet')
+  },
+
 };
 
 export default MerchantService;
