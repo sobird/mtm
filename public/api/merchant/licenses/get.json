@@ -1,0 +1,17 @@
+{
+  "code": 0,
+  "msg": null,
+  "data": [
+    {
+      "id": 108781,
+      "merchantId": "123456",
+      "type": 0,
+      "src": null,
+      "auditStatus": 4,
+      "isExpired": false,
+      "expireDate": null,
+      "createTime": 1,
+      "rejectReason": ""
+    }
+  ]
+}

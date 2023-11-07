@@ -33,6 +33,7 @@ const ShopAdmin = lazy(() => import('@/pages/shop/admin'));
 const ShopProfileBase = lazy(() => import('@/pages/shop/profile/base-info'));
 const ShopProfileCompany = lazy(() => import('@/pages/shop/profile/company'));
 const ShopProfileSettlement = lazy(() => import('@/pages/shop/profile/settlement'));
+const ShopProfileLicense = lazy(() => import('@/pages/shop/profile/license'));
 
 const routes: RouteObject[] = [
   {
@@ -84,6 +85,11 @@ const routes: RouteObject[] = [
         {
           path: "company",
           element: <ShopProfileCompany />
+        },
+
+        {
+          path: "license",
+          element: <ShopProfileLicense />
         },
 
         {

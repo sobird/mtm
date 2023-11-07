@@ -89,6 +89,10 @@ const MerchantService = {
     return http.put('/merchant/wallet')
   },
 
+  /** 许可证列表 */
+  licenses() {
+    return http.get('/merchant/licenses')
+  }
 };
 
 export default MerchantService;

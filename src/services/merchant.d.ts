@@ -94,45 +94,25 @@ export interface IWalletData {
 }
 
 export interface ILicense {
-  /**
-   * 许可证id
-   */
+  /** 许可证id */
   id?: number;
-  /**
-   * 商家id
-   */
+  /** 商家id */
   merchantId?: number;
-  /**
-   * 许可证类型编码
-   */
-  licenseType?: number;
-  /**
-   * 许可证类型编码
-   */
+  /** 许可证类型 */
+  type?: number;
+  /** 许可证类型 */
   licenseTypeStr?: string;
-  /**
-   * 地址URL http://p0.meituan.net/credentials/f89b34439df080736a88387b4d588b2d321279.png
-   */
+  /** 许可证地址URL */
   license?: string;
-  /**
-   * 有效截止日期 2020-12-12
-   */
-  validDeadline?: string;
-  /**
-   * 创建时间 2020-12-12 12:12:12
-   */
+  /** 有效截止日期 2020-12-12 */
+  expireDate?: string;
+  /** 创建时间 2020-12-12 12:12:12 */
   createTime?: string;
-  /**
-   * 审核状态 4-审核中 6-审核通过 5-审核驳回
-   */
-  auditState?: number;
-  /**
-   * 证件是否过期 true-过期 false-不过期
-   */
-  isOverdue?: boolean;
-  /**
-   * 驳回原因
-   */
+  /** 审核状态 4-审核中 6-审核通过 5-审核驳回 */
+  auditStatus?: 4 | 5 | 6;
+  /** 证件是否过期 true-过期 false-不过期 */
+  isExpired?: boolean;
+  /** 驳回原因 */
   rejectReason?: string;
 }
 
