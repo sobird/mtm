@@ -390,3 +390,25 @@ export enum WalletTypeEnum {
   "企业钱包" = 1,
   "个人钱包" = 2,
 }
+
+// 品牌&商标类型，1-自有商标  2-授权商标
+export enum BrandTypeEnum {
+  自有商标 = 1,
+  授权商标 = 2,
+}
+
+export const BrandTypeMap = new Map([
+  [1, '自有商标'],
+  [2, '授权商标'],
+]);
+
+export enum TrademarkRegistrationTypeEnum {
+  '自然人（商标注册人为个人）' = 1,
+  '非自然人（商标注册人为公司主体）' = 2,
+}
+
+/** 商标注册类型 */
+export const TrademarkRegistrationTypeMap = new Map([
+  [1, '自然人（商标注册人为个人）'],
+  [2, '非自然人（商标注册人为公司主体）']
+]);

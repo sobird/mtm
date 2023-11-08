@@ -1,0 +1,140 @@
+.brand-info-container {
+  box-sizing: border-box;
+  padding: 24px 20px;
+  .add-button-box {
+    box-sizing: border-box;
+  }
+  .table-box {
+    box-sizing: border-box;
+    margin-bottom: 37px;
+  }
+}
+
+// 商标详情
+.brand-detail-container {
+  box-sizing: border-box;
+  padding: 25px 60px;
+  .roo-breadcrumb {
+    margin-bottom: 29px;
+  }
+  .roo-breadcrumb > li.active span,
+  .roo-breadcrumb > li.active a {
+    color: var(--text-color-base);
+  }
+  .title {
+    font-size: 16px;
+    color: #3f4156;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .detail-title {
+    font-size: 16px;
+    color: #3f4156;
+    font-weight: 500;
+    margin-bottom: 31px;
+  }
+  .content {
+    width: 100%;
+    box-sizing: border-box;
+    .static-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 30px;
+      .row-title {
+        box-sizing: border-box;
+        // width: 138px;
+        text-align: right;
+        color: var(--text-color-weak);
+        flex: 0 0 159px;
+        max-width: 16.66667%;
+      }
+      .row-content {
+        margin-left: 20px;
+        color: #585a6e;
+        display: flex;
+        align-items: flex-start;
+        .img-box {
+          border: 1px solid #e9eaf2;
+          margin-right: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 80px;
+          height: 80px;
+        }
+      }
+      .row-content-blank {
+        color: #babccc;
+      }
+    }
+    .field-row {
+      padding-top: 7px;
+      padding-bottom: 7px;
+      .form-group {
+        margin-bottom: 0;
+        .control-label {
+          // margin-left: -75px;
+          padding-right: 5px;
+          font-size: 14px;
+          color: var(--text-color-weak);
+          flex: 0 0 159px;
+        }
+        .form-group-content {
+          .roo-radio-group {
+            .roo-radio:nth-child(2) {
+              margin-left: -15px;
+            }
+          }
+          .trademarkRegType-radio-box {
+            width: 550px;
+            .roo-radio-group {
+              .roo-radio:nth-child(2) {
+                margin-left: -20px;
+              }
+            }
+          }
+        }
+      }
+    }
+    // 商标注册文字
+    .trademarkRegCertificatesText {
+      line-height: 1.8;
+      color: #a2a4b3;
+      width: 500px;
+      margin-top: 13px;
+      // margin-bottom: 16px;
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: column;
+      span {
+        font-size: 12px;
+      }
+    }
+  }
+  // 图片外框
+  .object-img-box {
+    box-sizing: border-box;
+    width: 100px;
+    height: 100px;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 3px;
+    margin-right: 6px;
+    cursor: pointer;
+  }
+  .id-card-box{
+    display: flex;
+    width: 260px;
+    justify-content: space-between;
+    .roo-upload-card-item {
+      width: 120px;
+    }
+  }
+  .brand-detail-box{
+    position: relative;
+  }
+}

@@ -54,7 +54,7 @@ const ShopProfile = () => {
             label: '基本信息',
           },
           {
-            key: '/shop/profile/company',
+            key: '/shop/profile/principal',
             label: '主体信息',
           },
           {

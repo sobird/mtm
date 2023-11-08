@@ -1,0 +1,22 @@
+// 吸底的button
+.button-tab-box {
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-top: 1px solid #e9eaf2;
+  padding-left: 216px;
+  height: 60px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 200px;
+  // padding-top: 15px;
+  display: flex;
+  align-items: center;
+  z-index: 4;
+  .defaultBtn {
+    width: 90px;
+    height: 32px;
+    margin-right: 10px;
+    line-height: 32px;
+  }
+}

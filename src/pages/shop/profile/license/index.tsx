@@ -25,7 +25,8 @@ const ShopProfileLicense = () => {
   return (
     <>
       <Card
-        headStyle={{borderBottom: 0}}
+        title="许可证列表"
+        // headStyle={{borderBottom: 0}}
         bodyStyle={{ paddingTop: 16 }}
         extra={<Button onClick={() => navigate('/shop/profile/license/operate?type=add')}>添加证照</Button>}
       >

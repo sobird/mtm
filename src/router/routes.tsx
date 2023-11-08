@@ -31,9 +31,10 @@ import ShopProfile from '@/pages/shop/profile';
 import ShopProfileWallet from '@/pages/shop/profile/wallet';
 const ShopAdmin = lazy(() => import('@/pages/shop/admin'));
 const ShopProfileBase = lazy(() => import('@/pages/shop/profile/base-info'));
-const ShopProfileCompany = lazy(() => import('@/pages/shop/profile/company'));
+const ShopProfilePrincipal = lazy(() => import('@/pages/shop/profile/principal'));
 const ShopProfileSettlement = lazy(() => import('@/pages/shop/profile/settlement'));
 const ShopProfileLicense = lazy(() => import('@/pages/shop/profile/license'));
+import TrademarkPage from '@/pages/shop/trademark';
 
 const routes: RouteObject[] = [
   {
@@ -75,6 +76,11 @@ const routes: RouteObject[] = [
       },
 
       {
+        path: "shop/trademark",
+        element: <TrademarkPage />
+      },
+
+      {
         path: 'shop/profile',
         element: <ShopProfile />,
         children: [{
@@ -83,8 +89,8 @@ const routes: RouteObject[] = [
         },
 
         {
-          path: "company",
-          element: <ShopProfileCompany />
+          path: "principal",
+          element: <ShopProfilePrincipal />
         },
 
         {
