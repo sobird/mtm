@@ -1,6 +1,6 @@
 /**
  * Step2
- * 
+ *
  * sobird<i@sobird.me> at 2023/08/15 0:12:03 created.
  */
 
@@ -13,7 +13,7 @@ const Step2: React.FC<PropsWithChildren> = () => {
       status="warning"
       title="暂无内容"
     />
-  )
-}
+  );
+};
 
 export default Step2;

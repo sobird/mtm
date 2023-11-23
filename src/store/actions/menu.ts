@@ -13,14 +13,14 @@ type MenuThunkAction = ThunkAction<any, RootState, any, IMenuAction>;
 export const UPDATE_MENU = 'UPDATE_MENU';
 
 // updateMenu Action Creator
-export const updateMenuAction = (payload: IMenuState) => ({ type: UPDATE_MENU, payload });
+export const updateMenuAction = (payload: IMenuState) => { return { type: UPDATE_MENU, payload }; };
 
 export const fetchMenuThunkAction: MenuThunkAction = async (dispatch, getState, extraArgument) => {
   // const state = getState();
 
   return MenuService.list().then(([menuTrees, menuItems, favorites]) => {
     // const menuTrees = [First, Favorites, ...Others];
-    const defaultOpenKeys = menuTrees.filter(item => item.children && item.children.length > 0).map(item => item.id);
+    const defaultOpenKeys = menuTrees.filter(item => { return item.children && item.children.length > 0; }).map(item => { return item.id; });
 
     dispatch(
       updateMenuAction({
@@ -29,7 +29,7 @@ export const fetchMenuThunkAction: MenuThunkAction = async (dispatch, getState, 
         menuTrees,
         // 默认菜单全打开
         defaultOpenKeys: [...new Set(defaultOpenKeys)],
-      })
+      }),
     );
   });
 };
@@ -40,9 +40,9 @@ export const removeFavMenuItem = (menuItem: IMenuItem) => {
     const state = getState();
     const { favorites } = state.menu;
 
-    const index = favorites.findIndex(item => item.id === menuItem.id);
+    const index = favorites.findIndex(item => { return item.id === menuItem.id; });
 
-    if(index !== -1) {
+    if (index !== -1) {
       favorites.splice(index, 1);
     }
 
@@ -50,8 +50,8 @@ export const removeFavMenuItem = (menuItem: IMenuItem) => {
      * @todo 可调用接口更新到后端
      */
     dispatch(updateMenuAction({
-      favorites: [...favorites]
-    }))
+      favorites: [...favorites],
+    }));
   };
 
   return thunkAction;
@@ -68,10 +68,9 @@ export const insertFavMenuItem = (menuItem: IMenuItem) => {
      * @todo 可调用接口更新到后端
      */
     dispatch(updateMenuAction({
-      favorites: [...favorites]
-    }))
+      favorites: [...favorites],
+    }));
   };
 
   return thunkAction;
 };
-

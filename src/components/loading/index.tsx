@@ -11,7 +11,7 @@ export default function Loading() {
   return (
     <Spin
       style={{
-        margin: "100px auto",
+        margin: '100px auto',
         display: 'block',
         // transform: 'translate(-50%, -50%)',
       }}

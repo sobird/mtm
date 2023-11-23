@@ -9,7 +9,7 @@
 
 // import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
-import thunk, { ThunkDispatch }from 'redux-thunk';
+import thunk, { ThunkDispatch } from 'redux-thunk';
 import reducers from './reducers';
 import logger from './middleware/logger';
 
@@ -26,7 +26,6 @@ const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
   // enhancers: []
 });
-
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

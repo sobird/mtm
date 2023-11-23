@@ -19,11 +19,10 @@ export function getRowSpans(data: any[], key: string) {
   for (let i = data.length - 1; i >= 0; i--) {
     if (i === 0) {
       rowSpans[i] = sameValueLength + 1;
-      continue;
     }
     if (data[i][key] === data[i - 1][key]) {
       rowSpans[i] = 0;
-      sameValueLength++;
+      sameValueLength += 1;
     } else {
       rowSpans[i] = sameValueLength + 1;
       sameValueLength = 0;
@@ -52,7 +51,7 @@ export function listToTree(list: IList[]) {
 
   list.forEach(item => {
     if (!item.children) {
-      //item.children = []
+      // item.children = []
     }
     map.set(item.id, item);
   });
@@ -71,16 +70,16 @@ export function listToTree(list: IList[]) {
   return result;
 }
 
-export const fileToBase64 = (file: Blob | File): Promise<string> =>
-  new Promise((resolve, reject) => {
+export const fileToBase64 = (file: Blob | File): Promise<string> => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = error => reject(error);
+    reader.onload = () => { return resolve(reader.result as string); };
+    reader.onerror = error => { return reject(error); };
   });
+};
 
-
-export const palyAudio = (src?: string) =>{
+export const palyAudio = (src?: string) => {
   const audio = new Audio(src || sound);
   audio.play().then(() => {
     console.log('播放成功');
@@ -104,4 +103,4 @@ export const palyAudio = (src?: string) =>{
   // });
 
   // video.click();
-}
+};

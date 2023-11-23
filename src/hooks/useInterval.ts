@@ -7,7 +7,9 @@
  * sobird<i@sobird.me> at 2023/10/27 12:01:38 created.
  */
 
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import {
+  useState, useMemo, useCallback, useEffect, useRef,
+} from 'react';
 
 type ReturnType = (time: null | undefined | number) => void;
 
@@ -22,19 +24,19 @@ export interface UseIntervalOptions {
 
 /**
  * useInterval
- * 
+ *
  * @param fn 回调函数
  * @param delay 执行间隔 ms; 当设置为非整数或小于0的值时，不会启动定时器，
  * 此时可通过返回值resume(1000)来启动间隔1000ms的定时器，通过执行 resume(null) 清除定时器
- * @param options 
- * @returns 
+ * @param options
+ * @returns
  */
 const useInterval = (fn: () => void, delay?: number, options: UseIntervalOptions = {}): ReturnType => {
   const { immediate = false } = options;
   const [runEffect, setRunEffect] = useState(true);
-  const [time, setTime ] = useState(delay);
+  const [time, setTime] = useState(delay);
 
-  const timerCallback = useMemo(() => fn, [fn]);
+  const timerCallback = useMemo(() => { return fn; }, [fn]);
   // eslint-disable-next-line no-undef
   const timerRef = useRef<NodeJS.Timer | null>(null);
 
@@ -45,7 +47,7 @@ const useInterval = (fn: () => void, delay?: number, options: UseIntervalOptions
   }, []);
 
   useEffect(() => {
-    if (!Number.isInteger(time) || time < 0 ) {
+    if (!Number.isInteger(time) || time < 0) {
       return;
     }
     if (immediate) {
@@ -54,12 +56,11 @@ const useInterval = (fn: () => void, delay?: number, options: UseIntervalOptions
 
     timerRef.current = setInterval(timerCallback, time);
     return clear;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, immediate, runEffect]);
 
-  return (time = 1000) => {
-    setTime(time);
-    setRunEffect(v => !v);
+  return (interval = 1000) => {
+    setTime(interval);
+    setRunEffect(v => { return !v; });
   };
 };
 

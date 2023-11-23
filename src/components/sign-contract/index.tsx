@@ -6,7 +6,9 @@
 
 import { useState } from 'react';
 import Cookies from 'js-cookie';
-import { Alert, Button, message, Form, Tooltip, Modal, Checkbox } from 'antd';
+import {
+  Alert, Button, message, Form, Tooltip, Modal, Checkbox,
+} from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import FormItemCaptcha from '@/components/form-item-captcha';
 import MerchantService from '@/services/merchant';
@@ -31,10 +33,10 @@ export default function ContractSign({ config }: ContractSignProps) {
   const onFinish = async values => {
     console.log('values', values);
     const { captcha, policy } = values;
-    const captcha_cookie = Cookies.get('captcha');
+    const captchaCookie = Cookies.get('captcha');
     message.destroy();
 
-    if (captcha_cookie != captcha) {
+    if (captchaCookie !== captcha) {
       message.error('验证码错误');
       return;
     }
@@ -67,7 +69,7 @@ export default function ContractSign({ config }: ContractSignProps) {
 
   return (
     <Modal
-      title='签约合作协议'
+      title="签约合作协议"
       closeIcon={false}
       style={{
         width: '500px',
@@ -75,21 +77,21 @@ export default function ContractSign({ config }: ContractSignProps) {
       open={visible}
       footer={null}
     >
-      <div className='sign-constract-box'>
-        <div className='alert-box'>
+      <div className="sign-constract-box">
+        <div className="alert-box">
           {/* 100代表pop商家 30代表合同过期 */}
           {bizType === 100 && state === 30 ? (
             <Alert
-              className='contract-dated'
-              message='您的协议已到期，我们将通过短信验证来确认您与平台继续达成合作'
+              className="contract-dated"
+              message="您的协议已到期，我们将通过短信验证来确认您与平台继续达成合作"
               icon={<InfoCircleOutlined />}
               showIcon={true}
             />
           ) : (
-            <Alert message='我们将通过短信验证来确认您与平台正式达成合作' icon={<InfoCircleOutlined />} />
+            <Alert message="我们将通过短信验证来确认您与平台正式达成合作" icon={<InfoCircleOutlined />} />
           )}
         </div>
-        <div className='tip-box'>
+        <div className="tip-box">
           <span>验证码将发送到 </span>
           <span>{mobile}</span>
           <span>，如需更换手机号请联系招商经理</span>
@@ -98,34 +100,35 @@ export default function ContractSign({ config }: ContractSignProps) {
           form={form}
           // value={formValue}
           // rules={rules}
-          layout='horizontal'
+          layout="horizontal"
           onFinish={onFinish}
         >
           <FormItemCaptcha
-            name='captcha'
-            phoneName='mobile'
-            placeholder='请输入验证码'
+            name="captcha"
+            phoneName="mobile"
+            placeholder="请输入验证码"
             fieldProps={{
               width: '200px',
             }}
           />
 
-          <Form.Item name='policy' valuePropName='checked'>
-            <Checkbox className='policy'>
-              我已阅读并同意{' '}
-              <a href='https://page.meituan.net/html/1615180237352_38ceb3/index.html' target='_blank'>
+          <Form.Item name="policy" valuePropName="checked">
+            <Checkbox className="policy">
+              我已阅读并同意
+              {' '}
+              <a href="https://page.meituan.net/html/1615180237352_38ceb3/index.html" target="_blank" rel="noreferrer">
                 《美团电商合作协议》
               </a>
               <Tooltip
-                color='#fff'
-                title='以下协议与纸质协议拥有同等效力，点击“确认合作”视为您同意并接受合作协议条款。如对合作条款有异议，可联系业务经理。'
+                color="#fff"
+                title="以下协议与纸质协议拥有同等效力，点击“确认合作”视为您同意并接受合作协议条款。如对合作条款有异议，可联系业务经理。"
               >
-                <InfoCircleOutlined color='#ccc' />
+                <InfoCircleOutlined color="#ccc" />
               </Tooltip>
             </Checkbox>
           </Form.Item>
 
-          <Button type='primary' loading={loading} style={{ width: '100%' }} htmlType='submit'>
+          <Button type="primary" loading={loading} style={{ width: '100%' }} htmlType="submit">
             确认合作
           </Button>
         </Form>

@@ -7,10 +7,10 @@
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
+import { NoneSupport } from '@mtm/shared';
 import theme from '@/styles/theme';
 
 import LayoutAdmin from '@/layout/admin';
-import { NoneSupport } from '@mtm/shared';
 import Login from '@/pages/login';
 import Register from '@/pages/register';
 import RegisterSuccess from '@/pages/register/success';
@@ -22,19 +22,19 @@ import SettingProfile from '@/pages/setting/profile';
 import MdxTest from '@/pages/mdx';
 import Component from '@/pages/component';
 
-const SettleInpc = lazy(() => import('@/pages/settleinpc'));
-const EntryHome = lazy(() => import('@/pages/settleinjx/home'));
-const EntryShop = lazy(() => import('@/pages/settleinjx/shop'));
-const EntryCompany = lazy(() => import('@/pages/settleinjx/company'));
-
 import ShopProfile from '@/pages/shop/profile';
 import ShopProfileWallet from '@/pages/shop/profile/wallet';
-const ShopAdmin = lazy(() => import('@/pages/shop/admin'));
-const ShopProfileBase = lazy(() => import('@/pages/shop/profile/base-info'));
-const ShopProfilePrincipal = lazy(() => import('@/pages/shop/profile/principal'));
-const ShopProfileSettlement = lazy(() => import('@/pages/shop/profile/settlement'));
-const ShopProfileLicense = lazy(() => import('@/pages/shop/profile/license'));
 import TrademarkPage from '@/pages/shop/trademark';
+
+const SettleInpc = lazy(() => { return import('@/pages/settleinpc'); });
+const EntryHome = lazy(() => { return import('@/pages/settleinjx/home'); });
+const EntryShop = lazy(() => { return import('@/pages/settleinjx/shop'); });
+const EntryCompany = lazy(() => { return import('@/pages/settleinjx/company'); });
+const ShopAdmin = lazy(() => { return import('@/pages/shop/admin'); });
+const ShopProfileBase = lazy(() => { return import('@/pages/shop/profile/base-info'); });
+const ShopProfilePrincipal = lazy(() => { return import('@/pages/shop/profile/principal'); });
+const ShopProfileSettlement = lazy(() => { return import('@/pages/shop/profile/settlement'); });
+const ShopProfileLicense = lazy(() => { return import('@/pages/shop/profile/license'); });
 
 const routes: RouteObject[] = [
   {
@@ -70,14 +70,14 @@ const routes: RouteObject[] = [
         children: [
           {
             path: 'admin',
-            element: <ShopAdmin />
+            element: <ShopAdmin />,
           },
-        ]
+        ],
       },
 
       {
-        path: "shop/trademark",
-        element: <TrademarkPage />
+        path: 'shop/trademark',
+        element: <TrademarkPage />,
       },
 
       {
@@ -85,41 +85,40 @@ const routes: RouteObject[] = [
         element: <ShopProfile />,
         children: [{
           index: true,
-          element: <ShopProfileBase />
+          element: <ShopProfileBase />,
         },
 
         {
-          path: "principal",
-          element: <ShopProfilePrincipal />
+          path: 'principal',
+          element: <ShopProfilePrincipal />,
         },
 
         {
-          path: "license",
-          element: <ShopProfileLicense />
+          path: 'license',
+          element: <ShopProfileLicense />,
         },
 
         {
-          path: "wallet",
-          element: <ShopProfileWallet />
+          path: 'wallet',
+          element: <ShopProfileWallet />,
         },
 
         {
-          path: "settlement",
-          element: <ShopProfileSettlement />
+          path: 'settlement',
+          element: <ShopProfileSettlement />,
         },
-        
+
         {
           path: '*',
           element: <NoneSupport />,
-        }]
+        }],
       },
-
 
       // 404
       {
         path: '*',
         element: <NoneSupport />,
-      }
+      },
     ],
   },
   {
@@ -136,7 +135,7 @@ const routes: RouteObject[] = [
   {
     path: '/login',
     element: (
-      <ConfigProvider componentSize='large' theme={theme}>
+      <ConfigProvider componentSize="large" theme={theme}>
         <Login />
       </ConfigProvider>
     ),
@@ -144,7 +143,7 @@ const routes: RouteObject[] = [
   {
     path: '/register',
     element: (
-      <ConfigProvider componentSize='large' theme={theme}>
+      <ConfigProvider componentSize="large" theme={theme}>
         <Register />
       </ConfigProvider>
     ),

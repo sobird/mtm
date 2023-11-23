@@ -1,6 +1,6 @@
 /**
  * upload-ocr
- * 
+ *
  * sobird<i@sobird.me> at 2023/08/15 0:41:33 created.
  */
 
@@ -19,20 +19,23 @@ interface UploadOcrProps {
 
 const uploadButton = (
   <div>
-    <PlusOutlined style={{fontSize: '30px'}} />
+    <PlusOutlined style={{ fontSize: '30px' }} />
     <div>点击上传</div>
   </div>
 );
 
-const getBase64 = (file: RcFile): Promise<string> =>
-  new Promise((resolve, reject) => {
+const getBase64 = (file: RcFile): Promise<string> => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
+    reader.onload = () => { return resolve(reader.result as string); };
+    reader.onerror = (error) => { return reject(error); };
   });
+};
 
-const OcrUpload: React.FC<PropsWithChildren<UploadOcrProps>> = ({ value, onChange, onUploadSuccess, type = 0, children, ...props}) => {
+const OcrUpload: React.FC<PropsWithChildren<UploadOcrProps>> = ({
+  value, onChange, onUploadSuccess, type = 0, children, ...props
+}) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
@@ -45,11 +48,12 @@ const OcrUpload: React.FC<PropsWithChildren<UploadOcrProps>> = ({ value, onChang
   }] : fileList;
 
   const onUploadChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    console.log('newFileList', newFileList)
+    console.log('newFileList', newFileList);
     setFileList(newFileList);
   };
 
-  const handlePreview = async (file: UploadFile) => {
+  const handlePreview = async (fileVal: UploadFile) => {
+    const file = fileVal;
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as RcFile);
     }
@@ -61,15 +65,17 @@ const OcrUpload: React.FC<PropsWithChildren<UploadOcrProps>> = ({ value, onChang
 
   return (
     <>
-      <Upload 
-        listType="picture-card" 
+      <Upload
+        listType="picture-card"
         fileList={initFileList}
         onChange={onUploadChange}
         onPreview={handlePreview}
-        onRemove={(file) => {
+        onRemove={() => {
           onChange('');
         }}
-        customRequest={({ file, onProgress, onSuccess, onError}) => {
+        customRequest={({
+          file, onProgress, onSuccess, onError,
+        }) => {
           VenusService.upload(file as File, (percent) => {
             onProgress({ percent });
           }).then(res => {
@@ -77,24 +83,25 @@ const OcrUpload: React.FC<PropsWithChildren<UploadOcrProps>> = ({ value, onChang
 
             const { url } = res;
             onChange(url);
-          
+
             // 图片文字识别
             VenusService.ocr({
               type,
-              url: url,
-            }).then(res => {
-              onUploadSuccess?.(res);
-            })
-          }).catch(onError)
+              url,
+            }).then(ocrRes => {
+              onUploadSuccess?.(ocrRes);
+            });
+          }).catch(onError);
         }}
-        {...props}>
+        {...props}
+      >
         {initFileList?.length > 0 ? null : children || uploadButton}
       </Upload>
-      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={() => setPreviewOpen(false)}>
-        <img style={{ width: '100%' }} src={previewImage} />
+      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={() => { return setPreviewOpen(false); }}>
+        <img style={{ width: '100%' }} src={previewImage} alt="" />
       </Modal>
     </>
-  )
-}
+  );
+};
 
 export default OcrUpload;

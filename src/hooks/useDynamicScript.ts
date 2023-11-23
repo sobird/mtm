@@ -1,10 +1,10 @@
 /**
  * useDynamicScript
- * 
+ *
  * sobird<i@sobird.me> at 2023/09/14 18:20:53 created.
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 const urlCache = new Set();
 const useDynamicScript = (url: string) => {

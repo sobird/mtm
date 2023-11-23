@@ -6,7 +6,7 @@
  * sobird<i@sobird.me> at 2023/10/26 15:17:34 created.
  */
 
-import React, { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import classNames from 'classnames';
 import { Form, Input, Space } from 'antd';
 import type { FormProps } from 'antd';
@@ -24,29 +24,33 @@ const formItemLayout = {
     flex: '0 0 142px',
   },
   wrapperCol: {
-    span: 12
-  }
+    span: 12,
+  },
 };
 
 interface CouponFormProps extends FormProps {
   mode?: 'create' | 'update' | 'detail';
 }
 
-const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, children, mode, ...props }) => {
+const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({
+  className, form, children, mode, ...props
+}) => {
   const [_form] = Form.useForm();
   const formInstance = form || _form;
 
   return (
     <Form form={formInstance} className={classNames('admin-form', className)} {...formItemLayout} {...props}>
-      <Form.Item required label='证件类型' name='idCardType'>
-        <div className='id-type-text'>
-          中国大陆居民身份证 <span>(店铺管理员仅支持大陆居民身份证申请)</span>
+      <Form.Item required label="证件类型" name="idCardType">
+        <div className="id-type-text">
+          中国大陆居民身份证
+          {' '}
+          <span>(店铺管理员仅支持大陆居民身份证申请)</span>
         </div>
       </Form.Item>
 
       <Form.Item
-        label='电子证件照'
-        name='idCardPhotos'
+        label="电子证件照"
+        name="idCardPhotos"
         required
         rules={[
           {
@@ -65,29 +69,30 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, ch
         ]}
       >
         <FieldIdCard onUploadSuccess={(res, index) => {
-          console.log('res', res, index)
+          console.log('res', res, index);
 
-          if(index === 0) {
+          if (index === 0) {
             // 身份证正面才识别
             VenusService.ocr({
               type: 0,
-              url: res.url
+              url: res.url,
             }).then(idInfo => {
-              const {name, citizenId, validdate} = idInfo
+              const { name, citizenId, validdate } = idInfo;
 
               formInstance.setFieldsValue({
                 name,
                 citizenId,
-                validdate
-              })
-            })
+                validdate,
+              });
+            });
           }
-        }}/>
+        }}
+        />
       </Form.Item>
 
       <Form.Item
-        label='管理员姓名'
-        name='name'
+        label="管理员姓名"
+        name="name"
         rules={[
           {
             required: true,
@@ -99,12 +104,12 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, ch
           },
         ]}
       >
-        <Input placeholder='请保持与身份证件上的姓名一致' />
+        <Input placeholder="请保持与身份证件上的姓名一致" />
       </Form.Item>
 
       <Form.Item
-        label='身份证件号'
-        name='citizenId'
+        label="身份证件号"
+        name="citizenId"
         required
         rules={[
           {
@@ -116,12 +121,12 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, ch
           },
         ]}
       >
-        <Input placeholder='请保持与身份证件上的证件号一致' />
+        <Input placeholder="请保持与身份证件上的证件号一致" />
       </Form.Item>
 
       <Form.Item
-        label='有效截止日'
-        name='validdate'
+        label="有效截止日"
+        name="validdate"
         required
         rules={[
           {
@@ -137,8 +142,8 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, ch
       </Form.Item>
 
       <Form.Item
-        label='管理员手机号'
-        name='mobile'
+        label="管理员手机号"
+        name="mobile"
         required
         rules={[
           {
@@ -150,13 +155,13 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, ch
           },
         ]}
       >
-        <Input placeholder='请填写管理员手机号' />
+        <Input placeholder="请填写管理员手机号" />
       </Form.Item>
 
-      <FormItemCaptcha placeholder='请查看手机短信，输入验证码' phoneName='mobile' />
+      <FormItemCaptcha placeholder="请查看手机短信，输入验证码" phoneName="mobile" />
 
       <Form.Item
-        label='授权书'
+        label="授权书"
         // name='authLetter'
         required
         rules={[
@@ -167,27 +172,29 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({ className, form, ch
         ]}
         shouldUpdate
       >
-        {() => (
-          <Space className='auth-letter'>
-            <FieldUploadFile maxCount={1} listType="picture-card">上传1</FieldUploadFile>
-            <div className='shop-license-pic'>
-              <p>1.当店铺管理员与法人不一致时，请上传管理员授权书</p>
-              <p>
-                2.请使用模板下载后加盖公司印章后上传，
-                <span
-                  className='down-load'
-                  onClick={() => {
-                    window.location.href = 'managerAuthHandbookUrl';
-                  }}
-                >
-                  下载模版
-                </span>
-              </p>
-              <p>3.支持上传1张文件，大小不得超过10MB</p>
-              <p>4.格式支持JPG/JPEG/PNG/GIF/BPM</p>
-            </div>
-          </Space>
-        )}
+        {() => {
+          return (
+            <Space className="auth-letter">
+              <FieldUploadFile maxCount={1} listType="picture-card">上传1</FieldUploadFile>
+              <div className="shop-license-pic">
+                <p>1.当店铺管理员与法人不一致时，请上传管理员授权书</p>
+                <p>
+                  2.请使用模板下载后加盖公司印章后上传，
+                  <span
+                    className="down-load"
+                    onClick={() => {
+                      window.location.href = 'managerAuthHandbookUrl';
+                    }}
+                  >
+                    下载模版
+                  </span>
+                </p>
+                <p>3.支持上传1张文件，大小不得超过10MB</p>
+                <p>4.格式支持JPG/JPEG/PNG/GIF/BPM</p>
+              </div>
+            </Space>
+          );
+        }}
       </Form.Item>
       {children}
     </Form>

@@ -7,9 +7,9 @@ import React, { Suspense, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import { Watermark } from 'antd';
+import { ErrorBoundary } from '@mtm/shared';
 import startQiankun from '@/router/micro';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { ErrorBoundary } from "@mtm/shared";
 import Loading from '@/components/loading';
 import Notifier from '@/components/notifier';
 import { fetchMerchantThunkAction } from '@/store/actions/merchant';
@@ -22,7 +22,7 @@ import './index.scss';
 const LayoutAdmin: React.FC = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const { collapsed, micro } = useAppSelector((state) => state.app);
+  const { collapsed, micro } = useAppSelector((state) => { return state.app; });
 
   useEffect(() => {
     // 获取商家详情
@@ -34,7 +34,6 @@ const LayoutAdmin: React.FC = () => {
     setTimeout(() => {
       palyAudio();
     }, 3000);
-    
 
     if (!window.qiankunStarted) {
       window.qiankunStarted = true;
@@ -48,22 +47,22 @@ const LayoutAdmin: React.FC = () => {
 
     return () => {
       console.log('leave', location.pathname);
-    }
+    };
   }, [location.pathname]);
 
   return (
     <>
       <div
         className={classNames('app-container', {
-          "aside-collapsed": collapsed,
+          'aside-collapsed': collapsed,
         })}
       >
         <Header />
-        <div className='app-body'>
+        <div className="app-body">
           <Aside />
-          <main className='app-main'>
-            <div id="micro-container" style={{ width: '100%' }} ></div>
-            <div id="main-container" style={{ width: '100%' }} >
+          <main className="app-main">
+            <div id="micro-container" style={{ width: '100%' }} />
+            <div id="main-container" style={{ width: '100%' }}>
               <ErrorBoundary>
                 <Suspense fallback={<Loading />}><Outlet /></Suspense>
               </ErrorBoundary>
@@ -85,13 +84,12 @@ const LayoutAdmin: React.FC = () => {
         font={{
           color: '#eee',
         }}
-        content='sobird.me'
+        content="sobird.me"
         gap={[350, 350]}
-      >
-      </Watermark>
+      />
       <Notifier />
     </>
   );
-}
+};
 
 export default LayoutAdmin;

@@ -7,10 +7,10 @@
  * sobird<i@sobird.me> at 2023/10/25 2:31:48 created.
  */
 
-import React, { useState, FC, ComponentProps } from 'react';
+import { FC } from 'react';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import { message, Upload, Space } from 'antd';
-import type { UploadFile, RcFile } from 'antd/es/upload';
+import type { RcFile } from 'antd/es/upload';
 import { PlusOutlined } from '@ant-design/icons';
 import Tooltip from '@/components/tooltip';
 import FieldUploadFile from '@/components/field-upload-file';
@@ -70,29 +70,30 @@ const fileValidator = async (file: RcFile) => {
   }
 };
 
-const FieldMerchantLogo: FC<FieldMerchantLogoProps> = ({ value, defaultValue = [], onChange, status }) => {
-  const [valuePair, setValuePair] = useMergedState(() => defaultValue, {
+const FieldMerchantLogo: FC<FieldMerchantLogoProps> = ({
+  value, defaultValue = [], onChange, status,
+}) => {
+  const [valuePair, setValuePair] = useMergedState(() => { return defaultValue; }, {
     value,
     onChange,
   });
 
-
-  const tips = status === MerchantLogoAuditStatusEnum.审核中 ? reviewTips : normalTips;
+  // const tips = status === MerchantLogoAuditStatusEnum.审核中 ? reviewTips : normalTips;
 
   return (
-    <div className='field-merchant-logo'>
+    <div className="field-merchant-logo">
       <Space>
         <FieldUploadFile
-          className='upload-logo-current'
+          className="upload-logo-current"
           value={[valuePair[0]]}
-          onChange={(value) => {
-            valuePair[0] = value[0]
-            setValuePair([...valuePair])
+          onChange={(newValue) => {
+            [valuePair[0]] = newValue;
+            setValuePair([...valuePair]);
           }}
           beforeUpload={async (file) => {
             const result = await fileValidator(file);
 
-            if(!result) {
+            if (!result) {
               return Upload.LIST_IGNORE;
             }
           }}
@@ -100,27 +101,27 @@ const FieldMerchantLogo: FC<FieldMerchantLogoProps> = ({ value, defaultValue = [
           disabled={valuePair.length >= 1 && status === MerchantLogoAuditStatusEnum.审核通过}
           autoHidden
           maxCount={1}
-          listType='picture-card'
-          accept='image/*,.pdf,.bpm'
+          listType="picture-card"
+          accept="image/*,.pdf,.bpm"
         >
           {uploadButton}
         </FieldUploadFile>
 
         {valuePair.length >= 1 && status && (
           <>
-            <span className='updated-label'>修改为 》</span>
+            <span className="updated-label">修改为 》</span>
             <FieldUploadFile
-              className='upload-logo-updated'
+              className="upload-logo-updated"
               value={[valuePair[1]]}
-              onChange={(value) => {
-                valuePair[1] = value[0]
-                setValuePair(valuePair)
+              onChange={(newValue) => {
+                [valuePair[1]] = newValue;
+                setValuePair(valuePair);
               }}
-
               itemRender={originNode => {
                 const { props } = originNode;
                 return (
                   <Tooltip title={reviewTips}>
+                    {/* eslint-disable-next-line react/prop-types */}
                     <div className={props.className}>
                       {props.children}
                       <span className={`merchant-logo-status merchant-logo-status-${status}`}>
@@ -132,8 +133,8 @@ const FieldMerchantLogo: FC<FieldMerchantLogoProps> = ({ value, defaultValue = [
               }}
               autoHidden
               maxCount={1}
-              listType='picture-card'
-              accept='image/*,.pdf,.bpm'
+              listType="picture-card"
+              accept="image/*,.pdf,.bpm"
             >
               <Tooltip title={normalTips}>{uploadButton}</Tooltip>
             </FieldUploadFile>

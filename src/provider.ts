@@ -1,6 +1,6 @@
 /**
  * MTM微前端通用包
- * 
+ *
  * @todo
  * 迁移到@mtm/shared
  *
@@ -13,25 +13,13 @@ import * as Antd from 'antd';
 import * as AntdProComponents from '@ant-design/pro-components';
 import * as AntdIcons from '@ant-design/icons';
 import IntersectionObserveWrapper from '@/hooks/useIntersectionObserver';
-import metrics from '@/utils/metrics';
 import http from './utils/http';
-import * as report from '@/utils/report/wrapper';
-
-export enum MicroAPPSType {
-  THH_FEB_MERCHANT_MAIN = 'thh_feb_merchant_main',
-  THH_FEB_MERCHANT_OPERATION = 'thh_feb_merchant_operation',
-  THH_FEB_MERCHANT_ORDER = 'thh_feb_merchant_order',
-  THH_FEB_DATA = 'thh_feb_data',
-  THH_FEB_MARKET = 'thh_feb_market',
-  THH_FEB_PRODUCT = 'thh_feb_product',
-  FE_MERCHANT_ADMIN = 'fe-merchant-admin',
-}
 
 (function (root: any, deps: any) {
   Object.keys(deps).forEach(key => {
     root[key] = deps[key];
   });
-})(window, {
+}(window, {
   mtm: {
     React,
     ReactRouterDOM,
@@ -39,7 +27,7 @@ export enum MicroAPPSType {
     AntdProComponents,
     AntdIcons,
   },
-  // todo 
+  // todo
   tfe: {
     React,
     ReactRouterDOM,
@@ -57,34 +45,30 @@ export enum MicroAPPSType {
       CommonLoading: {},
     },
     env: {
-      MAIN_STATIC_URL: '//awp-assets.meituan.net/thh/thh_feb_merchant_main/'
+      MAIN_STATIC_URL: '//awp-assets.meituan.net/thh/thh_feb_merchant_main/',
     },
     constants: {
-      MicroAPPSType,
+
     },
   },
   $thh: {
-    metrics,
-    report,
     Request: http,
-    getStore: function(key) {
+    getStore(key) {
       console.log('key $thh', key);
       return {
         poiId: 148568,
-        name: '小米妈妈家居旗舰店'
-      }
-    }
+        name: '小米妈妈家居旗舰店',
+      };
+    },
   },
   baseSDK: {
-    metrics,
-    report,
     Request: http,
-    getStore: function(key) {
+    getStore(key) {
       console.log('key', key);
       return {
         poiId: 148568,
-        name: '小米妈妈家居旗舰店'
-      }
-    }
+        name: '小米妈妈家居旗舰店',
+      };
+    },
   },
-});
+}));

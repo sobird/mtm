@@ -1,6 +1,6 @@
 /**
  * menu.ts
- * 
+ *
  * sobird<i@sobird.me> at 2023/10/17 9:54:26 created.
  */
 
@@ -37,12 +37,12 @@ const initialState: IMenuState = {
 
 export default (state = initialState, action: IMenuAction) => {
   switch (action.type) {
-    case UPDATE_MENU :
+    case UPDATE_MENU:
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
     default:
       return state;
   }
-}
+};

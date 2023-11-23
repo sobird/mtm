@@ -5,8 +5,9 @@
  */
 
 import { Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import {
+  Outlet, useNavigate, useParams, useLocation,
+} from 'react-router-dom';
 import { ErrorBoundary, Page } from '@mtm/shared';
 import { useAppSelector } from '@/store/hooks';
 import Loading from '@/components/loading';
@@ -28,19 +29,17 @@ const BreadcrumbItem = [
   },
 ];
 
-
 const ShopProfile = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
-  const merchant = useAppSelector(state => state.merchant);
+  const merchant = useAppSelector(state => { return state.merchant; });
 
   // const [activeKey, setActiveKey] = useState();
 
   const activeKey = params['*'] || '';
 
-
-  console.log('location', location)
+  console.log('location', location);
 
   return (
     <Page
@@ -79,10 +78,10 @@ const ShopProfile = () => {
           navigate(activeKey);
         },
       }}
-      title='店铺信息'
-      className='page-shop-profile'
+      title="店铺信息"
+      className="page-shop-profile"
     >
-      <div className='shop-profile-body'>
+      <div className="shop-profile-body">
         <ErrorBoundary>
           <Suspense fallback={<Loading />}><Outlet /></Suspense>
         </ErrorBoundary>

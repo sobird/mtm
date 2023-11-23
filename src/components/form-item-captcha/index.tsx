@@ -6,29 +6,33 @@
  * sobird<i@sobird.me> at 2023/10/28 1:33:42 created.
  */
 
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Form, FormItemProps } from 'antd';
 import { isSmsCode } from '@/utils/validator';
 import CommonService from '@/services/common';
-import FieldCaptcha, {FieldCaptchaProps} from '@/components/field-captcha';
+import FieldCaptcha, { FieldCaptchaProps } from '@/components/field-captcha';
 
 interface FormItemCaptchaProps extends FormItemProps {
   /** 手机号的字段 name */
   phoneName?: string | number;
   placeholder?: string;
-  onCaptcha?: FieldCaptchaProps["onCaptcha"];
-  fieldProps?: FieldCaptchaProps["fieldProps"];
+  onCaptcha?: FieldCaptchaProps['onCaptcha'];
+  fieldProps?: FieldCaptchaProps['fieldProps'];
 }
 
-const FormItemCaptcha: FC<FormItemCaptchaProps> = ({ phoneName = 'mobile', placeholder, onCaptcha, fieldProps, ...props }) => {
-
-  onCaptcha = onCaptcha || (async mobile => {
+const FormItemCaptcha: FC<FormItemCaptchaProps> = ({
+  phoneName = 'mobile',
+  placeholder,
+  onCaptcha = (async mobile => {
     await CommonService.captcha(mobile);
-  });
+  }),
+  fieldProps,
+  ...props
+}) => {
   return (
     <Form.Item
-      label='验证码'
-      name='captcha'
+      label="验证码"
+      name="captcha"
       required
       rules={[
         {
@@ -48,15 +52,14 @@ const FormItemCaptcha: FC<FormItemCaptchaProps> = ({ phoneName = 'mobile', place
           style: { padding: 0 },
         }}
         fieldProps={{
-          placeholder: placeholder,
-          ...fieldProps
+          placeholder,
+          ...fieldProps,
         }}
         // captchaTextRender={
         //   (paramsTiming, paramsCount) => {
         //     return paramsTiming ? `${paramsCount} 秒后重新获取` : '获取验证码';
         //   }
         // }
-
         // 如果需要失败可以 throw 一个错误出来，onGetCaptcha 会自动停止
         // throw new Error("获取验证码错误")
         onCaptcha={onCaptcha}

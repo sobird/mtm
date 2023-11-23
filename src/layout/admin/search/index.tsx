@@ -9,10 +9,10 @@ import { Link } from 'react-router-dom';
 import { Select, Tag, Button } from 'antd';
 import { SearchOutlined, DeleteOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import debounce from 'lodash/debounce';
+import { Empty } from '@mtm/shared';
 import useLocalStorageState from '@/hooks/useLocalStorageState';
 import { useAppSelector } from '@/store/hooks';
 import { IMenuItem } from '@/services/menu';
-import { Empty } from '@mtm/shared';
 
 import './index.scss';
 
@@ -40,17 +40,17 @@ const SeachDropdown: React.FC<SeachDropdownProps> = ({
 }) => {
   if (keyword) {
     return (
-      <div className='search-select-dropdown-suggest'>
+      <div className="search-select-dropdown-suggest">
         {result?.length > 0 ? (
           result.map(item => {
             console.log('item', item);
             return (
               <Link
                 to={item.path}
-                target='_blank'
-                className='search-select-dropdown-suggest-item'
+                target="_blank"
+                className="search-select-dropdown-suggest-item"
                 key={item.path}
-                onClick={() => onSelected?.(item)}
+                onClick={() => { return onSelected?.(item); }}
               >
                 {item.name}
               </Link>
@@ -64,11 +64,11 @@ const SeachDropdown: React.FC<SeachDropdownProps> = ({
   }
 
   return (
-    <div className='search-select-dropdown-history'>
-      <div className='search-history-head'>
-        <span className='search-history-head-title'>搜索历史</span>
+    <div className="search-select-dropdown-history">
+      <div className="search-history-head">
+        <span className="search-history-head-title">搜索历史</span>
 
-        <Button icon={<DeleteOutlined />} type='link' onClick={onClearHistory}>
+        <Button icon={<DeleteOutlined />} type="link" onClick={onClearHistory}>
           清除记录
         </Button>
       </div>
@@ -76,14 +76,14 @@ const SeachDropdown: React.FC<SeachDropdownProps> = ({
         history.map(item => {
           return (
             <Tag
-              className='search-history-tag'
-              color='#EBEBEB'
+              className="search-history-tag"
+              color="#EBEBEB"
               closeIcon={<CloseCircleOutlined />}
               closable
               key={item.path}
-              onClose={() => onTagClose?.(item)}
+              onClose={() => { return onTagClose?.(item); }}
             >
-              <Link to={item.path} target='_blank' key={item.path}>
+              <Link to={item.path} target="_blank" key={item.path}>
                 {item.name}
               </Link>
             </Tag>
@@ -122,7 +122,7 @@ const find = (data: IMenuItem[], keyword) => {
 };
 
 const Search: React.FC = () => {
-  const { menuTrees } = useAppSelector(state => state.menu);
+  const { menuTrees } = useAppSelector(state => { return state.menu; });
   const [keyword, setKeyword] = useState('');
   const [searchHistory, setSearchHistory] = useLocalStorageState('search_history', []);
 
@@ -130,18 +130,18 @@ const Search: React.FC = () => {
     debounce(value => {
       setKeyword(value);
     }, 200),
-    []
+    [],
   );
 
   /**
    * 记录历史
-   * 
-   * @todo 
+   *
+   * @todo
    * 待测试 保证 搜索历史为最新10条记录
    */
   const recordHistory = useCallback(record => {
     const _searchHistory = [...searchHistory];
-    const index = _searchHistory.findIndex(item => item.path === record.path);
+    const index = _searchHistory.findIndex(item => { return item.path === record.path; });
 
     // 如果已存在则删除
     if (index !== -1) {
@@ -160,40 +160,42 @@ const Search: React.FC = () => {
   const result = find(menuTrees, keyword);
 
   return (
-    <div className='app-search'>
+    <div className="app-search">
       <Select
-        popupClassName='search-select-dropdown'
+        popupClassName="search-select-dropdown"
         showSearch
-        placeholder='搜索你感兴趣的内容'
+        placeholder="搜索你感兴趣的内容"
         allowClear
-        size='middle'
+        size="middle"
         style={{
           width: '50%',
           maxWidth: '580px',
         }}
         suffixIcon={<SearchOutlined />}
-        dropdownRender={() => (
-          <SeachDropdown
-            keyword={keyword}
-            history={searchHistory}
-            result={result}
-            onSelected={recordHistory}
-            onTagClose={item => {
-              const _searchHistory = [...searchHistory];
-              const index = _searchHistory.findIndex(record => record.path === item.path);
+        dropdownRender={() => {
+          return (
+            <SeachDropdown
+              keyword={keyword}
+              history={searchHistory}
+              result={result}
+              onSelected={recordHistory}
+              onTagClose={item => {
+                const _searchHistory = [...searchHistory];
+                const index = _searchHistory.findIndex(record => { return record.path === item.path; });
 
-              if (index !== -1) {
-                _searchHistory.splice(index, 1);
-              }
+                if (index !== -1) {
+                  _searchHistory.splice(index, 1);
+                }
 
-              setSearchHistory(_searchHistory);
-            }}
-            onClearHistory={() => {
-              console.log('onClearHistory', 123);
-              setSearchHistory([]);
-            }}
-          />
-        )}
+                setSearchHistory(_searchHistory);
+              }}
+              onClearHistory={() => {
+                console.log('onClearHistory', 123);
+                setSearchHistory([]);
+              }}
+            />
+          );
+        }}
         onSearch={debounceFn}
       />
     </div>

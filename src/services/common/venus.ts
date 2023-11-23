@@ -54,7 +54,9 @@ export function signature(type: IType = 1) {
  * @returns
  */
 export async function upload(file: File, config: IUploadRequestConfig = {}) {
-  const { filename = 'file', headers, data = {}, type = 1, onProgressPercent, ...others } = config;
+  const {
+    filename = 'file', headers, data = {}, type = 1, onProgressPercent, ...others
+  } = config;
   const { token, bucket, expire } = await signature(type);
   const key = `${bucket}${nanoid()}-${file.name}`;
 
@@ -62,7 +64,7 @@ export async function upload(file: File, config: IUploadRequestConfig = {}) {
     ...data,
     [filename]: file,
     key,
-  },{
+  }, {
     headers: {
       Authorization: token,
       expire,
@@ -79,7 +81,6 @@ export async function upload(file: File, config: IUploadRequestConfig = {}) {
     return res as unknown as IVenusUploadResponse;
   });
 }
-
 
 export interface IOcrRequestData {
   type: 0 | 1 | 3 | number;
@@ -100,7 +101,7 @@ export interface IOcrResponseData {
 
 export async function ocr(params?: IOcrRequestData) {
   return http.get<IOcrResponseData>('/venus/ocr', params).then(res => {
-    if(params?.type !== undefined) {
+    if (params?.type !== undefined) {
       return res[params.type];
     }
 

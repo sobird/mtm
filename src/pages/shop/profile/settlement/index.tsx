@@ -1,12 +1,11 @@
 /**
  * 店铺信息 - 结算信息
- * 
+ *
  * sobird<i@sobird.me> at 2023/11/07 8:45:36 created.
  */
 
-import React from 'react';
 import { ConfigProvider, Form } from 'antd';
-import {Card} from '@mtm/shared';
+import { Card } from '@mtm/shared';
 import './index.scss';
 
 const formItemLayout = {
@@ -25,12 +24,12 @@ const ShopProfileSettlement = () => {
     settlementRate: 20,
   };
   return (
-    <Card title="基本信息" bodyStyle={{paddingTop: 16}}>
+    <Card title="基本信息" bodyStyle={{ paddingTop: 16 }}>
       <ConfigProvider
         theme={{
           components: {
             Form: {
-              itemMarginBottom: 0
+              itemMarginBottom: 0,
             },
           },
         }}
@@ -46,11 +45,11 @@ const ShopProfileSettlement = () => {
               return `${getFieldValue('settlementRate')}%`;
             }}
           </Form.Item>
-          
+
         </Form>
       </ConfigProvider>
     </Card>
-  )
-}
+  );
+};
 
 export default ShopProfileSettlement;

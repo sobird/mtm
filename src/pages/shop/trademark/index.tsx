@@ -4,24 +4,23 @@
  * sobird<i@sobird.me> at 2023/11/07 14:43:46 created.
  */
 
-import React, { Component } from 'react';
-import { Breadcrumb, Form, Radio, Input, DatePicker, message, Tooltip } from 'antd';
-import {ExclamationCircleOutlined} from '@ant-design/icons'
+import { Component } from 'react';
+import {
+  Breadcrumb, Form, Radio, message, Tooltip,
+} from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 import {
   BrandTypeEnum,
   BrandTypeMap,
-  TrademarkRegistrationTypeMap,
   TrademarkRegistrationTypeEnum,
 } from '@/services/merchant';
 
-
-import dayjs from 'dayjs';
 import ButtonTab from './button-tab';
 // import UploadImage from '@component/upload-image';
 import RejectionReason from '@/components/reason';
 import './index.scss';
 
-const Field = Form.field;
 const RadioGroup = Radio.Group;
 
 interface IProps {
@@ -29,15 +28,17 @@ interface IProps {
 }
 
 // 商标注册证明下面的说明组件
-const trademarkRegCertificatesText = () => (
-  <div className='trademarkRegCertificatesText'>
-    <span>1、请上传《商标注册证》或申请日起已满6个月的《注册申请受理通知书》</span>
-    <span>2、上传的《商标注册证》或《商标受理通知书》的申请人或注册人必须为开店公司</span>
-    <span>3、变更中的商标请同时上传《变更受理通知书》和《注册申请受理通知书》</span>
-    <span>4、转入/已转让的商标需上传《转让受理通知书》或者《转让证明》</span>
-    <span>5、《商标注册证》续证完成，而原《商标注册证》已经过期，需同时上传《核准续展注册证明》</span>
-  </div>
-);
+// const trademarkRegCertificatesText = () => {
+//   return (
+//     <div className="trademarkRegCertificatesText">
+//       <span>1、请上传《商标注册证》或申请日起已满6个月的《注册申请受理通知书》</span>
+//       <span>2、上传的《商标注册证》或《商标受理通知书》的申请人或注册人必须为开店公司</span>
+//       <span>3、变更中的商标请同时上传《变更受理通知书》和《注册申请受理通知书》</span>
+//       <span>4、转入/已转让的商标需上传《转让受理通知书》或者《转让证明》</span>
+//       <span>5、《商标注册证》续证完成，而原《商标注册证》已经过期，需同时上传《核准续展注册证明》</span>
+//     </div>
+//   );
+// };
 
 class AddBrand extends Component<IProps> {
   constructor(props: any) {
@@ -150,7 +151,7 @@ class AddBrand extends Component<IProps> {
       callback('商标注册证明最多上传10张');
       return;
     }
-    const errorList = value && value.filter((item: any) => typeof item !== 'string');
+    const errorList = value && value.filter((item: any) => { return typeof item !== 'string'; });
     if (errorList.length > 0) {
       callback('存在上传错误的图片');
       return;
@@ -172,7 +173,7 @@ class AddBrand extends Component<IProps> {
       callback('品牌授权证明最多上传10张');
       return;
     }
-    const errorList = value && value.filter((item: any) => typeof item !== 'string');
+    const errorList = value && value.filter((item: any) => { return typeof item !== 'string'; });
     if (errorList.length > 0) {
       callback('存在上传错误的图片');
       return;
@@ -218,7 +219,7 @@ class AddBrand extends Component<IProps> {
       trademarkRegCertificates: value.trademarkRegCertificates || [],
       trademarkRegExpiryDate: value.trademarkRegExpiryDate,
       ownerIdCertificates:
-        value.ownerIdCertificates && value.ownerIdCertificates.every(url => url) ? value.ownerIdCertificates : [],
+        value.ownerIdCertificates && value.ownerIdCertificates.every(url => { return url; }) ? value.ownerIdCertificates : [],
     };
     const { trademarkId, brandId } = this.state.brand;
     const res = this.isAddTrade
@@ -289,7 +290,7 @@ class AddBrand extends Component<IProps> {
    * @param {*}
    * @return {*}
    */
-  public disabledCondition = (cur: dayjs.Dayjs) => cur.isBefore(dayjs(), 'day') || cur.isSame(dayjs(), 'day');
+  public disabledCondition = (cur: dayjs.Dayjs) => { return cur.isBefore(dayjs(), 'day') || cur.isSame(dayjs(), 'day'); };
 
   /**
    * @description: 商标注册号校验
@@ -360,12 +361,12 @@ class AddBrand extends Component<IProps> {
     ];
 
     return (
-      <div className='brand-detail-container'>
+      <div className="brand-detail-container">
         <Breadcrumb items={BreadcrumbItems} />
-        <div className='brand-detail-box'>
-          <div className='title'>{this.isAddTrade ? '商标添加' : '商标修改'}</div>
+        <div className="brand-detail-box">
+          <div className="title">{this.isAddTrade ? '商标添加' : '商标修改'}</div>
           <RejectionReason list={this.state.rejectReason} />
-          <div className='content'>
+          <div className="content">
             <Form
               // value={formValue}
               onFinish={(value) => {
@@ -375,19 +376,19 @@ class AddBrand extends Component<IProps> {
               }}
             >
               <Form.Item
-                label='商标类型'
+                label="商标类型"
                 // name='brandType'
                 required
                 rules={[
                   {
                     required: true,
                     message: '请选择商标类型',
-                  }
+                  },
                 ]}
                 shouldUpdate
               >
-                {({ getFieldValue, }) => (
-                  <>
+                {({ getFieldValue }) => {
+                  return (
                     <RadioGroup
                       value={getFieldValue('brandType')}
                       onChange={(value: number) => {
@@ -401,14 +402,18 @@ class AddBrand extends Component<IProps> {
                         // handleChange(value);
                       }}
                     >
-                      {Array.from(BrandTypeMap.entries()).map(([value, label]) => (
-                        <Radio value={value} key={value}>
-                          {label} <Tooltip title="自有品牌即品牌下的商标，其权利人是您的开店公司或者开店公司的法定代表人。若不是，则是授权品牌"><ExclamationCircleOutlined /></Tooltip>
-                        </Radio>
-                      ))}
+                      {Array.from(BrandTypeMap.entries()).map(([value, label]) => {
+                        return (
+                          <Radio value={value} key={value}>
+                            {label}
+                            {' '}
+                            <Tooltip title="自有品牌即品牌下的商标，其权利人是您的开店公司或者开店公司的法定代表人。若不是，则是授权品牌"><ExclamationCircleOutlined /></Tooltip>
+                          </Radio>
+                        );
+                      })}
                     </RadioGroup>
-                  </>
-                )}
+                  );
+                }}
               </Form.Item>
               {/* {({ submitForm, setFieldValue, getFieldValue, validateForm, validateField }: any) => (
                 <form>

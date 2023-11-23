@@ -1,4 +1,3 @@
-
 import { http } from '@mtm/shared';
 
 interface IRegisterRequest {

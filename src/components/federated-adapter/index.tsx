@@ -1,12 +1,13 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /**
  * 模块联邦组件适配器
  * 解决 非法Hook调用 的问题
- * 
+ *
  * sobird<i@sobird.me> at 2023/09/15 12:01:38 created.
  */
 
-import { Component, PropsWithChildren, LazyExoticComponent, ComponentType } from "react";
+import {
+  Component, PropsWithChildren, LazyExoticComponent, ComponentType,
+} from 'react';
 
 interface FederatedAdapterProps {
   component: LazyExoticComponent<ComponentType<any>>;
@@ -14,9 +15,19 @@ interface FederatedAdapterProps {
 
 class FederatedAdapter extends Component<PropsWithChildren<FederatedAdapterProps>> {
   refHold: HTMLDivElement;
+
   constructor(props: FederatedAdapterProps) {
     super(props);
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.refHold;
+  }
+
+  componentDidMount() {
+    this.init();
+  }
+
+  componentDidUpdate() {
+    //
   }
 
   init = async () => {
@@ -26,20 +37,12 @@ class FederatedAdapter extends Component<PropsWithChildren<FederatedAdapterProps
     // @ts-ignore
     const ReactDOM = await import('market/newReactDOM');
     ReactDOM.createRoot(this.refHold).render(React.createElement(component, props, children));
-  }
-
-  componentDidUpdate() {
-    //
-  }
-
-  componentDidMount() {
-    this.init();
-  }
+  };
 
   render() {
     return (
-      <div className="federated-adapter" ref={(ref) => (this.refHold = ref)}></div>
-    )
+      <div className="federated-adapter" ref={(ref) => { this.refHold = ref; }} />
+    );
   }
 }
 

@@ -1,11 +1,11 @@
 /**
  * authorisation
- * 
+ *
  * sobird<i@sobird.me> at 2023/06/22 21:40:58 created.
  */
 
 import { http } from '@mtm/shared';
-import { signJWT } from "@/utils/jwt";
+import { signJWT } from '@/utils/jwt';
 
 export interface ILoginRequest {
   interCode: string;
@@ -25,18 +25,17 @@ const AuthService = {
       const token = await signJWT({
         mobile,
       });
-  
-      res.token = token
+
+      res.token = token;
     });
   },
 
   async logout() {
-    return http.post('/auth/logout').then( res => {
-      // todo 
+    return http.post('/auth/logout').then(res => {
+      // todo
       console.log('res', res);
     });
-  }
+  },
 };
 
 export default AuthService;
-

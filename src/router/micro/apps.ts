@@ -1,18 +1,18 @@
 /**
  * apps.ts
- * 
+ *
  * sobird<i@sobird.me> at 2023/09/25 1:31:55 created.
  */
 
-import { RegistrableApp } from "qiankun";
+import { RegistrableApp } from 'qiankun';
 import store from '@/store';
-import history from "@/utils/history";
+import history from '@/utils/history';
 import { updateMicro } from '@/store/actions/app';
 
-const getActiveRule = (hash: string) => (location) => location.hash.startsWith(hash);
+const getActiveRule = (hash: string) => { return (location) => { return location.hash.startsWith(hash); }; };
 
 const loader = (loading) => {
-  if(loading) {
+  if (loading) {
     store.dispatch(updateMicro({ loading }));
   } else {
     window.microTimer = setTimeout(() => {
@@ -32,7 +32,7 @@ const apps: RegistrableApp<any>[] = [
       store,
       window,
       history,
-    }
+    },
   },
 ];
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from 'antd';
 
 import './buttontab.scss';
@@ -17,7 +16,7 @@ export default function (props: IProps) {
    * @return {*}
    */
   const handClick = (func: any) => {
-    func && func();
+    func?.();
   };
 
   /**
@@ -30,9 +29,9 @@ export default function (props: IProps) {
     return (config || []).map((item: any) => {
       return (
         <Button
-          onClick={() => handClick(item.func)}
+          onClick={() => { return handClick(item.func); }}
           type={item.type}
-          className='defaultBtn'
+          className="defaultBtn"
           style={item.style}
           key={item.key}
           disabled={item.disabled}
@@ -42,8 +41,9 @@ export default function (props: IProps) {
       );
     });
   };
+  const { buttonTabBoxStyle } = props;
   return (
-    <div className='button-tab-box' style={props.buttonTabBoxStyle}>
+    <div className="button-tab-box" style={buttonTabBoxStyle}>
       {getDoms()}
     </div>
   );

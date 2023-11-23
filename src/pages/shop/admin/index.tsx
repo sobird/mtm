@@ -7,26 +7,15 @@
  * sobird<i@sobird.me> at 2023/10/26 15:17:34 created.
  */
 
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Button, Form, Input, Space } from 'antd';
-import FieldIdCard from '@/components/field-id-card';
-import FieldTermPick from '@/components/field-term-picker';
-import isIdCard from '@/utils/validator/isIdentityCard';
-import isMobilePhone from '@/utils/validator/isMobilePhone';
-import FieldUploadFile from '@/components/field-upload-file';
-import RejectionReason from '@/components/reason';
+import {
+  Alert, Button, Space,
+} from 'antd';
 import { Page } from '@mtm/shared';
+import RejectionReason from '@/components/reason';
 import AdminForm from './components/admin-form';
 
-
 import './index.scss';
-
-const formItemLayout = {
-  labelCol: {
-    flex: '0 0 142px',
-  },
-};
 
 const BreadcrumbItem = [
   {
@@ -45,24 +34,23 @@ const BreadcrumbItem = [
 
 function ShopAdmin() {
   const navigate = useNavigate();
-  const [form] = Form.useForm();
 
   return (
     <Page
-      className='shop-base-admin'
-      title='店铺管理员'
+      className="shop-base-admin"
+      title="店铺管理员"
       breadcrumb={{
         items: BreadcrumbItem,
       }}
     >
-      <RejectionReason list={['不通过', '用户名填写错误哦']} type='error' />
-       
+      <RejectionReason list={['不通过', '用户名填写错误哦']} type="error" />
+
       <Alert
-        message={
-          <div className='admin-alert'>
+        message={(
+          <div className="admin-alert">
             您已申请修改管理员信息，当前处于审核中，审核期间不可以再次修改信息，感谢您的耐心等待。
             <Button
-              type='link'
+              type="link"
               onClick={() => {
                 navigate('/shop/admin');
               }}
@@ -70,18 +58,18 @@ function ShopAdmin() {
               查看申请信息
             </Button>
           </div>
-        }
-        type='warning'
+        )}
+        type="warning"
         showIcon
       />
 
       {/* 删除驳回申请 */}
       <Alert
-        message={
-          <div className='admin-alert'>
+        message={(
+          <div className="admin-alert">
             <span>审核驳回。您申请修改的管理员信息审核不通过，请针对驳回原因进行修改后再次提交</span>
             <Button
-              type='link'
+              type="link"
               onClick={() => {
                 navigate('/shop/admin');
               }}
@@ -89,11 +77,11 @@ function ShopAdmin() {
               去修改
             </Button>
           </div>
-        }
-        type='error'
+        )}
+        type="error"
         closable
         showIcon
-        onClose={() => false}
+        onClose={() => { return false; }}
         // extra={(
         //   <Button
         //     icon="close" type="text" status="normal"
@@ -122,7 +110,7 @@ function ShopAdmin() {
 
       <AdminForm>
         <Space style={{ marginLeft: 142 }}>
-          <Button type='primary' htmlType='submit'>
+          <Button type="primary" htmlType="submit">
             更新店铺管理员信息
           </Button>
         </Space>

@@ -6,7 +6,9 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Card, Button, Alert, Radio, Cascader, Modal, message, Table } from 'antd';
+import {
+  Form, Card, Button, Alert, Radio, Cascader, Modal, message, Table,
+} from 'antd';
 import LayoutEntry from '@/layout/entry';
 import MerchantService, {
   IMerchantCategory,
@@ -16,9 +18,9 @@ import MerchantService, {
 } from '@/services/merchant';
 import { getRowSpans, listToTree } from '@/utils';
 
-const { Column } = Table;
-
 import './index.scss';
+
+const { Column } = Table;
 
 function EntryShop() {
   const navigate = useNavigate();
@@ -37,11 +39,11 @@ function EntryShop() {
         const categoryId = base.category;
         const categoryValues = [categoryId];
 
-        const categoryItem = categoryList.find(item => item.id === base.category);
+        const categoryItem = categoryList.find(item => { return item.id === base.category; });
         let categoryParentId = categoryItem.parentId;
 
         while (categoryParentId) {
-          const categoryItem = categoryList.find(item => item.id === categoryParentId);
+          const categoryItem = categoryList.find(item => { return item.id === categoryParentId; });
           categoryValues.unshift(categoryItem.id);
           categoryParentId = categoryItem.parentId;
         }
@@ -85,8 +87,11 @@ function EntryShop() {
       value: item.poiType,
       label: (
         <>
-          <span className='title'>企业{item.poiTypeName}</span>
-          <span className='desc'>{item.poiTypeDesc}</span>
+          <span className="title">
+            企业
+            {item.poiTypeName}
+          </span>
+          <span className="desc">{item.poiTypeDesc}</span>
         </>
       ),
     };
@@ -154,43 +159,43 @@ function EntryShop() {
 
   return (
     <LayoutEntry>
-      <div className='entry-shop'>
-        <div className='entry-shop-tips'>
+      <div className="entry-shop">
+        <div className="entry-shop-tips">
           <Alert
-            message='目前平台仅开放数码家电/办公、宠物生活、母婴玩具、服饰鞋包、运动户外、汽配摩托、医药健康类目的商家自入驻，其余类目邀约制入驻请勿提交申请。入驻审核时效预计在7个工作日内，感谢支持。'
-            type='info'
+            message="目前平台仅开放数码家电/办公、宠物生活、母婴玩具、服饰鞋包、运动户外、汽配摩托、医药健康类目的商家自入驻，其余类目邀约制入驻请勿提交申请。入驻审核时效预计在7个工作日内，感谢支持。"
+            type="info"
             showIcon
           />
         </div>
 
-        <div className='entry-shop-main'>
+        <div className="entry-shop-main">
           <h2>请选择您的店铺类型及主营类目</h2>
 
           <Card>
-            <Form form={form} onFinish={onFinish} layout='vertical'>
-              <Form.Item name='category' label='主营类目'>
+            <Form form={form} onFinish={onFinish} layout="vertical">
+              <Form.Item name="category" label="主营类目">
                 <Cascader
                   options={categoryOptions}
                   fieldNames={{ label: 'name', value: 'id' }}
-                  placeholder='主营类目决定您店铺的经营范围，请谨慎选择'
+                  placeholder="主营类目决定您店铺的经营范围，请谨慎选择"
                   style={{ width: 430 }}
                 />
               </Form.Item>
               <Form.Item
-                name='poiType'
-                label={
+                name="poiType"
+                label={(
                   <>
                     店铺类型
-                    <Button onClick={() => setOpen(true)} type='link' className='how-select'>
+                    <Button onClick={() => { return setOpen(true); }} type="link" className="how-select">
                       该如何选择？
                     </Button>
                   </>
-                }
+                )}
               >
                 <Radio.Group
                   onChange={event => {
                     const { value } = event.target;
-                    const poi = entryType.find(item => item.poiType == value);
+                    const poi = entryType.find(item => { return item.poiType == value; });
 
                     Modal.warning({
                       title: `确定更改店铺类型为 ${poi.poiTypeName} ？`,
@@ -199,16 +204,16 @@ function EntryShop() {
                     });
                   }}
                   options={options}
-                  className='shop-type-radio'
+                  className="shop-type-radio"
                 />
               </Form.Item>
             </Form>
           </Card>
         </div>
 
-        <div className='entry-footer'>
+        <div className="entry-footer">
           <Button
-            type='primary'
+            type="primary"
             onClick={() => {
               form.submit();
             }}
@@ -219,19 +224,19 @@ function EntryShop() {
       </div>
 
       <Modal
-        title='企业店铺类型和资质说明'
+        title="企业店铺类型和资质说明"
         centered
         open={open}
-        onOk={() => setOpen(false)}
-        onCancel={() => setOpen(false)}
+        onOk={() => { return setOpen(false); }}
+        onCancel={() => { return setOpen(false); }}
         width={1000}
-        okText='我知道了'
+        okText="我知道了"
       >
         <Table bordered pagination={false} dataSource={data}>
           <Column
-            title='店铺类型'
-            dataIndex='poiTypeName'
-            key='poiTypeName'
+            title="店铺类型"
+            dataIndex="poiTypeName"
+            key="poiTypeName"
             render={(text, _record, index) => {
               return {
                 children: text,
@@ -241,7 +246,7 @@ function EntryShop() {
               };
             }}
           />
-          <Column title='店铺说明' dataIndex='poiTypeDesc' key='poiTypeDesc' />
+          <Column title="店铺说明" dataIndex="poiTypeDesc" key="poiTypeDesc" />
         </Table>
       </Modal>
     </LayoutEntry>

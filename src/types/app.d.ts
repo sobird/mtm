@@ -3,7 +3,7 @@
 declare interface Window {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
   qiankunStarted: boolean;
-  microTimer: Timeout;
+  microTimer: Node.Timeout;
   config: {
     appId: string;
     version: number;

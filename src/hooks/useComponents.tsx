@@ -1,6 +1,6 @@
-import React, { useContext, createContext } from 'react'
-import { FC, ComponentType as CT } from 'react'
-
+import React, {
+  useContext, createContext, FC, ComponentType as CT, PropsWithChildren, useMemo,
+} from 'react';
 
 export interface Heading {
   depth: number
@@ -21,17 +21,17 @@ export interface Entry {
 }
 
 export interface PlaygroundProps {
-  className?: string
-  style?: any
-  wrapper?: CT<any>
-  components: ComponentsMap
+  // className?: string
+  // style?: any
+  // wrapper?: CT<any>
+  // components: ComponentsMap
   component: React.ReactElement;
-  position: number
+  // position: number
   code: string
-  scope: Record<string, any>
-  language?: string
-  showLivePreview?: boolean
-  useScoping?: boolean
+  // scope: Record<string, any>
+  // language?: string
+  // showLivePreview?: boolean
+  // useScoping?: boolean
 }
 
 export interface LayoutProps {
@@ -46,35 +46,42 @@ export interface ComponentsMap {
   [key: string]: any
 }
 
-const DefNotFound: FC = () => <>Not found</>
-const DefLayout: FC = ({ children }) => <>{children}</>
-const DefPlayground: FC<PlaygroundProps> = ({ component, code }) => (
-  <div>
-    {component}
-    <pre>{code}</pre>
-  </div>
-)
+const DefNotFound: FC = () => { return <>Not found</>; };
+const DefLayout: FC<PropsWithChildren> = ({ children }) => { return children; };
+const DefPlayground: FC<PlaygroundProps> = ({ component, code }) => {
+  return (
+    <div>
+      {component}
+      <pre>{code}</pre>
+    </div>
+  );
+};
 
 const defaultComponents: ComponentsMap = {
   layout: DefLayout,
   notFound: DefNotFound,
   playground: DefPlayground,
-}
+};
 
 export interface ComponentsProviderProps {
   components: ComponentsMap
 }
 
-const ctx = createContext<ComponentsMap>(defaultComponents)
-export const ComponentsProvider: FC<ComponentsProviderProps> = ({
+const ctx = createContext<ComponentsMap>(defaultComponents);
+export const ComponentsProvider: FC<PropsWithChildren<ComponentsProviderProps>> = ({
   components: themeComponents = {},
   children,
-}) => (
-  <ctx.Provider value={{ ...defaultComponents, ...themeComponents }}>
-    {children}
-  </ctx.Provider>
-)
+}) => {
+  const value = useMemo(() => {
+    return { ...defaultComponents, ...themeComponents };
+  }, [themeComponents]);
+  return (
+    <ctx.Provider value={value}>
+      {children}
+    </ctx.Provider>
+  );
+};
 
 export const useComponents = (): ComponentsMap => {
-  return useContext(ctx)
-}
+  return useContext(ctx);
+};

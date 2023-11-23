@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { Button, Result } from 'antd';
 
 interface NoneSupportProps {
@@ -14,7 +14,7 @@ const NoneSupport: React.FC<NoneSupportProps> = ({ text }) => {
       extra={(
         <Button
           onClick={() => {
-            navigate(-1)
+            navigate(-1);
           }}
         >
           我知道了
@@ -22,6 +22,6 @@ const NoneSupport: React.FC<NoneSupportProps> = ({ text }) => {
       )}
     />
   );
-}
+};
 
 export default NoneSupport;

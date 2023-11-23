@@ -34,20 +34,20 @@ const CommonService = {
       { t: +new Date() },
       {
         baseURL: '/',
-        parser: res => res.data,
-      }
-    )
+        parser: res => { return res.data; },
+      },
+    );
   },
 
   /** 生成验证码 */
   async captcha(mobile: string) {
     // 随机六位数
-    const i = Math.random() * (999999-100000) + 100000; 
-    const captcha_num = parseInt(i as unknown as string, 10);
-    
+    const i = Math.random() * (999999 - 100000) + 100000;
+    const captchaNum = parseInt(i as unknown as string, 10);
+
     return http.get<ICaptchaResponse>('/captcha', { mobile }).then(res => {
-      res.captcha = captcha_num;
-      Cookies.set('captcha', captcha_num as unknown as string);
+      res.captcha = captchaNum;
+      Cookies.set('captcha', captchaNum as unknown as string);
 
       message.success(`【美团】${res.captcha}（商户注册验证码）。工作人员不会向您索要，请勿向任何人泄露，以免造成账户或资金损失。`, 5);
       return res;
@@ -55,9 +55,9 @@ const CommonService = {
   },
 
   /** 通用 验证 验证码 */
-  async validateCaptcha(params: {mobilePhone: string, captcha: string}) {
+  async validateCaptcha(params: { mobilePhone: string, captcha: string }) {
     return http.post('/captcha', params);
-  }
+  },
 };
 
 export default CommonService;

@@ -49,22 +49,22 @@ const onClick = ({ key }) => {
 };
 
 const Header: React.FC = () => {
-  const { collapsed } = useSelector((state: IStoreState) => state.app);
+  const { collapsed } = useSelector((state: IStoreState) => { return state.app; });
 
   return (
-    <header className='app-header'>
-      <div className='header-brand'>
-        <a href='/' title='美团电商商家管理后台'>
-          <img src={collapsed ? SamllLogo : NomalLogo}></img>
+    <header className="app-header">
+      <div className="header-brand">
+        <a href="/" title="美团电商商家管理后台">
+          <img src={collapsed ? SamllLogo : NomalLogo} alt="" />
         </a>
       </div>
 
-      <div className='header-bread'>
+      <div className="header-bread">
         <Search />
-        <div className='header-nav'>
-          <Dropdown menu={{ items, onClick }} overlayClassName='avatar-dropdown'>
-            <div className='app-avatar'>
-              <img src={AvatarDefault} />
+        <div className="header-nav">
+          <Dropdown menu={{ items, onClick }} overlayClassName="avatar-dropdown">
+            <div className="app-avatar">
+              <img src={AvatarDefault} alt="" />
             </div>
           </Dropdown>
         </div>

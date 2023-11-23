@@ -39,13 +39,29 @@ const FieldUploadFile: React.FC<PropsWithChildren<FieldUploadFileProps>> = ({
   children,
   ...props
 }) => {
-  const [valuePair, setValuePair] = useMergedState(() => defaultValue, {
-    value,
-    onChange,
-  });
+  const [valuePair, setValuePair] = useMergedState(
+    () => {
+      return defaultValue;
+    },
+    {
+      value,
+      onChange,
+    },
+  );
 
   const [fileList, setFileList] = useState<UploadFile[]>(
-    valuePair?.filter(item => item).map(url => ({ url, status: 'done', uid: url, name: url }))
+    valuePair
+      ?.filter(item => {
+        return item;
+      })
+      .map(url => {
+        return {
+          url,
+          status: 'done',
+          uid: url,
+          name: url,
+        };
+      }),
   );
 
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -54,14 +70,15 @@ const FieldUploadFile: React.FC<PropsWithChildren<FieldUploadFileProps>> = ({
     alt: '',
   });
 
-  const onPreview = async (file: UploadFile) => {
+  const onPreview = async (fileVal: UploadFile) => {
+    const file = fileVal;
     if (!file.url && !file.preview) {
       file.preview = await fileToBase64(file.originFileObj as RcFile);
     }
 
     setPreviewImage({
       src: file.url || (file.preview as string),
-      alt: file.name || file.url?.substring(file.url?.lastIndexOf('/') + 1),
+      alt: file.name || file.url?.substring(file.url?.lastIndexOf('/') || 0 + 1),
     });
     setPreviewOpen(true);
   };
@@ -78,7 +95,9 @@ const FieldUploadFile: React.FC<PropsWithChildren<FieldUploadFileProps>> = ({
           valuePair.pop();
           setValuePair([...valuePair]);
         }}
-        customRequest={({ file, action, onSuccess, onProgress, onError, ...options }) => {
+        customRequest={({
+          file, action, onSuccess, onProgress, onError, ...options
+        }) => {
           const config: { [key in string]: unknown } = { ...options };
           if (action) {
             config.url = action;
@@ -94,7 +113,12 @@ const FieldUploadFile: React.FC<PropsWithChildren<FieldUploadFileProps>> = ({
               onSuccess(res);
               onUploadSuccess?.(res);
 
-              setValuePair([...valuePair.filter(item => item), res.url]);
+              setValuePair([
+                ...valuePair.filter(item => {
+                  return item;
+                }),
+                res.url,
+              ]);
             })
             .catch(onError);
         }}
@@ -104,7 +128,14 @@ const FieldUploadFile: React.FC<PropsWithChildren<FieldUploadFileProps>> = ({
       >
         {maxCount && fileList?.length >= maxCount && autoHidden ? null : children}
       </Upload>
-      <Modal open={previewOpen} title={previewImage.alt} footer={null} onCancel={() => setPreviewOpen(false)}>
+      <Modal
+        open={previewOpen}
+        title={previewImage.alt}
+        footer={null}
+        onCancel={() => {
+          return setPreviewOpen(false);
+        }}
+      >
         <img alt={previewImage.alt} style={{ width: '100%' }} src={previewImage.src} />
       </Modal>
     </>

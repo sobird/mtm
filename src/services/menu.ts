@@ -4,8 +4,8 @@
  * sobird<i@sobird.me> at 2023/09/21 14:17:06 created.
  */
 
-import { listToTree } from '@/utils';
 import { http } from '@mtm/shared';
+import { listToTree } from '@/utils';
 
 export interface IMenuItem {
   title: string;
@@ -52,11 +52,11 @@ export const Favorites: IMenuItem = {
 
 const MenuService = {
   async list(parentId?: number) {
-    return http.get<IMenuListResponse>('/menu', { parentId }).then(({menuItems = [], favorites = []}) => {
-      const items = menuItems.sort((a: any, b: any) => a.index - b.index);
+    return http.get<IMenuListResponse>('/menu', { parentId }).then(({ menuItems = [], favorites = [] }) => {
+      const items = menuItems.sort((a: any, b: any) => { return a.index - b.index; });
       const menuTrees = listToTree(items);
       // 标记最后一项
-      menuTrees[menuTrees.length - 1]['last'] = true;
+      menuTrees[menuTrees.length - 1].last = true;
 
       // Favorites.children = favorites.map(item => {
       //   item.url = item.url + '?fav';

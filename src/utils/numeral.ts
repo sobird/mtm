@@ -81,7 +81,7 @@ export const LOCALE = {
 
 numeral.register('locale', 'zh', LOCALE);
 numeral.locale('zh');
-//numeral.zeroFormat('零');
+// numeral.zeroFormat('零');
 numeral.nullFormat('');
 // numeral.defaultFormat('0.00');
 
@@ -91,11 +91,11 @@ numeral.nullFormat('');
  * @param precision
  * @returns
  */
-numeral.fn.round = function (precision = 2) {
-  return Math.round(Math.pow(10, precision) * this.value()) / Math.pow(10, precision);
+numeral.fn.round = function round(precision = 2) {
+  return Math.round(10 ** precision * this.value()) / 10 ** precision;
 };
 
-numeral.fn.isFloat = function () {
+numeral.fn.isFloat = function isFloat() {
   const n: any = this.value();
   return parseInt(n, 10) < parseFloat(n);
 };
@@ -114,12 +114,12 @@ numeral.register('format', 'custom formats', {
   format(value, format, roundingFunction) {
     const space = numeral._.includes(format, ' %') ? ' ' : '';
     let output;
-    value *= 100;
+    const newValue = value * 100;
 
     // check for space before %
-    format = format.replace(/\s?%/, '');
+    const newFormat = format.replace(/\s?%/, '');
 
-    output = numeral._.numberToFormat(value, format, roundingFunction);
+    output = numeral._.numberToFormat(newValue, newFormat, roundingFunction);
 
     if (numeral._.includes(output, ')')) {
       output = output.split('');

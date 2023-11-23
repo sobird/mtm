@@ -1,10 +1,10 @@
 /**
  * OCR文字识别接口服务
- * 
+ *
  * sobird<i@sobird.me> at 2023/08/15 23:44:11 created.
  */
 
-import { http } from '@mtm/shared';;
+import { http } from '@mtm/shared';
 
 export interface IOcrRequestData {
   type: number;
@@ -26,7 +26,7 @@ export interface IOcrResponseData {
 const OcrService = {
   get(params?: IOcrRequestData) {
     return http.get<IOcrResponseData[]>('/ocr', params);
-  }
-}
+  },
+};
 
 export default OcrService;

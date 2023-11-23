@@ -48,14 +48,14 @@ const Setting = () => {
       breadcrumb={{
         items: BreadcrumbItem,
       }}
-      title='账户设置'
+      title="账户设置"
       extra={[<Button>操作</Button>]}
       bodyStyle={{
-        flexDirection: "row",
-        gap: 15
+        flexDirection: 'row',
+        gap: 15,
       }}
     >
-      <Menu style={{ width: 200 }} defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode='inline' items={items} />
+      <Menu style={{ width: 200 }} defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']} mode="inline" items={items} />
       <Outlet />
     </Page>
   );

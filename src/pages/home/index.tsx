@@ -10,36 +10,36 @@ import useFederatedComponent from '@/hooks/useFederatedComponent';
 
 import './index.scss';
 
-const LatestNewsCard = React.lazy(() => import('market/latest-news'));
-const MarketActivityCard = React.lazy(() => import('market/market-activity'));
-const FundManageCard = React.lazy(() => import('market/fund-manage'));
-const OverviewCard = React.lazy(() => import('market/overview'));
-const RealdataCard = React.lazy(() => import('market/realdata'));
-const MerchantGrowthCard = React.lazy(() => import('market/merchant-growth'));
-const ProductManageCard = React.lazy(() => import('market/product-manage'));
-const TrendingChartCard = React.lazy(() => import('market/trending-chart'));
-const ViolationsCard = React.lazy(() => import('market/violations'));
-const GoldMerchantCard = React.lazy(() => import('market/gold-merchant'));
+const LatestNewsCard = React.lazy(() => { return import('market/latest-news'); });
+const MarketActivityCard = React.lazy(() => { return import('market/market-activity'); });
+const FundManageCard = React.lazy(() => { return import('market/fund-manage'); });
+const OverviewCard = React.lazy(() => { return import('market/overview'); });
+const RealdataCard = React.lazy(() => { return import('market/realdata'); });
+const MerchantGrowthCard = React.lazy(() => { return import('market/merchant-growth'); });
+const ProductManageCard = React.lazy(() => { return import('market/product-manage'); });
+const TrendingChartCard = React.lazy(() => { return import('market/trending-chart'); });
+const ViolationsCard = React.lazy(() => { return import('market/violations'); });
+const GoldMerchantCard = React.lazy(() => { return import('market/gold-merchant'); });
 
 const Home: React.FC = () => {
   // const { Component: FederatedComponent, errorLoading } = useFederatedComponent('//awp-assets.meituan.net/thh/thh_feb_market/marketRemoteEntry.js', 'marketApp', './market-activity');
 
   return (
-    <div className='page-home'>
+    <div className="page-home">
       <Row gutter={[15, 15]}>
         <Col span={24}>
-          <LatestNewsCard style={{paddingBottom: 0}}/>
+          <LatestNewsCard style={{ paddingBottom: 0 }} />
         </Col>
 
         <Col span={24}>
-          <OverviewCard className='page-home-card' style={{padding: '0px'}} />
+          <OverviewCard className="page-home-card" style={{ padding: '0px' }} />
         </Col>
 
         <Col span={12}>
-          <RealdataCard bodyStyle={{height: 198}} />
+          <RealdataCard bodyStyle={{ height: 198 }} />
         </Col>
         <Col span={12}>
-          <MerchantGrowthCard bodyStyle={{height: 198}}/>
+          <MerchantGrowthCard bodyStyle={{ height: 198 }} />
         </Col>
 
         <Col span={12}>
@@ -49,19 +49,16 @@ const Home: React.FC = () => {
           <FundManageCard />
         </Col>
 
-      
-
-      
         <Col span={12}>
-          <GoldMerchantCard bodyStyle={{height: 465}}/>
+          <GoldMerchantCard bodyStyle={{ height: 465 }} />
         </Col>
 
         <Col span={12}>
           <Row gutter={[0, 15]}>
             <Col span={24}>
-              <MarketActivityCard max={4} bodyStyle={{paddingTop: 6}} />
+              <MarketActivityCard max={4} bodyStyle={{ paddingTop: 6 }} />
             </Col>
-            <Col span={24}><ViolationsCard bodyStyle={{paddingTop: 16}}/></Col>
+            <Col span={24}><ViolationsCard bodyStyle={{ paddingTop: 16 }} /></Col>
           </Row>
         </Col>
 

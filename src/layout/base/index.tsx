@@ -16,25 +16,25 @@ interface BaseProps {
 
 const Base: React.FC<PropsWithChildren<BaseProps>> = ({ children, hasWindow = true, hasBackground = true }) => {
   return (
-    <div className='layout-base'>
-      <div className='base-header'>
-        <div className='base-header-box'>
-          <img src={mtmLogo} />
+    <div className="layout-base">
+      <div className="base-header">
+        <div className="base-header-box">
+          <img src={mtmLogo} alt="" />
         </div>
       </div>
-      <div className='base-body' style={{background: hasBackground ? '' : 'none'}}>
-        {hasWindow ? <div className='base-body-box'><div className='base-window'>{children}</div></div> : children}
+      <div className="base-body" style={{ background: hasBackground ? '' : 'none' }}>
+        {hasWindow ? <div className="base-body-box"><div className="base-window">{children}</div></div> : children}
       </div>
-      <div className='base-footer'>
-        <div className='copyright'>
-          <a target='_blank' href='https://beian.miit.gov.cn' rel='noreferrer'>
+      <div className="base-footer">
+        <div className="copyright">
+          <a target="_blank" href="https://beian.miit.gov.cn" rel="noreferrer">
             <span>©2020 meituan.com 京ICP备10211739号</span>
           </a>
-          <img src={policeIcon} />
+          <img src={policeIcon} alt="" />
           <a
-            target='_blank'
-            href='http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11000002002052'
-            rel='noreferrer'
+            target="_blank"
+            href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11000002002052"
+            rel="noreferrer"
           >
             <span>京公网安备11000002002052号</span>
           </a>

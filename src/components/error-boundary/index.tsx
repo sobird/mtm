@@ -4,8 +4,8 @@
  * sobird<i@sobird.me> at 2023/05/09 1:51:06 created.
  */
 
-import React, { PropsWithChildren } from "react";
-import { Result, Button } from "antd";
+import React, { PropsWithChildren } from 'react';
+import { Result, Button } from 'antd';
 
 interface ErrorBoundaryProps {
   title?: React.ReactNode;
@@ -23,7 +23,7 @@ export interface ErrorInfo {
   componentStack: string;
 }
 
-const reloadPage = () => window.location.reload();
+const reloadPage = () => { return window.location.reload(); };
 
 class ErrorBoundary extends React.Component<PropsWithChildren<ErrorBoundaryProps>, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
@@ -44,7 +44,7 @@ class ErrorBoundary extends React.Component<PropsWithChildren<ErrorBoundaryProps
   }
 
   private handleRetry = () => {
-    const { onRetry = reloadPage } = this.props;
+    const { onRetry } = this.props;
     this.setState({ error: null }, onRetry);
   };
 
@@ -59,8 +59,8 @@ class ErrorBoundary extends React.Component<PropsWithChildren<ErrorBoundaryProps
       return (
         <Result
           status="error"
-          title={title || "应用出现异常"}
-          subTitle={
+          title={title}
+          subTitle={(
             <>
               请稍后重试，无法恢复时请反馈给客服、运营同学
               {errorMessage && (
@@ -70,12 +70,12 @@ class ErrorBoundary extends React.Component<PropsWithChildren<ErrorBoundaryProps
                 </>
               )}
             </>
-          }
-          extra={
+          )}
+          extra={(
             <Button type="primary" onClick={this.handleRetry}>
               重试
             </Button>
-          }
+          )}
         />
       );
     }
@@ -83,5 +83,10 @@ class ErrorBoundary extends React.Component<PropsWithChildren<ErrorBoundaryProps
     return children;
   }
 }
+
+ErrorBoundary.defaultProps = {
+  title: '应用出现异常',
+  onRetry: reloadPage,
+};
 
 export default ErrorBoundary;

@@ -1,12 +1,12 @@
 /**
  * merchant.ts
- * 
+ *
  * sobird<i@sobird.me> at 2023/10/24 1:43:57 created.
  */
 
 import { Action } from 'redux';
-import { UPDATE_MERCHANT } from '@/store/actions/merchant'
-import { IMerchantEntity } from '@/services/merchant.d'
+import { UPDATE_MERCHANT } from '@/store/actions/merchant';
+import { IMerchantEntity } from '@/services/merchant.d';
 
 export type IMerchantState = Partial<IMerchantEntity>;
 export interface IMerchantAction extends Action {
@@ -35,17 +35,17 @@ const initialState: IMerchantState = {
   exited: false,
   imInfo: {
     imSeparateOnShadow: false,
-  }
+  },
 };
 
-export default (state = initialState, action: IMerchantAction) => {
+export default (state = initialState, action: IMerchantAction = { type: '', payload: {} }) => {
   switch (action.type) {
-    case UPDATE_MERCHANT :
+    case UPDATE_MERCHANT:
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
     default:
       return state;
   }
-}
+};

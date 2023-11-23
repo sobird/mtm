@@ -1,20 +1,20 @@
 /**
  * 侧边栏导航组件
- * 
- * @todo 
+ *
+ * @todo
  * 优化菜单管理功能 代码 和 CSS iconfont
  *
  * sobird<i@sobird.me> at 2023/09/12 15:46:42 created.
  */
 
 import React, { useEffect, useState } from 'react';
-import {message} from 'antd';
+import { message, Button, Menu } from 'antd';
 import classNames from 'classnames';
 
-import { PlusCircleOutlined, MinusCircleOutlined, PlusCircleFilled, MinusCircleFilled } from '@ant-design/icons';
+import {
+  PlusCircleOutlined, MinusCircleOutlined, PlusCircleFilled, MinusCircleFilled,
+} from '@ant-design/icons';
 
-import { nanoid } from 'nanoid';
-import { Button, Menu } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import MenuService, { Favorites } from '@/services/menu';
 
@@ -33,8 +33,8 @@ const Aside: React.FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const [editMode, setEditMode] = useState(false);
 
-  const { collapsed } = useAppSelector(state => state.app);
-  const { menuTrees: [First, ...Others], favorites, defaultOpenKeys } = useAppSelector(state => state.menu);
+  const { collapsed } = useAppSelector(state => { return state.app; });
+  const { menuTrees: [First, ...Others], favorites, defaultOpenKeys } = useAppSelector(state => { return state.menu; });
 
   // defaultOpenKeys.push(Favorites.id);
 
@@ -43,13 +43,12 @@ const Aside: React.FunctionComponent = () => {
 
   // 收藏夹
   Favorites.children = favorites.map(item => {
-    const _item = {...item};
-    _item.url = _item.url + '?fav';
-    return _item;
+    const itemAssign = { ...item };
+    itemAssign.url += '?fav';
+    return itemAssign;
   });
 
   const menuTrees = [Favorites, ...Others];
-
 
   useEffect(() => {
     dispatch(fetchMenuThunkAction);
@@ -63,11 +62,11 @@ const Aside: React.FunctionComponent = () => {
   const currentURL = location.pathname + location.search;
 
   return (
-    <aside className='app-aside'>
-      <div className='app-menu'>
+    <aside className="app-aside">
+      <div className="app-menu">
         {menuTrees.length > 1 && (
           <Menu
-            mode='inline'
+            mode="inline"
             inlineCollapsed={collapsed}
             selectedKeys={[currentURL, location.pathname]}
             defaultOpenKeys={collapsed ? [] : dok}
@@ -78,7 +77,7 @@ const Aside: React.FunctionComponent = () => {
             {/* 后台首页 */}
             <Item key={First.url}>
               <Link to={First.url}>
-                {<i className={`icon iconfont icon-${First.icon}`} />}
+                <i className={`icon iconfont icon-${First.icon}`} />
                 <TitleWithBadge badge={{}}>
                   <span>{First.title}</span>
                 </TitleWithBadge>
@@ -97,50 +96,53 @@ const Aside: React.FunctionComponent = () => {
                   <SubMenu
                     className={isFavorites && 'fav-submenu'}
                     key={submenu.id}
-                    title={
+                    title={(
                       <>
-                        <span className='submenu-title'>
+                        <span className="submenu-title">
                           {submenu.icon ? <i className={`icon iconfont icon-${submenu.icon}`} /> : null}
-                          <span className='submenu-title-text'>{submenu.title}</span>
+                          <span className="submenu-title-text">{submenu.title}</span>
 
                           {editMode && isFavorites ? (
-                            <span className='fav-submenu-count'>已添加{favorites?.length}/10</span>
+                            <span className="fav-submenu-count">
+                              已添加
+                              {favorites?.length}
+                              /10
+                            </span>
                           ) : null}
                         </span>
 
                         {isFavorites && (
                           <span
                             className={`fav-submenu-${editMode ? 'save' : 'setting'}`}
-                            onClick={e => {
+                            onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
 
-                              
-
-                              if(editMode) {
+                              if (editMode) {
                                 MenuService.update({
-                                  favorites
+                                  favorites,
                                 }).finally(() => {
                                   setEditMode(false);
-                                })
+                                });
                               } else {
                                 setEditMode(true);
                               }
-
-                              
                             }}
+                            onKeyUp={() => {}}
+                            role="button"
+                            tabIndex={0}
                           >
                             {editMode ? '保存' : '管理'}
                           </span>
                         )}
                       </>
-                    }
+                    )}
                     // icon={<i className={`icon iconfont icon-${icon}`} />}
                   >
-                    {submenu?.children &&
-                      submenu?.children.map(item => {
-                        const badge = badgeMap && badgeMap.get && badgeMap.get(item.id);
-                        const added = !!favorites.find(fav => fav.id === item.id);
+                    {submenu?.children
+                      && submenu?.children.map(item => {
+                        const badgeItem = badgeMap && badgeMap.get && badgeMap.get(item.id);
+                        const added = !!favorites.find(fav => { return fav.id === item.id; });
 
                         // 编辑模式
                         if (editMode) {
@@ -150,11 +152,10 @@ const Aside: React.FunctionComponent = () => {
                               className={classNames('fav-item-edit', {
                                 'fav-item-added': added,
                               })}
-
                               onClick={() => {
                                 console.log(item, added);
 
-                                if(added) {
+                                if (added) {
                                   dispatch(removeFavMenuItem(item));
                                 } else {
                                   if (favorites.length >= 10) {
@@ -165,14 +166,20 @@ const Aside: React.FunctionComponent = () => {
                                 }
                               }}
                             >
-                              <TitleWithBadge badge={badge}>
+                              <TitleWithBadge badge={badgeItem}>
                                 <span>{item.title}</span>
                               </TitleWithBadge>
 
                               {added ? (
-                                <><MinusCircleOutlined className='outlined' /><MinusCircleFilled className='filled' /></>
+                                <>
+                                  <MinusCircleOutlined className="outlined" />
+                                  <MinusCircleFilled className="filled" />
+                                </>
                               ) : (
-                                <><PlusCircleOutlined className='outlined' /><PlusCircleFilled  className='filled' /></>
+                                <>
+                                  <PlusCircleOutlined className="outlined" />
+                                  <PlusCircleFilled className="filled" />
+                                </>
                               )}
                             </Item>
                           );
@@ -181,7 +188,7 @@ const Aside: React.FunctionComponent = () => {
                         return (
                           <Item key={item.url}>
                             <Link to={item.url}>
-                              {<i className={`icon iconfont icon-${item.icon}`} />}
+                              <i className={`icon iconfont icon-${item.icon}`} />
                               <TitleWithBadge badge={badge}>
                                 <span>{item.title}</span>
                               </TitleWithBadge>
@@ -190,7 +197,7 @@ const Aside: React.FunctionComponent = () => {
                         );
                       })}
                   </SubMenu>,
-                  isEditMode && <li className='nav-edit-hint'>点击下方功能入口即可添加</li>,
+                  isEditMode && <li className="nav-edit-hint">点击下方功能入口即可添加</li>,
                   !submenu.last && <Divider />,
                 ];
               }
@@ -198,7 +205,7 @@ const Aside: React.FunctionComponent = () => {
               return [
                 <Item key={submenu.url}>
                   <Link to={submenu.url}>
-                    {<i className={`icon iconfont icon-${submenu.icon}`} />}
+                    <i className={`icon iconfont icon-${submenu.icon}`} />
                     <TitleWithBadge badge={badge}>
                       <span>{submenu.title}</span>
                     </TitleWithBadge>
@@ -211,8 +218,8 @@ const Aside: React.FunctionComponent = () => {
         )}
       </div>
 
-      <Button type='text' className='hamburger' onClick={() => dispatch(toggleAside())}>
-        <i className='icon iconfont icon-bars' />
+      <Button type="text" className="hamburger" onClick={() => { return dispatch(toggleAside()); }}>
+        <i className="icon iconfont icon-bars" />
       </Button>
     </aside>
   );

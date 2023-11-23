@@ -1,6 +1,6 @@
 /**
  * 商家信息
- * 
+ *
  * sobird<i@sobird.me> at 2023/06/20 21:54:57 created.
  */
 
@@ -12,7 +12,7 @@ export enum MerchantTypeEnum {
   企业专卖店铺 = 22,
   企业旗舰店铺 = 23,
   /** 这个是虚拟的，后端没有维护这个变量 */
-  其他 = 99
+  其他 = 99,
 }
 
 /** 商家主营类目 */
@@ -344,10 +344,9 @@ export interface IMerchantEntryEntity {
 }
 
 type IOption = {
-  [key in string]: any;
   value: number | string;
   name: string;
-}
+} & { [key in string]: string; };
 
 export interface IMerchantOptions {
   companyTypeList: IOption[];
@@ -387,8 +386,8 @@ export interface IMerchantTask {
 
 /** 钱包类型，1-企业钱包  2-个人钱包 */
 export enum WalletTypeEnum {
-  "企业钱包" = 1,
-  "个人钱包" = 2,
+  '企业钱包' = 1,
+  '个人钱包' = 2,
 }
 
 // 品牌&商标类型，1-自有商标  2-授权商标
@@ -410,5 +409,5 @@ export enum TrademarkRegistrationTypeEnum {
 /** 商标注册类型 */
 export const TrademarkRegistrationTypeMap = new Map([
   [1, '自然人（商标注册人为个人）'],
-  [2, '非自然人（商标注册人为公司主体）']
+  [2, '非自然人（商标注册人为公司主体）'],
 ]);

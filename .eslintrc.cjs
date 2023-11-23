@@ -1,17 +1,13 @@
-/**
- * 0 = off, 1 = warning, 2 = error
- */
-
 module.exports = {
-  env: { browser: true, es2020: true, node: true, },
+  root: true,
+  "env": {
+    "browser": true,
+  },
   extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react-hooks/recommended',
+    'sobird/typescript-react.cjs',
+    // https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html#removing-unused-react-imports
+    // "plugin:react/jsx-runtime",
   ],
-  parser: '@typescript-eslint/parser',
-  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
-  plugins: ['react-refresh'],
   rules: {
     // 替代基础的 indent 规则
     '@typescript-eslint/no-explicit-any': 0,
@@ -69,5 +65,25 @@ module.exports = {
     'implicit-arrow-linebreak': 'off',
     // 除非/*global*/注释中提到，否则不允许使用未声明的变量
     'no-undef': 'error',
+
+    'react/no-unstable-nested-components': ['error', {
+      'allowAsProps': true
+    }],
+
+    // '@typescript-eslint/no-unused-vars': 'warn',
+
+    // 非 required 的 prop 必须有 defaultProps
+    // @off 不强制要求写 defaultProps
+    'react/require-default-props': 'off',
+
+    // 防止React被错误地标记为未使用
+    'react/jsx-uses-react': 'error',
+    // https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html#removing-unused-react-imports
+    'react/react-in-jsx-scope': 'off',
+
+    // 对 for 循环禁用
+    'no-plusplus': ["error", { "allowForLoopAfterthoughts": true }],
+
+    'react-hooks/exhaustive-deps': 'off',
   },
 }

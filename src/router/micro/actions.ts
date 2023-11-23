@@ -1,6 +1,6 @@
 /**
  * actions.ts
- * 
+ *
  * sobird<i@sobird.me> at 2023/10/02 19:35:21 created.
  */
 
@@ -22,6 +22,6 @@ actions.onGlobalStateChange((state, prev) => {
 
 actions.getGlobalState = () => {
   return initState;
-}
+};
 
 export default actions;

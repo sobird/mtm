@@ -1,9 +1,8 @@
-import React from 'react'
-import {Button, Tooltip} from 'antd';
+import { Button, Tooltip } from 'antd';
 import numeral from 'numeral';
 import WalletCard from '../../components/wallet-card';
 
-import './index.scss'
+import './index.scss';
 import LabelValue from '@/components/label-value';
 
 const fen2yuan = function fen2yuan(num: any) {
@@ -11,7 +10,7 @@ const fen2yuan = function fen2yuan(num: any) {
     return null;
   }
   return (num / 100).toFixed(2);
-}
+};
 
 // 钱包类型，1-企业钱包  2-个人钱包
 export const walletTypeObj: { [key: string]: number } = {
@@ -24,8 +23,8 @@ const ShopProfileWallet = () => {
     walletType: 1,
     currentWallet: true,
     remainAmount: 200,
-    walletName: "小米妈妈",
-    walletAccount: "小米妈妈家具旗舰店",
+    walletName: '小米妈妈',
+    walletAccount: '小米妈妈家具旗舰店',
     bindingPhone: 15321871599,
     walletId: 123456,
     bankCardCount: 0,
@@ -45,7 +44,12 @@ const ShopProfileWallet = () => {
   let gotoBankManageDom = null;
   if (currentWallet) {
     if (bankCardCount === 0) {
-      gotoBankManageDom = (<div className="line-two">绑定银行卡后可正常使用提现业务，请前往<Button className="btn-text" style={{ marginTop: '-4px' }} type="text">绑定银行卡</Button></div>);
+      gotoBankManageDom = (
+        <div className="line-two">
+          绑定银行卡后可正常使用提现业务，请前往
+          <Button className="btn-text" style={{ marginTop: '-4px' }} type="text">绑定银行卡</Button>
+        </div>
+      );
     }
   } else {
     gotoBankManageDom = (<div className="line-two">如需提现，请先变更为当前使用</div>);
@@ -56,12 +60,11 @@ const ShopProfileWallet = () => {
 
       <WalletCard />
 
-
       <div className={`wallet-box ${currentWallet ? 'current-wallet-box' : ''}`} key={`wallet-box-${walletId}`}>
         <div className="wallet-bar">
           <span className="wallet-name">
             <span>{walletType === 1 ? '企业钱包' : '个人钱包'}</span>
-            {changeWallet ? <Button className="btn-text" type="text" onClick={() => this.changeWallet(true, wallet)}>{`${ walletType === walletTypeObj.PERSON ? '更换为企业钱包' : '切换为当前使用'}`}</Button> : null}
+            {changeWallet ? <Button className="btn-text" type="text" onClick={() => { return this.changeWallet(true, wallet); }}>{`${walletType === walletTypeObj.PERSON ? '更换为企业钱包' : '切换为当前使用'}`}</Button> : null}
           </span>
           <span className="wallet-tag"><span>{currentWallet ? '当前使用中' : '曾经使用过'}</span></span>
         </div>
@@ -70,7 +73,10 @@ const ShopProfileWallet = () => {
             <div className="line-one">
               <div>
                 <p className="remain-amount-des">钱包余额</p>
-                <p className="remain-amount"><span>¥</span><span>{numeral(fen2yuan(remainAmount)).format('0,0.00')}</span></p>
+                <p className="remain-amount">
+                  <span>¥</span>
+                  <span>{numeral(fen2yuan(remainAmount)).format('0,0.00')}</span>
+                </p>
               </div>
               {
                 currentWallet ? (
@@ -122,7 +128,7 @@ const ShopProfileWallet = () => {
         <div className="wallet-bar">
           <span className="wallet-name">
             <span>{walletType === 1 ? '企业钱包' : '个人钱包'}</span>
-            {changeWallet ? <Button className="btn-text" type="text" onClick={() => this.changeWallet(true, wallet)}>{`${ walletType === walletTypeObj.PERSON ? '更换为企业钱包' : '切换为当前使用'}`}</Button> : null}
+            {changeWallet ? <Button className="btn-text" type="text" onClick={() => { return this.changeWallet(true, wallet); }}>{`${walletType === walletTypeObj.PERSON ? '更换为企业钱包' : '切换为当前使用'}`}</Button> : null}
           </span>
           <span className="wallet-tag"><span>{currentWallet ? '当前使用中' : '曾经使用过'}</span></span>
         </div>
@@ -131,7 +137,10 @@ const ShopProfileWallet = () => {
             <div className="line-one">
               <div>
                 <p className="remain-amount-des">钱包余额</p>
-                <p className="remain-amount"><span>¥</span><span>{numeral(fen2yuan(remainAmount)).format('0,0.00')}</span></p>
+                <p className="remain-amount">
+                  <span>¥</span>
+                  <span>{numeral(fen2yuan(remainAmount)).format('0,0.00')}</span>
+                </p>
               </div>
               {
                 currentWallet ? (
@@ -177,7 +186,7 @@ const ShopProfileWallet = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ShopProfileWallet
+export default ShopProfileWallet;

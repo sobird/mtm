@@ -1,6 +1,5 @@
-import React from 'react'
-import { ComponentType, FC } from 'react'
-import { useComponents } from '@/hooks/useComponents'
+import React, { ComponentType, FC } from 'react';
+import { useComponents } from '@/hooks/useComponents';
 
 export interface PlaygroundProps {
   className?: string
@@ -25,9 +24,9 @@ export const Playground: FC<PlaygroundProps> = ({
   language,
   useScoping,
 }) => {
-  const components = useComponents()
-  const PlaygroundComponent = components.playground
-  if (!PlaygroundComponent) return null
+  const components = useComponents();
+  const PlaygroundComponent = components.playground;
+  if (!PlaygroundComponent) return null;
 
   return (
     <PlaygroundComponent
@@ -42,5 +41,5 @@ export const Playground: FC<PlaygroundProps> = ({
       language={language}
       useScoping={useScoping}
     />
-  )
-}
+  );
+};

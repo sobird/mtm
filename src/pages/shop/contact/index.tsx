@@ -7,7 +7,7 @@
  * sobird<i@sobird.me> at 2023/10/28 0:23:43 created.
  */
 
-import React, { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import classNames from 'classnames';
 import { Form, Input, FormProps } from 'antd';
 import { isEmail, isMobilePhone, isChineseName } from '@/utils/validator';
@@ -28,15 +28,17 @@ interface ShopContactProps extends FormProps {
   mode?: 'create' | 'update' | 'detail';
 }
 
-const ShopContact: FC<PropsWithChildren<ShopContactProps>> = ({ className, form, children, mode, ...props }) => {
-  const [_form] = Form.useForm();
-  const formInstance = form || _form;
+const ShopContact: FC<PropsWithChildren<ShopContactProps>> = ({
+  className, form, children, mode, ...props
+}) => {
+  const [formInstance] = Form.useForm(form);
+  // const formInstance = form || _form;
 
   return (
     <Form form={formInstance} className={classNames('admin-form', className)} {...formItemLayout} {...props}>
       <Form.Item
-        label='联系邮箱'
-        name='managerEmail'
+        label="联系邮箱"
+        name="managerEmail"
         required
         rules={[
           {
@@ -48,16 +50,16 @@ const ShopContact: FC<PropsWithChildren<ShopContactProps>> = ({ className, form,
           },
         ]}
       >
-        <Input placeholder='请输入邮箱地址' />
+        <Input placeholder="请输入邮箱地址" />
       </Form.Item>
 
-      <Form.Item label='客服电话' name='servicePhoneNum'>
-        <Input placeholder='请您及时填写客服电话' />
+      <Form.Item label="客服电话" name="servicePhoneNum">
+        <Input placeholder="请您及时填写客服电话" />
       </Form.Item>
 
       <Form.Item
-        label='紧急联系人姓名'
-        name='emergencyContact'
+        label="紧急联系人姓名"
+        name="emergencyContact"
         required
         rules={[
           {
@@ -69,12 +71,12 @@ const ShopContact: FC<PropsWithChildren<ShopContactProps>> = ({ className, form,
           },
         ]}
       >
-        <Input placeholder='请输入紧急联系人姓名' />
+        <Input placeholder="请输入紧急联系人姓名" />
       </Form.Item>
 
       <Form.Item
-        label='紧急联系人手机'
-        name='emergencyContactPhone'
+        label="紧急联系人手机"
+        name="emergencyContactPhone"
         required
         rules={[
           {
@@ -86,9 +88,9 @@ const ShopContact: FC<PropsWithChildren<ShopContactProps>> = ({ className, form,
           },
         ]}
       >
-        <Input placeholder='请输入紧急联系人电话' />
+        <Input placeholder="请输入紧急联系人电话" />
       </Form.Item>
-      <FormItemCaptcha placeholder='请查看手机短信，输入验证码' phoneName='emergencyContactPhone' />
+      <FormItemCaptcha placeholder="请查看手机短信，输入验证码" phoneName="emergencyContactPhone" />
       {children}
     </Form>
   );

@@ -1,13 +1,15 @@
 /*
  * index.tsx
- * 
+ *
  * sobird<i@sobird.me> at 2023/06/22 22:41:07 created.
  */
 
 import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Alert } from 'antd';
-import { RightOutlined } from '@ant-design/icons'
-import Entry from "@/layout/entry";
+import {
+  Form, Input, Button, Alert,
+} from 'antd';
+import { RightOutlined } from '@ant-design/icons';
+import Entry from '@/layout/entry';
 
 import Invitation, { IInvitationRequestData } from '@/services/common/invitation';
 
@@ -26,11 +28,14 @@ function EntryHome() {
   return (
     <Entry>
       <div className="entry-home">
-        <div className='entry-home-banner'></div>
+        <div className="entry-home-banner" />
         <div className="entry-home-steps">
           <div className="step-item step-item-1">
-            <h3><span>01.</span>准备入驻资料</h3>
-            <div className='desc'>
+            <h3>
+              <span>01.</span>
+              准备入驻资料
+            </h3>
+            <div className="desc">
               <span>准备店铺信息</span>
               <span>准备经营资质</span>
               <span>开店铺人证件</span>
@@ -38,8 +43,11 @@ function EntryHome() {
           </div>
 
           <div className="step-item step-item-2">
-            <h3><span>02.</span>选择店铺类型</h3>
-            <div className='desc'>
+            <h3>
+              <span>02.</span>
+              选择店铺类型
+            </h3>
+            <div className="desc">
               <span>店铺类型了解</span>
               <span>明确资质要求</span>
               <span>确认店铺类型</span>
@@ -47,8 +55,11 @@ function EntryHome() {
           </div>
 
           <div className="step-item step-item-3">
-            <h3><span>03.</span>填写入驻申请</h3>
-            <div className='desc'>
+            <h3>
+              <span>03.</span>
+              填写入驻申请
+            </h3>
+            <div className="desc">
               <span>主体信息</span>
               <span>资质证件</span>
               <span>经营信息</span>
@@ -56,8 +67,11 @@ function EntryHome() {
           </div>
 
           <div className="step-item step-item-4">
-            <h3><span>04.</span>提交等待审核</h3>
-            <div className='desc'>
+            <h3>
+              <span>04.</span>
+              提交等待审核
+            </h3>
+            <div className="desc">
               <span>招商初审</span>
               <span>证件复审</span>
               <span>账户开户</span>
@@ -65,8 +79,11 @@ function EntryHome() {
           </div>
 
           <div className="step-item step-item-5">
-            <h3><span>04.</span>开店线上经营</h3>
-            <div className='desc'>
+            <h3>
+              <span>04.</span>
+              开店线上经营
+            </h3>
+            <div className="desc">
               <span>发布商品信息</span>
               <span>设置提现账户</span>
               <span>线上售卖经营</span>
@@ -80,14 +97,16 @@ function EntryHome() {
             style={{ maxWidth: 600 }}
           >
             <Form.Item name="code" label="邀请码">
-              <Input placeholder='邀请码非必填，如有请填写服务商招商码或推荐商家邀请码' />
+              <Input placeholder="邀请码非必填，如有请填写服务商招商码或推荐商家邀请码" />
             </Form.Item>
-            <Form.Item className='entry-btn-item'>
-              <Button type="primary" htmlType="submit">立即入住 <RightOutlined style={{ fontSize: '14px', }} /></Button>
+            <Form.Item className="entry-btn-item">
+              <Button type="primary" htmlType="submit">
+                立即入住
+                <RightOutlined style={{ fontSize: '14px' }} />
+              </Button>
             </Form.Item>
           </Form>
         </div>
-
 
         <div className="entry-home-reminder">
           <Alert
@@ -99,7 +118,7 @@ function EntryHome() {
         </div>
       </div>
     </Entry>
-  )
+  );
 }
 
 export default EntryHome;

@@ -14,6 +14,7 @@ import {
   IMerchantType,
   IMerchantTask,
 } from './merchant.d';
+
 export * from './merchant.d';
 
 export enum MerchantLogoAuditStatusEnum {
@@ -24,12 +25,12 @@ export enum MerchantLogoAuditStatusEnum {
 
 /** 根据categoryId获取类目路径 */
 export function getCategoryPath(categoryId: number, categoryList: IMerchantCategory[]) {
-  const item = categoryList.find(item => item.id === categoryId);
+  const item = categoryList.find(item => { return item.id === categoryId; });
   const category = [item];
-  let parentId = item.parentId;
+  let { parentId } = item;
 
   while (parentId) {
-    const item = categoryList.find(item => item.id === parentId);
+    const item = categoryList.find(item => { return item.id === parentId; });
     category.unshift(item);
     parentId = item.parentId;
   }
@@ -81,18 +82,18 @@ const MerchantService = {
 
   /** 创建钱包 */
   createWallet() {
-    return http.post('/merchant/wallet')
+    return http.post('/merchant/wallet');
   },
 
   /** 切换企业钱包与个人钱包 */
   toggleWallet() {
-    return http.put('/merchant/wallet')
+    return http.put('/merchant/wallet');
   },
 
   /** 许可证列表 */
   licenses() {
-    return http.get('/merchant/licenses')
-  }
+    return http.get('/merchant/licenses');
+  },
 };
 
 export default MerchantService;

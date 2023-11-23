@@ -4,21 +4,19 @@
  * sobird<i@sobird.me> at 2023/10/25 19:32:29 created.
  */
 
-import React, { useEffect, useState } from 'react';
-import { Form, Button, Input, Space } from 'antd';
+import { useEffect } from 'react';
+import {
+  Form, Button, Input, Space,
+} from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
+import { Card } from '@mtm/shared';
 import { useAppSelector } from '@/store/hooks';
 import FieldMerchantLogo from '@/components/field-merchant-logo';
-import MerchantService,  { getCategoryPath, MerchantTypeEnum } from '@/services/merchant';
+import MerchantService, { getCategoryPath, MerchantTypeEnum } from '@/services/merchant';
 import BaseAdmin from '@/pages/shop/admin/form';
-import { Card } from '@mtm/shared';
 import ShopContact from '../../contact';
 
 import './index.scss';
-
-const blankText = '暂未填写';
-
-const value = '';
 
 const formItemLayout = {
   labelCol: {
@@ -28,9 +26,11 @@ const formItemLayout = {
 
 function BaseInfo() {
   const [form] = Form.useForm();
-  const merchant = useAppSelector(state => state.merchant);
+  const merchant = useAppSelector(state => { return state.merchant; });
   const {
-    shopInfo: { id, name, description, type, logo, category, externalLink },
+    shopInfo: {
+      id, name, description, type, logo, category, externalLink,
+    },
   } = merchant;
 
   const initialValues = {
@@ -44,65 +44,66 @@ function BaseInfo() {
     externalLink,
   };
 
-
   useEffect(() => {
     MerchantService.category().then(res => {
       const categoryPath = getCategoryPath(category, res);
-      const categoryPathName = categoryPath.map(item => item.name);
+      const categoryPathName = categoryPath.map(item => { return item.name; });
       const categoryLabel = categoryPathName.join(' > ');
-      console.log('categoryLabel', categoryLabel)
+      console.log('categoryLabel', categoryLabel);
       form.setFieldValue('categoryLabel', categoryLabel);
-    }) 
-  }, []);
+    });
+  }, [category]);
 
   return (
-    <div className='shop-baseinfo-panel'>
-      <Card title="基础信息" bodyStyle={{paddingTop: 20}}>
+    <div className="shop-baseinfo-panel">
+      <Card title="基础信息" bodyStyle={{ paddingTop: 20 }}>
         <Form
-          className='shop-base-form'
+          className="shop-base-form"
           {...formItemLayout}
           initialValues={initialValues}
           form={form}
           onFinish={values => {
             console.log('values', values);
-          // todo 
+          // todo
           }}
         >
-          <Form.Item colon={false} label='店铺编号' shouldUpdate={(pre, cur) => pre.shopId !== cur.shopId}>
+          <Form.Item colon={false} label="店铺编号" shouldUpdate={(pre, cur) => { return pre.shopId !== cur.shopId; }}>
             {({ getFieldValue }) => {
               const shopId = getFieldValue('shopId');
               return (
                 <>
-                  {shopId} <CopyOutlined className='clipboard' data-clipboard-text={shopId} />
+                  {shopId}
+                  {' '}
+                  <CopyOutlined className="clipboard" data-clipboard-text={shopId} />
                 </>
               );
             }}
           </Form.Item>
 
-          <Form.Item label='店铺名称' shouldUpdate={(p, c) => p.shopName !== c.shopName}>
+          <Form.Item label="店铺名称" shouldUpdate={(p, c) => { return p.shopName !== c.shopName; }}>
             {({ getFieldValue }) => {
               const shopName = getFieldValue('shopName');
-              return <>{shopName}</>;
+              return shopName;
             }}
           </Form.Item>
 
-          <Form.Item label='店铺类型' shouldUpdate={(p, c) => p.shopTypeLabel !== c.shopTypeLabel}>
+          <Form.Item label="店铺类型" shouldUpdate={(p, c) => { return p.shopTypeLabel !== c.shopTypeLabel; }}>
             {({ getFieldValue }) => {
               const shopTypeLabel = getFieldValue('shopTypeLabel');
-              return <>{shopTypeLabel}</>;
+              return shopTypeLabel;
             }}
           </Form.Item>
 
-          <Form.Item label='主营类目' shouldUpdate={(p, c) => p.categoryLabel !== c.categoryLabel}>
+          <Form.Item label="主营类目" shouldUpdate={(p, c) => { return p.categoryLabel !== c.categoryLabel; }}>
             {({ getFieldValue }) => {
               const categoryLabel = getFieldValue('categoryLabel');
-              return <>{categoryLabel}</>;
+              return categoryLabel;
             }}
           </Form.Item>
 
           <Form.Item
-            label='店铺标志'
-            name='logo'
+            label="店铺标志"
+            name="logo"
             required
             rules={[
               {
@@ -118,11 +119,11 @@ function BaseInfo() {
               },
             ]}
           >
-            <FieldMerchantLogo status={6}/>
+            <FieldMerchantLogo status={6} />
           </Form.Item>
           <Form.Item
-            label='店铺简介'
-            name='description'
+            label="店铺简介"
+            name="description"
             rules={[
               {
                 max: 200,
@@ -131,8 +132,8 @@ function BaseInfo() {
             ]}
           >
             <Input.TextArea
-              placeholder='填写店铺简介，可让消费者更了解您的店铺'
-              className='description'
+              placeholder="填写店铺简介，可让消费者更了解您的店铺"
+              className="description"
               // onChange={handleChange}
               showCount
               maxLength={200}
@@ -143,8 +144,8 @@ function BaseInfo() {
           </Form.Item>
 
           <Form.Item
-            label='第三方平台店铺链接'
-            name='externalLink'
+            label="第三方平台店铺链接"
+            name="externalLink"
             rules={[
               {
               // required: true,
@@ -153,22 +154,22 @@ function BaseInfo() {
               },
             ]}
           >
-            <Input className='extra-links' placeholder='填写真实的其他平台店铺链接' />
+            <Input className="extra-links" placeholder="填写真实的其他平台店铺链接" />
           </Form.Item>
 
           <Space style={{ marginLeft: 142 }}>
-            <Button type='primary' htmlType='submit'>
-            更新店铺基本信息
+            <Button type="primary" htmlType="submit">
+              更新店铺基本信息
             </Button>
           </Space>
         </Form>
       </Card>
 
-      <Card title="管理员信息" bodyStyle={{paddingTop: 20}}>
+      <Card title="管理员信息" bodyStyle={{ paddingTop: 20 }}>
         <BaseAdmin />
       </Card>
 
-      <Card title="联系方式" bodyStyle={{paddingTop: 20}}>
+      <Card title="联系方式" bodyStyle={{ paddingTop: 20 }}>
         <ShopContact />
       </Card>
     </div>

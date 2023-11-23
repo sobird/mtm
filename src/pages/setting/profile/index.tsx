@@ -1,5 +1,3 @@
-
-
 import { Form } from 'antd';
 
 const formItemLayout = {
@@ -18,7 +16,7 @@ const SettingProfile = () => {
       <Form.Item label="手机验证">关闭</Form.Item>
       <Form.Item label="最近登录">查看</Form.Item>
     </Form>
-  )
-}
+  );
+};
 
 export default SettingProfile;

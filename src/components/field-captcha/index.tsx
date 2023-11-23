@@ -1,16 +1,18 @@
 /**
  * 验证码表单输入字段
- * 
+ *
  * sobird<i@sobird.me> at 2023/10/29 18:20:51 created.
  */
 
 import React, { useState } from 'react';
-import { Button, Form, Input, ButtonProps, InputProps } from 'antd';
-import type { NamePath,  } from 'antd/lib/form/interface';
+import {
+  Button, Form, Input, ButtonProps, InputProps,
+} from 'antd';
+import type { NamePath } from 'antd/lib/form/interface';
 import useInterval from '@/hooks/useInterval';
 import CommonService from '@/services/common';
 
-export type FieldCaptchaProps =  {
+export type FieldCaptchaProps = {
   value?: InputProps['value'];
   onChange?: InputProps['onChange'];
 
@@ -51,13 +53,13 @@ const FieldCaptcha: React.FC<FieldCaptchaProps> = ({
   const [count, setCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>();
   const resumeInterval = useInterval(() => {
-    setCount((count) => {
-      if (count <= 1) {
+    setCount((prevState) => {
+      if (prevState <= 1) {
         resumeInterval(null);
       }
-      return count - 1;
+      return prevState - 1;
     });
-  })
+  });
 
   const onGetCaptcha = async (mobile: string) => {
     try {
@@ -95,8 +97,8 @@ const FieldCaptcha: React.FC<FieldCaptchaProps> = ({
         style={{
           display: 'block',
         }}
-        size='small'
-        type='link'
+        size="small"
+        type="link"
         disabled={count > 0}
         loading={loading}
         {...buttonProps}

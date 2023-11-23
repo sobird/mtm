@@ -1,12 +1,14 @@
 import { RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Clipboard from 'clipboard';
-import { ConfigProvider, theme as AntdTheme, message, ThemeConfig } from 'antd';
+import {
+  ConfigProvider, theme as AntdTheme, message, ThemeConfig,
+} from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
+import { Empty } from '@mtm/shared';
 import router from '@/router';
 import store from '@/store';
 import '@mtm/shared/es/utils/provider';
-import { Empty } from '@mtm/shared'
 import './App.css';
 
 // 全局复制
@@ -33,7 +35,7 @@ const theme: ThemeConfig = {
     colorTextDisabled: '#444',
     // motion: false,
 
-    fontFamily: "",
+    fontFamily: '',
     fontSize: 14,
   },
   components: {
@@ -44,8 +46,8 @@ const theme: ThemeConfig = {
     },
     Form: {
       itemMarginBottom: 20,
-      labelColor: "#333",
-      
+      labelColor: '#333',
+
     },
     Alert: {
       fontSize: 12,
@@ -59,8 +61,8 @@ const theme: ThemeConfig = {
       motion: false,
     },
     Upload: {
-      
-    }
+
+    },
   },
 };
 
@@ -73,8 +75,8 @@ function App() {
   return (
     <ConfigProvider
       locale={zhCN}
-      prefixCls='mtm'
-      renderEmpty={componentName => {
+      prefixCls="mtm"
+      renderEmpty={() => {
         return <Empty />;
       }}
       theme={theme}
