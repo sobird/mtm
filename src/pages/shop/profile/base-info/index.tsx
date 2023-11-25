@@ -10,7 +10,7 @@ import {
 } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { Card } from '@mtm/shared';
-import { useAppSelector } from '@/store/hooks';
+import { useAppSelector } from '@/store';
 import FieldMerchantLogo from '@/components/field-merchant-logo';
 import MerchantService, { getCategoryPath, MerchantTypeEnum } from '@/services/merchant';
 import BaseAdmin from '@/pages/shop/admin/form';

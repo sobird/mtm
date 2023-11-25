@@ -7,7 +7,7 @@
 import { RegistrableApp } from 'qiankun';
 import store from '@/store';
 import history from '@/utils/history';
-import { updateMicro } from '@/store/actions/app';
+import { updateMicro } from '@/store/slices/app';
 
 const getActiveRule = (hash: string) => { return (location) => { return location.hash.startsWith(hash); }; };
 

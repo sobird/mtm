@@ -9,10 +9,10 @@ import classNames from 'classnames';
 import { Watermark } from 'antd';
 import { ErrorBoundary } from '@mtm/shared';
 import startQiankun from '@/router/micro';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store';
 import Loading from '@/components/loading';
 import Notifier from '@/components/notifier';
-import { fetchMerchantThunkAction } from '@/store/actions/merchant';
+import { fetchMerchant } from '@/store/slices/merchant';
 import Header from './header';
 import Aside from './aside';
 import { palyAudio } from '@/utils';
@@ -26,10 +26,8 @@ const LayoutAdmin: React.FC = () => {
 
   useEffect(() => {
     // 获取商家详情
-    dispatch(fetchMerchantThunkAction);
+    dispatch(fetchMerchant());
     // palyAudio();
-
-    window.palyAudio = palyAudio;
 
     setTimeout(() => {
       palyAudio();

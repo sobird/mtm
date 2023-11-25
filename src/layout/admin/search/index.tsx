@@ -11,7 +11,7 @@ import { SearchOutlined, DeleteOutlined, CloseCircleOutlined } from '@ant-design
 import debounce from 'lodash/debounce';
 import { Empty } from '@mtm/shared';
 import useLocalStorageState from '@/hooks/useLocalStorageState';
-import { useAppSelector } from '@/store/hooks';
+import { useAppSelector } from '@/store';
 import { IMenuItem } from '@/services/menu';
 
 import './index.scss';

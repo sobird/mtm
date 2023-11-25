@@ -9,7 +9,7 @@ import {
   Outlet, useNavigate, useParams, useLocation,
 } from 'react-router-dom';
 import { ErrorBoundary, Page } from '@mtm/shared';
-import { useAppSelector } from '@/store/hooks';
+import { useAppSelector } from '@/store';
 import Loading from '@/components/loading';
 
 import './index.scss';

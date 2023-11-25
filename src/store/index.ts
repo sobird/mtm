@@ -9,8 +9,9 @@
 
 // import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import thunk, { ThunkDispatch } from 'redux-thunk';
-import reducers from './reducers';
+import reducers from './slices';
 import logger from './middleware/logger';
 
 // const composeWithDevTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -32,6 +33,7 @@ export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = ThunkDispatch<string, number, any>;
 
-window.store = store;
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export default store;

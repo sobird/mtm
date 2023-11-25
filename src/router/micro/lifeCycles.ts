@@ -5,7 +5,7 @@
  */
 
 // import store from '@/store';
-// import { updateMicro } from '@/store/actions/app';
+// import { updateMicro } from '@/store/slices/app';
 
 const lifeCycles = {
   // qiankun 生命周期钩子 - 微应用加载前

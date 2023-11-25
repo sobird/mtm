@@ -18,9 +18,9 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 import MenuService, { Favorites } from '@/services/menu';
 
-import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { toggleAside } from '@/store/actions/app';
-import { fetchMenuThunkAction, insertFavMenuItem, removeFavMenuItem } from '@/store/actions/menu';
+import { useAppSelector, useAppDispatch } from '@/store';
+import { toggleAside } from '@/store/slices/app';
+import { fetchMenu, removeFavMenuItem, insertFavMenuItem } from '@/store/slices/menu';
 import TitleWithBadge from './components/title-with-badge';
 
 import './index.scss';
@@ -51,7 +51,7 @@ const Aside: React.FunctionComponent = () => {
   const menuTrees = [Favorites, ...Others];
 
   useEffect(() => {
-    dispatch(fetchMenuThunkAction);
+    dispatch(fetchMenu());
 
     MenuService.badges().then(res => {
       setBadgeMap(res);
@@ -153,8 +153,6 @@ const Aside: React.FunctionComponent = () => {
                                 'fav-item-added': added,
                               })}
                               onClick={() => {
-                                console.log(item, added);
-
                                 if (added) {
                                   dispatch(removeFavMenuItem(item));
                                 } else {

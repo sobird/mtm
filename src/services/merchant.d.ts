@@ -159,7 +159,7 @@ export interface IMerchantEntity {
     operatingAddress?: string;
     operatingRange?: string;
   };
-  shopInfo: IShopEntity;
+  shopInfo: Partial<IShopEntity>;
   /** 签署合同 */
   contactConfirm?: number | boolean;
   margin?: boolean;
@@ -184,7 +184,7 @@ export interface IMerchantEntity {
     type?: 1 | 2;
   };
   /** 店铺类型 10,个人店; 20,普通店; 21,专营店; 22,专卖店; 23,旗舰店; 99,其他 */
-  merchantType?: number;
+  merchantType?: number | string;
   /** 店铺经营许可 */
   licenseList?: ILicense[];
   /** 管理人员和法人信息是否一致 */
