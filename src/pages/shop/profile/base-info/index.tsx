@@ -26,7 +26,7 @@ const formItemLayout = {
 
 function BaseInfo() {
   const [form] = Form.useForm();
-  const merchant = useAppSelector(state => { return state.merchant; });
+  const merchant = useAppSelector((state) => { return state.merchant; });
   const {
     shopInfo: {
       id, name, description, type, logo, category, externalLink,
@@ -45,9 +45,9 @@ function BaseInfo() {
   };
 
   useEffect(() => {
-    MerchantService.category().then(res => {
+    MerchantService.category().then((res) => {
       const categoryPath = getCategoryPath(category, res);
-      const categoryPathName = categoryPath.map(item => { return item.name; });
+      const categoryPathName = categoryPath.map((item) => { return item.name; });
       const categoryLabel = categoryPathName.join(' > ');
       console.log('categoryLabel', categoryLabel);
       form.setFieldValue('categoryLabel', categoryLabel);
@@ -62,7 +62,7 @@ function BaseInfo() {
           {...formItemLayout}
           initialValues={initialValues}
           form={form}
-          onFinish={values => {
+          onFinish={(values) => {
             console.log('values', values);
           // todo
           }}

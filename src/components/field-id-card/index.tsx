@@ -30,7 +30,7 @@ interface FieldIdCardProps extends Omit<FieldUploadFileProps, 'onUploadSuccess'>
 
 const fileValidator = async (file: RcFile) => {
   if (!file) {
-    return;
+    return false;
   }
   if (file.size > 10000000) {
     message.error('照片大小不能超过10MB');
@@ -61,6 +61,7 @@ const FieldIdCard: FC<FieldIdCardProps> = ({
           if (!result) {
             return Upload.LIST_IGNORE;
           }
+          return undefined;
         }}
         onUploadSuccess={(res) => {
           onUploadSuccess(res, 0);
@@ -86,6 +87,8 @@ const FieldIdCard: FC<FieldIdCardProps> = ({
           if (!result) {
             return Upload.LIST_IGNORE;
           }
+
+          return false;
         }}
         onUploadSuccess={(res) => {
           onUploadSuccess(res, 1);

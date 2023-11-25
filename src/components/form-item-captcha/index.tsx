@@ -23,7 +23,7 @@ interface FormItemCaptchaProps extends FormItemProps {
 const FormItemCaptcha: FC<FormItemCaptchaProps> = ({
   phoneName = 'mobile',
   placeholder,
-  onCaptcha = (async mobile => {
+  onCaptcha = (async (mobile) => {
     await CommonService.captcha(mobile);
   }),
   fieldProps,

@@ -61,7 +61,7 @@ function Login() {
       <Select
         popupMatchSelectWidth={false}
         bordered={false}
-        onClick={event => {
+        onClick={(event) => {
           event.stopPropagation();
         }}
         optionLabelProp="label"
@@ -109,7 +109,7 @@ function Login() {
           <FormItemCaptcha
             phoneName="mobile"
             placeholder="请输入验证码"
-            onCaptcha={async mobile => {
+            onCaptcha={async (mobile) => {
               const interCode = form.getFieldValue('interCode');
 
               if (!isMobilePhone(mobile, interCode)) {

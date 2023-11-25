@@ -25,10 +25,10 @@ export enum MerchantLogoAuditStatusEnum {
 
 /** 根据categoryId获取类目路径 */
 export function getCategoryPath(categoryId: number, categoryList: IMerchantCategory[]) {
-  const catItem = categoryList.find(item => { return item.id === categoryId; });
+  const catItem = categoryList.find((item) => { return item.id === categoryId; });
   const category = [catItem];
   let { parentId } = catItem;
-  const pcatItem = categoryList.find(item => { return item.id === parentId; });
+  const pcatItem = categoryList.find((item) => { return item.id === parentId; });
 
   while (parentId) {
     category.unshift(pcatItem);

@@ -77,7 +77,7 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({
             VenusService.ocr({
               type: 0,
               url: res.url,
-            }).then(idInfo => {
+            }).then((idInfo) => {
               const { name, citizenId, validdate } = idInfo;
 
               formInstance.setFieldsValue({

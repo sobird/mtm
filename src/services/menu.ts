@@ -73,7 +73,7 @@ const MenuService = {
 
   /** 可将此接口合并到 /menu */
   async badges(menuId?: number) {
-    return http.get<IMenuBadge[]>('/menu/badges', { menuId }).then(res => {
+    return http.get<IMenuBadge[]>('/menu/badges', { menuId }).then((res) => {
       const badgeMap = new Map();
       return res?.reduce((pre, cur) => {
         if (!cur?.menuId) {

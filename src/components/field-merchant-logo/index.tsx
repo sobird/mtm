@@ -117,7 +117,7 @@ const FieldMerchantLogo: FC<FieldMerchantLogoProps> = ({
                 [valuePair[1]] = newValue;
                 setValuePair(valuePair);
               }}
-              itemRender={originNode => {
+              itemRender={(originNode) => {
                 const { props } = originNode;
                 return (
                   <Tooltip title={reviewTips}>

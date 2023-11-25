@@ -44,7 +44,7 @@ const formItemLayout = {
 const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
   const [license, setLicense] = useState(false);
 
-  const onFinish = values => {
+  const onFinish = (values) => {
     console.log('values', values);
   };
 
@@ -63,7 +63,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
           rules={[{ required: true, message: '公司类型不能为空' }]}
         >
           <Radio.Group
-            options={option?.companyTypeList.map(item => {
+            options={option?.companyTypeList.map((item) => {
               return { value: item.type, label: item.name };
             })}
           />
@@ -71,7 +71,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
 
         <Form.Item label="销售渠道" name={['company', 'distChannel']}>
           <Checkbox.Group
-            options={option?.distChannelList.map(item => {
+            options={option?.distChannelList.map((item) => {
               return { value: item.type, label: item.name };
             })}
           />
@@ -86,7 +86,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
             >
               <OcrUpload
                 type={1}
-                onUploadSuccess={res => {
+                onUploadSuccess={(res) => {
                   form.setFieldValue(['company', 'businessLicense', 'socialCreditCode'], res.number);
                   form.setFieldValue(['company', 'businessLicense', 'name'], res.name);
                   form.setFieldValue(['company', 'businessLicense', 'address'], res.address);

@@ -32,14 +32,14 @@ const WalletAuth = () => {
 
   const onOk = () => {
     if (current !== 1) {
-      setCurrent(prevState => { return prevState + 1; });
+      setCurrent((prevState) => { return prevState + 1; });
       console.log(current);
     }
   };
 
   const onCancel = () => {
     if (current !== 0) {
-      setCurrent(prevState => { return prevState - 1; });
+      setCurrent((prevState) => { return prevState - 1; });
       return;
     }
     setOpen(false);

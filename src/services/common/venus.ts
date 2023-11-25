@@ -76,7 +76,7 @@ export async function upload(file: File, config: IUploadRequestConfig = {}) {
       onProgressPercent?.(Math.floor((progressEvent.loaded / progressEvent.total) * 100), progressEvent);
     },
     ...others,
-  }).then(res => {
+  }).then((res) => {
     onProgressPercent(100);
     return res as unknown as IVenusUploadResponse;
   });
@@ -100,7 +100,7 @@ export interface IOcrResponseData {
 }
 
 export async function ocr(params?: IOcrRequestData) {
-  return http.get<IOcrResponseData>('/venus/ocr', params).then(res => {
+  return http.get<IOcrResponseData>('/venus/ocr', params).then((res) => {
     if (params?.type !== undefined) {
       return res[params.type];
     }

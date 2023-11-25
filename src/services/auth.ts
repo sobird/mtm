@@ -21,7 +21,7 @@ export interface ILoginResponse {
 const AuthService = {
   async login(data: ILoginRequest) {
     const { mobile } = data;
-    return http.post<ILoginResponse>('/auth/login', data).then(async res => {
+    return http.post<ILoginResponse>('/auth/login', data).then(async (res) => {
       const token = await signJWT({
         mobile,
       });
@@ -31,7 +31,7 @@ const AuthService = {
   },
 
   async logout() {
-    return http.post('/auth/logout').then(res => {
+    return http.post('/auth/logout').then((res) => {
       // todo
       console.log('res', res);
     });

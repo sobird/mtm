@@ -43,7 +43,7 @@ function EntryCompany() {
   ];
 
   useEffect(() => {
-    MerchantService.options().then(res => {
+    MerchantService.options().then((res) => {
       setOption(res);
     });
 

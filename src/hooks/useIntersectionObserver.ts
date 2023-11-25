@@ -38,7 +38,7 @@ const useIntersectionObserver: React.FC<PropsWithChildren<IUseIntersectionObserv
     };
 
     const CallBack = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         const radio = entry.intersectionRatio;
         const rect = entry.boundingClientRect;
         if (radio >= threshold && rect.y > 0) {

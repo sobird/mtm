@@ -37,9 +37,9 @@ function EntryShop() {
         const categoryId = base.category;
         const categoryValues = [categoryId];
 
-        const categoryItem = categoryList.find(item => { return item.id === base.category; });
+        const categoryItem = categoryList.find((item) => { return item.id === base.category; });
         let categoryParentId = categoryItem.parentId;
-        const catItem = categoryList.find(item => { return item.id === categoryParentId; });
+        const catItem = categoryList.find((item) => { return item.id === categoryParentId; });
 
         while (categoryParentId) {
           categoryValues.unshift(catItem.id);
@@ -51,7 +51,7 @@ function EntryShop() {
     });
 
     // 获取店铺类型
-    MerchantService.type().then(res => {
+    MerchantService.type().then((res) => {
       setEntryType(res);
     });
   }, []);
@@ -80,7 +80,7 @@ function EntryShop() {
     });
   };
 
-  const options = entryType.map(item => {
+  const options = entryType.map((item) => {
     return {
       value: item.poiType,
       label: (
@@ -191,9 +191,9 @@ function EntryShop() {
                 )}
               >
                 <Radio.Group
-                  onChange={event => {
+                  onChange={(event) => {
                     const { value } = event.target;
-                    const poi = entryType.find(item => { return item.poiType === value; });
+                    const poi = entryType.find((item) => { return item.poiType === value; });
 
                     Modal.warning({
                       title: `确定更改店铺类型为 ${poi.poiTypeName} ？`,

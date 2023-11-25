@@ -78,7 +78,7 @@ const OcrUpload: React.FC<PropsWithChildren<UploadOcrProps>> = ({
         }) => {
           VenusService.upload(file as File, (percent) => {
             onProgress({ percent });
-          }).then(res => {
+          }).then((res) => {
             onSuccess(res);
 
             const { url } = res;
@@ -88,7 +88,7 @@ const OcrUpload: React.FC<PropsWithChildren<UploadOcrProps>> = ({
             VenusService.ocr({
               type,
               url,
-            }).then(ocrRes => {
+            }).then((ocrRes) => {
               onUploadSuccess?.(ocrRes);
             });
           }).catch(onError);

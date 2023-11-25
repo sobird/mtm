@@ -40,7 +40,7 @@ const FieldTermPick: React.FC<FieldTermPickProps> = ({
   });
 
   const [checkedValue, ...pickerValue] = valuePair;
-  const pickerDate = pickerValue.map(item => { return dayjs(item); }) as unknown as RangePickerProps['value'];
+  const pickerDate = pickerValue.map((item) => { return dayjs(item); }) as unknown as RangePickerProps['value'];
 
   const onCheckboxChange = (e: CheckboxChangeEvent) => {
     const newValue = e.target.checked;

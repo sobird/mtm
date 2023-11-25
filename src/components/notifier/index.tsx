@@ -12,7 +12,7 @@ const message = (setSearchParams, config) => {
       <button
         type="button"
         onClick={() => {
-          setSearchParams(searchParams => {
+          setSearchParams((searchParams) => {
             searchParams.set('v', config.version);
             return searchParams;
           });
@@ -31,7 +31,7 @@ const Notifier = () => {
   const [, setSearchParams] = useSearchParams();
 
   useInterval(() => {
-    CommonService.version().then(res => {
+    CommonService.version().then((res) => {
       if (window.config.version !== res.version) {
         api.open({
           message: message(setSearchParams, res),

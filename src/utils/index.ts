@@ -49,14 +49,14 @@ export function listToTree(list: IList[]) {
   const result = [];
   const map = new Map();
 
-  list.forEach(item => {
+  list.forEach((item) => {
     if (!item.children) {
       // item.children = []
     }
     map.set(item.id, item);
   });
 
-  list.forEach(item => {
+  list.forEach((item) => {
     const parent = map.get(item.parentId);
     if (parent) {
       if (!parent.children) {
@@ -75,7 +75,7 @@ export const fileToBase64 = (file: Blob | File): Promise<string> => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => { return resolve(reader.result as string); };
-    reader.onerror = error => { return reject(error); };
+    reader.onerror = (error) => { return reject(error); };
   });
 };
 

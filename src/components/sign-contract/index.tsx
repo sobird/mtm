@@ -30,7 +30,7 @@ export default function ContractSign({ config }: ContractSignProps) {
 
   const { mobile = '', bizType, state } = config || {};
 
-  const onFinish = async values => {
+  const onFinish = async (values) => {
     console.log('values', values);
     const { captcha, policy } = values;
     const captchaCookie = Cookies.get('captcha');
@@ -57,7 +57,7 @@ export default function ContractSign({ config }: ContractSignProps) {
           },
         });
       })
-      .catch(e => {
+      .catch((e) => {
         message.error({
           content: e.msg || e.message || '签署合约异常',
         });
@@ -85,7 +85,7 @@ export default function ContractSign({ config }: ContractSignProps) {
               className="contract-dated"
               message="您的协议已到期，我们将通过短信验证来确认您与平台继续达成合作"
               icon={<InfoCircleOutlined />}
-              showIcon={true}
+              showIcon
             />
           ) : (
             <Alert message="我们将通过短信验证来确认您与平台正式达成合作" icon={<InfoCircleOutlined />} />

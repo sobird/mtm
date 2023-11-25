@@ -37,7 +37,7 @@ export const fetchMenu = createAsyncThunk('fetchMenu', async () => {
 const menuSlice = createSlice({
   name: 'menu',
   initialState,
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchMenu.pending, (state, action) => {
         // state.status = 'loading'
@@ -45,9 +45,9 @@ const menuSlice = createSlice({
       })
       .addCase(fetchMenu.fulfilled, (state, action) => {
         const [menuTrees, menuItems, favorites] = action.payload;
-        const defaultOpenKeys = menuTrees.filter(item => {
+        const defaultOpenKeys = menuTrees.filter((item) => {
           return item.children && item.children.length > 0;
-        }).map(item => { return item.id; });
+        }).map((item) => { return item.id; });
 
         return {
           ...state,
@@ -70,7 +70,7 @@ const menuSlice = createSlice({
     removeFavMenuItem: (state, action: PayloadAction<IMenuItem>) => {
       const { favorites } = state;
 
-      const index = favorites.findIndex(item => { return item.id === action.payload.id; });
+      const index = favorites.findIndex((item) => { return item.id === action.payload.id; });
 
       if (index !== -1) {
         favorites.splice(index, 1);

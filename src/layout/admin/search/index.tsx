@@ -42,7 +42,7 @@ const SeachDropdown: React.FC<SeachDropdownProps> = ({
     return (
       <div className="search-select-dropdown-suggest">
         {result?.length > 0 ? (
-          result.map(item => {
+          result.map((item) => {
             return (
               <Link
                 to={item.path}
@@ -72,7 +72,7 @@ const SeachDropdown: React.FC<SeachDropdownProps> = ({
         </Button>
       </div>
       {history?.length > 0 ? (
-        history.map(item => {
+        history.map((item) => {
           return (
             <Tag
               className="search-history-tag"
@@ -102,10 +102,10 @@ const find = (data: IMenuItem[], keyword) => {
 
   const result = [];
 
-  data.forEach(parent => {
+  data.forEach((parent) => {
     const parentFound = parent.title.indexOf(keyword) !== -1;
 
-    parent?.children?.forEach(child => {
+    parent?.children?.forEach((child) => {
       const childFound = child.title.indexOf(keyword) !== -1;
 
       if (parentFound || childFound) {
@@ -121,12 +121,12 @@ const find = (data: IMenuItem[], keyword) => {
 };
 
 const Search: React.FC = () => {
-  const { menuTrees } = useAppSelector(state => { return state.menu; });
+  const { menuTrees } = useAppSelector((state) => { return state.menu; });
   const [keyword, setKeyword] = useState('');
   const [searchHistory, setSearchHistory] = useLocalStorageState('search_history', []);
 
   const debounceFn = useCallback(
-    debounce(value => {
+    debounce((value) => {
       setKeyword(value);
     }, 200),
     [],
@@ -138,9 +138,9 @@ const Search: React.FC = () => {
    * @todo
    * 待测试 保证 搜索历史为最新10条记录
    */
-  const recordHistory = useCallback(record => {
+  const recordHistory = useCallback((record) => {
     const internalSearchHistory = [...searchHistory];
-    const index = internalSearchHistory.findIndex(item => { return item.path === record.path; });
+    const index = internalSearchHistory.findIndex((item) => { return item.path === record.path; });
 
     // 如果已存在则删除
     if (index !== -1) {
@@ -178,9 +178,9 @@ const Search: React.FC = () => {
               history={searchHistory}
               result={result}
               onSelected={recordHistory}
-              onTagClose={item => {
+              onTagClose={(item) => {
                 const internalSearchHistory = [...searchHistory];
-                const index = internalSearchHistory.findIndex(record => { return record.path === item.path; });
+                const index = internalSearchHistory.findIndex((record) => { return record.path === item.path; });
 
                 if (index !== -1) {
                   internalSearchHistory.splice(index, 1);

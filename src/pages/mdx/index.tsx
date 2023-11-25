@@ -16,7 +16,7 @@ loader.config(monacoConfig);
 export default function MdxTest() {
   const [value, setValue] = useState();
 
-  const onChange = async editorValue => {
+  const onChange = async (editorValue) => {
     setValue(editorValue);
   };
 

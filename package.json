@@ -52,7 +52,7 @@
     "css-minimizer-webpack-plugin": "^5.0.0",
     "dotenv-webpack": "^8.0.1",
     "esbuild-loader": "^3.0.1",
-    "eslint-config-sobird": "^0.1.16",
+    "eslint-config-sobird": "^0.1.17",
     "html-webpack-plugin": "^5.5.1",
     "less": "^4.2.0",
     "less-loader": "^11.1.2",

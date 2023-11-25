@@ -37,7 +37,7 @@ const useInterval = (fn: () => void, delay?: number, options: UseIntervalOptions
   const [time, setTime] = useState(delay);
 
   const timerCallback = useMemo(() => { return fn; }, [fn]);
-  // eslint-disable-next-line no-undef
+
   const timerRef = useRef<NodeJS.Timer | null>(null);
 
   const clear = useCallback(() => {
@@ -60,7 +60,7 @@ const useInterval = (fn: () => void, delay?: number, options: UseIntervalOptions
 
   return (interval = 1000) => {
     setTime(interval);
-    setRunEffect(v => { return !v; });
+    setRunEffect((v) => { return !v; });
   };
 };
 

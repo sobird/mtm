@@ -51,10 +51,10 @@ const FieldUploadFile: React.FC<PropsWithChildren<FieldUploadFileProps>> = ({
 
   const [fileList, setFileList] = useState<UploadFile[]>(
     valuePair
-      ?.filter(item => {
+      ?.filter((item) => {
         return item;
       })
-      .map(url => {
+      .map((url) => {
         return {
           url,
           status: 'done',
@@ -87,7 +87,7 @@ const FieldUploadFile: React.FC<PropsWithChildren<FieldUploadFileProps>> = ({
     <>
       <Upload
         fileList={fileList}
-        onChange={info => {
+        onChange={(info) => {
           setFileList(info.fileList);
           onSelectChange?.(info);
         }}
@@ -109,12 +109,12 @@ const FieldUploadFile: React.FC<PropsWithChildren<FieldUploadFileProps>> = ({
             },
             ...config,
           })
-            .then(res => {
+            .then((res) => {
               onSuccess(res);
               onUploadSuccess?.(res);
 
               setValuePair([
-                ...valuePair.filter(item => {
+                ...valuePair.filter((item) => {
                   return item;
                 }),
                 res.url,

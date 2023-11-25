@@ -17,7 +17,7 @@ const ShopProfileLicense = () => {
   const [licenses, setLicenses] = useState([]);
 
   useEffect(() => {
-    MerchantService.licenses().then(res => {
+    MerchantService.licenses().then((res) => {
       setLicenses(res);
     });
   }, []);

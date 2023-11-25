@@ -42,7 +42,7 @@ export const fetchMerchant = createAsyncThunk('metchant/fetch', async () => {
 const merchantSlice = createSlice({
   name: 'merchant',
   initialState,
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchMerchant.pending, (state, action) => {
         // state.status = 'loading'

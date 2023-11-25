@@ -33,8 +33,16 @@ const Aside: React.FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const [editMode, setEditMode] = useState(false);
 
-  const { collapsed } = useAppSelector(state => { return state.app; });
-  const { menuTrees: [First, ...Others], favorites, defaultOpenKeys } = useAppSelector(state => { return state.menu; });
+  const { collapsed } = useAppSelector((state) => {
+    return state.app;
+  });
+  const {
+    menuTrees: [First, ...Others],
+    favorites,
+    defaultOpenKeys,
+  } = useAppSelector((state) => {
+    return state.menu;
+  });
 
   // defaultOpenKeys.push(Favorites.id);
 
@@ -42,7 +50,7 @@ const Aside: React.FunctionComponent = () => {
   dok.push(Favorites.id);
 
   // 收藏夹
-  Favorites.children = favorites.map(item => {
+  Favorites.children = favorites.map((item) => {
     const itemAssign = { ...item };
     itemAssign.url += '?fav';
     return itemAssign;
@@ -53,7 +61,7 @@ const Aside: React.FunctionComponent = () => {
   useEffect(() => {
     dispatch(fetchMenu());
 
-    MenuService.badges().then(res => {
+    MenuService.badges().then((res) => {
       setBadgeMap(res);
     });
   }, [dispatch]);
@@ -72,7 +80,7 @@ const Aside: React.FunctionComponent = () => {
             defaultOpenKeys={collapsed ? [] : dok}
             // items={items}
             inlineIndent={0}
-            forceSubMenuRender={true}
+            forceSubMenuRender
           >
             {/* 后台首页 */}
             <Item key={First.url}>
@@ -86,7 +94,7 @@ const Aside: React.FunctionComponent = () => {
 
             <Divider />
 
-            {menuTrees.map(submenu => {
+            {menuTrees.map((submenu) => {
               const isFavorites = submenu.code === Favorites.code;
               const isEditMode = isFavorites && editMode;
               const badge = badgeMap && badgeMap.get && badgeMap.get(submenu.id);
@@ -140,9 +148,11 @@ const Aside: React.FunctionComponent = () => {
                     // icon={<i className={`icon iconfont icon-${icon}`} />}
                   >
                     {submenu?.children
-                      && submenu?.children.map(item => {
+                      && submenu?.children.map((item) => {
                         const badgeItem = badgeMap && badgeMap.get && badgeMap.get(item.id);
-                        const added = !!favorites.find(fav => { return fav.id === item.id; });
+                        const added = !!favorites.find((fav) => {
+                          return fav.id === item.id;
+                        });
 
                         // 编辑模式
                         if (editMode) {
@@ -216,7 +226,13 @@ const Aside: React.FunctionComponent = () => {
         )}
       </div>
 
-      <Button type="text" className="hamburger" onClick={() => { return dispatch(toggleAside()); }}>
+      <Button
+        type="text"
+        className="hamburger"
+        onClick={() => {
+          return dispatch(toggleAside());
+        }}
+      >
         <i className="icon iconfont icon-bars" />
       </Button>
     </aside>

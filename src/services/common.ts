@@ -34,7 +34,7 @@ const CommonService = {
       { t: +new Date() },
       {
         baseURL: '/',
-        parser: res => { return res.data; },
+        parser: (res) => { return res.data; },
       },
     );
   },
@@ -45,7 +45,7 @@ const CommonService = {
     const i = Math.random() * (999999 - 100000) + 100000;
     const captchaNum = parseInt(i as unknown as string, 10);
 
-    return http.get<ICaptchaResponse>('/captcha', { mobile }).then(res => {
+    return http.get<ICaptchaResponse>('/captcha', { mobile }).then((res) => {
       res.captcha = captchaNum;
       Cookies.set('captcha', captchaNum as unknown as string);
 

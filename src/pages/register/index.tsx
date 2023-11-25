@@ -60,7 +60,7 @@ function Register() {
       <Select
         popupMatchSelectWidth={false}
         bordered={false}
-        onClick={event => {
+        onClick={(event) => {
           event.stopPropagation();
         }}
         optionLabelProp="label"

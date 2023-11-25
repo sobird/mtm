@@ -6,7 +6,7 @@ import './index.scss';
 import LabelValue from '@/components/label-value';
 
 const fen2yuan = function fen2yuan(num: any) {
-  if (typeof +num !== 'number' || isNaN(+num)) {
+  if (typeof +num !== 'number' || Number.isNaN(+num)) {
     return null;
   }
   return (num / 100).toFixed(2);

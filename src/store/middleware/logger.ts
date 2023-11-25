@@ -7,8 +7,8 @@
 import { Store } from 'redux';
 
 const logger = (store: Store) => {
-  return next => {
-    return action => {
+  return (next) => {
+    return (action) => {
       console.group(action.type);
       console.info('dispatching', action);
       const result = next(action);
