@@ -44,7 +44,6 @@ function EntryCompany() {
 
   useEffect(() => {
     MerchantService.options().then(res => {
-      console.log('res', res);
       setOption(res);
     });
 
@@ -66,7 +65,6 @@ function EntryCompany() {
       navigate('/settleinjx/shop');
       return;
     }
-    console.log('current', current);
     setCurrent(current - 1);
   };
 

@@ -1,6 +1,6 @@
 import { Button, Tooltip } from 'antd';
 import numeral from 'numeral';
-import WalletCard from '../../components/wallet-card';
+// import WalletCard from '../../components/wallet-card';
 
 import './index.scss';
 import LabelValue from '@/components/label-value';
@@ -58,13 +58,13 @@ const ShopProfileWallet = () => {
   return (
     <div className="settle-info-container">
 
-      <WalletCard />
+      {/* <WalletCard /> */}
 
       <div className={`wallet-box ${currentWallet ? 'current-wallet-box' : ''}`} key={`wallet-box-${walletId}`}>
         <div className="wallet-bar">
           <span className="wallet-name">
             <span>{walletType === 1 ? '企业钱包' : '个人钱包'}</span>
-            {changeWallet ? <Button className="btn-text" type="text" onClick={() => { return this.changeWallet(true, wallet); }}>{`${walletType === walletTypeObj.PERSON ? '更换为企业钱包' : '切换为当前使用'}`}</Button> : null}
+            {changeWallet ? <Button className="btn-text" type="text" onClick={() => { }}>{`${walletType === walletTypeObj.PERSON ? '更换为企业钱包' : '切换为当前使用'}`}</Button> : null}
           </span>
           <span className="wallet-tag"><span>{currentWallet ? '当前使用中' : '曾经使用过'}</span></span>
         </div>
@@ -128,7 +128,7 @@ const ShopProfileWallet = () => {
         <div className="wallet-bar">
           <span className="wallet-name">
             <span>{walletType === 1 ? '企业钱包' : '个人钱包'}</span>
-            {changeWallet ? <Button className="btn-text" type="text" onClick={() => { return this.changeWallet(true, wallet); }}>{`${walletType === walletTypeObj.PERSON ? '更换为企业钱包' : '切换为当前使用'}`}</Button> : null}
+            {changeWallet ? <Button className="btn-text" type="text" onClick={() => { }}>{`${walletType === walletTypeObj.PERSON ? '更换为企业钱包' : '切换为当前使用'}`}</Button> : null}
           </span>
           <span className="wallet-tag"><span>{currentWallet ? '当前使用中' : '曾经使用过'}</span></span>
         </div>

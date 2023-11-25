@@ -5,13 +5,23 @@
  */
 
 import React, { PropsWithChildren, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
-  Card, Checkbox, Form, Input, Radio, Space, Upload, DatePicker, Button, Select, Image, FormInstance,
+  Card,
+  Checkbox,
+  Form,
+  Input,
+  Radio,
+  Space,
+  Upload,
+  DatePicker,
+  Button,
+  Select,
+  Image,
+  FormInstance,
 } from 'antd';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import TermPick from '@/components/field-term-picker';
-import { IEntryEnum } from '@/services/merchant/entry/enum';
+import { IMerchantOptions } from '@/services/merchant';
 
 import OcrUpload from '@/components/ocr-upload';
 
@@ -22,8 +32,8 @@ import IdUploadDemo from '../id-upload-demo';
 const { RangePicker } = DatePicker;
 
 interface Step1Props {
-  option: IEntryEnum
-  form: FormInstance
+  option: IMerchantOptions;
+  form: FormInstance;
 }
 
 const formItemLayout = {
@@ -33,28 +43,17 @@ const formItemLayout = {
 
 const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
   const [license, setLicense] = useState(false);
-  const navigate = useNavigate();
 
-  const onFinish = (values: IInvitationRequestData) => {
+  const onFinish = values => {
     console.log('values', values);
   };
 
   const socialCreditCode = form.getFieldValue(['company', 'businessLicense', 'socialCreditCode']);
 
   return (
-    <Form
-      name="basic"
-      onFinish={onFinish}
-      labelCol={{ span: 4 }}
-      wrapperCol={{ span: 20 }}
-      size="middle"
-      form={form}
-    >
+    <Form name="basic" onFinish={onFinish} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} size="middle" form={form}>
       <Card title="企业主体信息" bordered={false}>
-        <Form.Item
-          label="测试组件"
-          name="testName"
-        >
+        <Form.Item label="测试组件" name="testName">
           <TermPick value={[true, '2023-01-10', '2023-01-11']} rangePicker />
         </Form.Item>
 
@@ -63,20 +62,22 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
           name={['company', 'companyType']}
           rules={[{ required: true, message: '公司类型不能为空' }]}
         >
-          <Radio.Group options={option?.companyTypeList.map(item => { return { value: item.type, label: item.name }; })} />
+          <Radio.Group
+            options={option?.companyTypeList.map(item => {
+              return { value: item.type, label: item.name };
+            })}
+          />
         </Form.Item>
 
-        <Form.Item
-          label="销售渠道"
-          name={['company', 'distChannel']}
-        >
-          <Checkbox.Group options={option?.distChannelList.map(item => { return { value: item.type, label: item.name }; })} />
+        <Form.Item label="销售渠道" name={['company', 'distChannel']}>
+          <Checkbox.Group
+            options={option?.distChannelList.map(item => {
+              return { value: item.type, label: item.name };
+            })}
+          />
         </Form.Item>
 
-        <Form.Item
-          label="营业执照"
-          name="businessLicense"
-        >
+        <Form.Item label="营业执照" name="businessLicense">
           <Space>
             <Form.Item
               name={['company', 'businessLicense', 'url']}
@@ -104,14 +105,20 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
               <p>3.文件格式支持：JPG/JPEG/PNG/GIF/BPM</p>
               <p>
                 4.企业主体需满足&nbsp;
-                <a className="name-link" target="_blank" href="https://rules-center.meituan.com/rules-detail/602?commonType=2" rel="noreferrer">美团电商平台入驻标准</a>
-&nbsp;要求
+                <a
+                  className="name-link"
+                  target="_blank"
+                  href="https://rules-center.meituan.com/rules-detail/602?commonType=2"
+                  rel="noreferrer"
+                >
+                  美团电商平台入驻标准
+                </a>
+                &nbsp;要求
               </p>
             </div>
           </Space>
 
-          {(socialCreditCode || license)
-          && (
+          {(socialCreditCode || license) && (
             <Card title="请核对营业执照信息，若信息不符，请手动修改" className="item-card">
               <Form.Item
                 {...formItemLayout}
@@ -149,10 +156,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
                 <TermPick rangePicker />
               </Form.Item>
 
-              <Form.Item
-                {...formItemLayout}
-                label="注册资金"
-              >
+              <Form.Item {...formItemLayout} label="注册资金">
                 <Form.Item
                   name={['company', 'businessLicense', 'capital']}
                   noStyle
@@ -166,10 +170,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
           )}
         </Form.Item>
 
-        <Form.Item
-          label="一般纳税人资格证电子版"
-          name={['company', 'certificateTaxpayer']}
-        >
+        <Form.Item label="一般纳税人资格证电子版" name={['company', 'certificateTaxpayer']}>
           <Space>
             <Upload action="/upload.do" listType="picture-card">
               <div>
@@ -215,10 +216,7 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
           <Input placeholder="请填写真实的办公地址" />
         </Form.Item>
 
-        <Form.Item
-          label="公司简介"
-          wrapperCol={{ span: 12 }}
-        >
+        <Form.Item label="公司简介" wrapperCol={{ span: 12 }}>
           <Form.Item
             name={['company', 'companyDesc']}
             noStyle
@@ -231,12 +229,12 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
               placeholder="可以从品牌定位、品牌产品线、市场占有率或年销量、品牌当下布局、品牌未来规划等方面介绍，最多不得超过1000字"
             />
           </Form.Item>
-          <Form.Item
-            name={['company', 'companyFile']}
-            noStyle
-          >
+          <Form.Item name={['company', 'companyFile']} noStyle>
             <Upload action="/upload.do">
-              <Button type="dashed" style={{ marginTop: '20px', marginBottom: '10px' }} icon={<UploadOutlined />}> 上传文件</Button>
+              <Button type="dashed" style={{ marginTop: '20px', marginBottom: '10px' }} icon={<UploadOutlined />}>
+                {' '}
+                上传文件
+              </Button>
             </Upload>
           </Form.Item>
 
@@ -249,16 +247,13 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
       </Card>
 
       <Card title="法人证件信息" bordered={false}>
-
         <Form.Item
           label="证件类型"
           name={['company', 'legalPerson', 'idType']}
           wrapperCol={{ span: 12 }}
           rules={[{ required: true, message: '法人手机号不能为空' }]}
         >
-          <Select
-            defaultValue={1001}
-          >
+          <Select defaultValue={1001}>
             <Select.Option value={1001}>中国大陆居民身份证</Select.Option>
             <Select.Option value={1002}>海外护照</Select.Option>
             <Select.Option value={1003}>港澳居民往来内地通行证</Select.Option>
@@ -266,28 +261,14 @@ const Step1: React.FC<PropsWithChildren<Step1Props>> = ({ option, form }) => {
           </Select>
         </Form.Item>
 
-        <Form.Item
-          label="电子证件照"
-          name="businessLicense"
-          rules={[{ required: true, message: '营业执照不能为空' }]}
-        >
+        <Form.Item label="电子证件照" name="businessLicense" rules={[{ required: true, message: '营业执照不能为空' }]}>
           <Space style={{ marginBottom: '10px' }}>
             <Upload action="/upload.do">
-              <Image
-                preview={false}
-                src={IdCardPreview1}
-                width={120}
-                style={{ cursor: 'pointer' }}
-              />
+              <Image preview={false} src={IdCardPreview1} width={120} style={{ cursor: 'pointer' }} />
             </Upload>
 
             <Upload action="/upload.do">
-              <Image
-                preview={false}
-                src={IdCardPreview2}
-                width={120}
-                style={{ cursor: 'pointer' }}
-              />
+              <Image preview={false} src={IdCardPreview2} width={120} style={{ cursor: 'pointer' }} />
             </Upload>
           </Space>
 

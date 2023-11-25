@@ -5,9 +5,8 @@
  */
 
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Dropdown } from 'antd';
-import { IStoreState } from '@/store/reducers';
+import { useAppSelector } from '@/store';
 import Search from '../search';
 
 import NomalLogo from '@/assets/mtm/logo_title.png';
@@ -30,16 +29,11 @@ const items = [
 ];
 
 const onClick = ({ key }) => {
-  //
-
-  console.log('key', key);
-
   switch (key) {
     case 'iphone':
       break;
     case 'logout':
-      AuthService.logout().then(res => {
-        console.log('res', res);
+      AuthService.logout().then(() => {
         // todo
       });
       break;
@@ -49,12 +43,12 @@ const onClick = ({ key }) => {
 };
 
 const Header: React.FC = () => {
-  const { collapsed } = useSelector((state: IStoreState) => { return state.app; });
+  const { collapsed } = useAppSelector((state) => { return state.app; });
 
   return (
     <header className="app-header">
       <div className="header-brand">
-        <a href="/" title="美团电商商家管理后台">
+        <a href="/" title="美团电商商家管理后台" aria-label="美团电商商家管理后台">
           <img src={collapsed ? SamllLogo : NomalLogo} alt="" />
         </a>
       </div>

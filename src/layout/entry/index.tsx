@@ -16,7 +16,7 @@ const LayoutEntry: React.FC<PropsWithChildren> = ({ children }) => {
       key: '1',
     },
   ];
-  const onClick: MenuProps['onClick'] = ({ key }) => {
+  const onClick: MenuProps['onClick'] = () => {
     //
   };
   return (

@@ -45,6 +45,10 @@ jobs:
       run: |
         yarn
 
+    - name: Running eslint
+      run: |
+        yarn lint:eslint
+
     - name: Build mtm 🔧
       run: |
         SHA=${GITHUB_SHA} FLOW_ID=${GITHUB_RUN_ID} yarn build

@@ -8,7 +8,9 @@
 
 import { FC, PropsWithChildren } from 'react';
 import classNames from 'classnames';
-import { Form, Input, Space } from 'antd';
+import {
+  Form, Input, Space, Button,
+} from 'antd';
 import type { FormProps } from 'antd';
 import { isIdentityCard, isMobilePhone } from '@/utils/validator';
 import FieldIdCard from '@/components/field-id-card';
@@ -35,8 +37,7 @@ interface CouponFormProps extends FormProps {
 const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({
   className, form, children, mode, ...props
 }) => {
-  const [_form] = Form.useForm();
-  const formInstance = form || _form;
+  const [formInstance] = Form.useForm(form);
 
   return (
     <Form form={formInstance} className={classNames('admin-form', className)} {...formItemLayout} {...props}>
@@ -180,14 +181,15 @@ const AdminForm: FC<PropsWithChildren<CouponFormProps>> = ({
                 <p>1.当店铺管理员与法人不一致时，请上传管理员授权书</p>
                 <p>
                   2.请使用模板下载后加盖公司印章后上传，
-                  <span
+                  <Button
+                    type="link"
                     className="down-load"
                     onClick={() => {
                       window.location.href = 'managerAuthHandbookUrl';
                     }}
                   >
                     下载模版
-                  </span>
+                  </Button>
                 </p>
                 <p>3.支持上传1张文件，大小不得超过10MB</p>
                 <p>4.格式支持JPG/JPEG/PNG/GIF/BPM</p>

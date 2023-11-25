@@ -85,5 +85,7 @@ module.exports = {
     'no-plusplus': ["error", { "allowForLoopAfterthoughts": true }],
 
     'react-hooks/exhaustive-deps': 'off',
+
+    'import/no-webpack-loader-syntax': 'warn',
   },
 }

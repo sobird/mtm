@@ -13,7 +13,6 @@ import LayoutEntry from '@/layout/entry';
 import MerchantService, {
   IMerchantCategory,
   IMerchantEntryEntity,
-  IMerchantTask,
   IMerchantType,
 } from '@/services/merchant';
 import { getRowSpans, listToTree } from '@/utils';
@@ -26,7 +25,6 @@ function EntryShop() {
   const navigate = useNavigate();
   const [categoryOptions, setCategoryOptions] = useState<IMerchantCategory[]>([]);
   const [entryType, setEntryType] = useState<IMerchantType[]>([]);
-  const [entryTask, setEntryTask] = useState<IMerchantTask>();
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
 
@@ -41,11 +39,11 @@ function EntryShop() {
 
         const categoryItem = categoryList.find(item => { return item.id === base.category; });
         let categoryParentId = categoryItem.parentId;
+        const catItem = categoryList.find(item => { return item.id === categoryParentId; });
 
         while (categoryParentId) {
-          const categoryItem = categoryList.find(item => { return item.id === categoryParentId; });
-          categoryValues.unshift(categoryItem.id);
-          categoryParentId = categoryItem.parentId;
+          categoryValues.unshift(catItem.id);
+          categoryParentId = catItem.parentId;
         }
 
         form.setFieldsValue({ ...base, category: categoryValues, entryTaskId: entryTask.entryTaskId });
@@ -195,7 +193,7 @@ function EntryShop() {
                 <Radio.Group
                   onChange={event => {
                     const { value } = event.target;
-                    const poi = entryType.find(item => { return item.poiType == value; });
+                    const poi = entryType.find(item => { return item.poiType === value; });
 
                     Modal.warning({
                       title: `确定更改店铺类型为 ${poi.poiTypeName} ？`,

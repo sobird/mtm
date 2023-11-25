@@ -43,7 +43,6 @@ const SeachDropdown: React.FC<SeachDropdownProps> = ({
       <div className="search-select-dropdown-suggest">
         {result?.length > 0 ? (
           result.map(item => {
-            console.log('item', item);
             return (
               <Link
                 to={item.path}
@@ -103,10 +102,10 @@ const find = (data: IMenuItem[], keyword) => {
 
   const result = [];
 
-  data.map(parent => {
+  data.forEach(parent => {
     const parentFound = parent.title.indexOf(keyword) !== -1;
 
-    parent?.children?.map(child => {
+    parent?.children?.forEach(child => {
       const childFound = child.title.indexOf(keyword) !== -1;
 
       if (parentFound || childFound) {
@@ -140,21 +139,21 @@ const Search: React.FC = () => {
    * 待测试 保证 搜索历史为最新10条记录
    */
   const recordHistory = useCallback(record => {
-    const _searchHistory = [...searchHistory];
-    const index = _searchHistory.findIndex(item => { return item.path === record.path; });
+    const internalSearchHistory = [...searchHistory];
+    const index = internalSearchHistory.findIndex(item => { return item.path === record.path; });
 
     // 如果已存在则删除
     if (index !== -1) {
-      _searchHistory.splice(index, 1);
+      internalSearchHistory.splice(index, 1);
     }
 
-    if (_searchHistory.length >= 10) {
-      _searchHistory.pop();
+    if (internalSearchHistory.length >= 10) {
+      internalSearchHistory.pop();
     }
 
-    _searchHistory.unshift(record);
+    internalSearchHistory.unshift(record);
 
-    setSearchHistory([..._searchHistory]);
+    setSearchHistory([...internalSearchHistory]);
   }, [searchHistory]);
 
   const result = find(menuTrees, keyword);
@@ -180,17 +179,16 @@ const Search: React.FC = () => {
               result={result}
               onSelected={recordHistory}
               onTagClose={item => {
-                const _searchHistory = [...searchHistory];
-                const index = _searchHistory.findIndex(record => { return record.path === item.path; });
+                const internalSearchHistory = [...searchHistory];
+                const index = internalSearchHistory.findIndex(record => { return record.path === item.path; });
 
                 if (index !== -1) {
-                  _searchHistory.splice(index, 1);
+                  internalSearchHistory.splice(index, 1);
                 }
 
-                setSearchHistory(_searchHistory);
+                setSearchHistory(internalSearchHistory);
               }}
               onClearHistory={() => {
-                console.log('onClearHistory', 123);
                 setSearchHistory([]);
               }}
             />

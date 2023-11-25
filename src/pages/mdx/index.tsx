@@ -2,8 +2,8 @@ import { useState } from 'react';
 import Editor, { loader } from '@monaco-editor/react';
 import * as Antd from 'antd';
 import { Page, ErrorBoundary } from '@mtm/shared';
-import Mdx from '@/components/mdx';
 import defaultMdxText from '!raw-loader!./index.mdx';
+import Mdx from '@/components/mdx';
 
 const monacoConfig = {
   paths: {
@@ -16,8 +16,8 @@ loader.config(monacoConfig);
 export default function MdxTest() {
   const [value, setValue] = useState();
 
-  const onChange = async value => {
-    setValue(value);
+  const onChange = async editorValue => {
+    setValue(editorValue);
   };
 
   return (

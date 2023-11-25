@@ -6,10 +6,9 @@
 
 import { Suspense } from 'react';
 import {
-  Outlet, useNavigate, useParams, useLocation,
+  Outlet, useNavigate, useLocation,
 } from 'react-router-dom';
 import { ErrorBoundary, Page } from '@mtm/shared';
-import { useAppSelector } from '@/store';
 import Loading from '@/components/loading';
 
 import './index.scss';
@@ -32,14 +31,6 @@ const BreadcrumbItem = [
 const ShopProfile = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const params = useParams();
-  const merchant = useAppSelector(state => { return state.merchant; });
-
-  // const [activeKey, setActiveKey] = useState();
-
-  const activeKey = params['*'] || '';
-
-  console.log('location', location);
 
   return (
     <Page

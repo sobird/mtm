@@ -4,9 +4,9 @@
  * sobird<i@sobird.me> at 2023/09/13 17:24:00 created.
  */
 
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Row, Col } from 'antd';
-import useFederatedComponent from '@/hooks/useFederatedComponent';
+// import useFederatedComponent from '@/hooks/useFederatedComponent';
 
 import './index.scss';
 

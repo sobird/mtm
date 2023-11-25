@@ -7,7 +7,7 @@ interface IProps {
   config?: any[];
 }
 
-export default function (props: IProps) {
+export default (props: IProps) => {
   const { config } = props;
 
   /**
@@ -47,4 +47,4 @@ export default function (props: IProps) {
       {getDoms()}
     </div>
   );
-}
+};

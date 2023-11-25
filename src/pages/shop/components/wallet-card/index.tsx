@@ -28,7 +28,7 @@ interface WalletCardProps {
   /** 钱包余额 */
   balance: number;
   /** 绑定的手机号 */
-  bindingPhone: string | number;
+  // bindingPhone: string | number;
   /** 绑定的银行卡号 */
   bindingBankCardNum: string | number;
 }
