@@ -12,7 +12,7 @@ import { CopyOutlined } from '@ant-design/icons';
 import { Card } from '@mtm/shared';
 import { useAppSelector } from '@/store';
 import FieldMerchantLogo from '@/components/field-merchant-logo';
-import MerchantService, { getCategoryPath, MerchantTypeEnum } from '@/services/merchant';
+import MerchantService, { MerchantTypeEnum } from '@/services/merchant';
 import BaseAdmin from '@/pages/shop/admin/form';
 import ShopContact from '../../contact';
 
@@ -45,12 +45,14 @@ function BaseInfo() {
   };
 
   useEffect(() => {
-    MerchantService.category().then((res) => {
-      const categoryPath = getCategoryPath(category, res);
-      const categoryPathName = categoryPath.map((item) => { return item.name; });
-      const categoryLabel = categoryPathName.join(' > ');
-      console.log('categoryLabel', categoryLabel);
-      form.setFieldValue('categoryLabel', categoryLabel);
+    MerchantService.category().then(() => {
+      // todo 页面卡死问题待解决
+
+      // const categoryPath = getCategoryPath(category, res);
+      // const categoryPathName = categoryPath.map((item) => { return item.name; });
+      // const categoryLabel = categoryPathName.join(' > ');
+      // console.log('categoryLabel', categoryLabel);
+      // form.setFieldValue('categoryLabel', categoryLabel);
     });
   }, [category]);
 

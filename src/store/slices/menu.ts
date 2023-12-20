@@ -30,7 +30,7 @@ const initialState: IMenuState = {
   defaultOpenKeys: [],
 };
 
-export const fetchMenu = createAsyncThunk('fetchMenu', async () => {
+export const fetchMenu = createAsyncThunk('menu/fetch', async () => {
   return MenuService.list();
 });
 
