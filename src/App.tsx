@@ -76,6 +76,7 @@ function App() {
     <ConfigProvider
       locale={zhCN}
       prefixCls="mtm"
+      iconPrefixCls="mtm"
       renderEmpty={() => {
         return <Empty />;
       }}
