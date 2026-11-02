@@ -2,15 +2,10 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "printWidth": 120,
-  "tabWidth": 2,
-  "useTabs": false,
-  "semi": true,
   "singleQuote": true,
   "jsxSingleQuote": true,
-  "quoteProps": "as-needed",
   "trailingComma": "es5",
-  "bracketSpacing": true,
   "arrowParens": "avoid",
   "sortImports": { "newlinesBetween": true },
-  "ignorePatterns": ["**/node_modules/**", "**/dist/**", "**/public/**", "docs/", "stats.json", "bun.lock"],
+  "ignorePatterns": ["bun.lock"],
 }

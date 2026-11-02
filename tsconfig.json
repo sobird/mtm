@@ -34,11 +34,11 @@
     "noUnusedParameters": true,
     //检查switch中是否含有case没有使用break跳出
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
+    // "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
-    },
+      "@/*": ["./src/*"]
+    }
   },
   // 指定被编译文件所在的目录
-  "include": ["src"]
+  "include": ["**/*.ts", "**/*.tsx"]
 }

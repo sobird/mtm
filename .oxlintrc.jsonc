@@ -49,21 +49,8 @@
     "jsx-a11y/prefer-tag-over-role": "warn",
   },
   "env": {
-    "builtin": true,
     "browser": true,
     "node": true,
   },
-  "ignorePatterns": [
-    "**/node_modules/**",
-    "**/dist/**",
-    "**/public/**",
-    "**/src/assets/**",
-    "plugins/**",
-    "docs/**",
-    "webpack.config.js",
-    "**/webpack.config.*",
-    "**/rollup.config.*",
-    "**/gulpfile.js",
-    "stats.json",
-  ],
+  "ignorePatterns": [],
 }
