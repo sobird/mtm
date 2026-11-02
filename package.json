@@ -83,5 +83,14 @@
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.15.1"
   },
+  "lint-staged": {
+    "*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}": [
+      "oxlint --fix",
+      "oxfmt --write"
+    ],
+    "*.{json,jsonc,json5,css,less,scss,md,mdx,html,yml,yaml}": [
+      "oxfmt --write"
+    ]
+  },
   "packageManager": "bun@1.4.4"
 }
