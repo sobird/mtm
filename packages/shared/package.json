@@ -2,30 +2,35 @@
   "name": "@mtm/shared",
   "version": "0.0.1",
   "description": "MTM通用组件库",
-  "authors": {
-    "name": "sobird"
-  },
-  "main": "lib/index.js",
-  "module": "es/index.js",
-  "unpkg": "dist/mtm.min.js",
-  "scripts": {
-    "start": "rollup -c -w --environment NODE_ENV:development",
-    "build": "rollup -c --environment NODE_ENV:production",
-    "local": "rollup -c --environment NODE_ENV:local"
-  },
   "keywords": [
     "Components",
-    "TypeScript",
-    "React"
+    "React",
+    "TypeScript"
   ],
-  "author": "sobird",
+  "homepage": "https://github.com/sobird/mtm#readme",
+  "bugs": {
+    "url": "https://github.com/sobird/mtm/issues"
+  },
   "license": "MIT",
+  "author": "sobird",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sobird/mtm.git"
+  },
   "files": [
     "package.json",
     "/dist"
   ],
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "unpkg": "dist/mtm.min.js",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "start": "rollup -c -w --environment NODE_ENV:development",
+    "build": "rollup -c --environment NODE_ENV:production",
+    "local": "rollup -c --environment NODE_ENV:local"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
@@ -59,7 +64,6 @@
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
-    "rollup-plugin-typescript2": "^0.36.0",
     "sass": "^1.69.3",
     "through2": "^4.0.2",
     "tslib": "^2.6.2",
@@ -77,12 +81,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sobird/mtm.git"
-  },
-  "bugs": {
-    "url": "https://github.com/sobird/mtm/issues"
-  },
-  "homepage": "https://github.com/sobird/mtm#readme"
+  "authors": {
+    "name": "sobird"
+  }
 }

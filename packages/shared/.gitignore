@@ -12,7 +12,8 @@ dist
 output
 dist-ssr
 *.local
-*.lock
+yarn.lock
+package-lock.json
 stats.json
 
 # Editor directories and files

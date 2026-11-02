@@ -2,65 +2,70 @@ name: Build and Deploy MTM_MARKET
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ['master']
     paths:
       - packages/mtm_market/**
   pull_request:
-    branches: [ "master" ]
+    branches: ['master']
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout 🛎️
-      uses: actions/checkout@v3
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
 
-    - name: Use Node.js 18
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Use Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: .bun-version
 
-    - name: Cache npm packages
-      id: cache-dependencies
-      uses: actions/cache@v3
-      with:
-        path: |
-          **/node_modules
-        key: ${{ runner.os }}-mtm_market-${{ hashFiles('**/package.json') }}
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-    - name: Install shared Dependencies 🔧
-      if: steps.cache-dependencies.outputs.cache-hit != 'true'
-      run: |
-        cd packages/shared
-        yarn
+      - name: Cache dependencies
+        id: cache-dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-mtm_market-${{ hashFiles('**/bun.lock') }}
 
-    - name: Build shared 🔧
-      run: |
-        cd packages/shared
-        yarn build
+      - name: Install shared Dependencies 🔧
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: |
+          cd packages/shared
+          bun install --frozen-lockfile
 
-    - name: Install mtm_market Dependencies 🔧
-      if: steps.cache-dependencies.outputs.cache-hit != 'true'
-      run: |
-        cd packages/mtm_market
-        yarn
+      - name: Build shared 🔧
+        run: |
+          cd packages/shared
+          bun run build
 
-    - name: Build mtm_market 🔧
-      run: |
-        cd packages/mtm_market
-        SHA=${GITHUB_SHA} FLOW_ID=${GITHUB_RUN_ID} yarn build
+      - name: Install mtm_market Dependencies 🔧
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: |
+          cd packages/mtm_market
+          bun install --frozen-lockfile
 
-    - name: Deploy VPS 🚀
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        port: ${{ secrets.PORT }}
-        source: packages/mtm_market/dist/**
-        target: "${{ secrets.TARGET }}/mtm_market"
-        strip_components: 3
+      - name: Build mtm_market 🔧
+        run: |
+          cd packages/mtm_market
+          SHA=${GITHUB_SHA} FLOW_ID=${GITHUB_RUN_ID} bun run build
+
+      - name: Deploy VPS 🚀
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          source: packages/mtm_market/dist/**
+          target: '${{ secrets.TARGET }}/mtm_market'
+          strip_components: 3
 
     # - name: Deploy 🚀
     #   uses: JamesIves/github-pages-deploy-action@v4

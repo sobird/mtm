@@ -2,67 +2,72 @@ name: Build and Deploy MTM
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ['master']
     paths-ignore:
       - packages/**
   pull_request:
-    branches: [ "master" ]
+    branches: ['master']
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout 🛎️
-      uses: actions/checkout@v3
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
 
-    - name: Use Node.js 18
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Use Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: .bun-version
 
-    - name: Cache npm packages
-      id: cache-dependencies
-      uses: actions/cache@v3
-      with:
-        path: |
-          **/node_modules
-        key: ${{ runner.os }}-mtm-${{ hashFiles('**/package.json') }}
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-    - name: Install shared Dependencies 🔧
-      if: steps.cache-dependencies.outputs.cache-hit != 'true'
-      run: |
-        cd packages/shared
-        yarn
+      - name: Cache dependencies
+        id: cache-dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-mtm-${{ hashFiles('**/bun.lock') }}
 
-    - name: Build shared 🔧
-      run: |
-        cd packages/shared
-        yarn build
+      - name: Install shared Dependencies 🔧
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: |
+          cd packages/shared
+          bun install --frozen-lockfile
 
-    - name: Install mtm Dependencies 🔧
-      if: steps.cache-dependencies.outputs.cache-hit != 'true'
-      run: |
-        yarn
+      - name: Build shared 🔧
+        run: |
+          cd packages/shared
+          bun run build
 
-    - name: Running eslint
-      run: |
-        yarn lint:eslint
+      - name: Install mtm Dependencies 🔧
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: |
+          bun install --frozen-lockfile
 
-    - name: Build mtm 🔧
-      run: |
-        SHA=${GITHUB_SHA} FLOW_ID=${GITHUB_RUN_ID} yarn build
+      - name: Running oxlint
+        run: |
+          bun run lint
 
-    - name: Deploy VPS 🚀
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        port: ${{ secrets.PORT }}
-        source: dist/**
-        target: ${{ secrets.TARGET }}
-        strip_components: 1
+      - name: Build mtm 🔧
+        run: |
+          SHA=${GITHUB_SHA} FLOW_ID=${GITHUB_RUN_ID} bun run build
+
+      - name: Deploy VPS 🚀
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          source: dist/**
+          target: ${{ secrets.TARGET }}
+          strip_components: 1
     # - name: Deploy 🚀
     #   uses: JamesIves/github-pages-deploy-action@v4
     #   with:
@@ -73,4 +78,3 @@ jobs:
     #     clean-exclude: |
     #       mtm_market
     #     #commit-message: "${{ github.event.head_commit.message }} Updated By Github"
-    

@@ -7,10 +7,10 @@
 
 ```
 cd packages/shared
-yarn link
+bun link
 
 cd -
-yarn link @mtm/shared
+bun link @mtm/shared
 ```
 
 ## 全局文本复制
