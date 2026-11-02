@@ -1,13 +1,16 @@
 {
   "name": "mtm",
-  "description": "美团电商商家管理后台",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
+  "description": "美团电商商家管理后台",
   "scripts": {
-    "start": "NODE_ENV=development webpack serve",
+    "analyzer": "NODE_ENV=production webpack --mode=production --node-env=production --profile --json > stats.json && webpack-bundle-analyzer --port 8888 stats.json",
     "build": "webpack --mode=production --node-env=production",
-    "lint:eslint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 50",
-    "analyzer": "NODE_ENV=production webpack --mode=production --node-env=production --profile --json > stats.json && webpack-bundle-analyzer --port 8888 stats.json"
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "start": "NODE_ENV=development webpack serve"
   },
   "dependencies": {
     "@ant-design/icons": "^5.1.4",
@@ -52,15 +55,15 @@
     "css-minimizer-webpack-plugin": "^5.0.0",
     "dotenv-webpack": "^8.0.1",
     "esbuild-loader": "^3.0.1",
-    "eslint-config-sobird": "^0.1.17",
     "html-webpack-plugin": "^5.5.1",
     "less": "^4.2.0",
     "less-loader": "^11.1.2",
     "mini-css-extract-plugin": "^2.7.6",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
     "postcss": "^8.4.31",
     "postcss-loader": "^7.3.2",
     "postcss-preset-env": "^8.4.2",
-    "prettier": "^2.8.8",
     "purgecss-webpack-plugin": "^5.0.0",
     "raw-loader": "^4.0.2",
     "sass": "^1.63.3",
@@ -73,5 +76,6 @@
     "webpack-bundle-analyzer": "^4.9.0",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.15.1"
-  }
+  },
+  "packageManager": "bun@1.4.4"
 }
