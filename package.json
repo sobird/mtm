@@ -6,10 +6,13 @@
   "scripts": {
     "analyzer": "NODE_ENV=production webpack --mode=production --node-env=production --profile --json > stats.json && webpack-bundle-analyzer --port 8888 stats.json",
     "build": "webpack --mode=production --node-env=production",
+    "commitlint": "commitlint",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
+    "lint-staged": "lint-staged",
+    "prepare": "husky",
     "start": "NODE_ENV=development webpack serve"
   },
   "dependencies": {
@@ -42,6 +45,8 @@
     "redux-thunk": "^2.4.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@mdx-js/loader": "^2.3.0",
     "@types/js-cookie": "^3.0.3",
     "@types/lodash": "^4.14.200",
@@ -56,8 +61,10 @@
     "dotenv-webpack": "^8.0.1",
     "esbuild-loader": "^3.0.1",
     "html-webpack-plugin": "^5.5.1",
+    "husky": "^9.1.7",
     "less": "^4.2.0",
     "less-loader": "^11.1.2",
+    "lint-staged": "^17.6.0",
     "mini-css-extract-plugin": "^2.7.6",
     "oxfmt": "^0.75.0",
     "oxlint": "^1.90.0",
