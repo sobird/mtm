@@ -6,14 +6,13 @@
   "scripts": {
     "analyzer": "NODE_ENV=production webpack --mode=production --node-env=production --profile --json > stats.json && webpack-bundle-analyzer --port 8888 stats.json",
     "build": "webpack --mode=production --node-env=production",
-    "commitlint": "commitlint",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "lint-staged": "lint-staged",
     "prepare": "husky",
-    "start": "NODE_ENV=development webpack serve"
+    "start": "NODE_ENV=development webpack serve",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@ant-design/icons": "^5.1.4",
