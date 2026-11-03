@@ -1,0 +1,29 @@
+.toolbar {
+  margin-bottom: var(--space-4);
+}
+
+.actions {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+}
+
+.shopTitle {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
