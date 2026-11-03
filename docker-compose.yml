@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/sobird/my-react-app:latest
+    image: ghcr.io/sobird/mtm:latest
     ports: ['127.0.0.1:3000:3000']
     environment:
       - DATABASE_PATH=/data/mtm.sqlite
