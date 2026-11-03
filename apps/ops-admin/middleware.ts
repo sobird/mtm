@@ -5,7 +5,7 @@ import { authConfig } from '@/lib/auth.config';
 import { assertProductionSecret } from '@/lib/env';
 
 // These pages are reachable without a session.
-const PUBLIC_PATHS = ['/login'];
+const PUBLIC_PATHS = new Set(['/login']);
 
 export default NextAuth(authConfig).auth(req => {
   // Reject tokens signed with the committed placeholder secret in production.
@@ -19,7 +19,7 @@ export default NextAuth(authConfig).auth(req => {
     return NextResponse.redirect(new URL('/', req.nextUrl));
   }
 
-  const isPublic = PUBLIC_PATHS.some(path => pathname === path || pathname.startsWith(`${path}/`));
+  const isPublic = PUBLIC_PATHS.has(pathname);
 
   if (!isLoggedIn && !isPublic) {
     const callbackUrl = encodeURIComponent(pathname + search);
