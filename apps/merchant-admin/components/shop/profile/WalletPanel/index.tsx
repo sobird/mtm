@@ -13,13 +13,13 @@ export function WalletPanel() {
   return (
     <div className={styles.panel}>
       <WalletCard
-        account='小米妈妈家具旗舰店'
+        account='示例家居旗舰店'
         type={1}
         current
         balance={200}
         bindingBankCardNum={0}
-        name='小米妈妈'
-        phone='15321871599'
+        name='示例联系人'
+        phone='138****0000'
         walletId='123456'
         onChangeWallet={() => setAuthOpen(true)}
       />
