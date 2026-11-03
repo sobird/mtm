@@ -1,6 +1,6 @@
 // https://oxc.rs/docs/guide/usage/formatter/config.html
 {
-  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "$schema": "../../node_modules/oxfmt/configuration_schema.json",
   "sortPackageJson": { "sortScripts": true },
   "sortImports": { "newlinesBetween": true },
   "printWidth": 120,
@@ -9,5 +9,5 @@
   "trailingComma": "es5",
   "arrowParens": "avoid",
 
-  "ignorePatterns": ["bun.lock", ".next", "dist"],
+  "ignorePatterns": ["**/bun.lock", "**/.next", "**/dist", "**/generated"],
 }

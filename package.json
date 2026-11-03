@@ -10,9 +10,9 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "fmt": "turbo run format:fix",
-    "fmt:check": "turbo run format",
-    "lint": "turbo run lint",
+    "fmt": "oxfmt --config packages/config/oxfmt.jsonc scripts && turbo run format:fix",
+    "fmt:check": "oxfmt --check --config packages/config/oxfmt.jsonc scripts && turbo run format",
+    "lint": "oxlint -c packages/config/oxlint.jsonc scripts && turbo run lint",
     "prepare": "husky",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck"
@@ -28,11 +28,11 @@
   },
   "lint-staged": {
     "*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}": [
-      "oxlint --fix",
-      "oxfmt --write"
+      "oxlint --fix -c packages/config/oxlint.jsonc",
+      "oxfmt --write --config packages/config/oxfmt.jsonc"
     ],
     "*.{json,jsonc,json5,css,less,scss,md,mdx,html,yml,yaml}": [
-      "oxfmt --write"
+      "oxfmt --write --config packages/config/oxfmt.jsonc"
     ]
   },
   "packageManager": "bun@1.4.4",

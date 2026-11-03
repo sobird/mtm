@@ -1,6 +1,6 @@
 // https://oxc.rs/docs/guide/usage/linter/config.html
 {
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "unicorn", "oxc", "react", "jsx-a11y", "import", "node", "promise"],
   "categories": {
     "correctness": "error",
@@ -56,8 +56,8 @@
     {
       // antd is an implementation detail of the design-system wrapper. Pages and
       // feature components must import from `@/components/ui` instead.
-      "files": ["app/**", "components/**", "lib/**", "scripts/**", "tests/**"],
-      "excludeFiles": ["components/ui/**", "app/layout.tsx", "app/providers.tsx"],
+      "files": ["**/app/**", "**/components/**", "**/lib/**", "**/scripts/**", "**/tests/**"],
+      "excludeFiles": ["**/components/ui/**", "**/app/layout.tsx", "**/app/providers.tsx"],
       "rules": {
         "no-restricted-imports": [
           "error",
@@ -72,5 +72,5 @@
       },
     },
   ],
-  "ignorePatterns": [".next", "dist"],
+  "ignorePatterns": ["**/.next", "**/dist", "**/generated"],
 }
