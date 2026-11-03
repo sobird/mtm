@@ -4,10 +4,16 @@
   "private": true,
   "scripts": {
     "build": "next build",
+    "db:generate": "prisma generate",
+    "db:migrate": "bun --env-file=../../.env x prisma migrate deploy",
+    "db:migrate:dev": "bun --env-file=../../.env x prisma migrate dev",
+    "db:reset": "bun --env-file=../../.env x prisma migrate reset --force --skip-seed && bun --env-file=../../.env prisma/seed.ts",
+    "db:seed": "bun --env-file=../../.env prisma/seed.ts",
     "dev": "next dev -p 3000",
     "format": "oxfmt --check --config ../../packages/config/oxfmt.jsonc",
     "format:fix": "oxfmt --config ../../packages/config/oxfmt.jsonc",
     "lint": "oxlint -c ../../packages/config/oxlint.jsonc",
+    "postinstall": "prisma generate",
     "smoke": "NODE_ENV=production bun ../../scripts/smoke.ts",
     "start": "next start -p 3000",
     "test": "vitest run",
@@ -18,6 +24,7 @@
     "@ant-design/nextjs-registry": "^1.3.0",
     "@base-ui-components/react": "1.0.0-rc.0",
     "@hookform/resolvers": "^7.0.1",
+    "@prisma/client": "^6.19.3",
     "@tanstack/react-query": "^5.105.3",
     "antd": "^6.6.8",
     "classnames": "^2.3.2",
@@ -49,6 +56,7 @@
     "@types/react": "19",
     "@types/react-dom": "19",
     "jsdom": "^30.1.3",
+    "prisma": "^6.19.3",
     "typescript": "^5.0.2",
     "vitest": "^5.1.0"
   }

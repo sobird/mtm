@@ -1,0 +1,329 @@
+// commerce_merchant schema: accounts, authorization, and legacy merchant tables.
+// Phase 1 keeps the existing Sequelize tables here; Merchant, MerchantCategory,
+// and Product are transitional and move out in later phases.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("MERCHANT_DATABASE_URL")
+}
+
+enum AccountStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum PermissionType {
+  MENU
+  BUTTON
+  API
+}
+
+model MerchantAccount {
+  id           String                @id @default(cuid())
+  merchantId   String
+  username     String                @unique
+  passwordHash String?
+  name         String
+  phone        String?
+  interCode    String                @default("86")
+  isOwner      Boolean               @default(false)
+  status       AccountStatus         @default(ACTIVE)
+  lastLoginAt  DateTime?
+  createdAt    DateTime              @default(now())
+  roles        MerchantAccountRole[]
+}
+
+model MerchantRole {
+  id          String                   @id @default(cuid())
+  code        String                   @unique
+  name        String
+  permissions MerchantRolePermission[]
+  accounts    MerchantAccountRole[]
+}
+
+model MerchantPermission {
+  id         String                   @id @default(cuid())
+  code       String                   @unique // e.g. product:view / product:audit
+  name       String
+  type       PermissionType // MENU / BUTTON / API
+  parentCode String?
+  path       String? // menu path
+  icon       String?
+  sort       Int                      @default(0)
+  roles      MerchantRolePermission[]
+}
+
+model MerchantAccountRole {
+  accountId String
+  roleId    String
+  account   MerchantAccount @relation(fields: [accountId], references: [id])
+  role      MerchantRole    @relation(fields: [roleId], references: [id])
+
+  @@id([accountId, roleId])
+  @@index([roleId])
+}
+
+model MerchantRolePermission {
+  roleId       String
+  permissionId String
+  role         MerchantRole       @relation(fields: [roleId], references: [id])
+  permission   MerchantPermission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+}
+
+model MerchantLoginLog {
+  id        String   @id @default(cuid())
+  accountId String
+  ip        String?
+  userAgent String?
+  success   Boolean
+  createdAt DateTime @default(now())
+}
+
+model MerchantOperationLog {
+  id         String   @id @default(cuid())
+  accountId  String
+  action     String
+  resource   String
+  resourceId String?
+  detail     Json?
+  createdAt  DateTime @default(now())
+}
+
+// TRANSITIONAL: removed in Phase 3 when Merchant moves to commerce_core.
+model Merchant {
+  id      String  @id
+  name    String?
+  status  Int?
+  type    Int?
+  payload Json?
+}
+
+// TRANSITIONAL: removed in Phase 3 when MerchantCategory merges into the unified Category tree.
+model MerchantCategory {
+  id       String @id
+  parentId String
+  name     String
+  level    Int
+}
+
+model MerchantLicense {
+  id         String  @id
+  merchantId String
+  type       Int?
+  name       String?
+  url        String?
+  status     Int?
+  expireAt   String?
+}
+
+model MerchantEntry {
+  merchantId String @id
+  step       Int?
+  status     Int?
+  payload    Json?
+}
+
+model EntryTask {
+  id            String @id
+  merchantId    String
+  bizType       Int?
+  localCommerce Int?
+  status        Int?
+}
+
+model EntryType {
+  code        String  @id
+  name        String
+  templateUrl String?
+  payload     Json?
+}
+
+model MenuItem {
+  id             String  @id
+  parentId       String
+  title          String
+  icon           String?
+  url            String?
+  code           String?
+  auth           Boolean
+  index          String?
+  level          Int
+  sortId         Int
+  toolMenu       Boolean
+  permissionCode String?
+}
+
+model MenuBadge {
+  menuId        String  @id
+  actionType    Int?
+  noticeStyle   Int?
+  noticeContent String?
+}
+
+model MenuPreference {
+  accountId String
+  menuId    String
+  visible   Boolean @default(true)
+  sortIndex Int     @default(0)
+
+  @@id([accountId, menuId])
+}
+
+model MenuFavorite {
+  accountId String
+  menuId    String
+  sortIndex Int    @default(0)
+
+  @@id([accountId, menuId])
+}
+
+model Coupon {
+  id          String  @id
+  name        String?
+  displayName String?
+  type        Int?
+  target      Int?
+  status      Int?
+  ctime       Int?
+  stime       Int?
+  etime       Int?
+  price       Float?
+  discount    Float?
+  validDays   Int?
+  validStime  Int?
+  validEtime  Int?
+  sendCount   Int?
+  leftCount   Int?
+  stock       Int?
+  limit       Int?
+  putCrowd    Int?
+  useCrowd    Int?
+  position    Int?
+  ticketType  Int?
+  rule        Json?
+  putTerm     Json?
+  useTerm     Json?
+  spuList     Json?
+  spuIds      Json?
+  wmPoiIds    Json?
+}
+
+model Campaign {
+  id                String   @id
+  name              String?
+  type              Int?
+  startTime         String?
+  endTime           String?
+  applyStartTime    String?
+  applyEndTime      String?
+  startTimeStr      String?
+  endTimeStr        String?
+  applyStartTimeStr String?
+  applyEndTimeStr   String?
+  applyStatus       Int?
+  applySpuCount     Int?
+  applySkuCount     Int?
+  minStock          String?
+  maxStock          String?
+  cover             String?
+  canClickApply     Boolean?
+  payload           Json?
+}
+
+model Message {
+  kind         String
+  id           String
+  title        String?
+  type         Int?
+  content      String?  @db.Text
+  createTime   Int?
+  publishTime  Int?
+  duration     Int?
+  noticeStyle  Int?
+  notifyEnable Boolean?
+  actionList   Json?
+  payload      Json?
+
+  @@id([kind, id])
+}
+
+model Violation {
+  id           String @id
+  issueCount   Int?
+  appealCount  Int?
+  ticketAmount Int?
+  payload      Json?
+}
+
+model GoldPeriod {
+  id                 String  @id
+  lastPeriodStatus   Int?
+  currentPeriodSTime String?
+  currentPeriodETime String?
+  payload            Json?
+}
+
+model GoldStandard {
+  key       String  @id
+  periodId  String  @default("1")
+  name      String?
+  desc      String?
+  progress  String?
+  url       String?
+  qualified Int?
+  payload   Json?
+}
+
+model MerchantTask {
+  id            String @id
+  poiId         String @default("0")
+  curTaskCount  Int?
+  curAwardCount Int?
+  payload       Json?
+}
+
+model Registration {
+  id        String @id @default(cuid())
+  interCode String
+  mobile    String
+  status    Int    @default(0)
+}
+
+model Invitation {
+  id     String    @id @default(cuid())
+  code   String
+  mobile String
+  usedAt DateTime?
+}
+
+model ReferenceData {
+  key     String @id
+  payload Json?
+}
+
+model AnalysisSnapshot {
+  key     String @id
+  period  String
+  payload Json?
+}
+
+model SeedMeta {
+  version   String   @id
+  appliedAt DateTime
+}
+
+// TRANSITIONAL: removed in Phase 4 when the product payload is replaced by the
+// core-api product/version projection.
+model Product {
+  id      String @id @default(cuid())
+  poiId   String @default("0")
+  payload Json?
+}

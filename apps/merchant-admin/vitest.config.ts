@@ -9,7 +9,11 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
+    globalSetup: ['./tests/global-setup.ts'],
     include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],
+    // The global setup resets one shared test database.
+    fileParallelism: false,
+    testTimeout: 30_000,
     // Styles are irrelevant in jsdom.
     css: false,
   },
