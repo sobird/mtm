@@ -67,5 +67,8 @@
       "oxfmt --write"
     ]
   },
-  "packageManager": "bun@1.4.4"
+  "packageManager": "bun@1.4.4",
+  "trustedDependencies": [
+    "sqlite3"
+  ]
 }

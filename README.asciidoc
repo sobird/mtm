@@ -24,6 +24,7 @@
 ----
 DATABASE_PATH=./data/mtm.sqlite   # 可选，默认 ./data/mtm.sqlite
 AUTH_SECRET=change-me             # 必填，用于会话与验证码签名
+PORT=3000                         # 可选，默认 3000
 ----
 
 参考 `.env.example`。生产环境必须提供随机的 `AUTH_SECRET`。
@@ -34,8 +35,8 @@ AUTH_SECRET=change-me             # 必填，用于会话与验证码签名
 ----
 bun install        # 安装依赖
 bun run dev        # 开发服务器
-bun run build      # 生产构建
-bun run start      # 启动生产服务
+bun run build      # 生产构建（standalone 输出）
+bun run start      # 启动生产服务（本地调试，生产部署请使用 Docker）
 bun run test       # 运行测试（Vitest）
 bun run test:watch # 监听模式测试
 bun run lint       # oxlint
@@ -62,3 +63,23 @@ lib/db/seed/data/ # 种子数据（JSON）
 ## 数据库与种子数据
 
 应用启动时通过 `lib/db/seed` 初始化数据库结构并写入 `lib/db/seed/data` 中的种子数据，重复启动不会重复写入。
+
+## Docker 部署
+
+镜像为多阶段构建（Bun 安装/构建 + Node 22 slim 运行），以非 root 用户运行，SQLite 数据存放在 `/data`。Compose 使用命名卷 `mtm-data`，并读取 `.env.production`：
+
+[source,bash]
+----
+docker build -t ghcr.io/sobird/mtm:latest .
+docker compose up -d
+curl -s http://127.0.0.1:3000/api/health
+# {"code":0,"message":"ok","data":{"db":true}}
+----
+
+单副本运行；SQLite 卷只能挂载给一个写实例。宿主机 nginx 反向代理到 `127.0.0.1:3000`。
+
+## CI/CD
+
+`.github/workflows/deploy.yml` 在 `master` 分支推送时执行 lint、typecheck、test、build，然后构建镜像并推送 GHCR（`latest` 与 commit SHA 标签），最后通过 SSH 在服务器执行 `docker compose pull && docker compose up -d`。
+
+需要的仓库 Secrets：`HOST`、`USERNAME`、`KEY`、`PORT`、`TARGET`（服务器上 Compose 文件所在目录）。若 GHCR 镜像为私有，另需 `GHCR_USERNAME`、`GHCR_TOKEN`。
