@@ -1,7 +1,8 @@
 import { SeedMeta } from '../models';
 import { CORE_SEED_VERSION, seedCore } from './core';
+import { MARKETING_SEED_VERSION, seedMarketing } from './marketing';
 
-export { CORE_SEED_VERSION, seedCore };
+export { CORE_SEED_VERSION, MARKETING_SEED_VERSION, seedCore, seedMarketing };
 
 /**
  * Runs every seed group whose version has not been applied yet. Each group is
@@ -13,5 +14,11 @@ export async function seedDatabase(): Promise<void> {
 
   if (!coreApplied) {
     await seedCore();
+  }
+
+  const marketingApplied = await SeedMeta.findOne({ where: { version: MARKETING_SEED_VERSION } });
+
+  if (!marketingApplied) {
+    await seedMarketing();
   }
 }

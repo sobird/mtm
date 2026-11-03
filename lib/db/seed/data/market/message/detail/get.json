@@ -1,0 +1,39 @@
+{
+  "code": 0,
+  "msg": "SUCCESS",
+  "data": [
+    {
+      "id": 1,
+      "type": 1,
+      "notifyEnable": true,
+      "title": "测试弹窗立即关闭",
+      "content": "测试弹窗立即关闭的内容信息",
+      "createTime": 1623942037,
+      "publishTime": 1623942037,
+      "duration": -1,
+      "noticeStyle": 104,
+      "actionList": [
+        {
+          "name": "延迟5s关闭",
+          "type": 30,
+          "direct": ""
+        },
+        {
+          "name": "立即关闭",
+          "type": 40,
+          "direct": ""
+        },
+        {
+          "name": "关闭并跳转链接",
+          "type": 10,
+          "direct": "https://sobird.me/"
+        },
+        {
+          "name": "关闭并跳转链接",
+          "type": 10,
+          "direct": "https://sobird.me/"
+        }
+      ]
+    }
+  ]
+}

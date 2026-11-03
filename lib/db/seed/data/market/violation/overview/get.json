@@ -1,0 +1,9 @@
+{
+  "code": 0,
+  "msg": "SUCCESS",
+  "data": {
+    "issueCount": 32,
+    "appealCount": 6,
+    "ticketAmount": 1434
+  }
+}
