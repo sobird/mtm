@@ -8,7 +8,7 @@ afterAll(() => prisma.$disconnect());
 test('seeds core entities exactly once', async () => {
   await initDatabase();
   await initDatabase();
-  expect(await prisma.menuItem.count()).toBe(54);
+  expect(await prisma.menuItem.count()).toBe(57);
   expect(await prisma.menuFavorite.count()).toBe(10);
   expect(await prisma.merchantCategory.count()).toBe(173);
   const account = await prisma.merchantAccount.findFirst({ where: { phone: '13412345678' } });

@@ -42,10 +42,14 @@ model MerchantAccount {
 
 model MerchantRole {
   id          String                   @id @default(cuid())
-  code        String                   @unique
+  merchantId  String
+  code        String
   name        String
   permissions MerchantRolePermission[]
   accounts    MerchantAccountRole[]
+
+  @@unique([merchantId, code])
+  @@index([merchantId])
 }
 
 model MerchantPermission {

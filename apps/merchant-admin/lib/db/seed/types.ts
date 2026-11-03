@@ -20,6 +20,7 @@ export interface MenuItemRow {
   level: number;
   sortId: number;
   toolMenu: boolean;
+  permissionCode: string | null;
 }
 
 export interface MenuBadgeRow {

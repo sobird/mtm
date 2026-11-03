@@ -103,6 +103,7 @@ function normalizeMenuItem(row: RawRecord): MenuItemRow {
     level: num(row.level),
     sortId: num(row.sortId),
     toolMenu: bool(row.toolMenu),
+    permissionCode: typeof row.permissionCode === 'string' ? row.permissionCode : null,
   };
 }
 
