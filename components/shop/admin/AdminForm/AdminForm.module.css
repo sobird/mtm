@@ -1,0 +1,39 @@
+.form {
+  max-width: 600px;
+}
+
+.staticValue {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.muted {
+  margin-left: var(--space-1);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.uploadPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+  padding: var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  background: rgb(0 0 0 / 2%);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.actions {
+  margin-left: 142px;
+}
+
+@media (max-width: 768px) {
+  .actions {
+    margin-left: 0;
+  }
+}
