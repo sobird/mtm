@@ -1,0 +1,21 @@
+{
+  "name": "@mtm/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./permissions": "./src/permissions.ts"
+  },
+  "scripts": {
+    "format": "oxfmt --check --config ../../packages/config/oxfmt.jsonc",
+    "format:fix": "oxfmt --config ../../packages/config/oxfmt.jsonc",
+    "lint": "oxlint -c ../../packages/config/oxlint.jsonc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.2",
+    "vitest": "^5.1.0"
+  }
+}

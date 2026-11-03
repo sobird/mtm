@@ -77,6 +77,14 @@
       "name": "@mtm/config",
       "version": "0.0.0",
     },
+    "packages/contracts": {
+      "name": "@mtm/contracts",
+      "version": "0.0.0",
+      "devDependencies": {
+        "typescript": "^5.0.2",
+        "vitest": "^5.1.0",
+      },
+    },
   },
   "packages": {
     "@adobe/css-tools": ["@adobe/css-tools@4.5.0", "https://registry.npmmirror.com/@adobe/css-tools/-/css-tools-4.5.0.tgz", {}, "sha512-6OzddxPio9UiWTCemp4N8cYLV2ZN1ncRnV1cVGtve7dhPOtRkleRyx32GQCYSwDYgaHU3USMm84tNsvKzRCa1Q=="],
@@ -252,6 +260,8 @@
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "https://registry.npmmirror.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.31.tgz", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
     "@mtm/config": ["@mtm/config@workspace:packages/config"],
+
+    "@mtm/contracts": ["@mtm/contracts@workspace:packages/contracts"],
 
     "@mtm/core-api": ["@mtm/core-api@workspace:apps/core-api"],
 
