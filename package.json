@@ -11,6 +11,7 @@
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "prepare": "husky",
+    "smoke": "bun scripts/smoke.ts",
     "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",

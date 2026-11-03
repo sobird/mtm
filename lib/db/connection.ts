@@ -24,10 +24,6 @@ export const dbGlobal: DbGlobalState = (globalForDb.__mtmDb ??= {});
 function createSequelize(): Sequelize {
   const storage = getDatabasePath();
 
-  if (storage !== ':memory:') {
-    fs.mkdirSync(path.dirname(storage), { recursive: true });
-  }
-
   return new Sequelize({
     dialect: 'sqlite',
     storage,
@@ -35,6 +31,17 @@ function createSequelize(): Sequelize {
     // A single connection keeps an in-memory database shared and avoids write
     // contention for this single-instance demo app.
     pool: { max: 1 },
+    hooks: {
+      // Create the parent directory only when the connection is actually
+      // opened. Doing this at import time makes `next build` try to mkdir the
+      // production path (`/data`) while collecting page data, which fails on
+      // machines without that directory (and in the Docker builder stage).
+      beforeConnect() {
+        if (storage !== ':memory:') {
+          fs.mkdirSync(path.dirname(storage), { recursive: true });
+        }
+      },
+    },
   });
 }
 
