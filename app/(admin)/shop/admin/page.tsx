@@ -22,6 +22,16 @@ export default function ShopAdminPage() {
         </p>
       </div>
 
+      <div role='alert' className={`${styles.warning} ${styles.danger}`}>
+        <span className={`${styles.warningIcon} ${styles.dangerIcon}`} aria-hidden='true'>
+          !
+        </span>
+        <p className={styles.warningText}>
+          审核驳回。您申请修改的管理员信息审核不通过，请针对驳回原因进行修改后再次提交
+          <span className={styles.link}>去修改</span>
+        </p>
+      </div>
+
       <AdminForm />
     </PageContainer>
   );

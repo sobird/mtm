@@ -30,6 +30,15 @@
   line-height: 1.6;
 }
 
+.danger {
+  background: rgb(255 77 79 / 8%);
+  border-color: var(--color-danger);
+}
+
+.dangerIcon {
+  background: var(--color-danger);
+}
+
 .link {
   margin-left: var(--space-2);
   color: var(--color-info);

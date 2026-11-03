@@ -28,6 +28,14 @@
   border-radius: var(--radius-md);
 }
 
+.uploadNotes {
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-5);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
 .actions {
   margin-left: 142px;
 }
