@@ -1,13 +1,9 @@
 import { afterAll, expect, test } from 'vitest';
 
-process.env.DATABASE_PATH = ':memory:';
-
-const { sequelize, initDatabase } = await import('@/lib/db');
+const { prisma, initDatabase } = await import('@/lib/db');
 const { getWorkbench } = await import('@/lib/services/analysis');
 
-afterAll(async () => {
-  await sequelize.close();
-});
+afterAll(() => prisma.$disconnect());
 
 test('workbench exposes overview and realdata', async () => {
   await initDatabase();

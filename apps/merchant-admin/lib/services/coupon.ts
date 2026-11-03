@@ -1,9 +1,5 @@
-import type { WhereOptions } from 'sequelize';
-import { Op } from 'sequelize';
-
-import { sequelize } from '@/lib/db/connection';
-import type { CouponAttributes } from '@/lib/db/models';
-import { Coupon } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
+import { Prisma, type Coupon } from '@/lib/generated/prisma';
 import type { PaginationInput } from '@/lib/pagination';
 import { normalizePagination } from '@/lib/pagination';
 
@@ -116,6 +112,10 @@ const COUPON_WRITABLE_KEYS = [
   'wmPoiIds',
 ] as const;
 
+const COUPON_JSON_KEYS = new Set(['rule', 'putTerm', 'useTerm', 'spuList', 'spuIds', 'wmPoiIds']);
+
+type CouponDraft = Record<string, unknown>;
+
 /** Converts an epoch-second value to an ISO string, keeping nullish values null. */
 function toISO(value: unknown): string | null {
   if (value === null || value === undefined || value === '') {
@@ -186,12 +186,12 @@ function toCouponDetail(row: Coupon): CouponDetailDTO {
 }
 
 /** Applies the same detail-column derivations the marketing seed uses. */
-function withDerivedDetailFields(attributes: Partial<CouponAttributes>): Partial<CouponAttributes> {
+function withDerivedDetailFields(attributes: CouponDraft): CouponDraft {
   if (attributes.rule === null || attributes.rule === undefined) {
     attributes.rule = [attributes.price ?? 0, attributes.discount ?? 0];
   }
   if (attributes.stock === null || attributes.stock === undefined) {
-    attributes.stock = (attributes.sendCount ?? 0) + (attributes.leftCount ?? 0);
+    attributes.stock = ((attributes.sendCount as number) ?? 0) + ((attributes.leftCount as number) ?? 0);
   } else {
     if (attributes.sendCount === null || attributes.sendCount === undefined) {
       attributes.sendCount = attributes.stock;
@@ -210,50 +210,68 @@ function withDerivedDetailFields(attributes: Partial<CouponAttributes>): Partial
   return attributes;
 }
 
+/** Maps null JSON columns to Prisma's explicit JSON-null sentinel. */
+function toPrismaData(attributes: CouponDraft, includeId: boolean): Record<string, unknown> {
+  const data: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(attributes)) {
+    if (!includeId && key === 'id') {
+      continue;
+    }
+    if (COUPON_JSON_KEYS.has(key)) {
+      data[key] = value === null || value === undefined ? Prisma.JsonNull : value;
+    } else {
+      data[key] = value;
+    }
+  }
+
+  return data;
+}
+
 export async function listCoupons(
   query: CouponListQuery = {}
 ): Promise<{ total: number; pn: number; ps: number; list: CouponListItemDTO[] }> {
   const { pn, ps, offset } = normalizePagination(query);
 
-  const where: WhereOptions = {};
+  const where: Prisma.CouponWhereInput = {};
   if (query.status !== undefined) {
     where.status = query.status;
   }
   if (query.stime !== undefined) {
-    where.stime = { [Op.gte]: query.stime };
+    where.stime = { gte: query.stime };
   }
   if (query.etime !== undefined) {
-    where.etime = { [Op.lte]: query.etime };
+    where.etime = { lte: query.etime };
   }
   if (query.target !== undefined) {
     where.target = query.target;
   }
 
   const sortField: CouponSortField = query.sort ?? 'ctime';
-  const sortDirection = query.order === 'asc' ? 'ASC' : 'DESC';
+  const sortDirection: Prisma.SortOrder = query.order === 'asc' ? 'asc' : 'desc';
 
-  const { rows, count } = await Coupon.findAndCountAll({
-    where,
-    limit: ps,
-    offset,
-    // Sort fields are non-unique; the id tiebreaker keeps LIMIT/OFFSET pages
-    // stable so a row cannot appear on two pages (or vanish) across requests.
-    order: [
-      [sortField, sortDirection],
-      ['id', 'ASC'],
-    ],
-  });
+  // Sort fields are non-unique; the id tiebreaker keeps LIMIT/OFFSET pages
+  // stable so a row cannot appear on two pages (or vanish) across requests.
+  const orderBy: Prisma.CouponOrderByWithRelationInput[] = [
+    { [sortField]: sortDirection } as Prisma.CouponOrderByWithRelationInput,
+    { id: 'asc' },
+  ];
+
+  const [rows, total] = await Promise.all([
+    prisma.coupon.findMany({ where, take: ps, skip: offset, orderBy }),
+    prisma.coupon.count({ where }),
+  ]);
 
   const list: CouponListItemDTO[] = [];
   for (const row of rows) {
     list.push(toCouponListItem(row));
   }
 
-  return { total: Array.isArray(count) ? count.length : count, pn, ps, list };
+  return { total, pn, ps, list };
 }
 
 export async function getCoupon(id: string): Promise<CouponDetailDTO> {
-  const row = await Coupon.findByPk(id);
+  const row = await prisma.coupon.findUnique({ where: { id } });
 
   if (!row) {
     throw new AppError('NOT_FOUND', 404, '优惠券不存在');
@@ -274,7 +292,7 @@ export async function createCoupon(input: CouponUpsertInput): Promise<CouponDeta
   const stime = input.stime ?? Number(putTerm[0] ?? 0);
   const etime = input.etime ?? Number(putTerm[1] ?? 0);
 
-  const attributes: CouponAttributes = withDerivedDetailFields({
+  const attributes = withDerivedDetailFields({
     id: input.id ?? `${Date.now()}`,
     name,
     displayName: input.displayName ?? name,
@@ -303,25 +321,26 @@ export async function createCoupon(input: CouponUpsertInput): Promise<CouponDeta
     spuList: input.spuList ?? [],
     spuIds: input.spuIds ?? [],
     wmPoiIds: input.wmPoiIds ?? [],
-  }) as CouponAttributes;
+  });
 
-  const row = await Coupon.create(attributes);
+  const row = await prisma.coupon.create({
+    data: toPrismaData(attributes, true) as Prisma.CouponUncheckedCreateInput,
+  });
 
   return toCouponDetail(row);
 }
 
 export async function updateCoupon(id: string, input: Partial<CouponUpsertInput>): Promise<CouponDetailDTO> {
-  const row = await Coupon.findByPk(id);
+  const existing = await prisma.coupon.findUnique({ where: { id } });
 
-  if (!row) {
+  if (!existing) {
     throw new AppError('NOT_FOUND', 404, '优惠券不存在');
   }
 
-  const patch: Partial<CouponAttributes> = {};
-  const patchRecord = patch as Record<string, unknown>;
+  const attributes: CouponDraft = { ...existing };
   for (const key of COUPON_WRITABLE_KEYS) {
     if (input[key] !== undefined) {
-      patchRecord[key] = input[key];
+      attributes[key] = input[key];
     }
   }
 
@@ -331,37 +350,32 @@ export async function updateCoupon(id: string, input: Partial<CouponUpsertInput>
     const etime = toEpoch(putTerm[1]);
 
     if (input.stime === undefined && stime !== undefined) {
-      patch.stime = stime;
+      attributes.stime = stime;
     }
     if (input.etime === undefined && etime !== undefined) {
-      patch.etime = etime;
+      attributes.etime = etime;
     }
   }
 
-  row.set(patch);
-  withDerivedDetailFields(row as unknown as Partial<CouponAttributes>);
+  withDerivedDetailFields(attributes);
 
-  for (const key of ['rule', 'putTerm', 'useTerm', 'spuList', 'spuIds', 'wmPoiIds'] as const) {
-    if (input[key] !== undefined) {
-      row.changed(key, true);
-    }
-  }
-
-  await row.save();
+  const row = await prisma.coupon.update({
+    where: { id },
+    data: toPrismaData(attributes, false) as Prisma.CouponUncheckedUpdateInput,
+  });
 
   return toCouponDetail(row);
 }
 
 export async function offlineCoupon(id: string): Promise<CouponDetailDTO> {
-  await sequelize.transaction(async transaction => {
-    const row = await Coupon.findByPk(id, { transaction });
+  await prisma.$transaction(async transaction => {
+    const row = await transaction.coupon.findUnique({ where: { id } });
 
     if (!row) {
       throw new AppError('NOT_FOUND', 404, '优惠券不存在');
     }
 
-    row.status = 6;
-    await row.save({ transaction });
+    await transaction.coupon.update({ where: { id }, data: { status: 6 } });
   });
 
   return getCoupon(id);

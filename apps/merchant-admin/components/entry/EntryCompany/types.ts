@@ -11,7 +11,7 @@ export interface MerchantOptions {
 }
 
 export interface EntryCompanyDetail {
-  entryTaskId?: number;
+  entryTaskId?: string;
   bizType?: number;
   audit?: { auditState?: number; [key: string]: unknown };
   company?: Record<string, unknown>;

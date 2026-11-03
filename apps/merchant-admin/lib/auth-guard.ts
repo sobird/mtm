@@ -3,8 +3,8 @@ import { assertProductionSecret } from '@/lib/env';
 import { AppError } from '@/lib/errors';
 
 export interface AuthContext {
-  accountId: number;
-  merchantId: number;
+  accountId: string;
+  merchantId: string;
 }
 
 /** Returns the current account, throwing a 401 `AppError` when unauthenticated. */

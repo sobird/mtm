@@ -33,7 +33,7 @@ function categoryPath(categoryId: number | undefined, categories: MerchantCatego
 
   const byId = new Map(categories.map(item => [item.id, item]));
   const names: string[] = [];
-  let current = byId.get(categoryId);
+  let current = byId.get(String(categoryId));
   let guard = 0;
 
   while (current && guard < 20) {

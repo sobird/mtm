@@ -12,5 +12,5 @@ const categoryQuerySchema = z.object({
 export const GET = withPublic(async ({ request }) => {
   const { parentId } = parseQuery(request, categoryQuerySchema);
 
-  return getCategories(parentId);
+  return getCategories(parentId === undefined ? undefined : String(parentId));
 });

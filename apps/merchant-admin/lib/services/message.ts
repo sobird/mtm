@@ -1,7 +1,9 @@
-import type { MessageKind } from '@/lib/db/models';
-import { Message } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
+import type { Message } from '@/lib/generated/prisma';
 
 import { AppError } from '../errors';
+
+export type MessageKind = 'news' | 'detail';
 
 export interface MessageBriefDTO {
   kind: MessageKind;
@@ -35,7 +37,7 @@ function toISO(value: unknown): string | null {
 
 function toMessageBriefDTO(row: Message): MessageBriefDTO {
   return {
-    kind: row.kind,
+    kind: row.kind as MessageKind,
     id: row.id,
     type: row.type ?? 0,
     title: row.title ?? '',
@@ -56,9 +58,9 @@ function toMessageDTO(row: Message): MessageDTO {
 }
 
 export async function getLatestMessages(): Promise<MessageBriefDTO[]> {
-  const rows = await Message.findAll({
+  const rows = await prisma.message.findMany({
     where: { kind: 'news' },
-    order: [['publishTime', 'DESC']],
+    orderBy: { publishTime: 'desc' },
   });
 
   const list: MessageBriefDTO[] = [];
@@ -70,7 +72,7 @@ export async function getLatestMessages(): Promise<MessageBriefDTO[]> {
 }
 
 export async function getMessage(id: string): Promise<MessageDTO> {
-  const row = await Message.findOne({ where: { kind: 'detail', id } });
+  const row = await prisma.message.findUnique({ where: { kind_id: { kind: 'detail', id } } });
 
   if (!row) {
     throw new AppError('NOT_FOUND', 404, '消息不存在');

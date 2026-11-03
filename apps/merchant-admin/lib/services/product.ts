@@ -1,4 +1,4 @@
-import { Product } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
 
 export interface ProductDTO {
   [key: string]: unknown;
@@ -15,7 +15,7 @@ function asRecord(value: unknown): Record<string, unknown> {
 export async function getSellingProduct(poiId?: number): Promise<{ total: number; items: ProductDTO[] }> {
   void poiId;
 
-  const row = await Product.findOne({ order: [['id', 'ASC']] });
+  const row = await prisma.product.findFirst({ orderBy: { id: 'asc' } });
 
   if (!row) {
     return { total: 0, items: [] };

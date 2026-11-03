@@ -1,4 +1,4 @@
-import { Violation } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
 
 import { AppError } from '../errors';
 
@@ -9,7 +9,7 @@ export interface ViolationOverviewDTO {
 }
 
 export async function getViolationOverview(): Promise<ViolationOverviewDTO> {
-  const row = await Violation.findOne({ order: [['id', 'ASC']] });
+  const row = await prisma.violation.findFirst({ orderBy: { id: 'asc' } });
 
   if (!row) {
     throw new AppError('NOT_FOUND', 404, '违规数据不存在');

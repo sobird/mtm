@@ -1,4 +1,4 @@
-import { Invitation, Registration } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
 
 export interface RegisterInput {
   interCode: string;
@@ -10,21 +10,28 @@ export interface RegisterInput {
  * Idempotent registration: the captcha is verified by the route handler.
  */
 export async function register(input: RegisterInput): Promise<void> {
-  await Registration.findOrCreate({
+  const existing = await prisma.registration.findFirst({
     where: { interCode: input.interCode, mobile: input.mobile },
-    defaults: {
-      interCode: input.interCode,
-      mobile: input.mobile,
-      status: 0,
-    },
   });
+
+  if (!existing) {
+    await prisma.registration.create({
+      data: {
+        interCode: input.interCode,
+        mobile: input.mobile,
+        status: 0,
+      },
+    });
+  }
 }
 
 /** Marks an invitation code as accepted by the anonymous onboarding flow. */
 export async function acceptInvitation(code: string): Promise<void> {
-  await Invitation.create({
-    code: String(code),
-    mobile: '',
-    usedAt: new Date(),
+  await prisma.invitation.create({
+    data: {
+      code: String(code),
+      mobile: '',
+      usedAt: new Date(),
+    },
   });
 }

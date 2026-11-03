@@ -1,4 +1,5 @@
-import { Merchant, MerchantCategory, MerchantLicense } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
+import { Prisma, type Merchant } from '@/lib/generated/prisma';
 import type { PaginationInput } from '@/lib/pagination';
 import { normalizePagination } from '@/lib/pagination';
 
@@ -6,7 +7,7 @@ import { AppError } from '../errors';
 import { getReferenceData } from './reference-data';
 
 export interface MerchantDTO {
-  id: number;
+  id: number | string;
   name?: string;
   status?: number;
   type?: number;
@@ -14,15 +15,15 @@ export interface MerchantDTO {
 }
 
 export interface MerchantCategoryDTO {
-  id: number;
-  parentId: number;
+  id: string;
+  parentId: string;
   name: string;
   level: number;
 }
 
 export interface LicenseDTO {
-  id: number;
-  merchantId: number;
+  id: string;
+  merchantId: string;
   type: number;
   name: string;
   url: string;
@@ -45,14 +46,14 @@ function toMerchantDTO(merchant: Merchant): MerchantDTO {
 
   dto.id = typeof payload.id === 'number' ? payload.id : merchant.id;
   dto.name = merchant.name ?? (payload.name as string) ?? '';
-  dto.status = merchant.status;
-  dto.type = merchant.type;
+  dto.status = merchant.status ?? undefined;
+  dto.type = merchant.type ?? undefined;
 
   return dto;
 }
 
-export async function getMerchant(merchantId: number): Promise<MerchantDTO> {
-  const merchant = await Merchant.findByPk(merchantId);
+export async function getMerchant(merchantId: string): Promise<MerchantDTO> {
+  const merchant = await prisma.merchant.findUnique({ where: { id: merchantId } });
 
   if (!merchant) {
     throw new AppError('NOT_FOUND', 404, '商家不存在');
@@ -63,24 +64,23 @@ export async function getMerchant(merchantId: number): Promise<MerchantDTO> {
 
 export async function listMerchants(params: PaginationInput): Promise<{ total: number; list: MerchantDTO[] }> {
   const { ps, offset } = normalizePagination(params ?? {});
-  const { rows, count } = await Merchant.findAndCountAll({
-    limit: ps,
-    offset,
-    order: [['id', 'ASC']],
-  });
+  const [rows, count] = await Promise.all([
+    prisma.merchant.findMany({ take: ps, skip: offset, orderBy: { id: 'asc' } }),
+    prisma.merchant.count(),
+  ]);
 
   const list: MerchantDTO[] = [];
   for (const row of rows) {
     list.push(toMerchantDTO(row));
   }
 
-  return { total: Array.isArray(count) ? count.length : count, list };
+  return { total: count, list };
 }
 
-export async function getCategories(parentId?: number): Promise<MerchantCategoryDTO[]> {
-  const rows = await MerchantCategory.findAll({
+export async function getCategories(parentId?: string): Promise<MerchantCategoryDTO[]> {
+  const rows = await prisma.merchantCategory.findMany({
     where: parentId === undefined ? undefined : { parentId },
-    order: [['id', 'ASC']],
+    orderBy: { id: 'asc' },
   });
 
   const list: MerchantCategoryDTO[] = [];
@@ -100,10 +100,10 @@ export async function getMerchantOptions(): Promise<Record<string, unknown>> {
   return getReferenceData<Record<string, unknown>>('merchant-options');
 }
 
-export async function listLicenses(merchantId: number): Promise<LicenseDTO[]> {
-  const rows = await MerchantLicense.findAll({
+export async function listLicenses(merchantId: string): Promise<LicenseDTO[]> {
+  const rows = await prisma.merchantLicense.findMany({
     where: { merchantId },
-    order: [['id', 'ASC']],
+    orderBy: { id: 'asc' },
   });
 
   const list: LicenseDTO[] = [];
@@ -111,19 +111,19 @@ export async function listLicenses(merchantId: number): Promise<LicenseDTO[]> {
     list.push({
       id: row.id,
       merchantId: row.merchantId,
-      type: row.type,
-      name: row.name,
-      url: row.url,
-      status: row.status,
-      expireAt: row.expireAt,
+      type: row.type ?? 0,
+      name: row.name ?? '',
+      url: row.url ?? '',
+      status: row.status ?? 0,
+      expireAt: row.expireAt ?? '',
     });
   }
 
   return list;
 }
 
-export async function signContract(merchantId: number, input: SignContractInput): Promise<void> {
-  const merchant = await Merchant.findByPk(merchantId);
+export async function signContract(merchantId: string, input: SignContractInput): Promise<void> {
+  const merchant = await prisma.merchant.findUnique({ where: { id: merchantId } });
 
   if (!merchant) {
     throw new AppError('NOT_FOUND', 404, '商家不存在');
@@ -133,7 +133,8 @@ export async function signContract(merchantId: number, input: SignContractInput)
   const contract = asRecord(payload.contract);
   payload.contract = { ...contract, name: input.name, idCard: input.idCard };
 
-  merchant.payload = payload;
-  merchant.changed('payload', true);
-  await merchant.save();
+  await prisma.merchant.update({
+    where: { id: merchantId },
+    data: { payload: payload as Prisma.InputJsonValue },
+  });
 }

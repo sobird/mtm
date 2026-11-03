@@ -1,8 +1,6 @@
 import { afterAll, expect, test } from 'vitest';
 
-process.env.DATABASE_PATH = ':memory:';
-
-const { sequelize, initDatabase } = await import('@/lib/db');
+const { prisma, initDatabase } = await import('@/lib/db');
 const { listCoupons, getCoupon, offlineCoupon } = await import('@/lib/services/coupon');
 const { listCampaigns } = await import('@/lib/services/campaign');
 const { getLatestMessages, getMessage } = await import('@/lib/services/message');
@@ -12,9 +10,7 @@ const { getGold } = await import('@/lib/services/gold');
 const { listMerchantTasks } = await import('@/lib/services/merchant-task');
 const { getWorkbench, getTrending, getOperation } = await import('@/lib/services/analysis');
 
-afterAll(async () => {
-  await sequelize.close();
-});
+afterAll(() => prisma.$disconnect());
 
 test('list total comes from the database, not the mock', async () => {
   await initDatabase();

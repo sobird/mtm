@@ -1,8 +1,8 @@
-import { MerchantTask } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
 
 export interface MerchantTaskDTO {
-  id: number;
-  poiId: number;
+  id: string;
+  poiId: string;
   curTaskCount: number;
   curAwardCount: number;
 }
@@ -14,7 +14,7 @@ export interface MerchantTaskDTO {
 export async function listMerchantTasks(poiId: number): Promise<MerchantTaskDTO[]> {
   void poiId;
 
-  const rows = await MerchantTask.findAll({ order: [['id', 'ASC']] });
+  const rows = await prisma.merchantTask.findMany({ orderBy: { id: 'asc' } });
 
   const list: MerchantTaskDTO[] = [];
   for (const row of rows) {

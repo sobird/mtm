@@ -1,5 +1,5 @@
-import { sequelize } from '@/lib/db/connection';
-import { MenuBadge, MenuFavorite, MenuItem } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
+import type { MenuItem } from '@/lib/generated/prisma';
 import { listToTree } from '@/lib/menu-tree';
 
 import { AppError } from '../errors';
@@ -63,7 +63,7 @@ async function findMenuItems(ids: string[]): Promise<Map<string, MenuItemDTO>> {
     return map;
   }
 
-  const rows = await MenuItem.findAll({ where: { id: ids } });
+  const rows = await prisma.menuItem.findMany({ where: { id: { in: ids } } });
 
   for (const row of rows) {
     map.set(row.id, toMenuItemDTO(row));
@@ -72,8 +72,8 @@ async function findMenuItems(ids: string[]): Promise<Map<string, MenuItemDTO>> {
   return map;
 }
 
-export async function getMenu(accountId: number): Promise<MenuDTO> {
-  const rows = await MenuItem.findAll();
+export async function getMenu(accountId: string): Promise<MenuDTO> {
+  const rows = await prisma.menuItem.findMany();
 
   const items: MenuItemDTO[] = [];
   for (const row of rows) {
@@ -86,9 +86,9 @@ export async function getMenu(accountId: number): Promise<MenuDTO> {
     menuItems[menuItems.length - 1].last = true;
   }
 
-  const favoriteRows = await MenuFavorite.findAll({
+  const favoriteRows = await prisma.menuFavorite.findMany({
     where: { accountId },
-    order: [['sortIndex', 'ASC']],
+    orderBy: { sortIndex: 'asc' },
   });
   const itemMap = await findMenuItems(favoriteRows.map(row => row.menuId));
 
@@ -103,7 +103,7 @@ export async function getMenu(accountId: number): Promise<MenuDTO> {
   return { menuItems, favorites };
 }
 
-export async function updateMenuFavorites(accountId: number, favorites: { id: string }[]): Promise<MenuItemDTO[]> {
+export async function updateMenuFavorites(accountId: string, favorites: { id: string }[]): Promise<MenuItemDTO[]> {
   const ids: string[] = [];
   const seen = new Set<string>();
   for (const favorite of favorites) {
@@ -120,7 +120,7 @@ export async function updateMenuFavorites(accountId: number, favorites: { id: st
   const itemMap = await findMenuItems(ids);
 
   const result: MenuItemDTO[] = [];
-  const rows: { accountId: number; menuId: string; sortIndex: number }[] = [];
+  const rows: { accountId: string; menuId: string; sortIndex: number }[] = [];
   for (const id of ids) {
     const item = itemMap.get(id);
     if (item) {
@@ -129,10 +129,10 @@ export async function updateMenuFavorites(accountId: number, favorites: { id: st
     }
   }
 
-  await sequelize.transaction(async transaction => {
-    await MenuFavorite.destroy({ where: { accountId }, transaction });
+  await prisma.$transaction(async transaction => {
+    await transaction.menuFavorite.deleteMany({ where: { accountId } });
     if (rows.length > 0) {
-      await MenuFavorite.bulkCreate(rows, { transaction });
+      await transaction.menuFavorite.createMany({ data: rows });
     }
   });
 
@@ -140,7 +140,7 @@ export async function updateMenuFavorites(accountId: number, favorites: { id: st
 }
 
 export async function getMenuBadges(): Promise<MenuBadgeDTO[]> {
-  const rows = await MenuBadge.findAll({ order: [['menuId', 'ASC']] });
+  const rows = await prisma.menuBadge.findMany({ orderBy: { menuId: 'asc' } });
 
   const list: MenuBadgeDTO[] = [];
   for (const row of rows) {

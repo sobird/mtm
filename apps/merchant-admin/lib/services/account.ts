@@ -1,13 +1,15 @@
-import { Account } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
+import { SEED_MERCHANT_ID } from '@/lib/db/seed/ids';
+import type { MerchantAccount } from '@/lib/generated/prisma';
 
 import { AppError } from '../errors';
 
 export interface AccountDTO {
-  id: number;
+  id: string;
   login: string;
   mobile: string;
   interCode: string;
-  merchantId: number;
+  merchantId: string;
 }
 
 export interface UpsertAccountInput {
@@ -15,18 +17,18 @@ export interface UpsertAccountInput {
   mobile: string;
 }
 
-function toAccountDTO(account: Account): AccountDTO {
+function toAccountDTO(account: MerchantAccount): AccountDTO {
   return {
     id: account.id,
-    login: account.login,
-    mobile: account.mobile,
+    login: account.username,
+    mobile: account.phone ?? '',
     interCode: account.interCode,
     merchantId: account.merchantId,
   };
 }
 
-export async function getAccount(accountId: number): Promise<AccountDTO> {
-  const account = await Account.findByPk(accountId);
+export async function getAccount(accountId: string): Promise<AccountDTO> {
+  const account = await prisma.merchantAccount.findUnique({ where: { id: accountId } });
 
   if (!account) {
     throw new AppError('NOT_FOUND', 404, '账号不存在');
@@ -36,15 +38,22 @@ export async function getAccount(accountId: number): Promise<AccountDTO> {
 }
 
 export async function upsertAccount(input: UpsertAccountInput): Promise<AccountDTO> {
-  const [account] = await Account.findOrCreate({
-    where: { interCode: input.interCode, mobile: input.mobile },
-    defaults: {
-      login: input.mobile,
-      mobile: input.mobile,
-      interCode: input.interCode,
-      merchantId: 1,
-    },
+  const existing = await prisma.merchantAccount.findFirst({
+    where: { interCode: input.interCode, phone: input.mobile },
   });
+
+  const account =
+    existing ??
+    (await prisma.merchantAccount.create({
+      data: {
+        username: input.mobile,
+        phone: input.mobile,
+        interCode: input.interCode,
+        merchantId: SEED_MERCHANT_ID,
+        name: input.mobile,
+        isOwner: false,
+      },
+    }));
 
   return toAccountDTO(account);
 }

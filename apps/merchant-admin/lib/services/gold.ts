@@ -1,4 +1,4 @@
-import { GoldPeriod, GoldStandard } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
 
 import { AppError } from '../errors';
 
@@ -27,13 +27,13 @@ export async function getGold(poiId: number, periodType: number): Promise<GoldDT
   void poiId;
   void periodType;
 
-  const period = await GoldPeriod.findOne({ order: [['id', 'ASC']] });
+  const period = await prisma.goldPeriod.findFirst({ orderBy: { id: 'asc' } });
 
   if (!period) {
     throw new AppError('NOT_FOUND', 404, '金牌商家数据不存在');
   }
 
-  const rows = await GoldStandard.findAll({ where: { periodId: period.id } });
+  const rows = await prisma.goldStandard.findMany({ where: { periodId: period.id } });
 
   const standards: GoldStandardDTO[] = [];
   for (const row of rows) {

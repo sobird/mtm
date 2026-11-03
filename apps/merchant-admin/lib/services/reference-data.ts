@@ -1,9 +1,9 @@
-import { ReferenceData } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
 
 import { AppError } from '../errors';
 
 export async function getReferenceData<T>(key: string): Promise<T> {
-  const row = await ReferenceData.findByPk(key);
+  const row = await prisma.referenceData.findUnique({ where: { key } });
 
   if (!row) {
     throw new AppError('NOT_FOUND', 404, '数据不存在');

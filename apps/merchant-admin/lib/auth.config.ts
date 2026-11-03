@@ -4,8 +4,8 @@ import type { NextAuthConfig } from 'next-auth';
  * Edge-safe Auth.js configuration.
  *
  * Auth.js is instantiated from this object in `middleware.ts`, which runs on the
- * Edge runtime. Keep this module free of Node-only imports (`sequelize`,
- * `sqlite3`, `next/headers`, ...); the Credentials provider and its `authorize`
+ * Edge runtime. Keep this module free of Node-only imports (`next/headers`,
+ * database clients, ...); the Credentials provider and its `authorize`
  * callback live in `lib/auth.ts`, which is server-only.
  */
 export const authConfig = {
@@ -44,8 +44,8 @@ export const authConfig = {
     },
     jwt({ token, user }) {
       if (user) {
-        token.accountId = user.accountId;
-        token.merchantId = user.merchantId;
+        token.accountId = String(user.accountId);
+        token.merchantId = String(user.merchantId);
         token.mobile = user.mobile;
         token.interCode = user.interCode;
         token.login = user.login;
@@ -57,8 +57,14 @@ export const authConfig = {
     session({ session, token }) {
       if (session.user) {
         session.user.id = token.sub as string;
-        session.user.accountId = token.accountId as number;
-        session.user.merchantId = token.merchantId as number;
+        // Tokens issued before the Prisma migration may still carry numeric
+        // ids, so normalize them instead of trusting the token shape.
+        if (token.accountId !== undefined) {
+          session.user.accountId = String(token.accountId);
+        }
+        if (token.merchantId !== undefined) {
+          session.user.merchantId = String(token.merchantId);
+        }
         session.user.mobile = token.mobile as string;
         session.user.interCode = token.interCode as string;
         session.user.login = token.login as string;

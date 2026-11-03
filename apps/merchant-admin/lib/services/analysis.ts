@@ -1,5 +1,5 @@
-import type { AnalysisKey } from '@/lib/db/models';
-import { AnalysisSnapshot } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
+import type { AnalysisKey } from '@/lib/db/seed/types';
 
 import { AppError } from '../errors';
 
@@ -61,7 +61,7 @@ function asRecord(value: unknown): Record<string, unknown> {
 }
 
 async function getSnapshot<T>(key: AnalysisKey): Promise<T> {
-  const row = await AnalysisSnapshot.findByPk(key);
+  const row = await prisma.analysisSnapshot.findUnique({ where: { key } });
 
   if (!row) {
     throw new AppError('NOT_FOUND', 404, '分析数据不存在');

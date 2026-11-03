@@ -1,6 +1,5 @@
-import type { WhereOptions } from 'sequelize';
-
-import { Campaign } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
+import type { Campaign, Prisma } from '@/lib/generated/prisma';
 import type { PaginationInput } from '@/lib/pagination';
 import { normalizePagination } from '@/lib/pagination';
 
@@ -92,7 +91,7 @@ export async function listCampaigns(query: CampaignListQuery = {}): Promise<{ to
 
   // The tab mapping is inferred from the seeded data and the legacy tab labels:
   // tab 1 ("报名中") -> applyStatus 2, tab 2 ("我报名的") -> applyStatus 3.
-  const where: WhereOptions = {};
+  const where: Prisma.CampaignWhereInput = {};
   const tab = query.type === undefined ? undefined : String(query.type);
   if (query.applyStatus !== undefined) {
     where.applyStatus = query.applyStatus;
@@ -102,12 +101,10 @@ export async function listCampaigns(query: CampaignListQuery = {}): Promise<{ to
     where.applyStatus = 3;
   }
 
-  const { rows, count } = await Campaign.findAndCountAll({
-    where,
-    limit: ps,
-    offset,
-    order: [['id', 'DESC']],
-  });
+  const [rows, total] = await Promise.all([
+    prisma.campaign.findMany({ where, take: ps, skip: offset, orderBy: { id: 'desc' } }),
+    prisma.campaign.count({ where }),
+  ]);
 
   const list: CampaignDTO[] = [];
   for (const row of rows) {
@@ -116,5 +113,5 @@ export async function listCampaigns(query: CampaignListQuery = {}): Promise<{ to
 
   const limited = typeof query.max === 'number' && query.max >= 0 ? list.slice(0, query.max) : list;
 
-  return { total: Array.isArray(count) ? count.length : count, list: limited };
+  return { total, list: limited };
 }

@@ -1,19 +1,43 @@
-import { afterAll, expect, test, vi } from 'vitest';
-
-process.env.DATABASE_PATH = ':memory:';
+import { afterAll, beforeAll, expect, test, vi } from 'vitest';
 
 vi.mock('@/lib/auth-guard', () => ({
-  requireAccount: vi.fn().mockResolvedValue({ accountId: 1, merchantId: 1 }),
+  requireAccount: vi.fn().mockResolvedValue({ accountId: '1', merchantId: '1' }),
 }));
 
-const { initDatabase, sequelize } = await import('@/lib/db');
+const { prisma, initDatabase } = await import('@/lib/db');
 const couponRoutes = await import('@/app/api/merchant/coupon/route');
 const { GET, DELETE, PATCH } = await import('@/app/api/merchant/coupon/[id]/route');
 const { GET: campaignsGET } = await import('@/app/api/merchant/campaigns/route');
 const { GET: latestNewsGET } = await import('@/app/api/message/latest-news/route');
 
+// The suite shares one PostgreSQL test database across files, so restore the
+// coupon rows this file mutates and remove the row it creates.
+let original: Awaited<ReturnType<typeof prisma.coupon.findUnique>> = null;
+let createdId: string | undefined;
+
+beforeAll(async () => {
+  await initDatabase();
+  original = await prisma.coupon.findUnique({ where: { id: '500145265' } });
+});
+
 afterAll(async () => {
-  await sequelize.close();
+  if (createdId) {
+    await prisma.coupon.deleteMany({ where: { id: createdId } });
+  }
+  if (original) {
+    await prisma.coupon.update({
+      where: { id: '500145265' },
+      data: {
+        name: original.name,
+        displayName: original.displayName,
+        status: original.status,
+        stime: original.stime,
+        etime: original.etime,
+        putTerm: original.putTerm ?? undefined,
+      },
+    });
+  }
+  await prisma.$disconnect();
 });
 
 function jsonRequest(url: string, method: string, body: unknown): Request {
@@ -97,6 +121,7 @@ test('POST creates a coupon and returns the derived rule', async () => {
   const body = await res.json();
   expect(body.data.name).toBe('新建测试券');
   expect(body.data.rule).toEqual([100, 10]);
+  createdId = body.data.id;
 });
 
 test('PATCH updates the coupon name', async () => {

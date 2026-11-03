@@ -1,18 +1,19 @@
-import { EntryTask, EntryType, MerchantEntry } from '@/lib/db/models';
+import { prisma } from '@/lib/db';
+import { Prisma, type MerchantEntry } from '@/lib/generated/prisma';
 
 import { AppError } from '../errors';
 
 export interface EntryDTO {
-  merchantId: number;
+  merchantId: string;
   step: number;
   status: number;
   [key: string]: unknown;
 }
 
 export interface EntryTaskDTO {
-  id: number;
-  entryTaskId: number;
-  merchantId: number;
+  id: string;
+  entryTaskId: string;
+  merchantId: string;
   bizType: number;
   localCommerce: number;
   status: number;
@@ -31,12 +32,24 @@ function asRecord(value: unknown): Record<string, unknown> {
 
 function toEntryDTO(entry: MerchantEntry): EntryDTO {
   const payload = asRecord(entry.payload);
+  const dto: EntryDTO = {
+    ...payload,
+    merchantId: entry.merchantId,
+    step: entry.step ?? 0,
+    status: entry.status ?? 0,
+  };
 
-  return { ...payload, merchantId: entry.merchantId, step: entry.step, status: entry.status };
+  // Legacy payloads store entryTaskId as a number; project ids as strings so
+  // the DTO matches the string-id contract used everywhere else.
+  if (payload.entryTaskId !== undefined && payload.entryTaskId !== null) {
+    dto.entryTaskId = String(payload.entryTaskId);
+  }
+
+  return dto;
 }
 
-export async function getEntry(merchantId: number, entryTaskId?: number): Promise<EntryDTO> {
-  const entry = await MerchantEntry.findByPk(merchantId);
+export async function getEntry(merchantId: string, entryTaskId?: number): Promise<EntryDTO> {
+  const entry = await prisma.merchantEntry.findUnique({ where: { merchantId } });
 
   if (!entry) {
     throw new AppError('NOT_FOUND', 404, '入驻信息不存在');
@@ -52,29 +65,30 @@ export async function getEntry(merchantId: number, entryTaskId?: number): Promis
   return toEntryDTO(entry);
 }
 
-export async function updateEntry(merchantId: number, input: Partial<EntryDTO>): Promise<EntryDTO> {
-  const entry = await MerchantEntry.findByPk(merchantId);
+export async function updateEntry(merchantId: string, input: Partial<EntryDTO>): Promise<EntryDTO> {
+  const entry = await prisma.merchantEntry.findUnique({ where: { merchantId } });
 
   if (!entry) {
     throw new AppError('NOT_FOUND', 404, '入驻信息不存在');
   }
 
-  entry.payload = { ...asRecord(entry.payload), ...input };
+  const data: Prisma.MerchantEntryUpdateInput = {
+    payload: { ...asRecord(entry.payload), ...input } as Prisma.InputJsonValue,
+  };
   if (typeof input.step === 'number') {
-    entry.step = input.step;
+    data.step = input.step;
   }
   if (typeof input.status === 'number') {
-    entry.status = input.status;
+    data.status = input.status;
   }
 
-  entry.changed('payload', true);
-  await entry.save();
+  const updated = await prisma.merchantEntry.update({ where: { merchantId }, data });
 
-  return toEntryDTO(entry);
+  return toEntryDTO(updated);
 }
 
-export async function getEntryTask(merchantId: number): Promise<EntryTaskDTO> {
-  const task = await EntryTask.findOne({ where: { merchantId } });
+export async function getEntryTask(merchantId: string): Promise<EntryTaskDTO> {
+  const task = await prisma.entryTask.findFirst({ where: { merchantId } });
 
   if (!task) {
     throw new AppError('NOT_FOUND', 404, '入驻任务不存在');
@@ -84,14 +98,14 @@ export async function getEntryTask(merchantId: number): Promise<EntryTaskDTO> {
     id: task.id,
     entryTaskId: task.id,
     merchantId: task.merchantId,
-    bizType: task.bizType,
-    localCommerce: task.localCommerce,
-    status: task.status,
+    bizType: task.bizType ?? 0,
+    localCommerce: task.localCommerce ?? 0,
+    status: task.status ?? 0,
   };
 }
 
 export async function getEntryTypes(): Promise<EntryTypeDTO[]> {
-  const rows = await EntryType.findAll({ order: [['code', 'ASC']] });
+  const rows = await prisma.entryType.findMany({ orderBy: { code: 'asc' } });
 
   const list: EntryTypeDTO[] = [];
   for (const row of rows) {
@@ -107,7 +121,7 @@ export async function getEntryTypes(): Promise<EntryTypeDTO[]> {
 }
 
 export async function getEntryTemplateUrl(type: string): Promise<{ url: string }> {
-  const row = await EntryType.findOne({ where: { code: type } });
+  const row = await prisma.entryType.findUnique({ where: { code: type } });
 
   if (!row) {
     throw new AppError('NOT_FOUND', 404, '入驻类型不存在');

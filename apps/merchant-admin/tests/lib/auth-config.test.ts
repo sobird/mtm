@@ -26,3 +26,13 @@ describe('redirect callback', () => {
     expect(redirect({ url: 'not a url', baseUrl: 'http://0.0.0.0:3000' })).toBe('/');
   });
 });
+
+test('normalizes legacy numeric session ids to strings', async () => {
+  const { authConfig: config } = await import('@/lib/auth.config');
+  const session = config.callbacks.session!({
+    session: { user: {} },
+    token: { sub: '1', accountId: 1, merchantId: 1, mobile: '13412345678', interCode: '86', login: 'demo' },
+  } as never);
+  expect(session.user?.accountId).toBe('1');
+  expect(session.user?.merchantId).toBe('1');
+});

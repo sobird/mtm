@@ -4,11 +4,12 @@ import type { z } from 'zod';
 import { fail, ok } from './api-response';
 import { requireAccount } from './auth-guard';
 import { initDatabase } from './db';
+import { SEED_ACCOUNT_ID, SEED_MERCHANT_ID } from './db/seed/ids';
 import { AppError } from './errors';
 
 export interface HandlerContext {
-  accountId: number;
-  merchantId: number;
+  accountId: string;
+  merchantId: string;
   request: Request;
   params: Record<string, string>;
 }
@@ -49,7 +50,7 @@ export function withPublic<T>(handler: (ctx: HandlerContext) => Promise<T>) {
     try {
       await initDatabase();
       const params = await resolveParams(context);
-      const data = await handler({ accountId: 1, merchantId: 1, request, params });
+      const data = await handler({ accountId: SEED_ACCOUNT_ID, merchantId: SEED_MERCHANT_ID, request, params });
 
       return ok(data);
     } catch (error) {

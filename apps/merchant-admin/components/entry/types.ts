@@ -1,6 +1,6 @@
 export interface MerchantCategoryItem {
-  id: number;
-  parentId: number;
+  id: string;
+  parentId: string;
   name: string;
   level: number;
 }
@@ -22,9 +22,9 @@ export interface EntryBase {
 }
 
 export interface EntryTaskItem {
-  id: number;
-  entryTaskId: number;
-  merchantId: number;
+  id: string;
+  entryTaskId: string;
+  merchantId: string;
   bizType: number;
   localCommerce: number;
   status: number;
@@ -32,7 +32,7 @@ export interface EntryTaskItem {
 }
 
 export interface EntryDetail {
-  entryTaskId: number;
+  entryTaskId: string;
   base: EntryBase;
   [key: string]: unknown;
 }
