@@ -7,6 +7,7 @@ import { HttpError, errorBody } from './http';
 import type { AppEnv } from './http';
 import { registerBrandRoutes } from './routes/brands';
 import { registerCategoryRoutes } from './routes/categories';
+import { registerMerchantRoutes } from './routes/merchants';
 
 const defaultHook: Hook<unknown, AppEnv, string, Response | undefined> = (result, c) => {
   if (!result.success) {
@@ -65,6 +66,7 @@ export function createApp(): OpenAPIHono<AppEnv> {
 
   registerCategoryRoutes(app);
   registerBrandRoutes(app);
+  registerMerchantRoutes(app);
 
   app.onError((error, c) => {
     if (error instanceof HttpError) {
