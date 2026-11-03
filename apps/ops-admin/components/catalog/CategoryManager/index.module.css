@@ -1,0 +1,46 @@
+.name {
+  display: inline-block;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+}
+
+.readonly {
+  display: block;
+  padding: 6px 0;
+  color: #595959;
+}
+
+.attributes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.attributeEmpty {
+  margin: 0;
+  color: #8c8c8c;
+  font-size: 13px;
+}
+
+.attributeRow {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) 110px auto minmax(160px, 1.4fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.deleteHint {
+  margin: 0;
+  color: #595959;
+}
