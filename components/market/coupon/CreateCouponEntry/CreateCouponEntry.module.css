@@ -1,0 +1,74 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.item {
+  position: relative;
+  display: flex;
+  gap: var(--space-3);
+  overflow: hidden;
+  padding: var(--space-3);
+  text-align: left;
+  cursor: pointer;
+  background: var(--color-bg);
+  border: 1px solid rgb(0 0 0 / 8%);
+  border-radius: var(--radius-sm);
+}
+
+.item:hover,
+.active {
+  border-color: var(--color-info);
+}
+
+.icon {
+  flex: 0 0 60px;
+  width: 60px;
+  height: 60px;
+}
+
+.icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.text strong {
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.text span {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.mark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: none;
+  width: 24px;
+  height: 24px;
+  background: url('/assets/coupon/sup_mark.png') center / contain no-repeat;
+}
+
+.item:hover .mark,
+.active .mark {
+  display: block;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
