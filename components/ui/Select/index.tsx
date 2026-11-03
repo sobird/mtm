@@ -148,10 +148,10 @@ function FormSelect({
   triggerRef,
   ...rest
 }: SelectProps & { name: string; triggerRef?: Ref<HTMLButtonElement> }) {
-  const { setValue } = useFormContext();
-  const { errors } = useFormState({ name });
+  const { setValue, getFieldState } = useFormContext();
+  const formState = useFormState({ name });
   const watchedValue = useWatch({ name }) as SelectOptionValue | null | undefined;
-  const message = error ?? (errors[name]?.message as string | undefined);
+  const message = error ?? (getFieldState(name, formState).error?.message as string | undefined);
 
   const handleValueChange = (nextValue: string | null) => {
     const typedValue = toTypedValue(nextValue, options);

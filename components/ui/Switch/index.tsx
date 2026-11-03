@@ -13,6 +13,8 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
   label?: ReactNode;
   /** Explicit error message; takes precedence over the form field error. */
   error?: string;
+  /** Set false to suppress the error text (e.g. when a Field renders it). */
+  showError?: boolean;
 }
 
 interface BoundSwitchProps extends SwitchProps {
@@ -20,11 +22,13 @@ interface BoundSwitchProps extends SwitchProps {
   innerRef: Ref<HTMLInputElement>;
 }
 
-function BoundSwitch({ name, innerRef, error, className, label, id, ...rest }: BoundSwitchProps) {
-  const { register } = useFormContext();
-  const { errors } = useFormState({ name });
+function BoundSwitch({ name, innerRef, error, showError = true, className, label, id, ...rest }: BoundSwitchProps) {
+  const { register, getFieldState } = useFormContext();
+  const formState = useFormState({ name });
   const { ref: registerRef, ...registration } = register(name);
-  const message = error ?? (errors[name]?.message as string | undefined);
+  const message = showError
+    ? (error ?? (getFieldState(name, formState).error?.message as string | undefined))
+    : undefined;
 
   const mergedRef = useCallback(
     (node: HTMLInputElement | null) => {
@@ -59,23 +63,26 @@ function BoundSwitch({ name, innerRef, error, className, label, id, ...rest }: B
 function NativeSwitch({
   innerRef,
   error,
+  showError = true,
   className,
   label,
   ...rest
 }: SwitchProps & { innerRef: Ref<HTMLInputElement> }) {
+  const message = showError ? error : undefined;
+
   return (
     <label className={cx(styles.wrapper, className)}>
       <input
         {...rest}
         ref={innerRef}
         type='checkbox'
-        aria-invalid={error ? true : undefined}
-        className={cx(styles.control, error && styles.invalid)}
+        aria-invalid={message ? true : undefined}
+        className={cx(styles.control, message && styles.invalid)}
       />
       {label ? <span className={styles.label}>{label}</span> : null}
-      {error ? (
+      {message ? (
         <span role='alert' className={styles.error}>
-          {error}
+          {message}
         </span>
       ) : null}
     </label>

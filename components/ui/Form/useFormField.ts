@@ -33,9 +33,9 @@ export const EMPTY_FORM_FIELD_STATE: FormFieldState = {
  *
  * The optional `name` scopes the error lookup. Without a Form context (or a
  * name) it returns stable defaults so the hook is safe in standalone controls.
- * Note: this hook does not subscribe to form-state changes; controls that need
- * to re-render on error/disabled updates should use RHF's `useFormState` /
- * `useWatch` directly.
+ * Reading `methods.formState` subscribes the calling component while it is
+ * mounted under a `FormProvider`, so errors update after validation; use RHF's
+ * `useFormState`/`useWatch` when a finer-grained subscription is needed.
  */
 export function useFormField<TValues extends FieldValues = FieldValues>(name?: string): FormFieldState<TValues> {
   const methods = useFormContext<TValues>();
@@ -44,12 +44,13 @@ export function useFormField<TValues extends FieldValues = FieldValues>(name?: s
     return EMPTY_FORM_FIELD_STATE as FormFieldState<TValues>;
   }
 
-  const fieldError = methods.formState.errors[name];
+  const fieldError = methods.getFieldState(name as never, methods.formState).error as { message?: string } | undefined;
+  const isSubmitting = Boolean(methods.formState.isSubmitting);
 
   return {
-    error: fieldError?.message as string | undefined,
-    disabled: Boolean(methods.formState.isSubmitting),
-    isSubmitting: Boolean(methods.formState.isSubmitting),
+    error: fieldError?.message,
+    disabled: isSubmitting,
+    isSubmitting,
     register: methods.register,
     setValue: methods.setValue,
     watch: methods.watch,

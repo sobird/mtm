@@ -20,10 +20,10 @@ interface BoundTextareaProps extends TextareaProps {
 }
 
 function BoundTextarea({ name, innerRef, error, className, id, ...rest }: BoundTextareaProps) {
-  const { register } = useFormContext();
-  const { errors } = useFormState({ name });
+  const { register, getFieldState } = useFormContext();
+  const formState = useFormState({ name });
   const { ref: registerRef, ...registration } = register(name);
-  const message = error ?? (errors[name]?.message as string | undefined);
+  const message = error ?? (getFieldState(name, formState).error?.message as string | undefined);
 
   const mergedRef = useCallback(
     (node: HTMLTextAreaElement | null) => {

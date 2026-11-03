@@ -13,6 +13,8 @@ export interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   label?: ReactNode;
   /** Explicit error message; takes precedence over the form field error. */
   error?: string;
+  /** Set false on all but one control in a group to render the error once. */
+  showError?: boolean;
 }
 
 interface BoundRadioProps extends RadioProps {
@@ -20,11 +22,13 @@ interface BoundRadioProps extends RadioProps {
   innerRef: Ref<HTMLInputElement>;
 }
 
-function BoundRadio({ name, innerRef, error, className, label, id, ...rest }: BoundRadioProps) {
-  const { register } = useFormContext();
-  const { errors } = useFormState({ name });
+function BoundRadio({ name, innerRef, error, showError = true, className, label, id, ...rest }: BoundRadioProps) {
+  const { register, getFieldState } = useFormContext();
+  const formState = useFormState({ name });
   const { ref: registerRef, ...registration } = register(name);
-  const message = error ?? (errors[name]?.message as string | undefined);
+  const message = showError
+    ? (error ?? (getFieldState(name, formState).error?.message as string | undefined))
+    : undefined;
 
   const mergedRef = useCallback(
     (node: HTMLInputElement | null) => {
@@ -55,14 +59,23 @@ function BoundRadio({ name, innerRef, error, className, label, id, ...rest }: Bo
   );
 }
 
-function NativeRadio({ innerRef, error, className, label, ...rest }: RadioProps & { innerRef: Ref<HTMLInputElement> }) {
+function NativeRadio({
+  innerRef,
+  error,
+  showError = true,
+  className,
+  label,
+  ...rest
+}: RadioProps & { innerRef: Ref<HTMLInputElement> }) {
+  const message = showError ? error : undefined;
+
   return (
     <label className={cx(styles.wrapper, className)}>
-      <input {...rest} ref={innerRef} type='radio' className={cx(styles.control, error && styles.invalid)} />
+      <input {...rest} ref={innerRef} type='radio' className={cx(styles.control, message && styles.invalid)} />
       {label ? <span className={styles.label}>{label}</span> : null}
-      {error ? (
+      {message ? (
         <span role='alert' className={styles.error}>
-          {error}
+          {message}
         </span>
       ) : null}
     </label>
