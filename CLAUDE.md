@@ -16,8 +16,9 @@
 
 - 阶段 1 已完成（monorepo + PostgreSQL/Prisma 数据层）：Turborepo 工作区、`apps/merchant-admin`、`apps/core-api`、三个业务库与测试库、Prisma 迁移与种子数据、一键启动脚本均已就绪。
 - 阶段 2 已完成（认证 / 权限与 ops-admin）：两个门户独立登录与会话 Cookie、集中权限码与菜单过滤、页面 403、账号 / 角色管理、BFF 60 秒签名 JWT 与 `core-api` 服务间鉴权、共享 UI 壳层均已就绪。
-- 下一个阶段是阶段 3：类目/品牌/商家/上传。
-- 后续阶段：3 类目/品牌/商家/上传，4 商品/版本/审核，5 i18n/开源化/CI。
+- 阶段 3 已完成（类目/品牌/商家/上传）：类目树 CRUD、品牌 CRUD + 图片上传、运营端商家/店铺只读、商家端店铺资料自维护、图片本地存储（StorageAdapter）均已就绪。
+- 下一个阶段是阶段 4：商品/版本/审核。
+- 后续阶段：5 i18n/开源化/CI。
 
 ## 必读文档
 
@@ -25,6 +26,7 @@
 - 前置迁移设计：`docs/superpowers/specs/2026-11-03-nextjs-migration-design.md`
 - 阶段 1 计划：`docs/superpowers/plans/2026-11-03-open-commerce-admin-phase1-foundation.md`
 - 阶段 2 计划：`docs/superpowers/plans/2026-11-03-open-commerce-admin-phase2-auth.md`
+- 阶段 3 计划：`docs/superpowers/plans/2026-11-04-open-commerce-admin-phase3-catalog-merchant-upload.md`
 - 后续阶段计划：待创建（`docs/superpowers/plans/`）
 
 ## 已定技术决策
@@ -72,6 +74,14 @@ bun run build
 
 服务端口：`apps/merchant-admin` 为 3000，`apps/ops-admin` 为 3001，`apps/core-api` 为 4000。`bun run dev` 依赖 Docker 启动本地 PostgreSQL。
 
+上传相关环境变量（见 `.env.example`）：
+
+- `CORE_PUBLIC_URL`：`core-api` 对外基址（默认 `http://localhost:4000`），用于拼接上传文件的绝对 URL。
+- `UPLOAD_DIR`：本地图片存储目录（默认 `var/uploads`，相对 `apps/core-api`）。
+- `UPLOAD_MAX_BYTES`：单文件上限，默认 `10485760`（10MB）。
+
+上传接口只接受 PNG / JPEG / WEBP，返回的公开地址形如 `${CORE_PUBLIC_URL}/uploads/<随机文件名>`。`apps/core-api/var/` 已在 `.gitignore` 中，不提交。
+
 演示账号：运营端 `admin / admin123`；商家主账号 `merchant@example.com / merchant123`（或手机号 `13412345678` + 登录页图形验证码）；商家子账号 `staff@example.com / staff123`。图形验证码与演示密码仅用于本地演示，生产环境必须关闭验证码或接入短信服务，并更换全部演示密码与 `change-me*` 占位密钥。
 
 ## 参考仓库（只读，不直接搬代码）
@@ -84,6 +94,6 @@ bun run build
 
 1. 读本文件、设计文档和当前阶段的实现计划。
 2. 设计已获批准；按计划执行，不要跳过阶段边界。
-3. 阶段 1、2 已完成，计划见 `docs/superpowers/plans/2026-11-03-open-commerce-admin-phase1-foundation.md` 与 `docs/superpowers/plans/2026-11-03-open-commerce-admin-phase2-auth.md`。
-4. 下一步：编写并执行阶段 3（类目/品牌/商家/上传）的计划。
+3. 阶段 1、2、3 已完成，计划见 `docs/superpowers/plans/` 下对应的 `phase1-foundation`、`phase2-auth`、`phase3-catalog-merchant-upload` 文件。
+4. 下一步：编写并执行阶段 4（商品/版本/审核）的计划。
 5. 完成一个阶段后再编写下一阶段的计划。

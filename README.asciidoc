@@ -106,7 +106,21 @@ bun run fmt:check  # 格式检查
 
 两个门户使用独立的会话密钥：商家端 `AUTH_SECRET`、运营端 `OPS_AUTH_SECRET`。门户与 `core-api` 之间的服务间鉴权使用 `CORE_API_JWT_SECRET`（两个门户与 `core-api` 必须配置为同一个值），`CORE_API_URL` 指向 `core-api` 的基地址。
 
+图片上传相关变量：
+
+* `CORE_PUBLIC_URL`：`core-api` 对外基址（默认 `http://localhost:4000`），用于拼接上传文件的绝对 URL。
+* `UPLOAD_DIR`：本地图片存储目录（默认 `var/uploads`，相对 `apps/core-api`）。
+* `UPLOAD_MAX_BYTES`：单文件上限，默认 `10485760`（10MB）。
+
 开发环境的连接串指向 Docker Compose 启动的本地 PostgreSQL。生产环境必须设置随机的 `AUTH_SECRET`、`OPS_AUTH_SECRET` 和 `CORE_API_JWT_SECRET`，替换所有 `change-me*` 占位值；`NODE_ENV=production` 时缺失或使用占位密钥会导致鉴权失败（运营端启动时直接报错）。同时必须修改上面的演示账号密码。
+
+## 图片上传
+
+品牌图片通过运营端 BFF 上传到 `apps/core-api`，由本地 `StorageAdapter` 写入 `UPLOAD_DIR`：
+
+* 只接受 PNG / JPEG / WEBP，默认上限 10MB（`UPLOAD_MAX_BYTES`）。
+* 返回的公开地址形如 `+${CORE_PUBLIC_URL}/uploads/<随机文件名>+`，可直接在浏览器打开。
+* `apps/core-api/var/` 已在 `.gitignore` 中，上传文件不提交到仓库；生产环境应替换为对象存储适配器。
 
 ## 数据库与种子数据
 
@@ -116,8 +130,9 @@ bun run fmt:check  # 格式检查
 
 * 阶段 1：monorepo + PostgreSQL/Prisma 数据层，已完成。
 * 阶段 2：认证 / 权限与运营端（ops-admin），已完成。
-* 下一阶段：阶段 3 类目 / 品牌 / 商家 / 上传。
-* 后续阶段：阶段 4 商品 / 版本 / 审核，阶段 5 i18n / 开源化 / CI。
+* 阶段 3：类目 / 品牌 / 商家 / 上传，已完成（类目树 CRUD、品牌 CRUD + 图片上传、运营端商家/店铺只读、商家端店铺资料自维护、图片本地存储）。
+* 下一阶段：阶段 4 商品 / 版本 / 审核。
+* 后续阶段：阶段 5 i18n / 开源化 / CI。
 
 ## 部署
 
