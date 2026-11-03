@@ -382,6 +382,9 @@ CREATE TABLE "Product" (
 CREATE UNIQUE INDEX "MerchantAccount_username_key" ON "MerchantAccount"("username");
 
 -- CreateIndex
+CREATE INDEX "MerchantAccount_merchantId_idx" ON "MerchantAccount"("merchantId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "MerchantRole_code_key" ON "MerchantRole"("code");
 
 -- CreateIndex
@@ -392,6 +395,12 @@ CREATE INDEX "MerchantAccountRole_roleId_idx" ON "MerchantAccountRole"("roleId")
 
 -- CreateIndex
 CREATE INDEX "MerchantRolePermission_permissionId_idx" ON "MerchantRolePermission"("permissionId");
+
+-- CreateIndex
+CREATE INDEX "MerchantLoginLog_accountId_idx" ON "MerchantLoginLog"("accountId");
+
+-- CreateIndex
+CREATE INDEX "MerchantOperationLog_accountId_idx" ON "MerchantOperationLog"("accountId");
 
 -- AddForeignKey
 ALTER TABLE "MerchantAccountRole" ADD CONSTRAINT "MerchantAccountRole_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "MerchantAccount"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

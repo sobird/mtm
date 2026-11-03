@@ -9,7 +9,7 @@
     "format": {},
     "format:fix": { "cache": false },
     "typecheck": { "dependsOn": ["^typecheck"] },
-    "test": {},
+    "test": { "cache": false },
     "db:migrate": { "cache": false },
     "db:seed": { "cache": false },
     "db:reset": { "cache": false }

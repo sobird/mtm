@@ -1,4 +1,4 @@
-process.env.MERCHANT_DATABASE_URL ||=
+process.env.MERCHANT_DATABASE_URL =
   process.env.MERCHANT_TEST_DATABASE_URL ?? 'postgresql://mtm:mtm@localhost:5432/commerce_merchant_test?schema=public';
 
 import '@testing-library/jest-dom/vitest';

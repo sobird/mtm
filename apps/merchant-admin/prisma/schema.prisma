@@ -36,6 +36,8 @@ model MerchantAccount {
   lastLoginAt  DateTime?
   createdAt    DateTime              @default(now())
   roles        MerchantAccountRole[]
+
+  @@index([merchantId])
 }
 
 model MerchantRole {
@@ -85,6 +87,8 @@ model MerchantLoginLog {
   userAgent String?
   success   Boolean
   createdAt DateTime @default(now())
+
+  @@index([accountId])
 }
 
 model MerchantOperationLog {
@@ -95,6 +99,8 @@ model MerchantOperationLog {
   resourceId String?
   detail     Json?
   createdAt  DateTime @default(now())
+
+  @@index([accountId])
 }
 
 // TRANSITIONAL: removed in Phase 3 when Merchant moves to commerce_core.
