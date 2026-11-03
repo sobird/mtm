@@ -37,6 +37,20 @@ test('无 cross-tenant 的运营账号只看到授权商家', async () => {
   expect((await cross.json()).data).toHaveLength(3);
 });
 
+test('关键字同时匹配商家名称与编码', async () => {
+  const res = await get('/api/v1/merchants?keyword=M1001', opsToken(['merchant:view', 'platform:cross-tenant'], null));
+  expect(res.status).toBe(200);
+  const body = (await res.json()) as { data: { code: string }[] };
+  expect(body.data).toHaveLength(1);
+  expect(body.data[0].code).toBe('M1001');
+
+  const byName = await get(
+    `/api/v1/merchants?keyword=${encodeURIComponent('青禾')}`,
+    opsToken(['merchant:view', 'platform:cross-tenant'], null)
+  );
+  expect((await byName.json()).data.map((item: { code: string }) => item.code)).toEqual(['M1001']);
+});
+
 test('访问范围外商家详情返回 403', async () => {
   const res = await get('/api/v1/merchants/merchant-demo-3', opsToken(['merchant:view'], ['merchant-demo-2']));
   expect(res.status).toBe(403);

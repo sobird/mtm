@@ -1,12 +1,15 @@
+import { z } from '@hono/zod-openapi';
 import type { OpenAPIHono } from '@hono/zod-openapi';
 import type { ServiceTokenClaims } from '@mtm/auth/service-token';
-import { PERMISSIONS } from '@mtm/contracts';
+import { PERMISSIONS, uploadResultSchema } from '@mtm/contracts';
 import { createMiddleware } from 'hono/factory';
 
 import type { AppEnv } from '../http';
 import { HttpError, errorBody } from '../http';
-import { LocalStorageAdapter, saveUpload } from '../services/uploads';
+import { assertDeclaredUploadSize, LocalStorageAdapter, saveUpload } from '../services/uploads';
 import type { UploadConfig } from '../services/uploads';
+
+const uploadEnvelopeSchema = z.object({ data: uploadResultSchema });
 
 const OPS_UPLOAD_PERMISSIONS = [PERMISSIONS.BRAND_MANAGE, PERMISSIONS.CATEGORY_MANAGE] as const;
 const MERCHANT_UPLOAD_PERMISSIONS = [PERMISSIONS.PRODUCT_UPDATE, PERMISSIONS.SHOP_UPDATE] as const;
@@ -37,7 +40,34 @@ const requireUploadPermission = createMiddleware<AppEnv>(async (c, next) => {
 export function registerUploadRoutes(app: OpenAPIHono<AppEnv>, config: UploadConfig): void {
   const storage = new LocalStorageAdapter(config.dir);
 
+  // Documentation-only registration: the runtime handler stays a plain
+  // `app.post` so multipart bodies are not re-parsed by validation.
+  app.openAPIRegistry.registerPath({
+    method: 'post',
+    path: '/api/v1/uploads/images',
+    tags: ['upload'],
+    security: [{ bearerAuth: [] }],
+    request: {
+      body: {
+        required: true,
+        content: {
+          'multipart/form-data': {
+            schema: z.object({ file: z.any().openapi({ type: 'string', format: 'binary' }) }),
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '上传成功',
+        content: { 'application/json': { schema: uploadEnvelopeSchema } },
+      },
+    },
+  });
+
   app.post('/api/v1/uploads/images', requireUploadPermission, async c => {
+    assertDeclaredUploadSize(c.req.header('content-length'), config.maxBytes);
+
     let form: FormData;
 
     try {

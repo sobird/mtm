@@ -46,12 +46,12 @@ function categoryPath(categoryId: number | undefined, categories: MerchantCatego
   return names.length > 0 ? names.join(' > ') : '--';
 }
 
-function BaseInfoSubmitButton() {
+function BaseInfoSubmitButton({ disabled = false }: { disabled?: boolean }) {
   const { isSubmitting } = useFormState();
 
   return (
     <div className={styles.actions}>
-      <Button type='submit' loading={isSubmitting}>
+      <Button type='submit' loading={isSubmitting} disabled={disabled}>
         更新店铺基本信息
       </Button>
     </div>
@@ -74,7 +74,9 @@ export function BaseInfo() {
     queryFn: () => apiFetch<MerchantCategoryDTO[]>('/api/merchant/category'),
   });
 
-  const shopId = myMerchantQuery.data?.shops[0]?.id;
+  const coreShop = myMerchantQuery.data?.shops[0];
+  const shopId = coreShop?.id;
+  const coreShopReady = myMerchantQuery.isSuccess && coreShop !== undefined;
 
   if (merchantQuery.isPending || categoriesQuery.isPending) {
     return <Skeleton rows={6} />;
@@ -145,8 +147,9 @@ export function BaseInfo() {
         </div>
 
         <Form
+          key={coreShop?.id ?? 'pending'}
           schema={baseInfoSchema}
-          defaultValues={{ description: shop?.description ?? '', externalLink: shop?.externalLink ?? '' }}
+          defaultValues={{ description: coreShop?.description ?? '', externalLink: coreShop?.externalLink ?? '' }}
           onSubmit={handleSubmit}
           className={styles.form}
         >
@@ -169,7 +172,7 @@ export function BaseInfo() {
             />
           </Field>
 
-          <BaseInfoSubmitButton />
+          <BaseInfoSubmitButton disabled={!coreShopReady} />
         </Form>
       </Card>
 

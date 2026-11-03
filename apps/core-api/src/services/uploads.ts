@@ -65,6 +65,30 @@ function invalidFile(): HttpError {
   return new HttpError('UPLOAD_INVALID_FILE', 400, '上传文件不合法');
 }
 
+/**
+ * Allowance for multipart boundaries and field headers. The declared
+ * `Content-Length` covers the whole body, not just the file, so a legitimate
+ * file at the size limit still needs this headroom before we reject it.
+ */
+export const MULTIPART_OVERHEAD_BYTES = 1024 * 1024;
+
+/**
+ * Rejects clearly oversized multipart requests from the declared header before
+ * the body is buffered into memory. A missing or non-numeric header passes so
+ * the exact per-file check in `assertValidUpload` remains the final authority.
+ */
+export function assertDeclaredUploadSize(contentLength: string | undefined, maxBytes: number): void {
+  if (contentLength === undefined) {
+    return;
+  }
+
+  const declared = Number(contentLength);
+
+  if (Number.isFinite(declared) && declared > maxBytes + MULTIPART_OVERHEAD_BYTES) {
+    throw new HttpError('UPLOAD_TOO_LARGE', 413, '上传文件过大');
+  }
+}
+
 /** Validates the multipart file before any bytes are written to storage. */
 export function assertValidUpload(file: unknown, maxBytes: number): asserts file is File {
   if (!(file instanceof File) || file.size <= 0) {

@@ -11,6 +11,22 @@ import { getAccountPermissions } from './services/permission';
 const DEFAULT_CORE_API_URL = 'http://localhost:4000';
 const ALLOWED_PATH = /^[a-zA-Z0-9/_-]+$/;
 const FETCH_TIMEOUT_MS = 5_000;
+const DEFAULT_UPLOAD_MAX_BYTES = 10 * 1024 * 1024;
+const MULTIPART_OVERHEAD_BYTES = 1024 * 1024;
+
+/** Rejects obviously oversized multipart bodies from the declared header. */
+function assertDeclaredMultipartSize(contentLength: string | null): void {
+  if (contentLength === null || contentLength === '') {
+    return;
+  }
+
+  const declared = Number(contentLength);
+  const maxBytes = Number(process.env.UPLOAD_MAX_BYTES) || DEFAULT_UPLOAD_MAX_BYTES;
+
+  if (Number.isFinite(declared) && declared > maxBytes + MULTIPART_OVERHEAD_BYTES) {
+    throw new AppError('UPLOAD_TOO_LARGE', 413, '上传文件过大');
+  }
+}
 
 /** Mirrors `lib/env.ts`'s production-secret guard for the core-api token. */
 function isUnsafeProductionSecret(secret: string | undefined): boolean {
@@ -147,6 +163,8 @@ export async function proxyToCoreApi(request: Request, segments: string[]): Prom
 
     if (method !== 'GET' && method !== 'HEAD') {
       if (contentType.startsWith('multipart/form-data')) {
+        // Reject oversized bodies before buffering them into memory.
+        assertDeclaredMultipartSize(request.headers.get('content-length'));
         // Never read multipart bodies as text: that would drop the boundary.
         formData = await request.formData();
       } else {

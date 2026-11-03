@@ -7,6 +7,8 @@ import { afterAll, beforeEach, expect, test } from 'vitest';
 
 import { createApp } from '@/src/app';
 import { prisma } from '@/src/db';
+import { HttpError } from '@/src/http';
+import { assertDeclaredUploadSize, MULTIPART_OVERHEAD_BYTES } from '@/src/services/uploads';
 
 import { merchantToken, opsToken, resetCoreFixtures } from './helpers';
 
@@ -89,6 +91,37 @@ test('缺少文件、非法类型、超限与路径穿越被拒绝', async () =>
   expect((await upload(fileForm('a.txt', 'text/plain', 3), ['brand:manage'])).status).toBe(400);
   expect((await upload(fileForm('big.png', 'image/png', 2048), ['brand:manage'])).status).toBe(400);
   expect((await createApp().request('/uploads/..%2Fsecret.txt')).status).toBe(404);
+});
+
+test('按声明的 content-length 提前拒绝超大上传', () => {
+  const maxBytes = 1024;
+
+  expect(() => assertDeclaredUploadSize(undefined, maxBytes)).not.toThrow();
+  expect(() => assertDeclaredUploadSize('not-a-number', maxBytes)).not.toThrow();
+  expect(() => assertDeclaredUploadSize(String(maxBytes + MULTIPART_OVERHEAD_BYTES), maxBytes)).not.toThrow();
+
+  try {
+    assertDeclaredUploadSize(String(maxBytes + MULTIPART_OVERHEAD_BYTES + 1), maxBytes);
+    throw new Error('expected assertDeclaredUploadSize to throw');
+  } catch (error) {
+    expect(error).toBeInstanceOf(HttpError);
+    expect(error).toMatchObject({ code: 'UPLOAD_TOO_LARGE', status: 413 });
+  }
+});
+
+test('路由在解析 multipart 之前拒绝超大 content-length', async () => {
+  const res = await createApp().request('/api/v1/uploads/images', {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${await opsToken(['brand:manage'])}`,
+      'content-type': 'multipart/form-data; boundary=x',
+      'content-length': String(20 * 1024 * 1024),
+    },
+    body: '--x--',
+  });
+
+  expect(res.status).toBe(413);
+  expect(await res.json()).toMatchObject({ error: { code: 'UPLOAD_TOO_LARGE' } });
 });
 
 test('没有上传权限的商家返回 403', async () => {

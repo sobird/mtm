@@ -114,7 +114,10 @@ export async function listMerchants(
   const where = merchantWhere(auth);
 
   if (query.keyword) {
-    where.name = { contains: query.keyword, mode: 'insensitive' };
+    where.OR = [
+      { name: { contains: query.keyword, mode: 'insensitive' } },
+      { code: { contains: query.keyword, mode: 'insensitive' } },
+    ];
   }
 
   if (query.status) {

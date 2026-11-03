@@ -100,6 +100,25 @@ test('multipart 请求以 FormData 转发且不设置 JSON content-type', async 
   expect(init.headers['content-type']).toBeUndefined();
 });
 
+test('rejects oversized declared multipart content-length before forwarding', async () => {
+  const response = await proxyToCoreApi(
+    new Request('http://localhost/api/bff/uploads/images', {
+      method: 'POST',
+      headers: {
+        'sec-fetch-site': 'same-origin',
+        'content-type': 'multipart/form-data; boundary=x',
+        'content-length': String(20 * 1024 * 1024),
+      },
+      body: '--x--',
+    }),
+    ['uploads', 'images']
+  );
+
+  expect(response.status).toBe(413);
+  expect(await response.json()).toEqual({ code: 'UPLOAD_TOO_LARGE', message: '上传文件过大', data: null });
+  expect(fetchMock).not.toHaveBeenCalled();
+});
+
 test('throws the portal AppError preserving the core-api error code', async () => {
   fetchMock.mockResolvedValue(jsonResponse(403, { error: { code: 'FORBIDDEN', message: '无权访问', details: null } }));
 
