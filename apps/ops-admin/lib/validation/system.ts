@@ -19,13 +19,13 @@ export const accountCreateSchema = z.object({
   username: z.string().regex(namePattern, '用户名格式不合法'),
   name: z.string().min(1, '姓名不能为空').max(50, '姓名不得超过 50 个字符'),
   password: z.string().min(8, '密码至少 8 位').max(128, '密码不得超过 128 位'),
-  roleIds: z.array(idSchema).min(1, '请选择角色'),
+  roleIds: z.array(idSchema),
 });
 
 export const accountUpdateSchema = z.object({
   name: z.string().min(1, '姓名不能为空').max(50, '姓名不得超过 50 个字符').optional(),
   status: accountStatusSchema.optional(),
-  roleIds: z.array(idSchema).min(1, '请选择角色').optional(),
+  roleIds: z.array(idSchema).optional(),
 });
 
 export const accountPasswordSchema = z.object({

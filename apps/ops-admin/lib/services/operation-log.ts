@@ -9,9 +9,19 @@ export interface WriteOperationLogInput {
   detail?: Prisma.InputJsonValue | null;
 }
 
-/** Records an operator action in the ops audit log. */
-export async function writeOperationLog(input: WriteOperationLogInput): Promise<void> {
-  await prisma.opsOperationLog.create({
+type OperationLogClient = Prisma.TransactionClient | typeof prisma;
+
+/**
+ * Records an operator action in the ops audit log.
+ *
+ * Pass `tx` when calling inside a `prisma.$transaction` so the audit row
+ * commits or rolls back together with the data change.
+ */
+export async function writeOperationLog(
+  input: WriteOperationLogInput,
+  client: OperationLogClient = prisma
+): Promise<void> {
+  await client.opsOperationLog.create({
     data: {
       accountId: input.accountId,
       action: input.action,

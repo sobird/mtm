@@ -6,8 +6,6 @@ import { Prisma } from '@/lib/generated/prisma';
 
 import { writeOperationLog } from './operation-log';
 
-const SUPER_ADMIN_CODE = 'super-admin';
-
 export interface OpsRoleDTO {
   id: string;
   code: string;
@@ -136,6 +134,17 @@ export async function createRole(actorId: string, input: CreateRoleInput): Promi
         });
       }
 
+      await writeOperationLog(
+        {
+          accountId: actorId,
+          action: 'create',
+          resource: 'ops-role',
+          resourceId: role.id,
+          detail: { code: input.code, name: input.name },
+        },
+        tx
+      );
+
       return role.id;
     });
   } catch (error) {
@@ -145,14 +154,6 @@ export async function createRole(actorId: string, input: CreateRoleInput): Promi
 
     throw error;
   }
-
-  await writeOperationLog({
-    accountId: actorId,
-    action: 'create',
-    resource: 'ops-role',
-    resourceId: roleId,
-    detail: { code: input.code, name: input.name },
-  });
 
   return getRoleOrThrow(roleId);
 }
@@ -206,19 +207,22 @@ export async function updateRole(actorId: string, id: string, input: UpdateRoleI
       }
     }
 
-    return tx.opsRole.findUniqueOrThrow({ where: { id }, include: roleInclude });
-  });
+    await writeOperationLog(
+      {
+        accountId: actorId,
+        action: 'update',
+        resource: 'ops-role',
+        resourceId: id,
+        detail: {
+          name: input.name ?? null,
+          permissionCodes: input.permissionCodes ?? null,
+          merchantScope: input.merchantScope ?? null,
+        },
+      },
+      tx
+    );
 
-  await writeOperationLog({
-    accountId: actorId,
-    action: 'update',
-    resource: 'ops-role',
-    resourceId: id,
-    detail: {
-      name: input.name ?? null,
-      permissionCodes: input.permissionCodes ?? null,
-      merchantScope: input.merchantScope ?? null,
-    },
+    return tx.opsRole.findUniqueOrThrow({ where: { id }, include: roleInclude });
   });
 
   return toRoleDTO(updated);
@@ -234,10 +238,6 @@ export async function listPermissions(): Promise<OpsPermissionDTO[]> {
     path: permission.path,
     sort: permission.sort,
   }));
-}
-
-export function isSuperAdminCode(code: string): boolean {
-  return code === SUPER_ADMIN_CODE;
 }
 
 async function getRoleOrThrow(id: string): Promise<OpsRoleDTO> {

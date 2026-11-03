@@ -72,6 +72,15 @@ function unique(values: string[]): string[] {
   return [...new Set(values)];
 }
 
+function sameMembers(left: string[], right: string[]): boolean {
+  if (left.length !== right.length) {
+    return false;
+  }
+
+  const leftSet = new Set(left);
+  return right.every(value => leftSet.has(value));
+}
+
 async function assertRolesExist(client: Prisma.TransactionClient | typeof prisma, roleIds: string[]): Promise<void> {
   const ids = unique(roleIds);
 
@@ -104,7 +113,7 @@ export async function listAccounts(query: ListAccountsQuery): Promise<{ items: O
     prisma.opsAccount.findMany({
       where,
       include: accountInclude,
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
       skip: (query.page - 1) * query.pageSize,
       take: query.pageSize,
     }),
@@ -122,22 +131,36 @@ export async function createAccount(actorId: string, input: CreateAccountInput):
   }
 
   const roleIds = unique(input.roleIds);
-  await assertRolesExist(prisma, roleIds);
-
   const passwordHash = await hashPassword(input.password);
   let accountId: string;
 
   try {
-    const account = await prisma.opsAccount.create({
-      data: {
-        username: input.username,
-        name: input.name,
-        passwordHash,
-        roles: { create: roleIds.map(roleId => ({ roleId })) },
-      },
-      select: { id: true },
+    accountId = await prisma.$transaction(async tx => {
+      await assertRolesExist(tx, roleIds);
+
+      const account = await tx.opsAccount.create({
+        data: {
+          username: input.username,
+          name: input.name,
+          passwordHash,
+          roles: { create: roleIds.map(roleId => ({ roleId })) },
+        },
+        select: { id: true },
+      });
+
+      await writeOperationLog(
+        {
+          accountId: actorId,
+          action: 'create',
+          resource: 'ops-account',
+          resourceId: account.id,
+          detail: { username: input.username, name: input.name, roleIds },
+        },
+        tx
+      );
+
+      return account.id;
     });
-    accountId = account.id;
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       throw new AppError('USERNAME_TAKEN', 409, '用户名已存在');
@@ -146,22 +169,10 @@ export async function createAccount(actorId: string, input: CreateAccountInput):
     throw error;
   }
 
-  await writeOperationLog({
-    accountId: actorId,
-    action: 'create',
-    resource: 'ops-account',
-    resourceId: accountId,
-    detail: { username: input.username, name: input.name, roleIds },
-  });
-
   return getAccountOrThrow(accountId);
 }
 
 export async function updateAccount(actorId: string, id: string, input: UpdateAccountInput): Promise<OpsAccountDTO> {
-  if (id === actorId && input.status === 'DISABLED') {
-    throw new AppError('SELF_DISABLE_FORBIDDEN', 403, '不能停用当前账号');
-  }
-
   const updated = await prisma.$transaction(async tx => {
     const target = await tx.opsAccount.findUnique({
       where: { id },
@@ -170,6 +181,10 @@ export async function updateAccount(actorId: string, id: string, input: UpdateAc
 
     if (!target) {
       throw new AppError('ACCOUNT_NOT_FOUND', 404, '账号不存在');
+    }
+
+    if (id === actorId && input.status === 'DISABLED') {
+      throw new AppError('SELF_DISABLE_FORBIDDEN', 403, '不能停用当前账号');
     }
 
     if (input.roleIds !== undefined) {
@@ -200,6 +215,17 @@ export async function updateAccount(actorId: string, id: string, input: UpdateAc
       }
     }
 
+    const currentRoleIds = target.roles.map(item => item.roleId);
+    const rolesChanged = input.roleIds !== undefined && !sameMembers(currentRoleIds, unique(input.roleIds));
+    const changed =
+      (input.name !== undefined && input.name !== target.name) ||
+      (input.status !== undefined && input.status !== target.status) ||
+      rolesChanged;
+
+    if (!changed) {
+      return tx.opsAccount.findUniqueOrThrow({ where: { id }, include: accountInclude });
+    }
+
     await tx.opsAccount.update({
       where: { id },
       data: { name: input.name, status: input.status },
@@ -217,42 +243,50 @@ export async function updateAccount(actorId: string, id: string, input: UpdateAc
       }
     }
 
-    return tx.opsAccount.findUniqueOrThrow({ where: { id }, include: accountInclude });
-  });
+    await writeOperationLog(
+      {
+        accountId: actorId,
+        action: 'update',
+        resource: 'ops-account',
+        resourceId: id,
+        detail: {
+          name: input.name ?? null,
+          status: input.status ?? null,
+          roleIds: input.roleIds ?? null,
+        },
+      },
+      tx
+    );
 
-  await writeOperationLog({
-    accountId: actorId,
-    action: 'update',
-    resource: 'ops-account',
-    resourceId: id,
-    detail: {
-      name: input.name ?? null,
-      status: input.status ?? null,
-      roleIds: input.roleIds ?? null,
-    },
+    return tx.opsAccount.findUniqueOrThrow({ where: { id }, include: accountInclude });
   });
 
   return toAccountDTO(updated);
 }
 
 export async function resetAccountPassword(actorId: string, id: string, password: string): Promise<void> {
-  const account = await prisma.opsAccount.findUnique({ where: { id }, select: { id: true, username: true } });
-
-  if (!account) {
-    throw new AppError('ACCOUNT_NOT_FOUND', 404, '账号不存在');
-  }
-
   const passwordHash = await hashPassword(password);
 
-  await prisma.opsAccount.update({ where: { id }, data: { passwordHash } });
+  await prisma.$transaction(async tx => {
+    const account = await tx.opsAccount.findUnique({ where: { id }, select: { id: true, username: true } });
 
-  // Never include the plaintext password in the audit log.
-  await writeOperationLog({
-    accountId: actorId,
-    action: 'reset-password',
-    resource: 'ops-account',
-    resourceId: id,
-    detail: { username: account.username },
+    if (!account) {
+      throw new AppError('ACCOUNT_NOT_FOUND', 404, '账号不存在');
+    }
+
+    await tx.opsAccount.update({ where: { id }, data: { passwordHash } });
+
+    // Never include the plaintext password in the audit log.
+    await writeOperationLog(
+      {
+        accountId: actorId,
+        action: 'reset-password',
+        resource: 'ops-account',
+        resourceId: id,
+        detail: { username: account.username },
+      },
+      tx
+    );
   });
 }
 

@@ -129,6 +129,23 @@ test('prevents removing the last active super admin', async () => {
   expect(demoted.roles).toEqual([]);
 });
 
+test('rejects clearing the roles of the only super admin', async () => {
+  const superRole = await prisma.opsRole.findUniqueOrThrow({ where: { code: 'super-admin' } });
+
+  // The seeded admin is the only active super admin at this point, so the
+  // LAST_SUPER_ADMIN guard must fire instead of leaving the system unmanageable.
+  await expect(updateAccount(OPS_SEED_ADMIN_ID, OPS_SEED_ADMIN_ID, { roleIds: [] })).rejects.toMatchObject({
+    code: 'LAST_SUPER_ADMIN',
+    status: 409,
+  });
+
+  const seededRoles = await prisma.opsAccountRole.findMany({
+    where: { accountId: OPS_SEED_ADMIN_ID },
+    select: { roleId: true },
+  });
+  expect(seededRoles.map(item => item.roleId)).toEqual([superRole.id]);
+});
+
 test('resets the password without logging the plaintext', async () => {
   const account = await createAccount(OPS_SEED_ADMIN_ID, {
     username: 'ops-reset-user',
