@@ -1,0 +1,35 @@
+{
+  "name": "@mtm/core-api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:migrate": "bun --env-file=../../.env x prisma migrate deploy",
+    "db:migrate:dev": "bun --env-file=../../.env x prisma migrate dev",
+    "db:reset": "bun --env-file=../../.env x prisma migrate reset --force --skip-seed && bun --env-file=../../.env prisma/seed.ts",
+    "db:seed": "bun --env-file=../../.env prisma/seed.ts",
+    "dev": "bun --watch src/index.ts",
+    "fmt:check": "oxfmt --check --config ../../packages/config/oxfmt.jsonc",
+    "format": "oxfmt --check --config ../../packages/config/oxfmt.jsonc",
+    "format:fix": "oxfmt --config ../../packages/config/oxfmt.jsonc",
+    "lint": "oxlint -c ../../packages/config/oxlint.jsonc",
+    "postinstall": "prisma generate",
+    "start": "bun src/index.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.6",
+    "@hono/zod-openapi": "^1.1.4",
+    "@prisma/client": "^6.19.3",
+    "hono": "^4.10.4",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "prisma": "^6.19.3",
+    "typescript": "^5.0.2",
+    "vitest": "^5.1.0"
+  }
+}
