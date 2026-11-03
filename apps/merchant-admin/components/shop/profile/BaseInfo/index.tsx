@@ -46,12 +46,12 @@ function categoryPath(categoryId: number | undefined, categories: MerchantCatego
   return names.length > 0 ? names.join(' > ') : '--';
 }
 
-function BaseInfoSubmitButton({ disabled = false }: { disabled?: boolean }) {
+function BaseInfoSubmitButton() {
   const { isSubmitting } = useFormState();
 
   return (
     <div className={styles.actions}>
-      <Button type='submit' loading={isSubmitting} disabled={disabled}>
+      <Button type='submit' loading={isSubmitting}>
         更新店铺基本信息
       </Button>
     </div>
@@ -146,34 +146,49 @@ export function BaseInfo() {
           </LabelValue>
         </div>
 
-        <Form
-          key={coreShop?.id ?? 'pending'}
-          schema={baseInfoSchema}
-          defaultValues={{ description: coreShop?.description ?? '', externalLink: coreShop?.externalLink ?? '' }}
-          onSubmit={handleSubmit}
-          className={styles.form}
-        >
-          <Field label='店铺简介' hint='最多200个字符'>
-            <Textarea
-              name='description'
-              placeholder='填写店铺简介，可让消费者更了解您的店铺'
-              maxLength={200}
-              rows={5}
-              aria-label='店铺简介'
-            />
-          </Field>
+        {coreShopReady ? (
+          <Form
+            schema={baseInfoSchema}
+            defaultValues={{ description: coreShop?.description ?? '', externalLink: coreShop?.externalLink ?? '' }}
+            onSubmit={handleSubmit}
+            className={styles.form}
+          >
+            <Field label='店铺简介' hint='最多200个字符'>
+              <Textarea
+                name='description'
+                placeholder='填写店铺简介，可让消费者更了解您的店铺'
+                maxLength={200}
+                rows={5}
+                aria-label='店铺简介'
+              />
+            </Field>
 
-          <Field label='第三方平台店铺链接'>
-            <Input
-              name='externalLink'
-              placeholder='填写真实的其他平台店铺链接'
-              maxLength={1000}
-              aria-label='第三方平台店铺链接'
-            />
-          </Field>
+            <Field label='第三方平台店铺链接'>
+              <Input
+                name='externalLink'
+                placeholder='填写真实的其他平台店铺链接'
+                maxLength={1000}
+                aria-label='第三方平台店铺链接'
+              />
+            </Field>
 
-          <BaseInfoSubmitButton disabled={!coreShopReady} />
-        </Form>
+            <BaseInfoSubmitButton />
+          </Form>
+        ) : myMerchantQuery.isError ? (
+          <div className={styles.actions}>
+            <Empty description='店铺信息加载失败' />
+            <Button
+              variant='ghost'
+              onClick={() => {
+                void myMerchantQuery.refetch();
+              }}
+            >
+              重试
+            </Button>
+          </div>
+        ) : (
+          <Skeleton rows={4} />
+        )}
       </Card>
 
       <Card title='管理员信息'>

@@ -107,6 +107,21 @@ beforeEach(() => {
   });
 });
 
+test('core-api 店铺加载失败时显示提示与重试，而不是禁用表单', async () => {
+  mocks.fetchMyMerchant.mockRejectedValue(new Error('network down'));
+
+  renderBaseInfo();
+
+  expect(await screen.findByText('店铺信息加载失败')).toBeInTheDocument();
+  expect(screen.queryByLabelText('店铺简介')).not.toBeInTheDocument();
+
+  mocks.fetchMyMerchant.mockResolvedValue(CORE_MERCHANT);
+  await userEvent.click(screen.getByRole('button', { name: '重试' }));
+
+  const description = await screen.findByLabelText('店铺简介');
+  await waitFor(() => expect(description).toHaveValue('核心简介'));
+});
+
 test('店铺简介默认值来自 core-api 店铺并保存到同一店铺', async () => {
   renderBaseInfo();
 
