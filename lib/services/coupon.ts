@@ -300,13 +300,15 @@ export async function updateCoupon(id: string, input: Partial<CouponUpsertInput>
   }
 
   if (input.putTerm !== undefined) {
-    const putTerm = (Array.isArray(input.putTerm) ? input.putTerm : []) as Array<number | undefined>;
+    const putTerm = Array.isArray(input.putTerm) ? input.putTerm : [];
+    const stime = Number(putTerm[0]);
+    const etime = Number(putTerm[1]);
 
-    if (input.stime === undefined) {
-      patch.stime = putTerm[0] ?? row.stime;
+    if (input.stime === undefined && Number.isFinite(stime)) {
+      patch.stime = stime;
     }
-    if (input.etime === undefined) {
-      patch.etime = putTerm[1] ?? row.etime;
+    if (input.etime === undefined && Number.isFinite(etime)) {
+      patch.etime = etime;
     }
   }
 

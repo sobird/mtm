@@ -2,11 +2,15 @@ import NextAuth from 'next-auth';
 import { NextResponse } from 'next/server';
 
 import { authConfig } from '@/lib/auth.config';
+import { assertProductionSecret } from '@/lib/env';
 
 // These pages are reachable without a session.
 const PUBLIC_PATHS = ['/login', '/register', '/settleinpc', '/settleinjx'];
 
 export default NextAuth(authConfig).auth(req => {
+  // Reject tokens signed with the committed placeholder secret in production.
+  assertProductionSecret();
+
   const { pathname, search } = req.nextUrl;
   const isLoggedIn = Boolean(req.auth);
 

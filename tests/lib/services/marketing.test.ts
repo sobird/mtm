@@ -41,6 +41,16 @@ test('campaign total and page size come from the database', async () => {
   expect(res.list).toHaveLength(10);
 });
 
+test('campaign tabs filter by applyStatus', async () => {
+  const applying = await listCampaigns({ type: '1' });
+  expect(applying.list.length).toBeGreaterThan(0);
+  expect(applying.list.every(item => item.applyStatus === 2)).toBe(true);
+
+  const applied = await listCampaigns({ type: '2' });
+  expect(applied.total).toBe(2);
+  expect(applied.list.every(item => item.applyStatus === 3)).toBe(true);
+});
+
 test('latest messages are news while detail lookup reads the detail row', async () => {
   const news = await getLatestMessages();
   expect(news).toHaveLength(3);
