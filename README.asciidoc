@@ -70,13 +70,13 @@ lib/db/seed/data/ # 种子数据（JSON）
 
 [source,bash]
 ----
-docker build -t ghcr.io/sobird/mtm:latest .
+docker build -t ghcr.io/sobird/my-react-app:latest .
 docker compose up -d
 curl -s http://127.0.0.1:3000/api/health
 # {"code":0,"message":"ok","data":{"db":true}}
 ----
 
-单副本运行；SQLite 卷只能挂载给一个写实例。宿主机 nginx 反向代理到 `127.0.0.1:3000`。
+单副本运行；SQLite 卷只能挂载给一个写实例。容器只绑定 `127.0.0.1:3000`，由宿主机 nginx 反向代理对外提供服务。服务器上的 `.env.production` 必须设置真实的随机 `AUTH_SECRET`（仓库中的同名文件只是模板）。
 
 ## CI/CD
 
