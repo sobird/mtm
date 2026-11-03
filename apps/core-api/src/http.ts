@@ -3,6 +3,7 @@ import { PERMISSIONS } from '@mtm/contracts';
 import type { PageMeta } from '@mtm/contracts';
 import type { Context, Env } from 'hono';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
+import type { JSONValue } from 'hono/utils/types';
 
 import type { AuthVariables } from './auth';
 
@@ -30,8 +31,12 @@ export function errorBody(code: string, message: string, details?: unknown): Err
   return { error: { code, message, details: details ?? null } };
 }
 
-export function sendData<E extends Env>(c: Context<E>, data: unknown, status: ContentfulStatusCode = 200) {
-  return c.json({ data }, status);
+export function sendData<E extends Env, T extends JSONValue, U extends ContentfulStatusCode = 200>(
+  c: Context<E>,
+  data: T,
+  status?: U
+) {
+  return c.json({ data }, (status ?? 200) as U);
 }
 
 export function sendPage<E extends Env>(c: Context<E>, items: unknown[], meta: PageMeta) {
