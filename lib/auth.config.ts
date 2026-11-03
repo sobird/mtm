@@ -22,6 +22,26 @@ export const authConfig = {
   },
   providers: [],
   callbacks: {
+    /**
+     * Keep callback URLs relative. Next.js standalone builds request URLs from
+     * the bound hostname (`0.0.0.0`), so resolving `/login` against the request
+     * origin would send the browser to `http://0.0.0.0:3000/login`.
+     */
+    redirect({ url }) {
+      if (url.startsWith('/') && !url.startsWith('//') && !url.startsWith('/\\')) {
+        return url;
+      }
+
+      try {
+        const { pathname, search, hash } = new URL(url);
+        if (pathname.startsWith('//')) {
+          return '/';
+        }
+        return `${pathname}${search}${hash}`;
+      } catch {
+        return '/';
+      }
+    },
     jwt({ token, user }) {
       if (user) {
         token.accountId = user.accountId;
