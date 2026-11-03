@@ -12,7 +12,7 @@
 
     // React 18 uses the automatic JSX runtime, so `React` need not be in scope.
     "react/react-in-jsx-scope": "off",
-    // Style and asset imports are side-effect imports in this webpack setup.
+    // Style and asset imports are side-effect imports in this Next.js setup.
     "import/no-unassigned-import": "off",
 
     // Preserved from the previous ESLint setup: logging is intentional here.
@@ -52,5 +52,5 @@
     "browser": true,
     "node": true,
   },
-  "ignorePatterns": [".next", "src", "packages", "dist"],
+  "ignorePatterns": [".next", "dist"],
 }

@@ -9,5 +9,5 @@
   "trailingComma": "es5",
   "arrowParens": "avoid",
 
-  "ignorePatterns": ["bun.lock", ".next", "src", "packages", "dist"],
+  "ignorePatterns": ["bun.lock", ".next", "dist"],
 }

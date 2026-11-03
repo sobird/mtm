@@ -1,63 +1,64 @@
 # 商家电商管理后台系统
 :toc:
 
-> 运营模块集合到主工程中来
+基于 Next.js App Router 的商家管理后台，包含首页仪表盘、营销中心、店铺资料、入驻流程与认证。
 
-## @mtm/shared
+## 技术栈
 
-```
-cd packages/shared
-bun link
+* Next.js 15（App Router、Route Handlers、Server Components）
+* React 19 + TypeScript
+* Sequelize + SQLite（`sqlite3`）
+* NextAuth（Auth.js v5，Credentials 登录）
+* TanStack Query / TanStack Table、Zustand
+* React Hook Form + Zod、Base UI、Recharts
+* Vitest + Testing Library、oxlint / oxfmt
 
-cd -
-bun link @mtm/shared
-```
+## 环境要求
 
-## 全局文本复制
-> 已配置全局文本复制功能
+* Bun 1.4.4（由 `packageManager` 字段固定；可用 `.bun-version` 配合版本管理器）
+* Node.js 20+
 
-使用方法如下：
+## 环境变量
 
-```jsx
-// 查找id为foo的元素内容进行复制
-<span id="foo">foo</span>
-<button class="clipboard" data-clipboard-target="#foo">
-  复制
-</button>
+[source,bash]
+----
+DATABASE_PATH=./data/mtm.sqlite   # 可选，默认 ./data/mtm.sqlite
+AUTH_SECRET=change-me             # 必填，用于会话与验证码签名
+----
 
-// 或者
+参考 `.env.example`。生产环境必须提供随机的 `AUTH_SECRET`。
 
-// 直接复制data-clipboard-text设置的文本内容
-<button class="clipboard" data-clipboard-text="foo">
-  复制
-</button>
-```
+## 常用命令
 
-## FAQ
+[source,bash]
+----
+bun install        # 安装依赖
+bun run dev        # 开发服务器
+bun run build      # 生产构建
+bun run start      # 启动生产服务
+bun run test       # 运行测试（Vitest）
+bun run test:watch # 监听模式测试
+bun run lint       # oxlint
+bun run lint:fix   # oxlint 自动修复
+bun run typecheck  # tsc --noEmit
+bun run fmt        # oxfmt 格式化
+bun run fmt:check  # 格式检查
+----
 
-### [qiankun] lifecycle not found from xxx entry exports, fallback to get from window['xxx']
+## 目录结构
 
-qiankun是通过html中的最后一个script文件，获取qiankun的生命周期，所以如果最后一个不是入口js文件就拿不到生命周期。
+[source,text]
+----
+app/            # App Router 路由（(admin)、(auth)、(entry)、api）
+components/     # 业务与 UI 组件（ui/ 为基础组件库）
+lib/            # 数据库、服务层、认证、校验与通用工具
+stores/         # Zustand 状态
+styles/         # 全局样式与设计令牌
+tests/          # Vitest 测试与测试初始化
+data/           # SQLite 数据库文件（运行时生成）
+lib/db/seed/data/ # 种子数据（JSON）
+----
 
-可在webpack.config.js文件中修改下面配置修复此问题
-```js
-const config = {
-  ...
-  plugins: [
-    new HtmlPlugin({
-      ...
-      chunks: [ 'app' ]
-    }),
-  ]
-  ...
-}
-```
+## 数据库与种子数据
 
-## 数据规则
-
-金钱 单位 元 or 分?
-
-使用 actions/cache@v3 缓存 **/node_modules 目录文件，缩减编译部署时安装依赖所耗费的时间。
-
-
-* 保证金 - cash deposit
+应用启动时通过 `lib/db/seed` 初始化数据库结构并写入 `lib/db/seed/data` 中的种子数据，重复启动不会重复写入。
