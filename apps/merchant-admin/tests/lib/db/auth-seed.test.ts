@@ -3,9 +3,20 @@ import { DEMO_MERCHANT_ID, MERCHANT_PERMISSIONS } from '@mtm/contracts';
 import { afterAll, expect, test } from 'vitest';
 
 import { prisma, initDatabase } from '@/lib/db';
-import { SEED_MERCHANT_ID, SEED_STAFF_ACCOUNT_ID } from '@/lib/db/seed/ids';
+import { seedMerchantAuth } from '@/lib/db/seed';
+import { SEED_ACCOUNT_ID, SEED_MERCHANT_ID, SEED_STAFF_ACCOUNT_ID } from '@/lib/db/seed/ids';
 
 afterAll(() => prisma.$disconnect());
+
+test('re-running the auth seed corrects a drifted owner merchantId', async () => {
+  await initDatabase();
+  await prisma.merchantAccount.update({ where: { id: SEED_ACCOUNT_ID }, data: { merchantId: '1' } });
+
+  await seedMerchantAuth(prisma);
+
+  const owner = await prisma.merchantAccount.findUniqueOrThrow({ where: { id: SEED_ACCOUNT_ID } });
+  expect(owner.merchantId).toBe(SEED_MERCHANT_ID);
+});
 
 test('seeds owner and staff accounts with scoped roles', async () => {
   await initDatabase();

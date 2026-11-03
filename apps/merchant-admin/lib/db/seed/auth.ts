@@ -172,6 +172,7 @@ export async function seedMerchantAuth(tx: Prisma.TransactionClient): Promise<vo
     await tx.merchantAccount.update({
       where: { id: SEED_ACCOUNT_ID },
       data: {
+        merchantId: SEED_MERCHANT_ID,
         username: MERCHANT_OWNER_USERNAME,
         name: MERCHANT_OWNER_NAME,
         isOwner: true,
@@ -207,6 +208,7 @@ export async function seedMerchantAuth(tx: Prisma.TransactionClient): Promise<vo
     await tx.merchantAccount.update({
       where: { id: SEED_STAFF_ACCOUNT_ID },
       data: {
+        merchantId: SEED_MERCHANT_ID,
         username: MERCHANT_STAFF_USERNAME,
         name: MERCHANT_STAFF_NAME,
         phone: MERCHANT_STAFF_PHONE,
