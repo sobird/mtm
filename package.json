@@ -9,7 +9,10 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "db:migrate": "bun scripts/dev-bootstrap.mjs && turbo run db:migrate",
+    "db:reset": "bun scripts/dev-bootstrap.mjs && turbo run db:reset",
+    "db:seed": "turbo run db:seed",
+    "dev": "bun scripts/dev-bootstrap.mjs && turbo run dev",
     "fmt": "oxfmt --config packages/config/oxfmt.jsonc scripts && turbo run format:fix",
     "fmt:check": "oxfmt --check --config packages/config/oxfmt.jsonc scripts && turbo run format",
     "lint": "oxlint -c packages/config/oxlint.jsonc scripts && turbo run lint",

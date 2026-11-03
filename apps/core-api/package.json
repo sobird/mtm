@@ -9,7 +9,7 @@
     "db:migrate:dev": "bun --env-file=../../.env x prisma migrate dev",
     "db:reset": "bun --env-file=../../.env x prisma migrate reset --force --skip-seed && bun --env-file=../../.env prisma/seed.ts",
     "db:seed": "bun --env-file=../../.env prisma/seed.ts",
-    "dev": "bun --watch src/index.ts",
+    "dev": "bun --env-file=../../.env --watch src/index.ts",
     "fmt:check": "oxfmt --check --config ../../packages/config/oxfmt.jsonc",
     "format": "oxfmt --check --config ../../packages/config/oxfmt.jsonc",
     "format:fix": "oxfmt --config ../../packages/config/oxfmt.jsonc",

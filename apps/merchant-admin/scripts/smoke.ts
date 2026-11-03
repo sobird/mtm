@@ -1,30 +1,34 @@
-import path from 'node:path';
-
 import { createSessionCookie } from './session-cookie';
 
 /**
  * Production-build smoke test (Task 25).
  *
- * Delete the stale database, then start the built server against that path.
- * The script never deletes the file itself: a live SQLite connection holds it
- * open, and unlinking it leaves the server writing to an orphaned inode. For
- * the restart-persistence check, keep the file and start the server again.
- * The standalone server changes its cwd to `.next/standalone`, so pass an
- * absolute path:
+ * Start the built server against the same PostgreSQL database this script
+ * targets, then run the checks over HTTP:
  *
- *   rm -f data/smoke.sqlite
- *   NODE_ENV=production DATABASE_PATH="$(pwd)/data/smoke.sqlite" AUTH_SECRET=test-secret PORT=3000 \
+ *   NODE_ENV=production MERCHANT_DATABASE_URL=... AUTH_SECRET=test-secret PORT=3000 \
  *     node .next/standalone/server.js &
- *   NODE_ENV=production AUTH_SECRET=test-secret bun run smoke
+ *   NODE_ENV=production MERCHANT_DATABASE_URL=... AUTH_SECRET=test-secret bun run smoke
  */
 
 const BASE_URL = process.env.SMOKE_BASE_URL ?? 'http://localhost:3000';
-const DATABASE_PATH = path.resolve(process.env.SMOKE_DATABASE_PATH ?? './data/smoke.sqlite');
 const REQUEST_TIMEOUT_MS = 15_000;
 const READY_TIMEOUT_MS = 30_000;
 
 if (!process.env.AUTH_SECRET) {
   throw new Error('AUTH_SECRET must be set to the same value the smoke server was started with');
+}
+
+const DATABASE_URL = process.env.MERCHANT_DATABASE_URL;
+
+if (!DATABASE_URL) {
+  throw new Error('MERCHANT_DATABASE_URL must point at the database the smoke server uses');
+}
+
+function describeDatabaseUrl(raw: string): string {
+  const url = new URL(raw);
+
+  return `${url.protocol}//${url.username ? '***@' : ''}${url.host}${url.pathname}`;
 }
 
 const PUBLIC_ROUTES = [
@@ -262,7 +266,7 @@ async function checkCouponFlow(cookie: string): Promise<void> {
 
 async function main(): Promise<void> {
   console.log(`Smoke target: ${BASE_URL}`);
-  console.log(`Smoke database: ${DATABASE_PATH}\n`);
+  console.log(`Smoke database: ${describeDatabaseUrl(DATABASE_URL)}\n`);
 
   await waitForServer();
 
