@@ -1,0 +1,95 @@
+{
+  "code": 0,
+  "msg": "SUCCESS",
+  "data": [
+    {
+      "menuId": "1399",
+      "noticeStyle": 30,
+      "noticeContent": 99
+    },
+    {
+      "menuId": "1400",
+      "noticeStyle": 30,
+      "noticeContent": 99
+    },
+    {
+      "menuId": "1401",
+      "noticeStyle": 30,
+      "noticeContent": "新"
+    },
+    {
+      "menuId": "1850",
+      "noticeStyle": 20,
+      "noticeContent": 99
+    },
+    {
+      "menuId": "19207",
+      "noticeStyle": 30,
+      "noticeContent": "新"
+    },
+    {
+      "menuId": "19244",
+      "noticeStyle": 20,
+      "noticeContent": 111
+    },
+    {
+      "menuId": "1882",
+      "noticeStyle": 10,
+      "noticeContent": 111
+    },
+    {
+      "menuId": "1734",
+      "noticeStyle": 10
+    },
+    {
+      "menuId": "1406",
+      "noticeStyle": 30,
+      "noticeContent": "新"
+    },
+    {
+      "menuId": "1407",
+      "noticeStyle": 30,
+      "noticeContent": "新"
+    },
+    {
+      "menuId": "999002",
+      "noticeStyle": 30,
+      "noticeContent": "新"
+    },
+    {
+      "menuId": "999003",
+      "noticeStyle": 20,
+      "noticeContent": 111
+    },
+    {
+      "menuId": "999004",
+      "noticeStyle": 30,
+      "noticeContent": "新"
+    },
+    {
+      "menuId": "999005",
+      "noticeStyle": 30,
+      "noticeContent": "新"
+    },
+    {
+      "menuId": "999006",
+      "noticeStyle": 10,
+      "noticeContent": 111
+    },
+    {
+      "menuId": "9999000",
+      "noticeStyle": 30,
+      "noticeContent": "新"
+    },
+    {
+      "menuId": "9999001",
+      "noticeStyle": 20,
+      "noticeContent": 111
+    },
+    {
+      "menuId": "9999002",
+      "noticeStyle": 30,
+      "noticeContent": "新"
+    }
+  ]
+}

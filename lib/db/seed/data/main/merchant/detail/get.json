@@ -1,0 +1,93 @@
+{
+  "code": 0,
+  "data": {
+    "id": 123456,
+    "legalPersonInfo": {
+      "idCardPhotos": [
+        "https://mtm.sobird.me/assets/identity_card_1.jpeg",
+        "https://mtm.sobird.me/assets/identity_card_2.jpeg"
+      ],
+      "phone": "176****3557",
+      "name": "小米妈妈",
+      "cardNum": "32010**********012",
+      "validate": "",
+      "cardValidateType": 1,
+      "email": ""
+    },
+    "merchantManagerInfo": {
+      "idCardPhotos": [
+        "https://mtm.sobird.me/assets/identity_card_1.jpeg",
+        "https://mtm.sobird.me/assets/identity_card_2.jpeg"
+      ],
+      "phone": "176****3557",
+      "name": "小米妈妈",
+      "cardNum": "32010**********012",
+      "email": "w*@qq.com",
+      "validate": "",
+      "cardValidateType": 1
+    },
+    "enteredCompanyInfo": {
+      "mainCategory": [200000452],
+      "businessLicense": "https://mtm.sobird.me/assets/business_license.png",
+      "name": "小米妈妈家居旗舰店",
+      "socialCreditCode": "9137132****P3P1Q9A",
+      "address": "北京市海淀区北京科技大学",
+      "openingPermit": "https://mtm.sobird.me/assets/business_license.png",
+      "type": "其他",
+      "registeredCapital": "伍佰万元整",
+      "operatingRange": "家具",
+      "operatingTime": "2019-01-25",
+      "operatingTimeType": 1,
+      "foundedDate": "2019-01-25",
+      "files": ["https://mtm.sobird.me/assets/certificate_bank.jpeg"],
+      "operatingAddress": "北京市海淀区北京科技大学"
+    },
+    "shopInfo": {
+      "name": "小米妈妈家居旗舰店",
+      "description": "小米妈妈家居旗舰店",
+      "bankNum": "158981*******3550",
+      "bankUname": "小米妈妈家居",
+      "logo": "https://mtm.sobird.me/assets/merchant/logo.jpg",
+      "type": 23,
+      "category": 200010002,
+      "address": "北京市海淀区",
+      "id": 148568,
+      "auth": "企业店铺",
+      "ensureAmount": 1000000,
+      "bankPhone": "156****0187",
+      "bankMode": 1,
+      "branchId": 123,
+      "bankId": 456,
+      "branchName": "中国工商银行",
+      "returnAddress": "",
+      "eMerchantId": "",
+      "eSupplierId": "",
+      "servicePhoneNum": "186****3556",
+      "walletAccountName": "**********N0DV",
+      "walletId": "12000046822770",
+      "settleAuthInfo": {
+        "auth": 1,
+        "authTime": 1606273315,
+        "authRole": "176****3557"
+      },
+      "externalLink": "https://sobird.me/"
+    },
+    "state": 4,
+    "incomingState": 3,
+    "reviewState": 2,
+    "settlement": 1,
+    "margin": 0,
+    "commodity": 0,
+    "contactConfirm": 1,
+    "merchantState": 4,
+    "h5ContactLink": "https://rules-center.meituan.com/m/detail/91?commonType=2",
+    "pcContactLink": "https://rules-center.meituan.com/rules?commonType=2",
+    "pubAccountId": 137438993652,
+    "bsid": "1rlfNYH3S9uRfFes-a8rrJMxISpw7_zGC6WOPiG_vkENJ0ii_tYHlBn9OR_QfY_QMlvXd-ESHOoD9ku4Bu6TQg",
+    "groupInfo": {
+      "groupNumber": 2,
+      "groupTime": "24-00-00"
+    },
+    "merchantType": 23
+  }
+}
