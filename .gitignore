@@ -14,7 +14,7 @@ next-env.d.ts
 dist
 dist-ssr
 *.local
-data/*.sqlite*
+**/data/*.sqlite*
 yarn.lock
 package-lock.json
 stats.json
