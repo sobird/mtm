@@ -42,6 +42,9 @@ export const couponListQuerySchema = z.object({
   status: z.coerce.number().int().optional(),
   stime: z.coerce.number().int().optional(),
   etime: z.coerce.number().int().optional(),
+  target: z.coerce.number().int().optional(),
+  sort: z.enum(['ctime', 'sendCount', 'leftCount']).optional(),
+  order: z.enum(['asc', 'desc']).optional(),
 });
 
 export const couponUpsertSchema = z

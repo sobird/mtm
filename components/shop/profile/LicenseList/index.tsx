@@ -1,11 +1,10 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import type { ColumnDef } from '@tanstack/react-table';
 import { useState } from 'react';
 
 import { Button, Card, DataTable, Empty, Tag, Tooltip, useToast } from '@/components/ui';
-import type { TagTone } from '@/components/ui';
+import type { DataTableColumns, TagTone } from '@/components/ui';
 import { apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import type { LicenseDTO } from '@/lib/services/merchant';
@@ -46,23 +45,23 @@ export function LicenseList() {
 
   const list = licensesQuery.data ?? [];
 
-  const columns: ColumnDef<LicenseDTO>[] = [
+  const columns: DataTableColumns<LicenseDTO> = [
     {
-      accessorKey: 'type',
-      header: '证照类型',
-      cell: ({ row }) => display(row.original.type),
+      dataIndex: 'type',
+      title: '证照类型',
+      render: (_, row) => display(row.type),
     },
     {
-      id: 'url',
-      header: '许可证照',
-      cell: ({ row }) => (
+      key: 'url',
+      title: '许可证照',
+      render: (_, row) => (
         <Button
           variant='ghost'
           size='sm'
-          disabled={!row.original.url}
+          disabled={!row.url}
           onClick={() => {
-            if (row.original.url) {
-              window.open(row.original.url, '_blank', 'noopener');
+            if (row.url) {
+              window.open(row.url, '_blank', 'noopener');
             }
           }}
         >
@@ -71,29 +70,29 @@ export function LicenseList() {
       ),
     },
     {
-      accessorKey: 'expireAt',
-      header: '证照有效截止日期',
-      cell: ({ row }) => (
+      dataIndex: 'expireAt',
+      title: '证照有效截止日期',
+      render: (_, row) => (
         <span>
-          {display(row.original.expireAt)}
-          {isExpired(row.original.expireAt) ? <span className={styles.expired}>已过期</span> : null}
+          {display(row.expireAt)}
+          {isExpired(row.expireAt) ? <span className={styles.expired}>已过期</span> : null}
         </span>
       ),
     },
     {
-      accessorKey: 'status',
-      header: '审核状态',
-      cell: ({ row }) => {
-        const status = STATUS_MAP[row.original.status];
+      dataIndex: 'status',
+      title: '审核状态',
+      render: (_, row) => {
+        const status = STATUS_MAP[row.status];
 
         return status ? <Tag tone={status.tone}>{status.label}</Tag> : <span>--</span>;
       },
     },
     {
-      id: 'actions',
-      header: '操作',
-      cell: ({ row }) => {
-        const { status, expireAt } = row.original;
+      key: 'actions',
+      title: '操作',
+      render: (_, row) => {
+        const { status, expireAt } = row;
 
         if (status === 4) {
           return (

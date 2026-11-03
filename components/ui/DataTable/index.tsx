@@ -1,30 +1,43 @@
 'use client';
 
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import type { ColumnDef, RowData } from '@tanstack/react-table';
+import { Table } from 'antd';
+import type { TableColumnsType, TableProps } from 'antd';
+import type { Key } from 'react';
 
-import { cx } from '../cx';
 import { Empty } from '../Empty';
-import { Pagination } from '../Pagination';
-import { Skeleton } from '../Skeleton';
 
-import styles from './DataTable.module.css';
+export type DataTableColumn<T> = TableColumnsType<T>[number];
+export type DataTableColumns<T> = TableColumnsType<T>;
 
-export type DataTableRowKey<T> = keyof T | ((row: T) => string);
+export interface DataTableSort {
+  columnKey?: string;
+  order?: 'ascend' | 'descend';
+}
+
+export interface DataTableChange {
+  sorter?: DataTableSort;
+  filters?: Record<string, Key[] | null>;
+}
 
 export interface DataTableProps<T> {
-  columns: ColumnDef<T>[];
+  columns: DataTableColumns<T>;
   data: T[];
   total: number;
   page: number;
   pageSize: number;
   onPageChange: (page: number) => void;
-  rowKey: DataTableRowKey<T>;
+  rowKey: TableProps<T>['rowKey'];
   loading?: boolean;
   emptyText?: string;
+  /**
+   * Fires for sort and filter changes. Sorting/filtering is server-side here:
+   * columns use `sorter: true`, so antd renders the controls without reordering
+   * the current page.
+   */
+  onTableChange?: (change: DataTableChange) => void;
 }
 
-export function DataTable<T extends RowData>({
+export function DataTable<T extends object>({
   columns,
   data,
   total,
@@ -34,80 +47,51 @@ export function DataTable<T extends RowData>({
   rowKey,
   loading = false,
   emptyText,
+  onTableChange,
 }: DataTableProps<T>) {
-  const pageCount = Math.max(1, Math.ceil(total / Math.max(1, pageSize)));
+  const handleChange: TableProps<T>['onChange'] = (pagination, filters, sorter, extra) => {
+    if (extra.action === 'paginate') {
+      const nextPage = pagination.current ?? 1;
+      if (nextPage !== page) {
+        onPageChange(nextPage);
+      }
+      return;
+    }
 
-  // oxlint-disable-next-line react/incompatible-library -- TanStack Table instance is intentionally unmemoizable.
-  const table = useReactTable({
-    columns,
-    data,
-    getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,
-    pageCount,
-    state: {
-      pagination: { pageIndex: Math.max(0, page - 1), pageSize },
-    },
-    getRowId: (row: T) => (typeof rowKey === 'function' ? rowKey(row) : String(row[rowKey])),
-  });
+    const activeSorter = Array.isArray(sorter) ? sorter[0] : sorter;
+    // antd only fills `columnKey` when a column has an explicit `key`, so fall
+    // back to the data index for the common `dataIndex`-only columns.
+    const field = activeSorter?.field;
+    const rawKey = activeSorter?.columnKey ?? (Array.isArray(field) ? field[0] : field);
 
-  const headerGroups = table.getHeaderGroups();
-  const rows = table.getRowModel().rows;
-  const columnCount = Math.max(1, columns.length);
-  const skeletonCount = data.length > 0 ? data.length : 5;
+    onTableChange?.({
+      sorter: activeSorter
+        ? {
+            columnKey: rawKey === undefined ? undefined : String(rawKey),
+            order: activeSorter.order ?? undefined,
+          }
+        : undefined,
+      filters: filters as Record<string, Key[] | null>,
+    });
+  };
 
   return (
-    <div className={styles.tableWrapper}>
-      <div className={styles.scroll}>
-        <table className={styles.table}>
-          <thead className={styles.thead}>
-            {headerGroups.map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th key={header.id} className={styles.th} scope='col'>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {loading
-              ? Array.from({ length: skeletonCount }, (_, rowIndex) => (
-                  <tr key={`skeleton-${rowIndex}`} className={styles.tr}>
-                    {Array.from({ length: columnCount }, (_cellValue, cellIndex) => (
-                      <td key={cellIndex} className={styles.td}>
-                        <Skeleton rows={1} />
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              : rows.map(row => (
-                  <tr key={row.id} className={styles.tr}>
-                    {row.getVisibleCells().map(cell => (
-                      <td key={cell.id} className={styles.td}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-            {!loading && rows.length === 0 ? (
-              <tr>
-                <td className={styles.td} colSpan={columnCount}>
-                  <Empty description={emptyText ?? '暂无数据'} />
-                </td>
-              </tr>
-            ) : null}
-          </tbody>
-        </table>
-      </div>
-      <Pagination
-        page={page}
-        pageSize={pageSize}
-        total={total}
-        onPageChange={onPageChange}
-        className={cx(styles.footer)}
-      />
-    </div>
+    <Table<T>
+      size='middle'
+      rowKey={rowKey}
+      columns={columns}
+      dataSource={data}
+      loading={loading}
+      locale={{ emptyText: <Empty description={emptyText ?? '暂无数据'} /> }}
+      pagination={{
+        current: page,
+        pageSize,
+        total,
+        showSizeChanger: false,
+        showTotal: value => `共 ${value} 条`,
+      }}
+      onChange={handleChange}
+    />
   );
 }
 

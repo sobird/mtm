@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 
-import { Button, Field, Form, Input, Radio, Select, useToast } from '@/components/ui';
+import { Button, DateRangePicker, Field, Form, Input, Radio, Select, useToast } from '@/components/ui';
 import { ApiError, apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import type { CouponDetailDTO } from '@/lib/services/coupon';
@@ -207,33 +207,21 @@ function DateTimeRangeField({ disabled }: { disabled?: boolean }) {
   const value = useWatch({ name: 'putTerm' }) as [number?, number?] | undefined;
   const error = getFieldState('putTerm', formState).error?.message as string | undefined;
 
-  const update = (index: 0 | 1, raw: string) => {
-    const next: [number?, number?] = [value?.[0], value?.[1]];
-    next[index] = dateTimeInputToEpoch(raw);
-    setValue('putTerm', next, { shouldValidate: true, shouldDirty: true });
-  };
-
   return (
     <Field label='发放时间' required error={error}>
-      <div className={styles.range}>
-        <input
-          type='datetime-local'
-          className={styles.input}
-          aria-label='发放开始时间'
-          value={epochToDateTimeInput(value?.[0])}
-          disabled={disabled}
-          onChange={event => update(0, event.target.value)}
-        />
-        <span className={styles.separator}>至</span>
-        <input
-          type='datetime-local'
-          className={styles.input}
-          aria-label='发放结束时间'
-          value={epochToDateTimeInput(value?.[1])}
-          disabled={disabled}
-          onChange={event => update(1, event.target.value)}
-        />
-      </div>
+      <DateRangePicker
+        showTime
+        disabled={disabled}
+        className={styles.dateRange}
+        placeholder={['发放开始时间', '发放结束时间']}
+        value={[epochToDateTimeInput(value?.[0]), epochToDateTimeInput(value?.[1])]}
+        onChange={next =>
+          setValue('putTerm', [dateTimeInputToEpoch(next?.[0] ?? ''), dateTimeInputToEpoch(next?.[1] ?? '')], {
+            shouldValidate: true,
+            shouldDirty: true,
+          })
+        }
+      />
     </Field>
   );
 }
@@ -304,22 +292,12 @@ function UseTermField({ disabled }: { disabled?: boolean }) {
             onChange={() => selectMode('range')}
             label='自定义'
           />
-          <input
-            type='date'
-            className={styles.input}
-            aria-label='使用时间开始日期'
-            value={epochToDateInput(range?.[0])}
+          <DateRangePicker
             disabled={disabled || mode !== 'range'}
-            onChange={event => setRange([dateInputToEpoch(event.target.value), range?.[1]])}
-          />
-          <span className={styles.separator}>至</span>
-          <input
-            type='date'
-            className={styles.input}
-            aria-label='使用时间结束日期'
-            value={epochToDateInput(range?.[1])}
-            disabled={disabled || mode !== 'range'}
-            onChange={event => setRange([range?.[0], dateInputToEpoch(event.target.value)])}
+            className={styles.dateRange}
+            placeholder={['使用开始日期', '使用结束日期']}
+            value={[epochToDateInput(range?.[0]), epochToDateInput(range?.[1])]}
+            onChange={next => setRange([dateInputToEpoch(next?.[0] ?? ''), dateInputToEpoch(next?.[1] ?? '')])}
           />
         </div>
       </div>

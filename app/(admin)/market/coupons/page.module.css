@@ -17,21 +17,6 @@
   font-size: 14px;
 }
 
-.dateInput {
-  height: 32px;
-  padding: 0 var(--space-2);
-  color: var(--color-text);
-  font: inherit;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-}
-
-.separator {
-  color: var(--color-text-secondary);
-  font-size: 14px;
-}
-
 .actions {
   display: flex;
   align-items: center;

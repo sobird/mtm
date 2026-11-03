@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import type { ChangeEvent, ReactNode } from 'react';
+import { Upload as AntUpload } from 'antd';
+import { useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 
 import { cx } from '../cx';
 import { Dialog } from '../Dialog';
@@ -59,6 +60,17 @@ export function Upload({
 }: UploadProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const pendingFiles = useRef<File[]>([]);
+  const flushTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (flushTimer.current !== null) {
+        clearTimeout(flushTimer.current);
+      }
+    },
+    []
+  );
   const items = value.filter(Boolean);
   const occurrences = new Map<string, number>();
   const keyedItems = items.map(url => {
@@ -71,20 +83,25 @@ export function Upload({
   const canUpload = !disabled && !full;
   const allowMultiple = multiple ?? (maxCount === undefined || maxCount > 1);
 
-  const handleSelect = async (event: ChangeEvent<HTMLInputElement>) => {
-    const selected = Array.from(event.target.files ?? []);
-    event.target.value = '';
+  /** `beforeUpload` fires once per file, so batch the selection on the next tick. */
+  const queueFile = (file: File) => {
+    pendingFiles.current.push(file);
 
-    if (selected.length === 0) {
+    if (flushTimer.current !== null) {
       return;
     }
 
-    const remaining = maxCount ? Math.max(maxCount - items.length, 0) : selected.length;
-    const files = selected.slice(0, remaining);
+    flushTimer.current = setTimeout(() => {
+      flushTimer.current = null;
+      const batch = pendingFiles.current;
+      pendingFiles.current = [];
+      const remaining = maxCount ? Math.max(maxCount - items.length, 0) : batch.length;
+      const files = batch.slice(0, remaining);
 
-    if (files.length > 0) {
-      await onFilesSelected?.(files);
-    }
+      if (files.length > 0) {
+        void onFilesSelected?.(files);
+      }
+    }, 0);
   };
 
   const handleRemove = (index: number) => {
@@ -128,24 +145,29 @@ export function Upload({
 
         {canUpload || !autoHidden ? (
           <li className={styles.item}>
-            <label className={cx(styles.trigger, disabled && styles.disabled)}>
-              {children ?? (
-                <span className={styles.triggerDefault}>
-                  <span className={styles.plus} aria-hidden='true'>
-                    +
+            <AntUpload
+              className={styles.triggerUpload}
+              accept={accept}
+              multiple={allowMultiple}
+              disabled={disabled}
+              showUploadList={false}
+              fileList={[]}
+              beforeUpload={file => {
+                queueFile(file);
+                return false;
+              }}
+            >
+              <span className={cx(styles.trigger, disabled && styles.disabled)}>
+                {children ?? (
+                  <span className={styles.triggerDefault}>
+                    <span className={styles.plus} aria-hidden='true'>
+                      +
+                    </span>
+                    <span>点击上传</span>
                   </span>
-                  <span>点击上传</span>
-                </span>
-              )}
-              <input
-                type='file'
-                className={styles.input}
-                accept={accept}
-                multiple={allowMultiple}
-                disabled={disabled}
-                onChange={handleSelect}
-              />
-            </label>
+                )}
+              </span>
+            </AntUpload>
           </li>
         ) : null}
       </ul>

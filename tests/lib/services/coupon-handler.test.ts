@@ -52,6 +52,28 @@ test('GET lists coupons with pagination', async () => {
   expect(body.data.list).toHaveLength(5);
 });
 
+test('GET sorts coupons by a whitelisted column', async () => {
+  const res = await couponRoutes.GET(
+    new Request('http://localhost/api/merchant/coupon?pn=1&ps=100&sort=sendCount&order=asc'),
+    { params: Promise.resolve({}) }
+  );
+  expect(res.status).toBe(200);
+  const counts: number[] = (await res.json()).data.list.map((item: { sendCount: number }) => item.sendCount);
+  expect(counts).toEqual([...counts].sort((a, b) => a - b));
+  expect(counts.at(0)).toBe(0);
+  expect(counts.at(-1)).toBe(100);
+});
+
+test('GET filters coupons by target', async () => {
+  const res = await couponRoutes.GET(new Request('http://localhost/api/merchant/coupon?pn=1&ps=100&target=3'), {
+    params: Promise.resolve({}),
+  });
+  expect(res.status).toBe(200);
+  const body = await res.json();
+  expect(body.data.list.length).toBeGreaterThan(0);
+  expect(body.data.list.every((item: { target: number }) => item.target === 3)).toBe(true);
+});
+
 test('POST creates a coupon and returns the derived rule', async () => {
   const res = await couponRoutes.POST(
     jsonRequest('http://localhost/api/merchant/coupon', 'POST', {

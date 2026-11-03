@@ -2,7 +2,7 @@
 
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { Checkbox, Input } from '@/components/ui';
+import { Checkbox, DatePicker } from '@/components/ui';
 
 import styles from './FieldTermPicker.module.css';
 
@@ -44,27 +44,22 @@ function FieldTermPickerView({ value, onChange, rangePicker = false, disabled = 
   return (
     <div className={styles.picker}>
       <div className={styles.dates}>
-        <Input
-          type='date'
+        <DatePicker
           className={styles.date}
           value={start ?? ''}
           disabled={datesDisabled}
           aria-label='开始日期'
-          onChange={event => {
-            const next = event.target.value;
-            onChange(rangePicker ? [checked, next, end] : [checked, next]);
-          }}
+          onChange={next => onChange(rangePicker ? [checked, next, end] : [checked, next])}
         />
         {rangePicker ? (
           <>
             <span className={styles.separator}>至</span>
-            <Input
-              type='date'
+            <DatePicker
               className={styles.date}
               value={end ?? ''}
               disabled={datesDisabled}
               aria-label='结束日期'
-              onChange={event => onChange([checked, start, event.target.value])}
+              onChange={next => onChange([checked, start, next])}
             />
           </>
         ) : null}

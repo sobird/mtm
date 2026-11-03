@@ -52,5 +52,25 @@
     "browser": true,
     "node": true,
   },
+  "overrides": [
+    {
+      // antd is an implementation detail of the design-system wrapper. Pages and
+      // feature components must import from `@/components/ui` instead.
+      "files": ["app/**", "components/**"],
+      "excludeFiles": ["components/ui/**", "app/layout.tsx", "app/providers.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [{ "name": "antd", "message": "请从 @/components/ui 导入，不要直接依赖 antd。" }],
+            "patterns": [
+              { "group": ["antd/*"], "message": "请从 @/components/ui 导入，不要直接依赖 antd。" },
+              { "group": ["@ant-design/*"], "message": "请从 @/components/ui 导入，不要直接依赖 antd。" },
+            ],
+          },
+        ],
+      },
+    },
+  ],
   "ignorePatterns": [".next", "dist"],
 }

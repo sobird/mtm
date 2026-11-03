@@ -25,8 +25,8 @@
 
 1. 单仓库、单应用、单次构建：所有页面路由由同一个 Next.js 应用提供。
 2. 彻底移除微前端：qiankun、Module Federation、`externals`、`window.mtm`、`packages/shared` 运行时、`federated-adapter` 全部删除。
-3. 彻底移除 Antd 体系：`antd`、`@ant-design/pro-components`、`@ant-design/icons`、`@ant-design/charts` 不再出现在依赖树中。
-4. 改为 headless UI + CSS Modules，保留现有视觉语言和交互。
+3. 移除 Antd 5 体系：`@ant-design/pro-components`、`@ant-design/icons`、`@ant-design/charts` 不再使用。antd 6 仅作为 `components/ui` 封装层的内部实现（见第 18 节修订）。
+4. 页面统一使用 `components/ui`；封装层内部可用 headless UI 或 antd，保留现有视觉语言和交互。
 5. 用 Next Route Handlers + Sequelize + SQLite 重建接口层；现有 mock JSON 转为种子数据。
 6. 用 NextAuth（Auth.js）Credentials + JWT 会话替换客户端 `jose` 签发 token。
 7. 用 Docker（容器 + volume）部署，SQLite 文件持久化。
@@ -46,7 +46,7 @@
 反目标（即使能跑起来也算失败）：
 
 - 重新引入第二套应用边界（iframe、微前端、多 zone、Module Federation）。
-- 用 CSS-in-JS 或组件库主题系统替代 Antd 后，又形成一套不可控的黑盒样式。
+- 让组件库样式散落到页面代码，形成不可控的黑盒样式。组件库只能出现在 `components/ui`，主题令牌集中在 `app/providers.tsx`。
 - 为了“渐进迁移”长期保留两套 UI/两套路由/两套数据层。
 
 ## 4. 约束
@@ -54,7 +54,7 @@
 - 包管理器保持 bun（`bun@1.4.4`），锁文件为 `bun.lock`。
 - Next.js App Router，Node.js 运行时（不使用静态导出）。
 - 生产容器 Node 22 LTS；本地 Node 24 可用。
-- 样式只用 CSS Modules + 全局 CSS 变量；不引入 Tailwind/CSS-in-JS。
+- 业务样式只用 CSS Modules + 全局 CSS 变量；不引入 Tailwind。antd 的 CSS-in-JS 只存在于 `components/ui` 封装层内部。
 - TypeScript 严格度沿用现状（`strict: false`），不借迁移扩大范围。
 - 现有 UI 文案、字段、页面结构尽量保持一致；允许组件内部实现变化。
 - 所有页面默认中文，日期/金额格式沿用 `dayjs`、`numeral`。
@@ -495,3 +495,13 @@ volumes:
 | 重写期间 UI 细节丢失                                  | 体验回退                 | 以现有页面截图/行为为基准做回归清单                           |
 | Docker volume 权限                                    | 启动失败                 | 镜像内非 root 用户 + volume 目录预创建并授权                  |
 | 删除旧应用后无法回退                                  | 风险集中                 | 在独立分支推进；合并前保留旧代码于 git 历史；不保留运行时双轨 |
+
+## 18. 修订（2026-11-03）：antd 限定在封装层
+
+迁移完成后对日期选择、表格排序/筛选、上传三类交互做了 antd 对比原型。结论：headless 实现在这三类场景的交互成本高于收益，决定**在封装层内引入 antd**，而不是在页面里直接使用。
+
+- 页面与业务组件继续只从 `@/components/ui` 导入；`.oxlintrc.jsonc` 用 `no-restricted-imports` 禁止 `antd` / `@ant-design/*` 出现在 `components/ui/**` 之外（根布局与 Provider 除外）。
+- `DataTable`、`DatePicker`、`DateRangePicker`、`Upload` 内部使用 antd；其余基础组件保持现有 base-ui/CSS Modules 实现。
+- 主题令牌集中在 `app/providers.tsx`（`ConfigProvider` + `AntdApp`），与 `styles/tokens.css` 对齐；`AntdRegistry` 放在根布局负责 SSR 样式注入。
+- 表格排序/筛选走服务端参数（`sort`/`order`/`target`），antd 只负责交互 UI，避免客户端只排当前页导致的总数错位。
+- 代价：antd 组件所在路由的首屏 JS 增加约 300 kB（gzip，未拆分）；作为交换，日期、表格、上传的交互由成熟组件承担。

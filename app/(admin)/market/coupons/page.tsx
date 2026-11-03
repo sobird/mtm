@@ -1,14 +1,13 @@
 'use client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import type { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
 import { useState } from 'react';
 
 import { PageContainer } from '@/components/layout/PageContainer';
 import CreateCouponEntry from '@/components/market/coupon/CreateCouponEntry';
-import { Button, DataTable, Dialog, Empty, Select, Tag, useToast } from '@/components/ui';
-import type { SelectOptionValue, TagTone } from '@/components/ui';
+import { Button, DataTable, DateRangePicker, Dialog, Empty, Select, Tag, useToast } from '@/components/ui';
+import type { DataTableChange, DataTableColumns, SelectOptionValue, TagTone } from '@/components/ui';
 import { ApiError, apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import type { CouponListItemDTO } from '@/lib/services/coupon';
@@ -49,6 +48,17 @@ const TARGET_MAP: Record<number, string> = {
   2: '店铺通用券',
   3: '店铺客服体验券',
 };
+
+const TARGET_FILTERS = [
+  { text: '店铺商品券', value: 1 },
+  { text: '店铺通用券', value: 2 },
+  { text: '店铺客服体验券', value: 3 },
+];
+
+const SORTABLE_COLUMNS = new Set(['ctime', 'sendCount', 'leftCount']);
+
+type SortKey = 'ctime' | 'sendCount' | 'leftCount';
+type SortDirection = 'asc' | 'desc';
 
 function pad(value: number): string {
   return String(value).padStart(2, '0');
@@ -112,6 +122,9 @@ export default function MarketCouponsPage() {
   const [status, setStatus] = useState<SelectOptionValue>(-1);
   const [stime, setStime] = useState('');
   const [etime, setEtime] = useState('');
+  const [target, setTarget] = useState<number | undefined>();
+  const [sort, setSort] = useState<SortKey | undefined>();
+  const [order, setOrder] = useState<SortDirection | undefined>();
   const [page, setPage] = useState(1);
 
   const [offlineTarget, setOfflineTarget] = useState<CouponListItemDTO | null>(null);
@@ -123,6 +136,9 @@ export default function MarketCouponsPage() {
     status: status === -1 ? undefined : Number(status),
     stime: toEpoch(stime),
     etime: toEpoch(etime),
+    target,
+    sort,
+    order,
   };
 
   const couponsQuery = useQuery({
@@ -151,79 +167,105 @@ export default function MarketCouponsPage() {
     }
   };
 
-  const columns: ColumnDef<CouponListItemDTO>[] = [
+  const sortOrderFor = (key: SortKey) => (sort === key ? (order === 'asc' ? 'ascend' : 'descend') : null);
+
+  const handleTableChange = ({ sorter, filters }: DataTableChange) => {
+    const key = sorter?.columnKey;
+
+    if (key && SORTABLE_COLUMNS.has(key) && sorter?.order) {
+      setSort(key as SortKey);
+      setOrder(sorter.order === 'ascend' ? 'asc' : 'desc');
+    } else {
+      setSort(undefined);
+      setOrder(undefined);
+    }
+
+    const nextTarget = filters?.target?.[0];
+    setTarget(nextTarget === undefined || nextTarget === null ? undefined : Number(nextTarget));
+    setPage(1);
+  };
+
+  const columns: DataTableColumns<CouponListItemDTO> = [
     {
-      accessorKey: 'id',
-      header: '优惠券编码',
-      cell: ({ row }) => row.original.id,
+      dataIndex: 'id',
+      title: '优惠券编码',
+      render: (_, row) => row.id,
     },
     {
-      accessorKey: 'name',
-      header: '优惠券名称',
-      cell: ({ row }) => (
-        <Link className={styles.link} href={`/market/coupon/${row.original.id}`}>
-          {row.original.name}
+      dataIndex: 'name',
+      title: '优惠券名称',
+      render: (_, row) => (
+        <Link className={styles.link} href={`/market/coupon/${row.id}`}>
+          {row.name}
         </Link>
       ),
     },
     {
-      accessorKey: 'type',
-      header: '优惠类型',
-      cell: ({ row }) => TYPE_MAP[row.original.type] ?? '--',
+      dataIndex: 'type',
+      title: '优惠类型',
+      render: (_, row) => TYPE_MAP[row.type] ?? '--',
     },
     {
-      accessorKey: 'target',
-      header: '券类型',
-      cell: ({ row }) => TARGET_MAP[row.original.target] ?? '--',
+      dataIndex: 'target',
+      title: '券类型',
+      filters: TARGET_FILTERS,
+      filteredValue: target === undefined ? null : [target],
+      render: (value: number) => TARGET_MAP[value] ?? '--',
     },
     {
-      id: 'putTerm',
-      header: '发放时段',
-      cell: ({ row }) => `${formatISO(row.original.putTerm?.[0])} 至 ${formatISO(row.original.putTerm?.[1])}`,
+      key: 'putTerm',
+      title: '发放时段',
+      render: (_, row) => `${formatISO(row.putTerm?.[0])} 至 ${formatISO(row.putTerm?.[1])}`,
     },
     {
-      id: 'useTerm',
-      header: '使用时间',
-      cell: ({ row }) => formatUseTerm(row.original.useTerm),
+      key: 'useTerm',
+      title: '使用时间',
+      render: (_, row) => formatUseTerm(row.useTerm),
     },
     {
-      accessorKey: 'sendCount',
-      header: '发放数量',
-      cell: ({ row }) => row.original.sendCount,
+      dataIndex: 'sendCount',
+      title: '发放数量',
+      sorter: true,
+      sortOrder: sortOrderFor('sendCount'),
+      render: (value: number) => value,
     },
     {
-      accessorKey: 'leftCount',
-      header: '当前余量',
-      cell: ({ row }) => row.original.leftCount,
+      dataIndex: 'leftCount',
+      title: '当前余量',
+      sorter: true,
+      sortOrder: sortOrderFor('leftCount'),
+      render: (value: number) => value,
     },
     {
-      accessorKey: 'ctime',
-      header: '创建时间',
-      cell: ({ row }) => formatISO(row.original.ctime),
+      dataIndex: 'ctime',
+      title: '创建时间',
+      sorter: true,
+      sortOrder: sortOrderFor('ctime'),
+      render: (_, row) => formatISO(row.ctime),
     },
     {
-      accessorKey: 'status',
-      header: '状态',
-      cell: ({ row }) => {
-        const statusMeta = STATUS_MAP[row.original.status];
+      dataIndex: 'status',
+      title: '状态',
+      render: (value: number) => {
+        const statusMeta = STATUS_MAP[value];
 
         return statusMeta ? <Tag tone={statusMeta.tone}>{statusMeta.label}</Tag> : <span>--</span>;
       },
     },
     {
-      id: 'actions',
-      header: '操作',
-      cell: ({ row }) => (
+      key: 'actions',
+      title: '操作',
+      render: (_, row) => (
         <div className={styles.actions}>
-          <Link className={styles.link} href={`/market/coupon/${row.original.id}`}>
+          <Link className={styles.link} href={`/market/coupon/${row.id}`}>
             查看
           </Link>
-          {row.original.status < 2 ? (
+          {row.status < 2 ? (
             <>
-              <Link className={styles.link} href={`/market/coupon/update/${row.original.id}`}>
+              <Link className={styles.link} href={`/market/coupon/update/${row.id}`}>
                 编辑
               </Link>
-              <Button variant='ghost' size='sm' onClick={() => setOfflineTarget(row.original)}>
+              <Button variant='ghost' size='sm' onClick={() => setOfflineTarget(row)}>
                 下线
               </Button>
             </>
@@ -257,24 +299,13 @@ export default function MarketCouponsPage() {
         </div>
         <div className={styles.filter}>
           <span className={styles.filterLabel}>发放时间</span>
-          <input
-            type='datetime-local'
-            className={styles.dateInput}
-            aria-label='发放开始时间'
-            value={stime}
-            onChange={event => {
-              setStime(event.target.value);
-              resetPage();
-            }}
-          />
-          <span className={styles.separator}>至</span>
-          <input
-            type='datetime-local'
-            className={styles.dateInput}
-            aria-label='发放结束时间'
-            value={etime}
-            onChange={event => {
-              setEtime(event.target.value);
+          <DateRangePicker
+            showTime
+            placeholder={['发放开始', '发放结束']}
+            value={[stime, etime]}
+            onChange={value => {
+              setStime(value?.[0] ?? '');
+              setEtime(value?.[1] ?? '');
               resetPage();
             }}
           />
@@ -291,6 +322,7 @@ export default function MarketCouponsPage() {
           page={page}
           pageSize={PAGE_SIZE}
           onPageChange={setPage}
+          onTableChange={handleTableChange}
           rowKey='id'
           loading={couponsQuery.isPending}
           emptyText='暂无优惠券'

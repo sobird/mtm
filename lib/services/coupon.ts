@@ -9,10 +9,15 @@ import { normalizePagination } from '@/lib/pagination';
 
 import { AppError } from '../errors';
 
+export type CouponSortField = 'ctime' | 'sendCount' | 'leftCount';
+
 export interface CouponListQuery extends PaginationInput {
   status?: number;
   stime?: number;
   etime?: number;
+  target?: number;
+  sort?: CouponSortField;
+  order?: 'asc' | 'desc';
 }
 
 export interface CouponListItemDTO {
@@ -220,12 +225,18 @@ export async function listCoupons(
   if (query.etime !== undefined) {
     where.etime = { [Op.lte]: query.etime };
   }
+  if (query.target !== undefined) {
+    where.target = query.target;
+  }
+
+  const sortField: CouponSortField = query.sort ?? 'ctime';
+  const sortDirection = query.order === 'asc' ? 'ASC' : 'DESC';
 
   const { rows, count } = await Coupon.findAndCountAll({
     where,
     limit: ps,
     offset,
-    order: [['ctime', 'DESC']],
+    order: [[sortField, sortDirection]],
   });
 
   const list: CouponListItemDTO[] = [];

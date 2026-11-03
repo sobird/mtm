@@ -74,7 +74,15 @@ export { SearchForm } from './SearchForm';
 export type { SearchFormProps } from './SearchForm';
 
 export { DataTable } from './DataTable';
-export type { DataTableProps, DataTableRowKey } from './DataTable';
+export type { DataTableChange, DataTableColumn, DataTableColumns, DataTableProps, DataTableSort } from './DataTable';
 
 export { Upload } from './Upload';
 export type { UploadProps } from './Upload';
+
+export { DatePicker } from './DatePicker';
+export type { DatePickerProps } from './DatePicker';
+
+export { DateRangePicker } from './DateRangePicker';
+export type { DateRangePickerProps, DateRangeValue } from './DateRangePicker';
+
+export { DATE_FORMAT, DATE_TIME_DISPLAY_FORMAT, DATE_TIME_FORMAT, fromDayjs, toDayjs } from './date-value';

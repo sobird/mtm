@@ -9,8 +9,9 @@
 * React 19 + TypeScript
 * Sequelize + SQLite（`sqlite3`）
 * NextAuth（Auth.js v5，Credentials 登录）
-* TanStack Query / TanStack Table、Zustand
-* React Hook Form + Zod、Base UI、Recharts
+* TanStack Query、Zustand
+* React Hook Form + Zod、Base UI（Dialog/Toast/Select 等）
+* Ant Design（仅限 `components/ui` 封装层内部实现，业务页面只从 `@/components/ui` 导入）、Recharts
 * Vitest + Testing Library、oxlint / oxfmt
 
 ## 环境要求
