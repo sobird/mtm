@@ -49,7 +49,7 @@ export const legalPersonSchema = z.object({
   idNum: z.string().min(1, '证件号码不能为空'),
   term: termSchema,
   mobile: z.string().refine(value => isMobilePhone(value, '86'), '请输入正确的中国大陆11位手机号码'),
-  idPhotos: z.array(z.string()).optional(),
+  idPhotos: z.array(z.string()).min(1, '请上传法人证件照'),
 });
 
 export const companyInfoSchema = z.object({

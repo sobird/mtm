@@ -95,7 +95,14 @@ export function SignContract({ open, onOpenChange, mobile, contractId, bizType, 
                   《美团电商合作协议》
                 </a>
                 <Tooltip content={POLICY_TIP}>
-                  <span className={styles.info} aria-label='协议说明'>
+                  <span
+                    className={styles.info}
+                    role='button'
+                    tabIndex={0}
+                    aria-label='协议说明'
+                    onClick={event => event.stopPropagation()}
+                    onKeyDown={event => event.stopPropagation()}
+                  >
                     ⓘ
                   </span>
                 </Tooltip>

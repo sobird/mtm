@@ -28,6 +28,10 @@ const IMAGE_ACCEPT = '.jpg,.jpeg,.png,.gif,.bmp';
 const FILE_ACCEPT = '.pdf,.ppt,.pptx,.doc,.docx,.jpg,.jpeg,.png,.gif,.bmp';
 
 function toUrlArray(value: unknown): string[] {
+  if (typeof value === 'string') {
+    return value ? [value] : [];
+  }
+
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string' && item !== '') : [];
 }
 
@@ -36,7 +40,7 @@ function normalizeTerm(value: unknown): [boolean, string, string] {
     return [false, '', ''];
   }
 
-  return [value[0] === true, value[1] ? String(value[1]) : '', value[2] ? String(value[2]) : ''];
+  return [Boolean(value[0]), value[1] ? String(value[1]) : '', value[2] ? String(value[2]) : ''];
 }
 
 function record(value: unknown): Record<string, unknown> {

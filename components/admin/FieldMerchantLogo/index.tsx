@@ -80,7 +80,7 @@ export function FieldMerchantLogo({ value, defaultValue = [], onChange, status, 
       }
 
       if (width < 200) {
-        toast.error('店铺标志图片需要大于100*100像素');
+        toast.error('店铺标志图片需要大于200*200像素');
         return false;
       }
 
@@ -99,7 +99,7 @@ export function FieldMerchantLogo({ value, defaultValue = [], onChange, status, 
           onChange={next => update([next[0] ?? '', current[1]])}
           beforeUpload={validate}
           maxCount={1}
-          accept='image/*,.pdf,.bpm'
+          accept='image/*'
           maxSizeMB={10}
           disabled={disabled || (Boolean(current[0]) && status === 6)}
         />
@@ -112,7 +112,7 @@ export function FieldMerchantLogo({ value, defaultValue = [], onChange, status, 
               onChange={next => update([current[0], next[0] ?? ''])}
               beforeUpload={validate}
               maxCount={1}
-              accept='image/*,.pdf,.bpm'
+              accept='image/*'
               maxSizeMB={10}
               disabled={disabled}
               itemOverlay={() => (

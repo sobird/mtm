@@ -18,7 +18,7 @@ function normalizeValiddate(value: unknown): [boolean, string, string] {
     return [false, '', ''];
   }
 
-  return [value[0] === true, value[1] ? String(value[1]) : '', value[2] ? String(value[2]) : ''];
+  return [Boolean(value[0]), value[1] ? String(value[1]) : '', value[2] ? String(value[2]) : ''];
 }
 
 function AdminSubmitButton() {
