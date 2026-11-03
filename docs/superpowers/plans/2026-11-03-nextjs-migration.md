@@ -77,12 +77,12 @@
 
 - Produces: `normalizePagination(input: { pn?: number; ps?: number }, maxPs?: number): { pn: number; ps: number; offset: number }`（默认 `pn = 1`、`ps = 10`、`maxPs = 100`，非法/越界值夹取）。
 
-- [ ] **Step 1: 建分支并安装依赖**
+- [ ] **Step 1: 确认分支并安装依赖**
 
 ```bash
-git switch -c feat/nextjs-migration
-bun add next react react-dom
-bun add -d @types/node vitest jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event
+# feat/nextjs-migration 分支已由控制器创建，不要重复 git switch -c
+bun add next@15 react react-dom
+bun add -d @types/node @types/react@19 @types/react-dom@19 vitest jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event
 ```
 
 预期：`package.json` 出现 Next/React/Vitest 依赖，`bun.lock` 更新。
@@ -159,12 +159,12 @@ export default nextConfig;
 `vitest.config.ts`：
 
 ```ts
-import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  resolve: { alias: { '@': path.resolve(__dirname, '.') } },
+  resolve: { alias: { '@': fileURLToPath(new URL('.', import.meta.url)) } },
   test: {
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
@@ -173,7 +173,13 @@ export default defineConfig({
 });
 ```
 
-`tests/setup.ts`：`import '@testing-library/jest-dom/vitest';`
+`tests/setup.ts`：
+
+```ts
+import '@testing-library/jest-dom/vitest';
+
+process.env.AUTH_SECRET ||= 'test-secret';
+```
 
 `lib/pagination.ts`：
 
@@ -235,6 +241,7 @@ git commit -m "feat(next): 初始化 Next.js 应用与测试基线"
 - Create: `styles/tokens.css`
 - Create: `styles/reset.css`
 - Modify: `app/globals.css`
+- Modify: `app/layout.tsx`（用 `<Providers>` 包裹 `{children}`）
 - Create: `app/providers.tsx`
 - Create: `components/ui/Toast/index.tsx`
 - Create: `components/ui/Toast/Toast.module.css`
@@ -290,7 +297,7 @@ Expected: FAIL，找不到 `@/components/ui/Toast`。
 
 `styles/tokens.css` 定义上述 CSS 变量（品牌色沿用旧 Antd 主题色，取 `src/styles/theme.ts` 的值）。`styles/reset.css` 做 box-sizing、margin、字体、按钮/输入继承。`app/globals.css` 依次 `@import` 两个文件。
 
-`app/providers.tsx`（`'use client'`）：创建 `QueryClient`（`staleTime: 30_000`、`refetchOnWindowFocus: false`），组合 `QueryClientProvider` 与 `ToastProvider`。
+`app/providers.tsx`（`'use client'`）：创建 `QueryClient`（`staleTime: 30_000`、`refetchOnWindowFocus: false`），组合 `QueryClientProvider` 与 `ToastProvider`。`app/layout.tsx` 用 `<Providers>{children}</Providers>` 包裹页面内容，确保所有 client 组件都能拿到 QueryClient 与 Toast context。
 
 `components/ui/Toast/index.tsx`（`'use client'`）：用 `useState` 维护 toast 队列，`setTimeout` 3 秒移除；渲染固定定位容器；`ToastProvider` 提供 `useToast` context。`Toast.module.css` 定义容器与三种状态样式。
 
@@ -374,7 +381,7 @@ export function getDatabasePath(): string {
 }
 ```
 
-`lib/db/index.ts`：创建 `new Sequelize({ dialect: 'sqlite', storage: getDatabasePath(), logging: false })`；开发环境把实例挂到 `globalThis` 防止 HMR 重建；`initDatabase()` 用模块级 `let initPromise` 缓存初始化 Promise，先 `import './models'` 注册全部模型与关联，再 `sequelize.sync()`，插入幂等的 `SeedMeta` 记录 `version: 'bootstrap'`，最后调用 `seedDatabase()`（Task 4 实现，先用空函数占位并导出）。
+`lib/db/index.ts`：创建 `new Sequelize({ dialect: 'sqlite', storage: getDatabasePath(), logging: false, pool: { max: 1 } })`。`pool.max = 1` 是必需的：`:memory:` 数据库在多个连接之间不共享数据，单连接保证测试与 `sequelize.sync()` 看到同一份数据；文件数据库使用单连接也不会成为瓶颈（单实例演示应用）。当路径不是 `:memory:` 时，先 `mkdir -p` 父目录。开发环境把实例挂到 `globalThis` 防止 HMR 重建；`initDatabase()` 用模块级 `let initPromise` 缓存初始化 Promise，先 `import './models'` 注册全部模型与关联，再 `sequelize.sync()`，插入幂等的 `SeedMeta` 记录 `version: 'bootstrap'`，最后调用 `seedDatabase()`（Task 4 实现，先用空函数占位并导出）。
 
 `lib/db/models/seed-meta.ts`：`SeedMeta.init({ version: STRING, appliedAt: DATE }, { sequelize, tableName: 'seed_meta' })`。
 
@@ -481,13 +488,21 @@ Expected: FAIL，模型不存在或计数为 0。
 - `transformMenu(raw: unknown): { items: MenuItemRow[]; favorites: MenuItemRow[] }`
 - `transformCategories(raw: unknown): MerchantCategoryRow[]`
 - `transformMerchantList(raw: unknown): MerchantRow[]`
+- `transformMerchantDetail(raw: unknown): MerchantRow`
 - `transformAccount(raw: unknown): AccountRow`
 - `transformLicenses(raw: unknown): MerchantLicenseRow[]`
 - `transformEntry(raw: unknown): MerchantEntryRow`
 - `transformEntryTask(raw: unknown): EntryTaskRow`
 - `transformEntryTypes(raw: unknown): EntryTypeRow[]`
 
-`core.ts`：按固定顺序 `bulkCreate(rows, { ignoreDuplicates: true })` 或 `findOrCreate`，所有 ID 固定；插入后写入 `SeedMeta` 版本。`index.ts` 的 `seedDatabase()` 先查 `SeedMeta`，已应用则直接返回。
+种子身份映射是固定契约（Task 5 的测试依赖它）：
+
+- `Account` 行主键固定为 `1`，字段取设计文档：`{ id: 1, login: 'mt087320v', mobile: '13412345678', interCode: '86', merchantId: 1 }`；`transformAccount` 不要采用 `account/get.json` 里的 `id: 160474295`。
+- `Merchant` 行主键固定为 `1`，名称等列字段从 `merchant/detail/get.json` 提取，完整原始详情放进 `payload`；`payload.id` 保留 `123456`，因此 `getMerchant(1)` 返回 DTO 的 `id` 为 `123456`。
+- `Merchant` 的列表数据（`merchant/list/get.json`，id `108781`）单独入库，主键使用其自身 id；它与登录账号绑定的 demo merchant 是两条记录。
+- `MenuFavorite` 的 `accountId` 固定为 `1`，与 `menu/get` 的 10 个收藏顺序一致。
+
+`core.ts`：按固定顺序 `bulkCreate(rows, { ignoreDuplicates: true })` 或 `findOrCreate`，所有 ID 固定；插入后写入 `SeedMeta` 版本。`index.ts` 的 `seedDatabase()` 按版本独立判断（先查 `SeedMeta` 的 core 版本，已应用则跳过 core；营销种子在 Task 6 以同样方式独立判断），不要因为 core 已应用就提前 return。
 
 - [ ] **Step 5: 运行测试与构建**
 
@@ -523,7 +538,7 @@ git commit -m "feat(db): 添加核心模型与幂等种子"
 
 - `AppError`：`{ code: string; status: number; message: string }`，构造 `new AppError(code, status, message)`。
 - `ok<T>(data: T): NextResponse<{ code: 0; message: 'ok'; data: T }>`
-- `fail(error: unknown): NextResponse<{ code: number; message: string; data: null }>`
+- `fail(error: unknown): NextResponse<{ code: string; message: string; data: null }>`：`AppError` 直接映射 `code/status/message`；同时兼容带 `{ code: string; status: number; message: string }` 形状的普通 Error（Task 9 的 mock 会这样注入）；未知错误返回 `{ code: 'INTERNAL_ERROR', status: 500 }`。
 - `getAccount(accountId: number): Promise<AccountDTO>`
 - `upsertAccount(input: { interCode: string; mobile: string }): Promise<AccountDTO>`
 - `getMenu(accountId: number): Promise<{ menuItems: MenuItemDTO[]; favorites: MenuItemDTO[] }>`
@@ -677,6 +692,7 @@ Expected: FAIL。
 - 优惠券种子：每条列表记录补齐详情投影（`rule` 由 `price/discount` 推导为 `[price, discount]`；`stock` 用 `sendCount + leftCount`；`limit` 默认 1；`putTerm` 用 `[stime, etime]`；其余缺失字段给稳定默认值）。详情 mock 的 `1070734573` 单独 upsert。
 - 其它实体按 JSON 直接映射；`AnalysisSnapshot` 的 key 为 `workbench | trending | operation`。
 - 所有写入幂等（`findOrCreate` 或 `upsert`），完成后写 `SeedMeta`。
+- `lib/db/seed/index.ts` 的 `seedDatabase()` 必须独立检查 core 与 marketing 两个版本：core 已应用只跳过 core，不能因此跳过 marketing（否则已有数据库升级后营销数据永远不落库）。
 
 - [ ] **Step 5: 运行测试与构建**
 
@@ -858,12 +874,12 @@ Expected: FAIL。
 - [ ] **Step 4: 实现认证**
 
 - `lib/validation/phone.ts`：复制旧 `patterns`。
-- `lib/services/captcha.ts`：随机 6 位数字；用 `jose` 的 `SignJWT` 以 `AUTH_SECRET` 签名，载荷 `{ mobile, captcha }`，5 分钟过期；`verifyCaptcha` 验签并比对。
+- `lib/services/captcha.ts`：随机生成 `100000`–`999999` 的 6 位数字（保证转成 number 展示时不会丢前导 0）；用 `jose` 的 `SignJWT` 以 `process.env.AUTH_SECRET` 签名，载荷 `{ mobile, captcha }`，5 分钟过期；`verifyCaptcha` 验签并比对。缺少 `AUTH_SECRET` 时直接抛错，不要在源码里写生产默认密钥（测试由 `tests/setup.ts` 注入）。
 - `app/api/captcha/route.ts`：校验 mobile 非空 → `createCaptcha` → 通过 `cookies()` 写 `mtm_captcha` → 返回 `{ code: 0, message: 'ok', data: { mobile: Number(mobile), captcha } }`。
 - `lib/auth.ts`：`NextAuth({ session: { strategy: 'jwt', maxAge: 2 * 60 * 60 }, providers: [Credentials({ credentials: {}, authorize(input) { ... } })] })`。`authorize` 校验 `interCode` 与 mobile 格式；验证码从请求 Cookie `mtm_captcha` 读取（`import { cookies } from 'next/headers'`），调用 `verifyCaptcha(token, input.captcha)`；页面通过 `signIn('credentials', { interCode, mobile, captcha, redirect: false })` 提交。成功后 `upsertAccount`，返回 `{ id, name: login, accountId, mobile, interCode, merchantId, login }`。
 - `lib/auth-guard.ts`：`auth()` 取会话，无会话抛 `AppError('UNAUTHORIZED', 401)`。
-- `middleware.ts`：用 `auth((req) => ...)`；未登录访问受保护路径时重定向 `/login?callbackUrl=...`；matcher 排除 `/login`、`/register`、`/settleinpc`、`/settleinjx`、`/api/auth`、`/api/captcha`、`/api/health`、`/_next`、静态资源。
-- `scripts/session-cookie.ts`：用 `encode` from `next-auth/jwt` 为种子账号生成 token；输出 curl 可用的 Cookie 头。
+- `middleware.ts`：用 `auth((req) => ...)`；未登录访问受保护页面时重定向 `/login?callbackUrl=...`；matcher **排除所有 `/api/*`**（API 的鉴权由 `withAuth` 负责，避免中间件把 401 变成 302）、`/login`、`/register`、`/settleinpc`、`/settleinjx`、`/_next`、静态资源。
+- `scripts/session-cookie.ts`：导出 `createSessionCookie(): Promise<string>`（Cookie 头），并在文件被直接执行时打印 curl 可用的 Cookie 头；导入该模块时不要产生输出。用 `encode` from `next-auth/jwt` 为种子账号（`accountId: 1, merchantId: 1, mobile: '13412345678', interCode: '86', login: 'mt087320v'`）生成 `authjs.session-token`；`AUTH_SECRET` 必须已设置。
 
 - [ ] **Step 5: 运行测试与构建**
 
@@ -938,7 +954,7 @@ Expected: FAIL。
 
 `lib/handler.ts` 捕获 `AppError` 与未知错误；成功用 `ok()`，失败用 `fail()`；`params` 兼容 Next 15 的 Promise。
 
-每个 route 只做：`withAuth` → Zod 解析 → service → `ok`。`/api/register`、`/api/invitation` 为公开接口，不走 `withAuth`。
+每个 route 只做：鉴权（如需）→ Zod 解析 → service → `ok`。公开接口（不调用 `withAuth`，固定使用 demo `merchantId = 1`）：`/api/register`、`/api/invitation`、`/api/merchant/entry`（GET/PATCH）、`/api/merchant/entry/task`、`/api/merchant/entry/type`、`/api/merchant/entry/template-url`、`/api/merchant/options`、`/api/merchant/category`。原因：`/settleinpc` 与 `/settleinjx/*` 是公开入驻页，必须能读取这些数据。其余核心接口用 `withAuth`。鉴权由 handler 负责，middleware 不拦截 `/api/*`。
 
 - [ ] **Step 4: 用 dev server 验证**
 
@@ -1209,6 +1225,8 @@ git commit -m "feat(ui): 添加展示与覆盖层组件"
 - Create: `lib/api-client.ts`
 - Create: `lib/query-keys.ts`
 - Create: `app/(admin)/layout.tsx`
+- Create: `app/(admin)/page.tsx`（最小占位页，Task 15 替换为仪表盘）
+- Create: `app/not-found.tsx`
 - Delete: `app/page.tsx`
 - Create: `tests/lib/menu/favorites.test.ts`
 
@@ -1250,7 +1268,8 @@ Expected: FAIL。
 - `Sidebar`：渲染收藏夹（可编辑模式，最多 10，保存调 `PATCH /api/menu`）、菜单树、角标；折叠状态来自 `useUiStore`。
 - `Header`：账号下拉（手机号/退出登录）；退出调用 `signOut({ callbackUrl: '/login' })`。
 - `PageContainer`：标题、描述、面包屑、右侧操作区。
-- 未迁移菜单链接直接使用 `<Link>`；目标不存在时由 `app/not-found.tsx` 接管。
+- `app/(admin)/page.tsx` 先放最小占位内容（保证 `/` 在 Task 15 之前就能渲染外壳），Task 15 再替换为仪表盘。
+- `app/not-found.tsx` 提供中文 404 文案与返回 `/` 的链接；未迁移菜单链接直接使用 `<Link>`，目标不存在时落到这里。
 
 - [ ] **Step 4: 运行测试与构建**
 
@@ -1295,8 +1314,9 @@ git commit -m "feat(layout): 实现管理端外壳与菜单"
 
 - `loginSchema`：`{ interCode: '86' | '65' | '852' | '853'; mobile: string; captcha: string }`，`mobile` 经 `isMobilePhone` 按区号校验。
 - `registerSchema`：在 `loginSchema` 基础上增加 `policy: true`。
-- `LoginForm`：提交调 `signIn('credentials', { interCode, mobile, captcha, redirect: false })`；成功后 `router.replace(callbackUrl ?? '/')`。
+- `LoginForm`：提交调 `signIn('credentials', { interCode, mobile, captcha, redirect: false })`；成功后 `router.replace(safeCallbackUrl(callbackUrl))`。`safeCallbackUrl` 只接受以单个 `/` 开头且不以 `//` 开头的站内路径，否则回退 `/`（避免开放重定向）。
 - `CaptchaField`：调 `/api/captcha`，用 `useToast().success()` 展示验证码文案（沿用旧文案格式）。
+- `useSearchParams` 必须位于 `<Suspense>` 内；在 `app/(auth)/login/page.tsx` 用 Suspense 包住 `LoginForm`（或在服务端读取 `searchParams` 后作为 prop 传入）。
 
 - [ ] **Step 1: 写失败的测试**
 
@@ -1316,9 +1336,14 @@ test('validates per country code', () => {
 });
 ```
 
+`tests/components/LoginForm.test.tsx`（mock `next-auth/react` 与 `next/navigation`）：至少断言两件事：
+
+1. 输入非法手机号并提交时不调用 `signIn`，页面出现手机号校验错误。
+2. 填入 `interCode: '86'`、`mobile: '13412345678'`、`captcha: '123456'` 后提交，`signIn` 被调用且参数包含 `{ interCode: '86', mobile: '13412345678', captcha: '123456', redirect: false }`。
+
 - [ ] **Step 2: 运行测试确认失败**
 
-Run: `bunx vitest run tests/lib/auth/schema.test.ts`
+Run: `bunx vitest run tests/lib/auth/schema.test.ts tests/components/LoginForm.test.tsx`
 Expected: FAIL。
 
 - [ ] **Step 3: 实现页面与表单**
@@ -1330,7 +1355,7 @@ Expected: FAIL。
 
 - [ ] **Step 4: 运行测试与构建**
 
-Run: `bunx vitest run tests/lib/auth/schema.test.ts && bun run typecheck && bun run build`
+Run: `bunx vitest run tests/lib/auth/schema.test.ts tests/components/LoginForm.test.tsx && bun run typecheck && bun run build`
 Expected: PASS。
 
 - [ ] **Step 5: 手工验证登录**
@@ -1354,7 +1379,7 @@ git commit -m "feat(auth): 迁移登录与注册页面"
 
 **Files:**
 
-- Create: `app/(admin)/page.tsx`
+- Modify: `app/(admin)/page.tsx`（Task 13 的占位页替换为仪表盘）
 - Create: `components/dashboard/DashboardGrid/index.tsx` + `components/dashboard/DashboardGrid/DashboardGrid.module.css`
 - Create: `components/market/remotes/LatestNews/index.tsx` + `components/market/remotes/LatestNews/LatestNews.module.css`
 - Create: `components/market/remotes/Overview/index.tsx`
@@ -1581,7 +1606,7 @@ Expected: 三个公开路由可访问。
 
 ```bash
 git add app/'(entry)' components/entry public/assets
-git commit -m "feat(entry): 迁输入驻页面第一批"
+git commit -m "feat(entry): 迁移入驻页面第一批"
 ```
 
 ---
@@ -1598,6 +1623,8 @@ git commit -m "feat(entry): 迁输入驻页面第一批"
 - Create: `components/admin/FieldMerchantLogo/index.tsx`
 - Create: `components/admin/FieldTermPicker/index.tsx`
 - Create: `components/admin/FieldUploadFile/index.tsx`
+- Create: `components/ui/Upload/index.tsx` + `components/ui/Upload/Upload.module.css`（原生 file input 包装，供字段组件复用）
+- Modify: `components/ui/index.ts`（导出 Upload）
 - Create: `app/api/venus/ocr/route.ts`
 - Create: `app/api/venus/sign/route.ts`
 - Create: `app/api/venus/upload/route.ts`
@@ -1648,7 +1675,7 @@ git commit -m "feat(entry): 迁输入驻企业信息与 OCR 签约"
 - Create: `app/(admin)/market/coupon/update/[id]/page.tsx`
 - Create: `components/market/coupon/CouponForm/index.tsx`
 - Create: `components/market/coupon/CreateCouponEntry/index.tsx`
-- Create: `lib/validation/coupon.ts`（Task 10 已建则复用）
+- Modify: `lib/validation/coupon.ts`（Task 10 已创建 `couponListQuerySchema` / `couponUpsertSchema`；此处复用并补充 `couponFormSchema`，不要新建重复 schema）
 - Create: `tests/lib/validation/coupon.test.ts`
 
 **Interfaces:**
@@ -1770,13 +1797,15 @@ git commit -m "feat(market): 迁移市场首页"
 - [ ] **Step 1: 删除旧目录与配置**
 
 ```bash
-git rm -r src packages webpack.config.js postcss.config.js hosts dist public/api
+# dist/ 当前未纳入版本控制，git rm 会失败；先删目录，其余已跟踪路径用 git rm
+rm -rf dist
+git rm -r src packages webpack.config.js postcss.config.js hosts public/api
 git rm .github/workflows/mtm.yml .github/workflows/mtm_market.yml
 ```
 
 - [ ] **Step 2: 更新 package.json**
 
-删除 `analyzer` 脚本与不再使用的依赖（`antd`、`@ant-design/*`、`@ant-design/pro-components`、`qiankun`、`react-router-dom`、`redux*`、`@reduxjs/toolkit`、`axios`、`history`、`js-cookie`、webpack/loader/plugin 系列、`esbuild-loader`、`sass`、`less` 等）。保留 husky/commitlint/lint-staged/oxlint/oxfmt/vitest/测试库。
+删除 `analyzer` 脚本与不再使用的依赖（`antd`、`@ant-design/*`、`@ant-design/pro-components`、`qiankun`、`react-router-dom`、`redux*`、`@reduxjs/toolkit`、`axios`、`history`、`js-cookie`、webpack/loader/plugin 系列、`esbuild-loader`、`sass`、`less` 等）。保留 husky/commitlint/lint-staged/oxlint/oxfmt/vitest/测试库，以及仍被代码引用的 `@types/node`、`@types/react`、`@types/react-dom`、`@types/lodash`、`@types/numeral`。
 
 ```bash
 bun install
@@ -1831,7 +1860,7 @@ git commit -m "chore: 移除微前端与旧 webpack 工程"
 
 - [ ] **Step 1: 编写 Dockerfile 与 .dockerignore**
 
-多阶段要点：builder 用 `oven/bun:1` 执行 `bun install --frozen-lockfile` 与 `bun run build`；runner 用 `node:22-slim`，只复制 `.next/standalone`、`.next/static`、`public`；`RUN mkdir -p /data && chown nextjs:nodejs /data`；`USER nextjs`；`CMD ["node", "server.js"]`。
+多阶段要点：builder 用 `oven/bun:1` 执行 `bun install --frozen-lockfile` 与 `bun run build`；runner 用 `node:22-slim`，只复制 `.next/standalone`、`.next/static`、`public`；`RUN mkdir -p /data && chown nextjs:nodejs /data`；`USER nextjs`；`CMD ["node", "server.js"]`。`sequelize`/`sqlite3` 在 `serverExternalPackages` 中，standalone 追踪可能漏掉原生 `.node` 二进制；构建后在 runner 里显式保留 `node_modules/sqlite3`（以及 `.next/standalone/node_modules/sqlite3` 若存在），健康检查步骤会验证。
 
 `.dockerignore` 排除 `node_modules`、`.next`、`data`、`.git`、`docs`。
 
@@ -1889,7 +1918,7 @@ git commit -m "chore(deploy): 添加 Docker 部署与 CI"
 
 - [ ] **Step 1: 编写 smoke 脚本**
 
-使用 Node 原生 `fetch`；Cookie 从 `scripts/session-cookie.ts` 导入。路由清单与设计文档第 6 节一致。
+使用 Node 原生 `fetch`；Cookie 从 `scripts/session-cookie.ts` 导入 `createSessionCookie`（不要依赖它的直接执行输出）。启动前确保 `data/` 目录存在（`mkdir -p data`），再删除旧的 `data/smoke.sqlite`。路由清单与设计文档第 6 节一致。
 
 - [ ] **Step 2: 启动生产构建并运行 smoke**
 
