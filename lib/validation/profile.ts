@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-import { isIdentityCard } from './id-card';
 import { isMobilePhone } from './phone';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,7 +26,7 @@ export type ContactValues = z.infer<typeof contactSchema>;
 /** 变更为个人钱包前置认证表单。 */
 export const walletAuthSchema = z.object({
   companyName: z.string().min(1, '企业名称不能为空').max(60, '企业名称最多60个字符'),
-  companyIdCard: z.string().refine(isIdentityCard, '请输入正确的身份证号码'),
+  companyIdCard: z.string().regex(/^[0-9A-Za-z]{15,20}$/, '请输入正确的企业证件号（统一社会信用代码）'),
   phone: z.string().refine(value => isMobilePhone(value, '86'), '请输入正确的中国大陆11位手机号码'),
   captcha: z.string().regex(/^\d{6}$/, '手机验证码不正确，请重新输入'),
 });

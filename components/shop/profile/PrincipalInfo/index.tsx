@@ -6,17 +6,10 @@ import { Card, Empty, LabelValue, Skeleton } from '@/components/ui';
 import { apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 
+import { display } from '../display';
 import type { MerchantProfileDTO } from '../types';
 
 import styles from './PrincipalInfo.module.css';
-
-function display(value: unknown): string {
-  if (value === undefined || value === null || value === '') {
-    return '--';
-  }
-
-  return String(value);
-}
 
 function PhotoLinks({ photos }: { photos?: string[] | null }) {
   const list = (photos ?? []).filter(Boolean);

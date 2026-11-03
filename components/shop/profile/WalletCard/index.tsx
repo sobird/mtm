@@ -53,7 +53,7 @@ export function WalletCard({
   }
 
   const withdrawButton = (
-    <Button variant='secondary' size='sm' disabled={balance === 0}>
+    <Button variant='secondary' size='sm' disabled={balance === 0} onClick={() => toast.info('功能即将上线')}>
       去提现
     </Button>
   );
@@ -78,7 +78,15 @@ export function WalletCard({
             <span>{BALANCE_FORMAT.format(balance)}</span>
           </p>
         </div>
-        {current ? balance === 0 ? <Tooltip content='暂无余额'>{withdrawButton}</Tooltip> : withdrawButton : null}
+        {current ? (
+          balance === 0 ? (
+            <Tooltip content='暂无余额'>
+              <span>{withdrawButton}</span>
+            </Tooltip>
+          ) : (
+            withdrawButton
+          )
+        ) : null}
       </div>
 
       {note}

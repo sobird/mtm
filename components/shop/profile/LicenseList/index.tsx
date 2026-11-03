@@ -10,6 +10,8 @@ import { apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import type { LicenseDTO } from '@/lib/services/merchant';
 
+import { display } from '../display';
+
 import styles from './LicenseList.module.css';
 
 const PAGE_SIZE = 10;
@@ -19,14 +21,6 @@ const STATUS_MAP: Record<number, { label: string; tone: TagTone }> = {
   5: { label: '审核驳回', tone: 'danger' },
   6: { label: '审核通过', tone: 'success' },
 };
-
-function display(value: unknown): string {
-  if (value === undefined || value === null || value === '') {
-    return '--';
-  }
-
-  return String(value);
-}
 
 function isExpired(expireAt: string | null | undefined): boolean {
   if (!expireAt) {
@@ -104,9 +98,11 @@ export function LicenseList() {
         if (status === 4) {
           return (
             <Tooltip content='审核中，暂时不支持删除'>
-              <Button variant='ghost' size='sm' disabled aria-label='删除证照'>
-                删除
-              </Button>
+              <span>
+                <Button variant='ghost' size='sm' disabled aria-label='删除证照'>
+                  删除
+                </Button>
+              </span>
             </Tooltip>
           );
         }
@@ -127,9 +123,11 @@ export function LicenseList() {
         if (status === 6 && !isExpired(expireAt)) {
           return (
             <Tooltip content='当前许可证件正在使用中，暂时不支持删除'>
-              <Button variant='ghost' size='sm' disabled aria-label='删除证照'>
-                删除
-              </Button>
+              <span>
+                <Button variant='ghost' size='sm' disabled aria-label='删除证照'>
+                  删除
+                </Button>
+              </span>
             </Tooltip>
           );
         }

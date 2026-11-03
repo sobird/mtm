@@ -11,6 +11,7 @@ import { baseInfoSchema } from '@/lib/validation/profile';
 
 import AdminForm from '../../admin/AdminForm';
 import ContactForm from '../ContactForm';
+import { display } from '../display';
 import type { MerchantProfileDTO } from '../types';
 
 import styles from './BaseInfo.module.css';
@@ -23,14 +24,6 @@ const SHOP_TYPE_LABELS: Record<number, string> = {
   23: '企业旗舰店铺',
   99: '其他',
 };
-
-function display(value: unknown): string {
-  if (value === undefined || value === null || value === '') {
-    return '--';
-  }
-
-  return String(value);
-}
 
 function categoryPath(categoryId: number | undefined, categories: MerchantCategoryDTO[]): string {
   if (categoryId === undefined || categoryId === null) {
@@ -91,8 +84,12 @@ export function BaseInfo() {
       return;
     }
 
-    await navigator.clipboard.writeText(String(shop.id));
-    toast.success('店铺编号已复制');
+    try {
+      await navigator.clipboard.writeText(String(shop.id));
+      toast.success('店铺编号已复制');
+    } catch {
+      toast.error('复制失败，请手动复制');
+    }
   };
 
   return (
