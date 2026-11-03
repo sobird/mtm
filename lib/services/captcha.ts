@@ -51,7 +51,7 @@ export async function verifyCaptcha(token: string | undefined, input: string): P
   }
 
   try {
-    const { payload } = await jwtVerify(token, getSecret());
+    const { payload } = await jwtVerify(token, getSecret(), { algorithms: ['HS256'] });
 
     return String(payload.captcha) === input;
   } catch {
