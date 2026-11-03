@@ -26,6 +26,8 @@
     "@hookform/resolvers": "^7.0.1",
     "@mtm/auth": "workspace:*",
     "@mtm/contracts": "workspace:*",
+    "@mtm/ui": "workspace:*",
+    "@node-rs/argon2": "^2.2.2",
     "@prisma/client": "^6.19.3",
     "@tanstack/react-query": "^5.105.3",
     "antd": "^6.6.8",

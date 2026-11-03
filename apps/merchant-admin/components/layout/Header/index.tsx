@@ -31,7 +31,7 @@ export function Header({ account }: HeaderProps) {
               <span className={styles.avatar} aria-hidden='true'>
                 <User size={16} />
               </span>
-              <span className={styles.mobile}>{account.mobile}</span>
+              <span className={styles.mobile}>{account.name || account.mobile}</span>
             </button>
           }
           items={[

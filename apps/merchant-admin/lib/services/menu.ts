@@ -1,8 +1,11 @@
+import { filterMenuTree } from '@mtm/auth/menu-filter';
+
 import { prisma } from '@/lib/db';
 import type { MenuItem } from '@/lib/generated/prisma';
 import { listToTree } from '@/lib/menu-tree';
 
 import { AppError } from '../errors';
+import { getAccountPermissions } from './permission';
 
 export interface MenuItemDTO {
   title: string;
@@ -16,6 +19,7 @@ export interface MenuItemDTO {
   level: number;
   sortId: number;
   toolMenu: boolean;
+  permissionCode: string | null;
   children?: MenuItemDTO[];
   last?: boolean;
 }
@@ -53,7 +57,18 @@ function toMenuItemDTO(item: MenuItem): MenuItemDTO {
     level: item.level,
     sortId: item.sortId,
     toolMenu: item.toolMenu,
+    permissionCode: item.permissionCode,
   };
+}
+
+function collectMenuIds(nodes: MenuItemDTO[], ids: Set<string>): void {
+  for (const node of nodes) {
+    ids.add(node.id);
+
+    if (node.children) {
+      collectMenuIds(node.children, ids);
+    }
+  }
 }
 
 async function findMenuItems(ids: string[]): Promise<Map<string, MenuItemDTO>> {
@@ -73,7 +88,7 @@ async function findMenuItems(ids: string[]): Promise<Map<string, MenuItemDTO>> {
 }
 
 export async function getMenu(accountId: string): Promise<MenuDTO> {
-  const rows = await prisma.menuItem.findMany();
+  const [rows, snapshot] = await Promise.all([prisma.menuItem.findMany(), getAccountPermissions(accountId)]);
 
   const items: MenuItemDTO[] = [];
   for (const row of rows) {
@@ -81,13 +96,18 @@ export async function getMenu(accountId: string): Promise<MenuDTO> {
   }
   items.sort((a, b) => a.index - b.index);
 
-  const menuItems = listToTree(items);
+  const tree = listToTree(items);
+  const menuItems = filterMenuTree(tree, snapshot.set);
   if (menuItems.length > 0) {
     menuItems[menuItems.length - 1].last = true;
   }
 
+  // Favorites may only point at menus the account can still reach.
+  const visibleIds = new Set<string>();
+  collectMenuIds(menuItems, visibleIds);
+
   const favoriteRows = await prisma.menuFavorite.findMany({
-    where: { accountId },
+    where: { accountId, menuId: { in: [...visibleIds] } },
     orderBy: { sortIndex: 'asc' },
   });
   const itemMap = await findMenuItems(favoriteRows.map(row => row.menuId));
