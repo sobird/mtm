@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalEnv": ["NODE_ENV", "AUTH_SECRET", "MERCHANT_DATABASE_URL", "CORE_DATABASE_URL", "OPS_DATABASE_URL"],
+  "globalDependencies": ["packages/config/**"],
   "tasks": {
     "dev": { "cache": false, "persistent": true },
     "build": { "dependsOn": ["^build"], "outputs": [".next/**", "!.next/cache/**", "dist/**"] },
