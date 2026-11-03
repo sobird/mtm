@@ -1,0 +1,126 @@
+// commerce_ops schema: operator accounts, roles, permissions, and audit logs.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("OPS_DATABASE_URL")
+}
+
+enum AccountStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum PermissionType {
+  MENU
+  BUTTON
+  API
+}
+
+model OpsAccount {
+  id           String           @id @default(cuid())
+  username     String           @unique
+  passwordHash String
+  name         String
+  status       AccountStatus    @default(ACTIVE)
+  lastLoginAt  DateTime?
+  createdAt    DateTime         @default(now())
+  roles        OpsAccountRole[]
+}
+
+model OpsRole {
+  id             String                 @id @default(cuid())
+  code           String                 @unique
+  name           String
+  permissions    OpsRolePermission[]
+  accounts       OpsAccountRole[]
+  merchantScopes OpsRoleMerchantScope[]
+}
+
+model OpsPermission {
+  id         String              @id @default(cuid())
+  code       String              @unique
+  name       String
+  type       PermissionType
+  parentCode String?
+  path       String?
+  icon       String?
+  sort       Int                 @default(0)
+  roles      OpsRolePermission[]
+}
+
+model OpsAccountRole {
+  accountId String
+  roleId    String
+  account   OpsAccount @relation(fields: [accountId], references: [id])
+  role      OpsRole    @relation(fields: [roleId], references: [id])
+
+  @@id([accountId, roleId])
+  @@index([roleId])
+}
+
+model OpsRolePermission {
+  roleId       String
+  permissionId String
+  role         OpsRole       @relation(fields: [roleId], references: [id])
+  permission   OpsPermission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+}
+
+model OpsRoleMerchantScope {
+  roleId     String
+  merchantId String
+  role       OpsRole @relation(fields: [roleId], references: [id])
+
+  @@id([roleId, merchantId])
+  @@index([merchantId])
+}
+
+model OpsLoginLog {
+  id        String   @id @default(cuid())
+  accountId String
+  ip        String?
+  userAgent String?
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([accountId, createdAt])
+}
+
+model OpsOperationLog {
+  id         String   @id @default(cuid())
+  accountId  String
+  action     String
+  resource   String
+  resourceId String?
+  detail     Json?
+  createdAt  DateTime @default(now())
+
+  @@index([accountId, createdAt])
+}
+
+model OpsMenuItem {
+  id             String  @id
+  parentId       String
+  title          String
+  icon           String?
+  url            String?
+  code           String?
+  auth           Boolean @default(false)
+  index          String?
+  level          Int     @default(0)
+  sortId         Int     @default(0)
+  toolMenu       Boolean @default(false)
+  permissionCode String?
+}
+
+model SeedMeta {
+  version   String   @id
+  appliedAt DateTime @default(now())
+}

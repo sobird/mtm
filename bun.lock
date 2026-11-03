@@ -73,6 +73,38 @@
         "vitest": "^5.1.0",
       },
     },
+    "apps/ops-admin": {
+      "name": "@mtm/ops-admin",
+      "version": "0.1.0",
+      "dependencies": {
+        "@ant-design/nextjs-registry": "^1.3.0",
+        "@mtm/auth": "workspace:*",
+        "@mtm/contracts": "workspace:*",
+        "@mtm/ui": "workspace:*",
+        "@prisma/client": "^6.19.3",
+        "@tanstack/react-query": "^5.105.3",
+        "antd": "^6.6.8",
+        "dayjs": "^1.11.10",
+        "next": "15",
+        "next-auth": "^5.0.0-beta.32",
+        "react": "^19.3.1",
+        "react-dom": "^19.3.1",
+        "zod": "^4.6.7",
+      },
+      "devDependencies": {
+        "@mtm/config": "workspace:*",
+        "@testing-library/jest-dom": "^7.0.1",
+        "@testing-library/react": "^16.3.3",
+        "@testing-library/user-event": "^14.6.8",
+        "@types/node": "^22",
+        "@types/react": "19",
+        "@types/react-dom": "19",
+        "jsdom": "^30.1.3",
+        "prisma": "^6.19.3",
+        "typescript": "^5.0.2",
+        "vitest": "^5.1.0",
+      },
+    },
     "packages/auth": {
       "name": "@mtm/auth",
       "version": "0.0.0",
@@ -308,6 +340,8 @@
     "@mtm/core-api": ["@mtm/core-api@workspace:apps/core-api"],
 
     "@mtm/merchant-admin": ["@mtm/merchant-admin@workspace:apps/merchant-admin"],
+
+    "@mtm/ops-admin": ["@mtm/ops-admin@workspace:apps/ops-admin"],
 
     "@mtm/ui": ["@mtm/ui@workspace:packages/ui"],
 

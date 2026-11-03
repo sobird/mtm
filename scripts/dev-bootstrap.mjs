@@ -13,8 +13,9 @@ const DATABASES = [
   'commerce_core',
   'commerce_merchant_test',
   'commerce_core_test',
+  'commerce_ops_test',
 ];
-const APPS = ['apps/merchant-admin', 'apps/core-api'];
+const APPS = ['apps/merchant-admin', 'apps/core-api', 'apps/ops-admin'];
 
 function run(command, args, options = {}) {
   return spawnSync(command, args, {
