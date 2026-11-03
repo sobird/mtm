@@ -272,7 +272,7 @@ export async function seedMerchantAuth(tx: Prisma.TransactionClient): Promise<vo
   );
 
   await tx.menuItem.updateMany({
-    where: { url: { in: ['/staff/sub-account', '/shop/admin'] } },
+    where: { url: '/staff/sub-account' },
     data: { permissionCode: PERMISSIONS.ACCOUNT_MANAGE },
   });
 }

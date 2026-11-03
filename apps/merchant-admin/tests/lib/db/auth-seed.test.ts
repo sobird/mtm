@@ -33,4 +33,9 @@ test('seeds owner and staff accounts with scoped roles', async () => {
   expect(accountMenus.map(item => item.url)).toEqual(
     expect.arrayContaining(['/system/accounts', '/staff/sub-account'])
   );
+
+  // The permission seed owns the /shop/admin mapping; the menu update only
+  // rewrites the sub-account menu.
+  const shopAdminPermission = await prisma.merchantPermission.findFirst({ where: { path: '/shop/admin' } });
+  expect(shopAdminPermission?.code).toBe('merchant:update');
 });

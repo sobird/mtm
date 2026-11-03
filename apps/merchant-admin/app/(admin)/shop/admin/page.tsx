@@ -1,10 +1,15 @@
+import { PERMISSIONS } from '@mtm/contracts';
+
 import { PageContainer } from '@/components/layout/PageContainer';
 import AdminForm from '@/components/shop/admin/AdminForm';
 import RejectionReason from '@/components/shop/admin/RejectionReason';
+import { requireMerchantPermission } from '@/lib/page-guard';
 
 import styles from './page.module.css';
 
-export default function ShopAdminPage() {
+export default async function ShopAdminPage() {
+  await requireMerchantPermission(PERMISSIONS.MERCHANT_UPDATE);
+
   return (
     <PageContainer
       title='店铺管理员'
