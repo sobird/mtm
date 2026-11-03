@@ -91,6 +91,7 @@ beforeEach(() => {
 test('explains that the owner always has every permission', async () => {
   renderManager();
 
+  expect(screen.getByRole('heading', { name: '角色管理' })).toBeInTheDocument();
   expect(await screen.findByText('店员角色')).toBeInTheDocument();
   expect(screen.getByText('子账号按角色获得权限，主账号始终拥有全部权限')).toBeInTheDocument();
 });

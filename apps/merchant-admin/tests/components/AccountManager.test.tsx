@@ -135,6 +135,7 @@ function rowOf(username: string) {
 test('renders the sub-account list and creates a sub-account with selected roles', async () => {
   renderManager();
 
+  expect(screen.getByRole('heading', { name: '子账号管理' })).toBeInTheDocument();
   expect(await screen.findByText('staff-a')).toBeInTheDocument();
   expect(screen.getByText('13800000001')).toBeInTheDocument();
 
