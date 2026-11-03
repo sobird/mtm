@@ -1,0 +1,76 @@
+.steps {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.step {
+  position: relative;
+  display: flex;
+  flex: 1;
+  gap: var(--space-2);
+  align-items: flex-start;
+  padding-right: var(--space-4);
+}
+
+.marker {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+}
+
+.finish .marker {
+  color: var(--color-bg);
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.process .marker {
+  color: var(--color-text);
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.title {
+  color: var(--color-text);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.wait .title {
+  color: var(--color-text-secondary);
+}
+
+.description {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.connector {
+  position: absolute;
+  top: 12px;
+  right: 0;
+  left: 36px;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.finish .connector {
+  background: var(--color-success);
+}

@@ -33,4 +33,7 @@
 
   /* Elevation */
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  /* Layering */
+  --z-overlay: 1000;
 }
