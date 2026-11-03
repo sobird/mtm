@@ -1,3 +1,5 @@
+import type { WhereOptions } from 'sequelize';
+
 import { Campaign } from '@/lib/db/models';
 import type { PaginationInput } from '@/lib/pagination';
 import { normalizePagination } from '@/lib/pagination';
@@ -87,7 +89,21 @@ function toCampaignDTO(row: Campaign): CampaignDTO {
 
 export async function listCampaigns(query: CampaignListQuery = {}): Promise<{ total: number; list: CampaignDTO[] }> {
   const { ps, offset } = normalizePagination(query);
+
+  // The tab mapping is inferred from the seeded data and the legacy tab labels:
+  // tab 1 ("报名中") -> applyStatus 2, tab 2 ("我报名的") -> applyStatus 3.
+  const where: WhereOptions = {};
+  const tab = query.type === undefined ? undefined : String(query.type);
+  if (query.applyStatus !== undefined) {
+    where.applyStatus = query.applyStatus;
+  } else if (tab === '1') {
+    where.applyStatus = 2;
+  } else if (tab === '2') {
+    where.applyStatus = 3;
+  }
+
   const { rows, count } = await Campaign.findAndCountAll({
+    where,
     limit: ps,
     offset,
     order: [['id', 'DESC']],

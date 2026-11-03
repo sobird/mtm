@@ -1,8 +1,12 @@
 import { jwtVerify, SignJWT } from 'jose';
 
+import { assertProductionSecret } from '@/lib/env';
+
 const CAPTCHA_TTL = '5m';
 
 function getSecret(): Uint8Array {
+  assertProductionSecret();
+
   const secret = process.env.AUTH_SECRET;
 
   if (!secret) {

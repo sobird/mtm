@@ -15,7 +15,7 @@ import { createSessionCookie } from './session-cookie';
  *   rm -f data/smoke.sqlite
  *   NODE_ENV=production DATABASE_PATH="$(pwd)/data/smoke.sqlite" AUTH_SECRET=test-secret PORT=3000 \
  *     node .next/standalone/server.js &
- *   AUTH_SECRET=test-secret bun run smoke
+ *   NODE_ENV=production AUTH_SECRET=test-secret bun run smoke
  */
 
 const BASE_URL = process.env.SMOKE_BASE_URL ?? 'http://localhost:3000';
@@ -153,6 +153,8 @@ interface CouponPayload {
   id?: string;
   status?: number;
   name?: string;
+  sendCount?: number;
+  leftCount?: number;
 }
 
 interface ApiEnvelope<T> {
@@ -226,8 +228,14 @@ async function checkCouponFlow(cookie: string): Promise<void> {
 
   record(
     `GET /api/merchant/coupon/${couponId}`,
-    detailResponse.status === 200 && detail?.code === 0 && detail.data?.id === couponId,
-    `status ${detailResponse.status}, code ${detail?.code ?? '(unparseable)'}`
+    detailResponse.status === 200 &&
+      detail?.code === 0 &&
+      detail.data?.id === couponId &&
+      detail.data?.sendCount === 10 &&
+      detail.data?.leftCount === 10,
+    `status ${detailResponse.status}, code ${detail?.code ?? '(unparseable)'}, sendCount ${
+      detail.data?.sendCount ?? '(none)'
+    }, leftCount ${detail.data?.leftCount ?? '(none)'}`
   );
 
   const deleteResponse = await request(`/api/merchant/coupon/${encodeURIComponent(couponId)}`, {

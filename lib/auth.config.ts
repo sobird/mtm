@@ -12,6 +12,7 @@ export const authConfig = {
   // Self-hosted deployment: trust the incoming host instead of requiring
   // `AUTH_URL` to be configured (Auth.js throws `UntrustedHost` otherwise).
   trustHost: true,
+  useSecureCookies: process.env.NODE_ENV === 'production',
   session: {
     strategy: 'jwt',
     maxAge: 2 * 60 * 60,

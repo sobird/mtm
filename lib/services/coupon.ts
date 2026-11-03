@@ -177,6 +177,13 @@ function withDerivedDetailFields(attributes: Partial<CouponAttributes>): Partial
   }
   if (attributes.stock === null || attributes.stock === undefined) {
     attributes.stock = (attributes.sendCount ?? 0) + (attributes.leftCount ?? 0);
+  } else {
+    if (attributes.sendCount === null || attributes.sendCount === undefined) {
+      attributes.sendCount = attributes.stock;
+    }
+    if (attributes.leftCount === null || attributes.leftCount === undefined) {
+      attributes.leftCount = attributes.stock;
+    }
   }
   if (attributes.limit === null || attributes.limit === undefined) {
     attributes.limit = 1;
@@ -233,8 +240,10 @@ export async function createCoupon(input: CouponUpsertInput): Promise<CouponDeta
   const name = input.name ?? '';
   const price = input.price ?? 0;
   const discount = input.discount ?? 0;
-  const sendCount = input.sendCount ?? 0;
-  const leftCount = input.leftCount ?? 0;
+  // Leave the counts undefined when omitted so `withDerivedDetailFields` can
+  // derive them from `stock`.
+  const sendCount = input.sendCount;
+  const leftCount = input.leftCount;
   const putTerm = Array.isArray(input.putTerm) ? input.putTerm : [];
   const stime = input.stime ?? Number(putTerm[0] ?? 0);
   const etime = input.etime ?? Number(putTerm[1] ?? 0);
@@ -287,6 +296,17 @@ export async function updateCoupon(id: string, input: Partial<CouponUpsertInput>
   for (const key of COUPON_WRITABLE_KEYS) {
     if (input[key] !== undefined) {
       patchRecord[key] = input[key];
+    }
+  }
+
+  if (input.putTerm !== undefined) {
+    const putTerm = (Array.isArray(input.putTerm) ? input.putTerm : []) as Array<number | undefined>;
+
+    if (input.stime === undefined) {
+      patch.stime = putTerm[0] ?? row.stime;
+    }
+    if (input.etime === undefined) {
+      patch.etime = putTerm[1] ?? row.etime;
     }
   }
 

@@ -5,6 +5,8 @@ vi.mock('@/lib/auth-guard', () => ({
   requireAccount: vi.fn().mockRejectedValue(Object.assign(new Error('未登录'), { code: 'UNAUTHORIZED', status: 401 })),
 }));
 
+vi.mock('@/lib/db', () => ({ initDatabase: vi.fn().mockResolvedValue(undefined) }));
+
 const { withAuth, parseQuery, parseBody } = await import('@/lib/handler');
 
 test('returns 401 JSON for unauthenticated handlers', async () => {

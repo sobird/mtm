@@ -24,14 +24,17 @@ export async function createSessionCookie(): Promise<string> {
     throw new Error('AUTH_SECRET is not set');
   }
 
+  const secure = process.env.NODE_ENV === 'production';
+  const cookieName = secure ? '__Secure-authjs.session-token' : 'authjs.session-token';
+
   const token = await encode({
     token: SEED_SESSION,
-    salt: 'authjs.session-token',
+    salt: cookieName,
     secret,
     maxAge: 2 * 60 * 60,
   });
 
-  return `authjs.session-token=${token}`;
+  return `${cookieName}=${token}`;
 }
 
 const entry = process.argv[1];

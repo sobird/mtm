@@ -3,6 +3,7 @@ import type { z } from 'zod';
 
 import { fail, ok } from './api-response';
 import { requireAccount } from './auth-guard';
+import { initDatabase } from './db';
 import { AppError } from './errors';
 
 export interface HandlerContext {
@@ -30,6 +31,7 @@ async function resolveParams(context?: RouteContext): Promise<Record<string, str
 export function withAuth<T>(handler: (ctx: HandlerContext) => Promise<T>) {
   return async (request: Request, context?: RouteContext): Promise<NextResponse> => {
     try {
+      await initDatabase();
       const { accountId, merchantId } = await requireAccount();
       const params = await resolveParams(context);
       const data = await handler({ accountId, merchantId, request, params });
@@ -45,6 +47,7 @@ export function withAuth<T>(handler: (ctx: HandlerContext) => Promise<T>) {
 export function withPublic<T>(handler: (ctx: HandlerContext) => Promise<T>) {
   return async (request: Request, context?: RouteContext): Promise<NextResponse> => {
     try {
+      await initDatabase();
       const params = await resolveParams(context);
       const data = await handler({ accountId: 1, merchantId: 1, request, params });
 

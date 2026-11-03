@@ -3,6 +3,8 @@ import Credentials from 'next-auth/providers/credentials';
 import { cookies } from 'next/headers';
 
 import { authConfig } from '@/lib/auth.config';
+import { initDatabase } from '@/lib/db';
+import { assertProductionSecret } from '@/lib/env';
 import { upsertAccount } from '@/lib/services/account';
 import { verifyCaptcha } from '@/lib/services/captcha';
 import { isMobilePhone } from '@/lib/validation/phone';
@@ -17,6 +19,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         captcha: { label: '验证码', type: 'text' },
       },
       async authorize(credentials) {
+        await initDatabase();
+        assertProductionSecret();
+
         const interCode = String(credentials?.interCode ?? '');
         const mobile = String(credentials?.mobile ?? '');
         const captcha = String(credentials?.captcha ?? '');
