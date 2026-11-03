@@ -1,4 +1,3 @@
-import { existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 
 import { createSessionCookie } from './session-cookie';
@@ -6,11 +5,12 @@ import { createSessionCookie } from './session-cookie';
 /**
  * Production-build smoke test (Task 25).
  *
- * Delete the stale database, then start the built server against that path;
- * the script refuses to run while the file exists, because deleting a file a
- * live SQLite connection holds open leaves the server writing to an unlinked
- * inode. The standalone server changes its cwd to `.next/standalone`, so pass
- * an absolute path:
+ * Delete the stale database, then start the built server against that path.
+ * The script never deletes the file itself: a live SQLite connection holds it
+ * open, and unlinking it leaves the server writing to an orphaned inode. For
+ * the restart-persistence check, keep the file and start the server again.
+ * The standalone server changes its cwd to `.next/standalone`, so pass an
+ * absolute path:
  *
  *   rm -f data/smoke.sqlite
  *   NODE_ENV=production DATABASE_PATH="$(pwd)/data/smoke.sqlite" AUTH_SECRET=test-secret PORT=3000 \
@@ -22,18 +22,6 @@ const BASE_URL = process.env.SMOKE_BASE_URL ?? 'http://localhost:3000';
 const DATABASE_PATH = path.resolve(process.env.SMOKE_DATABASE_PATH ?? './data/smoke.sqlite');
 const REQUEST_TIMEOUT_MS = 15_000;
 const READY_TIMEOUT_MS = 30_000;
-
-mkdirSync(path.dirname(DATABASE_PATH), { recursive: true });
-
-// A clean start is part of the contract: the operator deletes the file before
-// starting the server. The persistence rerun opts out explicitly.
-if (existsSync(DATABASE_PATH) && process.env.SMOKE_ALLOW_EXISTING_DB !== '1') {
-  throw new Error(
-    `smoke database already exists: ${DATABASE_PATH}\n` +
-      'Stop the server, delete the file, start the server again, then re-run smoke. ' +
-      'Set SMOKE_ALLOW_EXISTING_DB=1 only for the restart-persistence check.'
-  );
-}
 
 if (!process.env.AUTH_SECRET) {
   throw new Error('AUTH_SECRET must be set to the same value the smoke server was started with');
