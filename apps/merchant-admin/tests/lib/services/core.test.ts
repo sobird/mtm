@@ -47,6 +47,30 @@ test('rejects an 11th favorite', async () => {
   await expect(updateMenuFavorites(SEED_ACCOUNT_ID, eleven)).rejects.toMatchObject({ code: 'MAX_FAVORITES' });
 });
 
+test('staff favorites drop hidden menus', async () => {
+  await initDatabase();
+  const visibleId = '19214';
+
+  try {
+    const favorites = await updateMenuFavorites(SEED_STAFF_ACCOUNT_ID, [
+      { id: 'seed-menu-accounts' },
+      { id: visibleId },
+    ]);
+
+    expect(favorites.map(item => item.id)).toEqual([visibleId]);
+
+    const persisted = await prisma.menuFavorite.findMany({ where: { accountId: SEED_STAFF_ACCOUNT_ID } });
+    expect(persisted.map(row => row.menuId)).toEqual([visibleId]);
+
+    const hidden = await prisma.menuFavorite.findUnique({
+      where: { accountId_menuId: { accountId: SEED_STAFF_ACCOUNT_ID, menuId: 'seed-menu-accounts' } },
+    });
+    expect(hidden).toBeNull();
+  } finally {
+    await prisma.menuFavorite.deleteMany({ where: { accountId: SEED_STAFF_ACCOUNT_ID } });
+  }
+});
+
 test('returns merchant detail', async () => {
   const merchant = await getMerchant(SEED_MERCHANT_ID);
   expect(merchant.id).toBe(123456);
