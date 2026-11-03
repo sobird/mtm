@@ -5,6 +5,7 @@ import { requireServiceToken } from './auth';
 import { prisma } from './db';
 import { HttpError, errorBody } from './http';
 import type { AppEnv } from './http';
+import { registerBrandRoutes } from './routes/brands';
 import { registerCategoryRoutes } from './routes/categories';
 
 const defaultHook: Hook<unknown, AppEnv, string, Response | undefined> = (result, c) => {
@@ -63,6 +64,7 @@ export function createApp(): OpenAPIHono<AppEnv> {
   app.openapi(meRoute, c => c.json({ data: c.get('auth') }, 200));
 
   registerCategoryRoutes(app);
+  registerBrandRoutes(app);
 
   app.onError((error, c) => {
     if (error instanceof HttpError) {

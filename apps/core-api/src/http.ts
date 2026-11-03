@@ -39,7 +39,7 @@ export function sendData<E extends Env, T extends JSONValue, U extends Contentfu
   return c.json({ data }, (status ?? 200) as U);
 }
 
-export function sendPage<E extends Env>(c: Context<E>, items: unknown[], meta: PageMeta) {
+export function sendPage<E extends Env, T extends JSONValue>(c: Context<E>, items: T[], meta: PageMeta) {
   return c.json({ data: items, meta }, 200);
 }
 
