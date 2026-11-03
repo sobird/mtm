@@ -139,6 +139,18 @@ test('proxyToCoreApi forwards allowed paths and keeps the portal envelope', asyn
   expect(fetchMock.mock.calls[0][0]).toBe('http://core.test/api/v1/me?x=1');
 });
 
+test('proxyToCoreApi forwards the core-api page meta', async () => {
+  const meta = { page: 2, pageSize: 10, total: 15 };
+  const data = [{ id: 'brand-demo-1', name: '青禾', logoUrl: null, status: 'ACTIVE' }];
+  fetchMock.mockResolvedValue(jsonResponse(200, { data, meta }));
+
+  const response = await proxyToCoreApi(new Request('http://localhost/api/bff/brands?page=2&pageSize=10'), ['brands']);
+
+  expect(response.status).toBe(200);
+  expect(await response.json()).toEqual({ code: 0, message: 'ok', data, meta });
+  expect(fetchMock.mock.calls[0][0]).toBe('http://core.test/api/v1/brands?page=2&pageSize=10');
+});
+
 test('proxyToCoreApi rejects cross-site state-changing requests', async () => {
   const response = await proxyToCoreApi(
     new Request('http://localhost/api/bff/products', {
