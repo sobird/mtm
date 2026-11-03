@@ -10,13 +10,12 @@
     "db:reset": "bun --env-file=../../.env x prisma migrate reset --force --skip-seed && bun --env-file=../../.env prisma/seed.ts",
     "db:seed": "bun --env-file=../../.env prisma/seed.ts",
     "dev": "bun --env-file=../../.env --watch src/index.ts",
-    "fmt:check": "oxfmt --check --config ../../packages/config/oxfmt.jsonc",
     "format": "oxfmt --check --config ../../packages/config/oxfmt.jsonc",
     "format:fix": "oxfmt --config ../../packages/config/oxfmt.jsonc",
     "lint": "oxlint -c ../../packages/config/oxlint.jsonc",
     "postinstall": "prisma generate",
-    "start": "bun src/index.ts",
-    "test": "vitest run",
+    "start": "bun --env-file=../../.env src/index.ts",
+    "test": "bun --env-file=../../.env x vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

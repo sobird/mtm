@@ -30,7 +30,7 @@ function fail(message, code = 1) {
 }
 
 function startPostgres() {
-  const result = run('docker', ['compose', 'up', '-d', 'postgres']);
+  const result = run('docker', ['compose', 'up', '-d', 'postgres'], { timeout: 120_000 });
 
   if (result.status !== 0) {
     fail(PG_NOT_READY);
@@ -50,7 +50,7 @@ function waitForPostgres() {
       return;
     }
 
-    spawnSync('sleep', ['1']);
+    Bun.sleepSync(1000);
   }
 
   fail(PG_NOT_READY);
@@ -80,7 +80,7 @@ function ensureDatabase(name) {
   );
 
   if (exists.status !== 0) {
-    fail(`无法检查数据库 ${name}。`);
+    fail(`无法检查数据库 ${name}：${exists.stderr.trim()}`);
   }
 
   if (exists.stdout.trim() === '1') {

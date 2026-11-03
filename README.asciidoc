@@ -53,7 +53,7 @@ bun run dev
 ----
 bun install        # 安装依赖
 bun run dev        # 启动 PostgreSQL、迁移、种子数据并运行所有应用
-bun run db:migrate # 应用数据库迁移
+bun run db:migrate # 启动 PostgreSQL、创建数据库并应用迁移
 bun run db:seed    # 写入种子数据
 bun run db:reset   # 重置两个数据库并重新迁移、写入种子数据
 bun run build      # 构建所有应用

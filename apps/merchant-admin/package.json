@@ -15,9 +15,9 @@
     "lint": "oxlint -c ../../packages/config/oxlint.jsonc",
     "postinstall": "prisma generate",
     "smoke": "NODE_ENV=production bun scripts/smoke.ts",
-    "start": "next start -p 3000",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "start": "node --env-file=../../.env node_modules/next/dist/bin/next start -p 3000",
+    "test": "bun --env-file=../../.env x vitest run",
+    "test:watch": "bun --env-file=../../.env x vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

@@ -25,10 +25,12 @@ test('detail id absent from the list is still retrievable', async () => {
 });
 
 test('offlineCoupon sets status to 6', async () => {
+  const before = await getCoupon('500145265');
   const res = await offlineCoupon('500145265');
   expect(res.status).toBe(6);
   const again = await getCoupon('500145265');
   expect(again.status).toBe(6);
+  await prisma.coupon.update({ where: { id: '500145265' }, data: { status: before.status } });
 });
 
 test('campaign total and page size come from the database', async () => {
