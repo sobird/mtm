@@ -48,6 +48,7 @@ Account.init(
   },
   {
     sequelize,
+    modelName: 'Account',
     tableName: 'account',
     underscored: true,
     timestamps: false,

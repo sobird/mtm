@@ -52,6 +52,7 @@ MerchantTask.init(
   },
   {
     sequelize,
+    modelName: 'MerchantTask',
     tableName: 'merchant_task',
     underscored: true,
     timestamps: false,

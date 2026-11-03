@@ -30,6 +30,7 @@ ReferenceData.init(
   },
   {
     sequelize,
+    modelName: 'ReferenceData',
     tableName: 'reference_data',
     underscored: true,
     timestamps: false,

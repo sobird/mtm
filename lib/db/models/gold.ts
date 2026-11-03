@@ -51,6 +51,7 @@ GoldPeriod.init(
   },
   {
     sequelize,
+    modelName: 'GoldPeriod',
     tableName: 'gold_period',
     underscored: true,
     timestamps: false,
@@ -122,6 +123,7 @@ GoldStandard.init(
   },
   {
     sequelize,
+    modelName: 'GoldStandard',
     tableName: 'gold_standard',
     underscored: true,
     timestamps: false,

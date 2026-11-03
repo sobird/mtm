@@ -46,6 +46,7 @@ Registration.init(
   },
   {
     sequelize,
+    modelName: 'Registration',
     tableName: 'registration',
     underscored: true,
     timestamps: false,
@@ -95,6 +96,7 @@ Invitation.init(
   },
   {
     sequelize,
+    modelName: 'Invitation',
     tableName: 'invitation',
     underscored: true,
     timestamps: false,

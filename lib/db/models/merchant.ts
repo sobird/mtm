@@ -48,6 +48,7 @@ Merchant.init(
   },
   {
     sequelize,
+    modelName: 'Merchant',
     tableName: 'merchant',
     underscored: true,
     timestamps: false,
@@ -97,6 +98,7 @@ MerchantCategory.init(
   },
   {
     sequelize,
+    modelName: 'MerchantCategory',
     tableName: 'merchant_category',
     underscored: true,
     timestamps: false,
@@ -164,6 +166,7 @@ MerchantLicense.init(
   },
   {
     sequelize,
+    modelName: 'MerchantLicense',
     tableName: 'merchant_license',
     underscored: true,
     timestamps: false,
@@ -214,6 +217,7 @@ MerchantEntry.init(
   },
   {
     sequelize,
+    modelName: 'MerchantEntry',
     tableName: 'merchant_entry',
     underscored: true,
     timestamps: false,
@@ -266,6 +270,7 @@ EntryTask.init(
   },
   {
     sequelize,
+    modelName: 'EntryTask',
     tableName: 'entry_task',
     underscored: true,
     timestamps: false,
@@ -309,6 +314,7 @@ EntryType.init(
   },
   {
     sequelize,
+    modelName: 'EntryType',
     tableName: 'entry_type',
     underscored: true,
     timestamps: false,

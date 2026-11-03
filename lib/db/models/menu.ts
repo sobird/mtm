@@ -81,6 +81,7 @@ MenuItem.init(
   },
   {
     sequelize,
+    modelName: 'MenuItem',
     tableName: 'menu_item',
     underscored: true,
     timestamps: false,
@@ -124,6 +125,7 @@ MenuBadge.init(
   },
   {
     sequelize,
+    modelName: 'MenuBadge',
     tableName: 'menu_badge',
     underscored: true,
     timestamps: false,
@@ -172,6 +174,7 @@ MenuPreference.init(
   },
   {
     sequelize,
+    modelName: 'MenuPreference',
     tableName: 'menu_preference',
     underscored: true,
     timestamps: false,
@@ -213,6 +216,7 @@ MenuFavorite.init(
   },
   {
     sequelize,
+    modelName: 'MenuFavorite',
     tableName: 'menu_favorite',
     underscored: true,
     timestamps: false,

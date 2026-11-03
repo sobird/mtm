@@ -129,6 +129,7 @@ Campaign.init(
   },
   {
     sequelize,
+    modelName: 'Campaign',
     tableName: 'campaign',
     underscored: true,
     timestamps: false,

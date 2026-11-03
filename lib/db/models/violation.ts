@@ -48,6 +48,7 @@ Violation.init(
   },
   {
     sequelize,
+    modelName: 'Violation',
     tableName: 'violation',
     underscored: true,
     timestamps: false,

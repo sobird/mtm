@@ -38,6 +38,7 @@ AnalysisSnapshot.init(
   },
   {
     sequelize,
+    modelName: 'AnalysisSnapshot',
     tableName: 'analysis_snapshot',
     underscored: true,
     timestamps: false,

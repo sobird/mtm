@@ -23,6 +23,7 @@ SeedMeta.init(
   },
   {
     sequelize,
+    modelName: 'SeedMeta',
     tableName: 'seed_meta',
     timestamps: false,
   }

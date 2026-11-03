@@ -183,6 +183,7 @@ Coupon.init(
   },
   {
     sequelize,
+    modelName: 'Coupon',
     tableName: 'coupon',
     underscored: true,
     timestamps: false,

@@ -14,11 +14,12 @@ const globalForDb = globalThis as typeof globalThis & {
   __mtmDb?: DbGlobalState;
 };
 
-const isProduction = process.env.NODE_ENV === 'production';
-
-// Reuse the same connection across HMR reloads in development. In production a
-// module-level instance is enough, so the global cache is not used.
-export const dbGlobal: DbGlobalState = isProduction ? {} : (globalForDb.__mtmDb ??= {});
+// Reuse one connection (and one init promise) across module copies. The
+// production server can load several bundled copies of this module; without a
+// shared cache each copy syncs a different Sequelize instance, so models
+// registered by one copy are missing from another and `sync()` silently
+// creates only a subset of tables (R-21, seen as `no such table: seed_meta`).
+export const dbGlobal: DbGlobalState = (globalForDb.__mtmDb ??= {});
 
 function createSequelize(): Sequelize {
   const storage = getDatabasePath();
