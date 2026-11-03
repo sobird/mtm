@@ -21,8 +21,12 @@ export function SearchForm({ children, onSubmit, onReset, className }: SearchFor
   };
 
   const handleReset = (event: FormEvent<HTMLFormElement>) => {
+    // Without a controller-owned reset, let the native reset clear uncontrolled fields.
+    if (!onReset) {
+      return;
+    }
     event.preventDefault();
-    onReset?.();
+    onReset();
   };
 
   return (

@@ -5,6 +5,8 @@ import { cx } from '../cx';
 import styles from './Steps.module.css';
 
 export interface StepItem {
+  /** Optional stable identifier; falls back to the item index. */
+  key?: string;
   title: ReactNode;
   description?: ReactNode;
 }
@@ -22,7 +24,7 @@ export function Steps({ items, current, className }: StepsProps) {
         const status = index < current ? 'finish' : index === current ? 'process' : 'wait';
         return (
           <li
-            key={String(item.title)}
+            key={item.key ?? index}
             className={cx(styles.step, styles[status])}
             aria-current={index === current ? 'step' : undefined}
           >

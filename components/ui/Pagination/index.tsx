@@ -1,3 +1,5 @@
+'use client';
+
 import { cx } from '../cx';
 
 import styles from './Pagination.module.css';

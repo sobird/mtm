@@ -13,7 +13,7 @@ import styles from './DataTable.module.css';
 export type DataTableRowKey<T> = keyof T | ((row: T) => string);
 
 export interface DataTableProps<T> {
-  columns: ColumnDef<T, any>[];
+  columns: ColumnDef<T>[];
   data: T[];
   total: number;
   page: number;

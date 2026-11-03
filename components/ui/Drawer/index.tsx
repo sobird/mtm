@@ -13,18 +13,32 @@ export interface DrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title?: ReactNode;
+  /** Accessible name used when `title` is omitted. */
+  ariaLabel?: string;
   children?: ReactNode;
   footer?: ReactNode;
   side?: DrawerSide;
   className?: string;
 }
 
-export function Drawer({ open, onOpenChange, title, children, footer, side = 'right', className }: DrawerProps) {
+export function Drawer({
+  open,
+  onOpenChange,
+  title,
+  ariaLabel,
+  children,
+  footer,
+  side = 'right',
+  className,
+}: DrawerProps) {
   return (
     <BaseDialog.Root open={open} onOpenChange={onOpenChange}>
       <BaseDialog.Portal>
         <BaseDialog.Backdrop className={styles.backdrop} />
-        <BaseDialog.Popup className={cx(styles.popup, styles[side], className)}>
+        <BaseDialog.Popup
+          aria-label={title === undefined ? (ariaLabel ?? '抽屉') : undefined}
+          className={cx(styles.popup, styles[side], className)}
+        >
           <header className={styles.header}>
             {title !== undefined ? <BaseDialog.Title className={styles.title}>{title}</BaseDialog.Title> : <span />}
             <BaseDialog.Close className={styles.close} aria-label='关闭'>
