@@ -1,0 +1,8 @@
+.banner {
+  height: 300px;
+  margin-bottom: 80px;
+  background:
+    url('/assets/mt_entry.png') no-repeat center center,
+    linear-gradient(-43deg, #ffc212 0%, #ffd000 100%);
+  background-size: cover;
+}

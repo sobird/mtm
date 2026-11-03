@@ -1,0 +1,21 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.form {
+  width: 100%;
+  max-width: 600px;
+  margin: 30px auto;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+.actions button {
+  padding-right: 30px;
+  padding-left: 30px;
+  font-size: 20px;
+}

@@ -1,0 +1,61 @@
+.steps {
+  display: flex;
+  justify-content: center;
+}
+
+.step {
+  box-sizing: border-box;
+  width: 220px;
+  height: 160px;
+  margin: 0 9px;
+  color: #222;
+  background: #fff no-repeat 10px bottom;
+  background-size: 30%;
+  border-top: 2px solid #fc3;
+  border-radius: 2px;
+  box-shadow: 0 1px 14px 2px #e7ebf3;
+  opacity: 0.8;
+}
+
+.step h3 {
+  margin: 26px 0 10px;
+  padding-left: 30px;
+  font-size: 20px;
+}
+
+.step h3 span {
+  margin-right: 5px;
+  color: #fc3;
+  font-weight: 600;
+}
+
+.desc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+}
+
+.desc span {
+  height: 24px;
+}
+
+.step1 {
+  background-image: url('/assets/step_1.png');
+}
+
+.step2 {
+  background-image: url('/assets/step_2.png');
+}
+
+.step3 {
+  background-image: url('/assets/step_3.png');
+}
+
+.step4 {
+  background-image: url('/assets/step_4.png');
+}
+
+.step5 {
+  background-image: url('/assets/step_5.png');
+}
