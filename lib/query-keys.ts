@@ -7,6 +7,8 @@ export const queryKeys = {
   menu: ['menu'] as const,
   menuBadges: ['menuBadges'] as const,
   merchant: ['merchant'] as const,
+  merchantCategories: ['merchantCategories'] as const,
+  licenses: ['licenses'] as const,
   coupons: (params?: Record<string, unknown>) => ['coupons', params ?? {}] as const,
   coupon: (id: string | number) => ['coupon', id] as const,
   campaigns: (params?: Record<string, unknown>) => ['campaigns', params ?? {}] as const,

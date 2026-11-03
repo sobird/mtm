@@ -1,0 +1,15 @@
+.form {
+  max-width: 600px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 142px;
+}
+
+@media (max-width: 768px) {
+  .actions {
+    margin-left: 0;
+  }
+}
