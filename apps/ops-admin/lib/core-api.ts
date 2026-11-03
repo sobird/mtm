@@ -8,6 +8,26 @@ import { getAccountPermissions } from './services/permission';
 
 const DEFAULT_CORE_API_URL = 'http://localhost:4000';
 const ALLOWED_PATH = /^[a-zA-Z0-9/_-]+$/;
+const FETCH_TIMEOUT_MS = 5_000;
+
+/** Mirrors `lib/env.ts`'s production-secret guard for the core-api token. */
+function isUnsafeProductionSecret(secret: string | undefined): boolean {
+  if (process.env.NODE_ENV !== 'production') {
+    return false;
+  }
+
+  return !secret || secret.startsWith('change-me');
+}
+
+function isTimeoutError(error: unknown): boolean {
+  if (typeof error !== 'object' || error === null) {
+    return false;
+  }
+
+  const { name } = error as { name?: unknown };
+
+  return name === 'TimeoutError' || name === 'AbortError';
+}
 
 export interface CoreApiInit {
   method?: string;
@@ -24,7 +44,7 @@ interface CoreApiPayload<T> {
 export async function buildServiceToken(): Promise<string> {
   const secret = process.env.CORE_API_JWT_SECRET;
 
-  if (!secret) {
+  if (!secret || isUnsafeProductionSecret(secret)) {
     throw new AppError('CONFIGURATION_ERROR', 500, '核心服务未配置');
   }
 
@@ -54,15 +74,26 @@ export async function callCoreApi<T>(path: string, init: CoreApiInit = {}): Prom
   const base = process.env.CORE_API_URL ?? DEFAULT_CORE_API_URL;
   const url = `${base}/api/v1${path}${init.search ? `?${init.search}` : ''}`;
 
-  const response = await fetch(url, {
-    method: init.method ?? 'GET',
-    headers: {
-      authorization: `Bearer ${token}`,
-      ...(init.body === undefined ? {} : { 'content-type': 'application/json' }),
-    },
-    body: init.body === undefined ? undefined : JSON.stringify(init.body),
-    cache: 'no-store',
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(url, {
+      method: init.method ?? 'GET',
+      headers: {
+        authorization: `Bearer ${token}`,
+        ...(init.body === undefined ? {} : { 'content-type': 'application/json' }),
+      },
+      body: init.body === undefined ? undefined : JSON.stringify(init.body),
+      cache: 'no-store',
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+  } catch (error) {
+    if (isTimeoutError(error)) {
+      throw new AppError('CORE_API_TIMEOUT', 504, '核心服务响应超时');
+    }
+
+    throw error;
+  }
 
   const payload = (await response.json().catch(() => null)) as CoreApiPayload<T> | null;
 

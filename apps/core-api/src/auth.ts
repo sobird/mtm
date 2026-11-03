@@ -4,10 +4,23 @@ import { createMiddleware } from 'hono/factory';
 
 export type AuthVariables = { auth: ServiceTokenClaims };
 
+/**
+ * Mirrors `apps/ops-admin/lib/env.ts`'s production-secret guard: in production a
+ * missing or placeholder (`change-me…`) secret is treated as a configuration
+ * error instead of silently signing/verifying tokens.
+ */
+function isUnsafeProductionSecret(secret: string | undefined): boolean {
+  if (process.env.NODE_ENV !== 'production') {
+    return false;
+  }
+
+  return !secret || secret.startsWith('change-me');
+}
+
 export const requireServiceToken = createMiddleware<{ Variables: AuthVariables }>(async (c, next) => {
   const secret = process.env.CORE_API_JWT_SECRET;
 
-  if (!secret) {
+  if (!secret || isUnsafeProductionSecret(secret)) {
     return c.json({ error: { code: 'CONFIGURATION_ERROR', message: '服务未正确配置', details: null } }, 500);
   }
 

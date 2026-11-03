@@ -126,6 +126,31 @@ test('proxyToCoreApi forwards allowed paths and keeps the portal envelope', asyn
   expect(fetchMock.mock.calls[0][0]).toBe('http://core.test/api/v1/me?x=1');
 });
 
+test('rejects the placeholder secret in production', async () => {
+  vi.stubEnv('NODE_ENV', 'production');
+  process.env.CORE_API_JWT_SECRET = 'change-me-core';
+
+  try {
+    const error = await callCoreApi('/me').catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(AppError);
+    expect(error).toMatchObject({ code: 'CONFIGURATION_ERROR', status: 500 });
+    expect(fetchMock).not.toHaveBeenCalled();
+  } finally {
+    vi.unstubAllEnvs();
+    process.env.CORE_API_JWT_SECRET = SECRET;
+  }
+});
+
+test('maps fetch timeouts to a gateway timeout AppError', async () => {
+  fetchMock.mockRejectedValue(Object.assign(new Error('The operation timed out.'), { name: 'TimeoutError' }));
+
+  const error = await callCoreApi('/me').catch((caught: unknown) => caught);
+
+  expect(error).toBeInstanceOf(AppError);
+  expect(error).toMatchObject({ code: 'CORE_API_TIMEOUT', status: 504 });
+});
+
 test('proxyToCoreApi rejects path traversal', async () => {
   const response = await proxyToCoreApi(new Request('http://localhost/api/bff/..%2Fsecret'), ['..', 'secret']);
 

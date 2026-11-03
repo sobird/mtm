@@ -57,6 +57,22 @@ test('fails closed without a secret', async () => {
   process.env.CORE_API_JWT_SECRET = secret;
 });
 
+test('fails closed with the placeholder secret in production', async () => {
+  vi.stubEnv('NODE_ENV', 'production');
+  process.env.CORE_API_JWT_SECRET = 'change-me-core';
+
+  try {
+    const res = await app.request('/api/v1/me', { headers: { authorization: `Bearer ${valid}` } });
+    expect(res.status).toBe(500);
+    expect(await res.json()).toEqual({
+      error: { code: 'CONFIGURATION_ERROR', message: '服务未正确配置', details: null },
+    });
+  } finally {
+    vi.unstubAllEnvs();
+    process.env.CORE_API_JWT_SECRET = secret;
+  }
+});
+
 test('requirePermission returns 403 without the code and 200 with it', async () => {
   const route = new Hono<{ Variables: AuthVariables }>()
     .use(requireServiceToken)
