@@ -6,12 +6,17 @@ import { requireAccount } from './auth-guard';
 import { initDatabase } from './db';
 import { SEED_ACCOUNT_ID, SEED_MERCHANT_ID } from './db/seed/ids';
 import { AppError } from './errors';
+import { getAccountPermissions, type PermissionSnapshot } from './services/permission';
 
 export interface HandlerContext {
   accountId: string;
   merchantId: string;
   request: Request;
   params: Record<string, string>;
+}
+
+export interface PermissionHandlerContext extends HandlerContext {
+  permissions: PermissionSnapshot;
 }
 
 /**
@@ -51,6 +56,32 @@ export function withPublic<T>(handler: (ctx: HandlerContext) => Promise<T>) {
       await initDatabase();
       const params = await resolveParams(context);
       const data = await handler({ accountId: SEED_ACCOUNT_ID, merchantId: SEED_MERCHANT_ID, request, params });
+
+      return ok(data);
+    } catch (error) {
+      return fail(error);
+    }
+  };
+}
+
+/**
+ * Authenticated merchant route wrapper that also enforces a single permission
+ * code from the account's resolved snapshot. Owners implicitly hold every
+ * merchant permission via `getAccountPermissions`.
+ */
+export function withPermission<T>(permission: string, handler: (ctx: PermissionHandlerContext) => Promise<T>) {
+  return async (request: Request, context?: RouteContext): Promise<NextResponse> => {
+    try {
+      await initDatabase();
+      const { accountId, merchantId } = await requireAccount();
+      const permissions = await getAccountPermissions(accountId);
+
+      if (!permissions.set.has(permission)) {
+        throw new AppError('FORBIDDEN', 403, '无权访问');
+      }
+
+      const params = await resolveParams(context);
+      const data = await handler({ accountId, merchantId, permissions, request, params });
 
       return ok(data);
     } catch (error) {
