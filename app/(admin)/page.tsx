@@ -28,10 +28,10 @@ export default function AdminHomePage() {
           <Overview />
         </DashboardGridItem>
         <DashboardGridItem span={12}>
-          <Realdata />
+          <Realdata bodyStyle={{ height: 198 }} />
         </DashboardGridItem>
         <DashboardGridItem span={12}>
-          <MerchantGrowth />
+          <MerchantGrowth bodyStyle={{ height: 198 }} />
         </DashboardGridItem>
         <DashboardGridItem span={12}>
           <ProductManage />
@@ -40,12 +40,12 @@ export default function AdminHomePage() {
           <FundManage />
         </DashboardGridItem>
         <DashboardGridItem span={12}>
-          <GoldMerchant />
+          <GoldMerchant bodyStyle={{ height: 465 }} />
         </DashboardGridItem>
         <DashboardGridItem span={12}>
           <div style={rightColumnStyle}>
-            <MarketActivity max={4} />
-            <Violations />
+            <MarketActivity max={4} bodyStyle={{ paddingTop: 6 }} />
+            <Violations bodyStyle={{ paddingTop: 16 }} />
           </div>
         </DashboardGridItem>
         <DashboardGridItem span={24}>

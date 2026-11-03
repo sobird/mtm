@@ -5,7 +5,9 @@ import type { CSSProperties } from 'react';
 
 import { Card, Empty, Skeleton, useToast } from '@/components/ui';
 import { apiFetch } from '@/lib/api-client';
+import { NO_PERMISSION_MESSAGE } from '@/lib/messages';
 import { queryKeys } from '@/lib/query-keys';
+import type { ProductDTO } from '@/lib/services/product';
 
 import styles from './ProductManage.module.css';
 
@@ -17,10 +19,8 @@ export interface ProductManageProps {
 
 interface SellingResponse {
   total: number;
-  items: unknown[];
+  items: ProductDTO[];
 }
-
-const NO_PERMISSION = '当前跳转页面无权限，请联系主账户进行开通';
 
 export function ProductManage({ className, style, bodyStyle }: ProductManageProps) {
   const toast = useToast();
@@ -38,13 +38,13 @@ export function ProductManage({ className, style, bodyStyle }: ProductManageProp
   } else {
     content = (
       <div className={styles.tiles}>
-        <button type='button' className={styles.tile} onClick={() => toast.error(NO_PERMISSION)}>
+        <button type='button' className={styles.tile} onClick={() => toast.error(NO_PERMISSION_MESSAGE)}>
           <span className={styles.countLine}>
             <span className={styles.count}>{data?.total ?? '--'}</span>件
           </span>
           <span className={styles.caption}>在售中</span>
         </button>
-        <button type='button' className={styles.tile} onClick={() => toast.error(NO_PERMISSION)}>
+        <button type='button' className={styles.tile} onClick={() => toast.error(NO_PERMISSION_MESSAGE)}>
           <span className={styles.addIcon} aria-hidden='true'>
             +
           </span>

@@ -34,7 +34,7 @@
 }
 
 .extraLink {
-  color: var(--color-info);
+  color: var(--color-text-secondary);
   font-size: 14px;
   cursor: default;
 }

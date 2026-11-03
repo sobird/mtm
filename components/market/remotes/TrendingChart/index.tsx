@@ -78,7 +78,7 @@ export function TrendingChart({ className, style, bodyStyle }: TrendingChartProp
   const [rangeKey, setRangeKey] = useState<RangeKey>('last30');
 
   const { data, isPending, isError } = useQuery({
-    queryKey: queryKeys.analysis('trending'),
+    queryKey: queryKeys.analysis(`trending:${rangeKey}`),
     queryFn: () => {
       const now = dayjs();
       const start = rangeKey === 'last7' ? now.subtract(1, 'week') : now.subtract(1, 'month');
@@ -135,6 +135,7 @@ export function TrendingChart({ className, style, bodyStyle }: TrendingChartProp
                 key={item.key}
                 type='button'
                 className={cx(styles.range, rangeKey === item.key && styles.active)}
+                aria-pressed={rangeKey === item.key}
                 onClick={() => setRangeKey(item.key)}
               >
                 {item.label}
@@ -150,6 +151,7 @@ export function TrendingChart({ className, style, bodyStyle }: TrendingChartProp
                 key={item.key}
                 type='button'
                 className={cx(styles.metric, metricKey === item.key && styles.activeMetric)}
+                aria-pressed={metricKey === item.key}
                 onClick={() => setMetricKey(item.key)}
               >
                 {item.title}

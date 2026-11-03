@@ -87,10 +87,10 @@ export function GoldMerchant({ className, style, bodyStyle }: GoldMerchantProps)
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>指标名称</th>
-                <th>认证标准</th>
-                <th>当前状态</th>
-                <th>是否达标</th>
+                <th scope='col'>指标名称</th>
+                <th scope='col'>认证标准</th>
+                <th scope='col'>当前状态</th>
+                <th scope='col'>是否达标</th>
               </tr>
             </thead>
             <tbody>

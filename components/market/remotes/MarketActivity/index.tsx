@@ -31,7 +31,7 @@ const KNOWN_ICONS = new Set(['16', '66', '67', '68', '69', '70', '691']);
 export function MarketActivity({ className, style, bodyStyle, max = 4 }: MarketActivityProps) {
   const [type, setType] = useState<CampaignType>('1');
   const { data, isPending, isError } = useQuery({
-    queryKey: queryKeys.campaigns({ type, max }),
+    queryKey: queryKeys.campaigns({ type }),
     queryFn: () => apiFetch<CampaignListResponse>('/api/merchant/campaigns', { query: { type } }),
   });
 
@@ -66,7 +66,11 @@ export function MarketActivity({ className, style, bodyStyle, max = 4 }: MarketA
               </div>
             </div>
             <div className={styles.side}>
-              <Link className={styles.action} href='/market/home'>
+              <Link
+                className={styles.action}
+                href='/market/home'
+                aria-label={`${type === '1' ? '立即报名' : '查看详情'}：${item.name}`}
+              >
                 {type === '1' ? '立即报名' : '查看详情'}
               </Link>
             </div>

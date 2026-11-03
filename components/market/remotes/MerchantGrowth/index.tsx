@@ -150,11 +150,6 @@ export function MerchantGrowth({ className, style, bodyStyle }: MerchantGrowthPr
             <div className={styles.card} key={type}>
               <div className={styles.cardTitle}>
                 <span className={styles.cardName}>{config.title}</span>
-                <Tooltip content={config.tips}>
-                  <span className={styles.help} aria-hidden='true'>
-                    ?
-                  </span>
-                </Tooltip>
                 {tag ? <Tag tone={tag.tone}>{tag.label}</Tag> : null}
               </div>
               <div className={styles.scoreWrap}>
