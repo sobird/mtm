@@ -1,4 +1,5 @@
 import { prisma } from '../src/db';
+import { seedCoreData } from './seed-data';
 
 try {
   await prisma.seedMeta.upsert({
@@ -6,6 +7,7 @@ try {
     update: {},
     create: { version: 'bootstrap' },
   });
+  await seedCoreData(prisma);
 } finally {
   await prisma.$disconnect();
 }

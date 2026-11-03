@@ -1,5 +1,5 @@
 import { verifyPassword } from '@mtm/auth/password';
-import { MERCHANT_PERMISSIONS } from '@mtm/contracts';
+import { DEMO_MERCHANT_ID, MERCHANT_PERMISSIONS } from '@mtm/contracts';
 import { afterAll, expect, test } from 'vitest';
 
 import { prisma, initDatabase } from '@/lib/db';
@@ -13,6 +13,7 @@ test('seeds owner and staff accounts with scoped roles', async () => {
 
   const owner = await prisma.merchantAccount.findUniqueOrThrow({ where: { username: 'merchant@example.com' } });
   expect(owner.isOwner).toBe(true);
+  expect(owner.merchantId).toBe(DEMO_MERCHANT_ID);
   expect(owner.phone).toBe('13412345678');
   await expect(verifyPassword(owner.passwordHash!, 'merchant123')).resolves.toBe(true);
 
