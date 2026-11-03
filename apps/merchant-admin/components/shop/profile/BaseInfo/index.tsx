@@ -1,14 +1,15 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useFormState } from 'react-hook-form';
 
 import FieldMerchantLogo from '@/components/admin/FieldMerchantLogo';
 import { Button, Card, Empty, Field, Form, Input, LabelValue, Skeleton, Textarea, useToast } from '@/components/ui';
-import { apiFetch } from '@/lib/api-client';
+import { ApiError, apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import type { MerchantCategoryDTO } from '@/lib/services/merchant';
-import { baseInfoSchema } from '@/lib/validation/profile';
+import { fetchMyMerchant, updateMyShop } from '@/lib/services/shop-profile';
+import { baseInfoSchema, type BaseInfoValues } from '@/lib/validation/profile';
 
 import AdminForm from '../../admin/AdminForm';
 import ContactForm from '../ContactForm';
@@ -59,14 +60,21 @@ function BaseInfoSubmitButton() {
 
 export function BaseInfo() {
   const toast = useToast();
+  const queryClient = useQueryClient();
   const merchantQuery = useQuery({
     queryKey: queryKeys.merchant,
     queryFn: () => apiFetch<MerchantProfileDTO>('/api/merchant/detail'),
+  });
+  const myMerchantQuery = useQuery({
+    queryKey: queryKeys.myMerchant,
+    queryFn: fetchMyMerchant,
   });
   const categoriesQuery = useQuery({
     queryKey: queryKeys.merchantCategories,
     queryFn: () => apiFetch<MerchantCategoryDTO[]>('/api/merchant/category'),
   });
+
+  const shopId = myMerchantQuery.data?.shops[0]?.id;
 
   if (merchantQuery.isPending || categoriesQuery.isPending) {
     return <Skeleton rows={6} />;
@@ -79,6 +87,21 @@ export function BaseInfo() {
   const merchant = merchantQuery.data;
   const shop = merchant?.shopInfo;
   const categories = categoriesQuery.data ?? [];
+
+  const handleSubmit = async (values: BaseInfoValues) => {
+    if (!shopId) {
+      toast.error('店铺信息尚未加载完成，请稍后重试');
+      return;
+    }
+
+    try {
+      await updateMyShop(shopId, values);
+      toast.success('店铺基本信息已更新');
+      await queryClient.invalidateQueries({ queryKey: queryKeys.myMerchant });
+    } catch (error) {
+      toast.error(error instanceof ApiError ? error.message : '保存失败，请稍后重试');
+    }
+  };
 
   const handleCopy = async () => {
     if (shop?.id === undefined || shop?.id === null) {
@@ -124,9 +147,7 @@ export function BaseInfo() {
         <Form
           schema={baseInfoSchema}
           defaultValues={{ description: shop?.description ?? '', externalLink: shop?.externalLink ?? '' }}
-          onSubmit={() => {
-            toast.success('店铺基本信息已更新');
-          }}
+          onSubmit={handleSubmit}
           className={styles.form}
         >
           <Field label='店铺简介' hint='最多200个字符'>
