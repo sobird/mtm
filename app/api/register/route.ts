@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 const registerSchema = z.object({
   interCode: z.string().min(1),
   mobile: z.string().min(1),
-  captcha: z.string().optional(),
+  captcha: z.string().min(1).optional(),
 });
 
 export const POST = withPublic(async ({ request }) => {
@@ -22,7 +22,7 @@ export const POST = withPublic(async ({ request }) => {
     throw new AppError('INVALID_MOBILE', 400, '手机号格式不正确');
   }
 
-  if (body.captcha) {
+  if (body.captcha !== undefined) {
     const store = await cookies();
     const token = store.get('mtm_captcha')?.value;
     const valid = await verifyCaptcha(token, body.captcha);

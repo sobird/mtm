@@ -5,13 +5,18 @@ import { acceptInvitation } from '@/lib/services/registration';
 
 export const dynamic = 'force-dynamic';
 
+// The legacy onboarding form treats the code as optional and may send a number.
 const invitationSchema = z.object({
-  code: z.string().min(1),
+  code: z.union([z.string(), z.number()]).optional(),
 });
 
 export const POST = withPublic(async ({ request }) => {
   const { code } = await parseBody(request, invitationSchema);
-  await acceptInvitation(code);
+  const normalized = code === undefined ? '' : String(code).trim();
+
+  if (normalized) {
+    await acceptInvitation(normalized);
+  }
 
   return null;
 });
