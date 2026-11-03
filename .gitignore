@@ -24,6 +24,8 @@ package-lock.json
 stats.json
 .shared
 .playwright-mcp
+.claude/worktrees/
+.superpowers/
 
 # Editor directories and files
 .vscode/*
