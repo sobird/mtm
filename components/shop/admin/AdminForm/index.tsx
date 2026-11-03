@@ -1,11 +1,25 @@
 'use client';
 
-import { useFormState } from 'react-hook-form';
+import { useFormContext, useFormState } from 'react-hook-form';
 
+import FieldCaptcha from '@/components/admin/FieldCaptcha';
+import FieldIdCard from '@/components/admin/FieldIdCard';
+import FieldTermPicker from '@/components/admin/FieldTermPicker';
+import FieldUploadFile from '@/components/admin/FieldUploadFile';
 import { Button, Field, Form, Input, useToast } from '@/components/ui';
+import { ApiError, apiFetch } from '@/lib/api-client';
+import type { VenusOcrResult } from '@/lib/services/venus';
 import { adminSchema } from '@/lib/validation/admin';
 
 import styles from './AdminForm.module.css';
+
+function normalizeValiddate(value: unknown): [boolean, string, string] {
+  if (!Array.isArray(value)) {
+    return [false, '', ''];
+  }
+
+  return [value[0] === true, value[1] ? String(value[1]) : '', value[2] ? String(value[2]) : ''];
+}
 
 function AdminSubmitButton() {
   const { isSubmitting } = useFormState();
@@ -19,20 +33,32 @@ function AdminSubmitButton() {
   );
 }
 
-export function AdminForm() {
+function AdminFields() {
   const toast = useToast();
+  const { setValue } = useFormContext();
 
-  const handleSubmit = () => {
-    toast.success('店铺管理员信息已保存');
+  const handleIdCardUpload = async (res: { url: string }, index: number) => {
+    if (index !== 0) {
+      return;
+    }
+
+    try {
+      // 身份证人像面才识别
+      const info = await apiFetch<VenusOcrResult>('/api/venus/ocr', {
+        method: 'POST',
+        body: { image: res.url, type: 0 },
+      });
+
+      setValue('name', info.name ?? '', { shouldValidate: true });
+      setValue('citizenId', info.citizenId ?? '', { shouldValidate: true });
+      setValue('validdate', normalizeValiddate(info.validdate), { shouldValidate: true });
+    } catch (error) {
+      toast.error(error instanceof ApiError ? error.message : '证件识别失败，请手动填写');
+    }
   };
 
   return (
-    <Form
-      schema={adminSchema}
-      defaultValues={{ name: '', citizenId: '', validdate: '', mobile: '', captcha: '' }}
-      onSubmit={handleSubmit}
-      className={styles.form}
-    >
+    <>
       <Field label='证件类型'>
         <p className={styles.staticValue}>
           中国大陆居民身份证
@@ -41,9 +67,7 @@ export function AdminForm() {
       </Field>
 
       <Field label='电子证件照' required>
-        <div className={styles.uploadPlaceholder} aria-disabled='true'>
-          电子证件照上传组件将在后续版本接入
-        </div>
+        <FieldIdCard name='idCardPhotos' onUploadSuccess={handleIdCardUpload} />
       </Field>
 
       <Field label='管理员姓名' required>
@@ -55,7 +79,7 @@ export function AdminForm() {
       </Field>
 
       <Field label='有效截止日' required>
-        <Input name='validdate' placeholder='请输入有效截止日' aria-label='有效截止日' />
+        <FieldTermPicker name='validdate' />
       </Field>
 
       <Field label='管理员手机号' required>
@@ -63,24 +87,47 @@ export function AdminForm() {
       </Field>
 
       <Field label='验证码' required>
-        <Input name='captcha' placeholder='请查看手机短信，输入验证码' inputMode='numeric' aria-label='验证码' />
+        <FieldCaptcha name='captcha' phoneName='mobile' placeholder='请查看手机短信，输入验证码' />
       </Field>
 
       <Field label='授权书' required>
-        <div>
-          <div className={styles.uploadPlaceholder} aria-disabled='true'>
-            授权书上传组件将在后续版本接入
-          </div>
-          <ul className={styles.uploadNotes}>
-            <li>当店铺管理员与法人不一致时，请上传管理员授权书</li>
-            <li>请使用模板下载后加盖公司印章后上传</li>
-            <li>支持上传1张文件，大小不得超过10MB</li>
-            <li>格式支持JPG/JPEG/PNG/GIF/BPM</li>
-          </ul>
-        </div>
+        <FieldUploadFile name='authLetter' maxCount={1} accept='.jpg,.jpeg,.png,.gif,.bmp' maxSizeMB={10} />
+        <ul className={styles.uploadNotes}>
+          <li>当店铺管理员与法人不一致时，请上传管理员授权书</li>
+          <li>请使用模板下载后加盖公司印章后上传</li>
+          <li>支持上传1张文件，大小不得超过10MB</li>
+          <li>格式支持JPG/JPEG/PNG/GIF/BPM</li>
+        </ul>
       </Field>
 
       <AdminSubmitButton />
+    </>
+  );
+}
+
+export function AdminForm() {
+  const toast = useToast();
+
+  const handleSubmit = () => {
+    toast.success('店铺管理员信息已保存');
+  };
+
+  return (
+    <Form
+      schema={adminSchema}
+      defaultValues={{
+        idCardPhotos: [],
+        name: '',
+        citizenId: '',
+        validdate: [false],
+        mobile: '',
+        captcha: '',
+        authLetter: [],
+      }}
+      onSubmit={handleSubmit}
+      className={styles.form}
+    >
+      <AdminFields />
     </Form>
   );
 }

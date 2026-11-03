@@ -1,0 +1,13 @@
+.hint {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.error {
+  margin: var(--space-1) 0 0;
+  color: var(--color-danger);
+  font-size: 12px;
+  line-height: 1.5;
+}

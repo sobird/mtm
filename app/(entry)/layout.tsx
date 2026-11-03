@@ -1,10 +1,13 @@
 import type { ReactNode } from 'react';
 
 import { EntryHeader } from '@/components/entry/EntryHeader';
+import { initDatabase } from '@/lib/db';
 
 import styles from './entry.module.css';
 
-export default function EntryLayout({ children }: { children: ReactNode }) {
+export default async function EntryLayout({ children }: { children: ReactNode }) {
+  await initDatabase();
+
   return (
     <div className={styles.layout}>
       <EntryHeader />

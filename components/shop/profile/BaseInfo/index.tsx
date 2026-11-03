@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useFormState } from 'react-hook-form';
 
+import FieldMerchantLogo from '@/components/admin/FieldMerchantLogo';
 import { Button, Card, Empty, Field, Form, Input, LabelValue, Skeleton, Textarea, useToast } from '@/components/ui';
 import { apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
@@ -116,7 +117,7 @@ export function BaseInfo() {
           </LabelValue>
           <LabelValue label='主营类目'>{categoryPath(shop?.category, categories)}</LabelValue>
           <LabelValue label='店铺标志'>
-            <span className={styles.placeholder}>店铺标志上传组件将在后续版本接入</span>
+            <FieldMerchantLogo status={6} defaultValue={shop?.logo ? [shop.logo] : []} />
           </LabelValue>
         </div>
 

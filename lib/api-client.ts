@@ -64,15 +64,16 @@ async function parseError(response: Response): Promise<ApiError> {
 export async function apiFetch<T>(path: string, init: ApiFetchInit = {}): Promise<T> {
   const { query, body, headers, ...rest } = init;
   const requestHeaders = new Headers(headers);
+  const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
 
-  if (body !== undefined) {
+  if (body !== undefined && !isFormData) {
     requestHeaders.set('Content-Type', 'application/json');
   }
 
   const response = await fetch(buildUrl(path, query), {
     ...rest,
     headers: requestHeaders,
-    body: body === undefined ? undefined : JSON.stringify(body),
+    body: body === undefined || isFormData ? (body as FormData | undefined) : JSON.stringify(body),
   });
 
   if (!response.ok) {

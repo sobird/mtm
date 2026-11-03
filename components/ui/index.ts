@@ -75,3 +75,6 @@ export type { SearchFormProps } from './SearchForm';
 
 export { DataTable } from './DataTable';
 export type { DataTableProps, DataTableRowKey } from './DataTable';
+
+export { Upload } from './Upload';
+export type { UploadProps } from './Upload';

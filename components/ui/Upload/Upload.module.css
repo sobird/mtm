@@ -1,0 +1,126 @@
+.upload {
+  display: block;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.item {
+  position: relative;
+  width: 88px;
+  height: 88px;
+}
+
+.thumb,
+.trigger {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  background: rgb(0 0 0 / 2%);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.imageThumb {
+  border-style: solid;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fileName {
+  padding: 0 var(--space-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+.trigger:hover {
+  border-color: var(--color-info);
+}
+
+.triggerDefault {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.plus {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  color: var(--color-bg);
+  font-size: 12px;
+  line-height: 1;
+  background: rgb(0 0 0 / 55%);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.remove:hover {
+  background: rgb(0 0 0 / 75%);
+}
+
+.overlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 2px 0;
+  color: var(--color-bg);
+  font-size: 12px;
+  text-align: center;
+  background: rgb(0 0 0 / 45%);
+  pointer-events: none;
+}
+
+.preview {
+  display: block;
+  width: 100%;
+  height: auto;
+}
