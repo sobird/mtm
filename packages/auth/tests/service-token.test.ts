@@ -1,6 +1,12 @@
+import { SignJWT } from 'jose';
 import { afterEach, expect, test, vi } from 'vitest';
 
-import { signServiceToken, verifyServiceToken } from '../src/service-token';
+import {
+  SERVICE_TOKEN_AUDIENCE,
+  SERVICE_TOKEN_ISSUER,
+  signServiceToken,
+  verifyServiceToken,
+} from '../src/service-token';
 
 const claims = {
   portal: 'ops' as const,
@@ -38,5 +44,16 @@ test('rejects expiry, tampering and wrong secrets', async () => {
 
 test('rejects malformed claims', async () => {
   const token = await signServiceToken({ ...claims, portal: 'admin' as never }, 'secret');
+  await expect(verifyServiceToken(token, 'secret')).rejects.toThrow();
+});
+
+test('rejects a correctly signed token without exp', async () => {
+  const token = await new SignJWT({ ...claims })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuer(SERVICE_TOKEN_ISSUER)
+    .setAudience(SERVICE_TOKEN_AUDIENCE)
+    .setIssuedAt()
+    .sign(new TextEncoder().encode('secret'));
+
   await expect(verifyServiceToken(token, 'secret')).rejects.toThrow();
 });

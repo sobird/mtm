@@ -66,6 +66,7 @@ export async function verifyServiceToken(token: string, secret: string): Promise
     algorithms: ['HS256'],
     issuer: SERVICE_TOKEN_ISSUER,
     audience: SERVICE_TOKEN_AUDIENCE,
+    requiredClaims: ['exp'],
   });
 
   return parseClaims(payload);
