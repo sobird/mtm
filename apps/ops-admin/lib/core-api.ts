@@ -33,6 +33,7 @@ function isTimeoutError(error: unknown): boolean {
 export interface CoreApiInit {
   method?: string;
   body?: unknown;
+  formData?: FormData;
   search?: string;
 }
 
@@ -82,9 +83,11 @@ export async function callCoreApi<T>(path: string, init: CoreApiInit = {}): Prom
       method: init.method ?? 'GET',
       headers: {
         authorization: `Bearer ${token}`,
-        ...(init.body === undefined ? {} : { 'content-type': 'application/json' }),
+        // FormData must be sent untouched so fetch can set the multipart boundary.
+        ...(init.formData === undefined && init.body !== undefined ? { 'content-type': 'application/json' } : {}),
       },
-      body: init.body === undefined ? undefined : JSON.stringify(init.body),
+      body:
+        init.formData !== undefined ? init.formData : init.body === undefined ? undefined : JSON.stringify(init.body),
       cache: 'no-store',
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
@@ -119,22 +122,29 @@ export async function proxyToCoreApi(request: Request, segments: string[]): Prom
     }
 
     const method = request.method.toUpperCase();
+    const contentType = request.headers.get('content-type') ?? '';
     let body: unknown;
+    let formData: FormData | undefined;
 
     if (method !== 'GET' && method !== 'HEAD') {
-      const text = await request.text();
+      if (contentType.startsWith('multipart/form-data')) {
+        // Never read multipart bodies as text: that would drop the boundary.
+        formData = await request.formData();
+      } else {
+        const text = await request.text();
 
-      if (text) {
-        try {
-          body = JSON.parse(text);
-        } catch {
-          throw new AppError('INVALID_BODY', 400, '请求体不合法');
+        if (text) {
+          try {
+            body = JSON.parse(text);
+          } catch {
+            throw new AppError('INVALID_BODY', 400, '请求体不合法');
+          }
         }
       }
     }
 
     const search = new URL(request.url).searchParams.toString();
-    const data = await callCoreApi<unknown>(`/${joined}`, { method, body, search });
+    const data = await callCoreApi<unknown>(`/${joined}`, { method, body, formData, search });
 
     return ok(data);
   } catch (error) {

@@ -26,6 +26,7 @@ stats.json
 .playwright-mcp
 .claude/worktrees/
 .superpowers/
+apps/core-api/var/
 
 # Editor directories and files
 .vscode/*

@@ -80,6 +80,26 @@ test('forwards the query string and JSON body', async () => {
   expect(init.body).toBe(JSON.stringify({ name: 'x' }));
 });
 
+test('multipart 请求以 FormData 转发且不设置 JSON content-type', async () => {
+  fetchMock.mockResolvedValue(jsonResponse(200, { data: { id: 'm1', url: '/uploads/x.png' } }));
+  const form = new FormData();
+  form.append('file', new File(['x'], 'x.png', { type: 'image/png' }));
+
+  const response = await proxyToCoreApi(
+    new Request('http://localhost/api/bff/uploads/images', {
+      method: 'POST',
+      headers: { 'sec-fetch-site': 'same-origin' },
+      body: form,
+    }),
+    ['uploads', 'images']
+  );
+
+  expect(response.status).toBe(200);
+  const [, init] = fetchMock.mock.calls[0] as [string, RequestInit & { headers: Record<string, string> }];
+  expect(init.body).toBeInstanceOf(FormData);
+  expect(init.headers['content-type']).toBeUndefined();
+});
+
 test('throws the portal AppError preserving the core-api error code', async () => {
   fetchMock.mockResolvedValue(jsonResponse(403, { error: { code: 'FORBIDDEN', message: '无权访问', details: null } }));
 

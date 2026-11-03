@@ -1,3 +1,4 @@
+import { serveStatic } from '@hono/node-server/serve-static';
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
 import type { Hook } from '@hono/zod-openapi';
 
@@ -8,6 +9,8 @@ import type { AppEnv } from './http';
 import { registerBrandRoutes } from './routes/brands';
 import { registerCategoryRoutes } from './routes/categories';
 import { registerMerchantRoutes } from './routes/merchants';
+import { registerUploadRoutes } from './routes/uploads';
+import { resolveUploadConfig } from './services/uploads';
 
 const defaultHook: Hook<unknown, AppEnv, string, Response | undefined> = (result, c) => {
   if (!result.success) {
@@ -38,6 +41,7 @@ const meRoute = createRoute({
 
 export function createApp(): OpenAPIHono<AppEnv> {
   const app = new OpenAPIHono<AppEnv>({ defaultHook });
+  const uploadConfig = resolveUploadConfig();
 
   app.openAPIRegistry.registerComponent('securitySchemes', 'bearerAuth', {
     type: 'http',
@@ -58,6 +62,15 @@ export function createApp(): OpenAPIHono<AppEnv> {
     }
   });
 
+  // Public static serving for uploaded images, outside the /api/v1 auth scope.
+  app.use(
+    '/uploads/*',
+    serveStatic({
+      root: uploadConfig.dir,
+      rewriteRequestPath: path => path.replace(/^\/uploads/, ''),
+    })
+  );
+
   // Registered before any /api/v1 route so every route mounted later still
   // runs through service-token verification.
   app.use('/api/v1/*', requireServiceToken);
@@ -67,6 +80,7 @@ export function createApp(): OpenAPIHono<AppEnv> {
   registerCategoryRoutes(app);
   registerBrandRoutes(app);
   registerMerchantRoutes(app);
+  registerUploadRoutes(app, uploadConfig);
 
   app.onError((error, c) => {
     if (error instanceof HttpError) {
