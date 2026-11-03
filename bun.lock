@@ -78,6 +78,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@node-rs/argon2": "^2.2.2",
+        "jose": "^4.14.4",
       },
       "devDependencies": {
         "@mtm/config": "workspace:*",

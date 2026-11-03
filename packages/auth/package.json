@@ -5,7 +5,9 @@
   "type": "module",
   "exports": {
     "./password": "./src/password.ts",
-    "./rate-limit": "./src/rate-limit.ts"
+    "./rate-limit": "./src/rate-limit.ts",
+    "./service-token": "./src/service-token.ts",
+    "./menu-filter": "./src/menu-filter.ts"
   },
   "scripts": {
     "format": "oxfmt --check --config ../../packages/config/oxfmt.jsonc",
@@ -15,7 +17,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@node-rs/argon2": "^2.2.2"
+    "@node-rs/argon2": "^2.2.2",
+    "jose": "^4.14.4"
   },
   "devDependencies": {
     "@mtm/config": "workspace:*",
