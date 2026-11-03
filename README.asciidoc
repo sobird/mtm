@@ -83,4 +83,10 @@ curl -s http://127.0.0.1:3000/api/health
 
 `.github/workflows/deploy.yml` 在 `master` 分支推送时执行 lint、typecheck、test、build，然后构建镜像并推送 GHCR（`latest` 与 commit SHA 标签），最后通过 SSH 在服务器执行 `docker compose pull && docker compose up -d`。
 
+nginx 配置也由仓库托管：`deploy/nginx/mtm.conf` 会随部署上传到 `TARGET`，仅当内容变化时才 `install` 到 `/etc/nginx/conf.d/mtm.conf` 并 `nginx -t && systemctl reload nginx`；`nginx -t` 失败会回滚文件并让部署失败。这要求部署用户在 `/etc/sudoers.d/mtm-deploy` 中获得以下免密权限（路径以服务器上 `command -v` 的结果为准）：
+
+----
+deploy ALL=(root) NOPASSWD: /usr/bin/install -m 644 * /etc/nginx/conf.d/mtm.conf, /usr/sbin/nginx -t, /usr/bin/systemctl reload nginx
+----
+
 需要的仓库 Secrets：`HOST`、`USERNAME`、`KEY`、`PORT`、`TARGET`（服务器上 Compose 文件所在目录）。若 GHCR 镜像为私有，另需 `GHCR_USERNAME`、`GHCR_TOKEN`。

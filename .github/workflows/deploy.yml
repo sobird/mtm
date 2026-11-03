@@ -49,6 +49,17 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Upload nginx config
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          source: deploy/nginx/mtm.conf
+          target: ${{ secrets.TARGET }}
+          overwrite: true
+
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1
         with:
@@ -63,3 +74,20 @@ jobs:
             cd "${{ secrets.TARGET }}"
             docker compose pull
             docker compose up -d
+
+            # Sync nginx config only when it changed. `reload` is graceful and
+            # keeps existing connections; a failed `nginx -t` rolls the file back
+            # so a bad config never reaches the next nginx start.
+            if ! cmp -s deploy/nginx/mtm.conf /etc/nginx/conf.d/mtm.conf; then
+              cp /etc/nginx/conf.d/mtm.conf deploy/nginx/mtm.conf.prev 2>/dev/null || true
+              sudo install -m 644 deploy/nginx/mtm.conf /etc/nginx/conf.d/mtm.conf
+              if sudo nginx -t; then
+                sudo systemctl reload nginx
+              else
+                if [ -f deploy/nginx/mtm.conf.prev ]; then
+                  sudo install -m 644 deploy/nginx/mtm.conf.prev /etc/nginx/conf.d/mtm.conf
+                fi
+                echo "nginx config test failed; rolled back" >&2
+                exit 1
+              fi
+            fi
