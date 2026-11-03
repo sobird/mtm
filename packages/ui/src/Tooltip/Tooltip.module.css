@@ -1,0 +1,14 @@
+.positioner {
+  z-index: var(--z-overlay);
+}
+
+.popup {
+  max-width: 280px;
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-bg);
+  font-size: 12px;
+  line-height: 1.5;
+  background: var(--color-text);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
