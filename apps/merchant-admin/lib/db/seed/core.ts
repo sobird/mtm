@@ -1,17 +1,4 @@
-import {
-  Account,
-  EntryTask,
-  EntryType,
-  MenuBadge,
-  MenuFavorite,
-  MenuItem,
-  Merchant,
-  MerchantCategory,
-  MerchantEntry,
-  MerchantLicense,
-  ReferenceData,
-  SeedMeta,
-} from '../models';
+import { prisma } from '../client';
 import accountGet from './data/main/account/get.json';
 import menuBadgesGet from './data/main/menu/badges/get.json';
 import menuGet from './data/main/menu/get.json';
@@ -29,6 +16,7 @@ import venusSignGet from './data/main/venus/sign/get.json';
 import venusUploadGet from './data/main/venus/upload/post.json';
 import {
   dataOf,
+  jsonOf,
   transformAccount,
   transformCategories,
   transformEntry,
@@ -37,13 +25,12 @@ import {
   transformLicenses,
   transformMenu,
   transformMenuBadges,
+  transformMenuFavorites,
   transformMerchantDetail,
   transformMerchantList,
 } from './transformers';
 
 export const CORE_SEED_VERSION = '2026-11-03-core';
-
-const FIXED_ACCOUNT_ID = 1;
 
 function record(value: unknown): Record<string, unknown> {
   return typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : {};
@@ -61,6 +48,7 @@ export async function seedCore(): Promise<void> {
   const list = transformMerchantList(merchantListGet);
   const account = transformAccount(accountGet);
   const { items, favorites } = transformMenu(menuGet);
+  const menuFavorites = transformMenuFavorites(favorites);
   const badges = transformMenuBadges(menuBadgesGet);
   const licenses = transformLicenses(licensesGet);
   const entry = transformEntry(entryGet);
@@ -72,36 +60,30 @@ export async function seedCore(): Promise<void> {
     row.templateUrl = templateUrl ?? row.templateUrl;
   }
 
-  await MerchantCategory.bulkCreate(categories, { ignoreDuplicates: true });
-  await Merchant.bulkCreate([detail, ...list], { ignoreDuplicates: true });
-  await Account.bulkCreate([account], { ignoreDuplicates: true });
-  await MenuItem.bulkCreate(items, { ignoreDuplicates: true });
-  await MenuBadge.bulkCreate(badges, { ignoreDuplicates: true });
-  await MenuFavorite.bulkCreate(
-    favorites.map((favorite, index) => ({
-      accountId: FIXED_ACCOUNT_ID,
-      menuId: favorite.id,
-      sortIndex: index,
-    })),
-    { ignoreDuplicates: true }
-  );
-  await MerchantLicense.bulkCreate(licenses, { ignoreDuplicates: true });
-  await MerchantEntry.bulkCreate([entry], { ignoreDuplicates: true });
-  await EntryTask.bulkCreate([entryTask], { ignoreDuplicates: true });
-  await EntryType.bulkCreate(entryTypes, { ignoreDuplicates: true });
-
-  await ReferenceData.bulkCreate(
-    [
-      { key: 'merchant-options', payload: dataOf(merchantOptionsGet) },
-      { key: 'venus-sign', payload: dataOf(venusSignGet) },
-      { key: 'venus-ocr', payload: dataOf(venusOcrGet) },
-      { key: 'venus-upload', payload: dataOf(venusUploadGet) },
-    ],
-    { ignoreDuplicates: true }
-  );
-
-  await SeedMeta.findOrCreate({
-    where: { version: CORE_SEED_VERSION },
-    defaults: { version: CORE_SEED_VERSION, appliedAt: new Date() },
-  });
+  await prisma.$transaction([
+    prisma.merchantCategory.createMany({ data: categories, skipDuplicates: true }),
+    prisma.merchant.createMany({ data: [detail, ...list], skipDuplicates: true }),
+    prisma.merchantAccount.createMany({ data: [account], skipDuplicates: true }),
+    prisma.menuItem.createMany({ data: items, skipDuplicates: true }),
+    prisma.menuBadge.createMany({ data: badges, skipDuplicates: true }),
+    prisma.menuFavorite.createMany({ data: menuFavorites, skipDuplicates: true }),
+    prisma.merchantLicense.createMany({ data: licenses, skipDuplicates: true }),
+    prisma.merchantEntry.createMany({ data: [entry], skipDuplicates: true }),
+    prisma.entryTask.createMany({ data: [entryTask], skipDuplicates: true }),
+    prisma.entryType.createMany({ data: entryTypes, skipDuplicates: true }),
+    prisma.referenceData.createMany({
+      data: [
+        { key: 'merchant-options', payload: jsonOf(dataOf(merchantOptionsGet)) },
+        { key: 'venus-sign', payload: jsonOf(dataOf(venusSignGet)) },
+        { key: 'venus-ocr', payload: jsonOf(dataOf(venusOcrGet)) },
+        { key: 'venus-upload', payload: jsonOf(dataOf(venusUploadGet)) },
+      ],
+      skipDuplicates: true,
+    }),
+    prisma.seedMeta.upsert({
+      where: { version: CORE_SEED_VERSION },
+      update: { appliedAt: new Date() },
+      create: { version: CORE_SEED_VERSION, appliedAt: new Date() },
+    }),
+  ]);
 }

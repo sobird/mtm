@@ -1,43 +1,34 @@
+import {
+  SEED_ACCOUNT_ID,
+  SEED_GOLD_PERIOD_ID,
+  SEED_MERCHANT_ID,
+  SEED_MERCHANT_TASK_ID,
+  SEED_PRODUCT_ID,
+  SEED_VIOLATION_ID,
+} from './ids';
 import type {
-  AccountCreationAttributes,
+  AccountRow,
   AnalysisKey,
-  AnalysisSnapshotCreationAttributes,
-  CampaignCreationAttributes,
-  CouponCreationAttributes,
-  EntryTaskCreationAttributes,
-  EntryTypeCreationAttributes,
-  GoldPeriodCreationAttributes,
-  GoldStandardCreationAttributes,
-  MenuBadgeCreationAttributes,
-  MenuItemCreationAttributes,
-  MerchantCategoryCreationAttributes,
-  MerchantCreationAttributes,
-  MerchantEntryCreationAttributes,
-  MerchantLicenseCreationAttributes,
-  MerchantTaskCreationAttributes,
-  MessageCreationAttributes,
-  ProductCreationAttributes,
-  ViolationCreationAttributes,
-} from '../models';
-
-export type MenuItemRow = MenuItemCreationAttributes;
-export type MenuBadgeRow = MenuBadgeCreationAttributes;
-export type MerchantCategoryRow = MerchantCategoryCreationAttributes;
-export type MerchantRow = MerchantCreationAttributes;
-export type AccountRow = AccountCreationAttributes;
-export type MerchantLicenseRow = MerchantLicenseCreationAttributes;
-export type MerchantEntryRow = MerchantEntryCreationAttributes;
-export type EntryTaskRow = EntryTaskCreationAttributes;
-export type EntryTypeRow = EntryTypeCreationAttributes;
-export type CouponRow = CouponCreationAttributes;
-export type CampaignRow = CampaignCreationAttributes;
-export type MessageRow = MessageCreationAttributes;
-export type ViolationRow = ViolationCreationAttributes;
-export type ProductRow = ProductCreationAttributes;
-export type GoldPeriodRow = GoldPeriodCreationAttributes;
-export type GoldStandardRow = GoldStandardCreationAttributes;
-export type MerchantTaskRow = MerchantTaskCreationAttributes;
-export type AnalysisSnapshotRow = AnalysisSnapshotCreationAttributes;
+  AnalysisSnapshotRow,
+  CampaignRow,
+  CouponRow,
+  EntryTaskRow,
+  EntryTypeRow,
+  GoldPeriodRow,
+  GoldStandardRow,
+  JsonValue,
+  MenuBadgeRow,
+  MenuFavoriteRow,
+  MenuItemRow,
+  MerchantCategoryRow,
+  MerchantEntryRow,
+  MerchantLicenseRow,
+  MerchantRow,
+  MerchantTaskRow,
+  MessageRow,
+  ProductRow,
+  ViolationRow,
+} from './types';
 
 type RawRecord = Record<string, unknown>;
 
@@ -94,6 +85,11 @@ function nullableStr(value: unknown): string | null {
   return String(value);
 }
 
+/** The mock JSON is trusted, so the payload can be handed to Prisma as JSON. */
+export function jsonOf(value: unknown): JsonValue {
+  return value as JsonValue;
+}
+
 function normalizeMenuItem(row: RawRecord): MenuItemRow {
   return {
     id: str(row.id),
@@ -128,10 +124,18 @@ export function transformMenuBadges(raw: unknown): MenuBadgeRow[] {
   }));
 }
 
+export function transformMenuFavorites(items: MenuItemRow[]): MenuFavoriteRow[] {
+  return items.map((favorite, index) => ({
+    accountId: SEED_ACCOUNT_ID,
+    menuId: favorite.id,
+    sortIndex: index,
+  }));
+}
+
 export function transformCategories(raw: unknown): MerchantCategoryRow[] {
   return list(dataOf(raw)).map(row => ({
-    id: num(row.id),
-    parentId: num(row.parentId),
+    id: String(row.id),
+    parentId: String(row.parentId),
     name: str(row.name),
     level: num(row.level),
   }));
@@ -139,11 +143,11 @@ export function transformCategories(raw: unknown): MerchantCategoryRow[] {
 
 export function transformMerchantList(raw: unknown): MerchantRow[] {
   return list(dataOf(raw)).map(row => ({
-    id: num(row.id),
+    id: String(row.id),
     name: str(row.name),
     status: num(row.state, num(row.status)),
     type: num(row.merchantType, num(row.type)),
-    payload: row,
+    payload: jsonOf(row),
   }));
 }
 
@@ -152,11 +156,11 @@ export function transformMerchantDetail(raw: unknown): MerchantRow {
   const shopInfo = record(data.shopInfo);
 
   return {
-    id: 1,
+    id: SEED_MERCHANT_ID,
     name: str(shopInfo.name, str(data.name)),
     status: num(data.state, num(data.status)),
     type: num(data.merchantType, num(data.type)),
-    payload: data,
+    payload: jsonOf(data),
   };
 }
 
@@ -168,18 +172,20 @@ export function transformAccount(raw: unknown): AccountRow {
   const data = record(dataOf(raw));
 
   return {
-    id: 1,
-    login: str(data.login, 'mt087320v'),
-    mobile: '13412345678',
+    id: SEED_ACCOUNT_ID,
+    merchantId: SEED_MERCHANT_ID,
+    username: str(data.login, 'mt087320v'),
+    name: '演示商家管理员',
+    phone: '13412345678',
     interCode: '86',
-    merchantId: 1,
+    isOwner: true,
   };
 }
 
 export function transformLicenses(raw: unknown): MerchantLicenseRow[] {
   return list(dataOf(raw)).map(row => ({
-    id: num(row.id),
-    merchantId: 1,
+    id: String(row.id),
+    merchantId: SEED_MERCHANT_ID,
     type: num(row.type),
     name: str(row.licenseTypeStr, str(row.name)),
     url: str(row.src, str(row.license, str(row.url))),
@@ -194,10 +200,10 @@ export function transformEntry(raw: unknown): MerchantEntryRow {
   const audit = record(data.audit);
 
   return {
-    merchantId: 1,
+    merchantId: SEED_MERCHANT_ID,
     step: num(data.step, num(base.state)),
     status: num(audit.auditState, num(data.status)),
-    payload: data,
+    payload: jsonOf(data),
   };
 }
 
@@ -206,8 +212,8 @@ export function transformEntryTask(raw: unknown): EntryTaskRow {
   const audit = record(data.audit);
 
   return {
-    id: num(data.entryTaskId, num(data.id)),
-    merchantId: 1,
+    id: String(data.entryTaskId ?? data.id ?? ''),
+    merchantId: SEED_MERCHANT_ID,
     bizType: num(data.bizType),
     localCommerce: num(data.localCommerce),
     status: num(data.status, num(audit.auditState)),
@@ -219,7 +225,7 @@ export function transformEntryTypes(raw: unknown): EntryTypeRow[] {
     code: str(row.poiType, str(row.code)),
     name: str(row.poiTypeName, str(row.name)),
     templateUrl: str(row.templateUrl, str(row.template_url)) || null,
-    payload: row,
+    payload: jsonOf(row),
   }));
 }
 
@@ -261,12 +267,12 @@ export function transformCouponList(raw: unknown): CouponRow[] {
       useCrowd: -1,
       position: 0,
       ticketType: 0,
-      rule: [price, discount],
-      putTerm: [stime, etime],
-      useTerm: row.useTerm ?? [],
-      spuList: [],
-      spuIds: [],
-      wmPoiIds: [],
+      rule: jsonOf([price, discount]),
+      putTerm: jsonOf([stime, etime]),
+      useTerm: jsonOf(row.useTerm ?? []),
+      spuList: jsonOf([]),
+      spuIds: jsonOf([]),
+      wmPoiIds: jsonOf([]),
     };
   });
 }
@@ -306,12 +312,12 @@ export function transformCouponDetail(raw: unknown): CouponRow {
     useCrowd: num(data.useCrowd),
     position: num(data.position),
     ticketType: num(data.ticketType),
-    rule,
-    putTerm,
-    useTerm: data.useTerm ?? [],
-    spuList: data.spuList ?? [],
-    spuIds: data.spuIds ?? [],
-    wmPoiIds: data.wmPoiIds ?? [],
+    rule: jsonOf(rule),
+    putTerm: jsonOf(putTerm),
+    useTerm: jsonOf(data.useTerm ?? []),
+    spuList: jsonOf(data.spuList ?? []),
+    spuIds: jsonOf(data.spuIds ?? []),
+    wmPoiIds: jsonOf(data.wmPoiIds ?? []),
   };
 }
 
@@ -335,7 +341,7 @@ export function transformCampaigns(raw: unknown): CampaignRow[] {
     maxStock: nullableStr(row.maxStock),
     cover: nullableStr(row.cover),
     canClickApply: typeof row.canClickApply === 'boolean' ? row.canClickApply : null,
-    payload: row,
+    payload: jsonOf(row),
   }));
 }
 
@@ -352,7 +358,7 @@ export function transformLatestNews(raw: unknown): MessageRow[] {
     noticeStyle: null,
     notifyEnable: null,
     actionList: null,
-    payload: row,
+    payload: jsonOf(row),
   }));
 }
 
@@ -368,8 +374,8 @@ export function transformMessageDetail(raw: unknown): MessageRow[] {
     duration: nullableNum(row.duration),
     noticeStyle: nullableNum(row.noticeStyle),
     notifyEnable: typeof row.notifyEnable === 'boolean' ? row.notifyEnable : null,
-    actionList: row.actionList ?? [],
-    payload: row,
+    actionList: jsonOf(row.actionList ?? []),
+    payload: jsonOf(row),
   }));
 }
 
@@ -377,11 +383,11 @@ export function transformViolationOverview(raw: unknown): ViolationRow {
   const data = record(dataOf(raw));
 
   return {
-    id: 1,
+    id: SEED_VIOLATION_ID,
     issueCount: num(data.issueCount),
     appealCount: num(data.appealCount),
     ticketAmount: num(data.ticketAmount),
-    payload: data,
+    payload: jsonOf(data),
   };
 }
 
@@ -389,31 +395,31 @@ export function transformProductSelling(raw: unknown): ProductRow {
   const data = record(dataOf(raw));
 
   return {
-    id: 1,
-    poiId: 0,
-    payload: data,
+    id: SEED_PRODUCT_ID,
+    poiId: '0',
+    payload: jsonOf(data),
   };
 }
 
 export function transformGold(raw: unknown): { period: GoldPeriodRow; standards: GoldStandardRow[] } {
   const data = record(dataOf(raw));
   const period: GoldPeriodRow = {
-    id: 1,
+    id: SEED_GOLD_PERIOD_ID,
     lastPeriodStatus: num(data.lastPeriodStatus),
     currentPeriodSTime: str(data.currentPeriodSTime),
     currentPeriodETime: str(data.currentPeriodETime),
-    payload: data,
+    payload: jsonOf(data),
   };
 
   const standards = list(data.standards).map(row => ({
     key: str(row.key),
-    periodId: 1,
+    periodId: SEED_GOLD_PERIOD_ID,
     name: str(row.name),
     desc: str(row.desc),
     progress: str(row.progress),
     url: str(row.url),
     qualified: num(row.qualified),
-    payload: row,
+    payload: jsonOf(row),
   }));
 
   return { period, standards };
@@ -423,11 +429,11 @@ export function transformMerchantTasks(raw: unknown): MerchantTaskRow {
   const data = record(dataOf(raw));
 
   return {
-    id: 1,
-    poiId: 0,
+    id: SEED_MERCHANT_TASK_ID,
+    poiId: '0',
     curTaskCount: num(data.curTaskCount),
     curAwardCount: num(data.curAwardCount),
-    payload: data,
+    payload: jsonOf(data),
   };
 }
 
@@ -435,6 +441,6 @@ export function transformAnalysisSnapshot(raw: unknown, key: AnalysisKey, period
   return {
     key,
     period,
-    payload: dataOf(raw),
+    payload: jsonOf(dataOf(raw)),
   };
 }

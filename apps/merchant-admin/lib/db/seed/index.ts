@@ -1,4 +1,4 @@
-import { SeedMeta } from '../models';
+import { prisma } from '../client';
 import { CORE_SEED_VERSION, seedCore } from './core';
 import { MARKETING_SEED_VERSION, seedMarketing } from './marketing';
 
@@ -10,13 +10,13 @@ export { CORE_SEED_VERSION, MARKETING_SEED_VERSION, seedCore, seedMarketing };
  * receives later seeds (for example the marketing seed added in Task 6).
  */
 export async function seedDatabase(): Promise<void> {
-  const coreApplied = await SeedMeta.findOne({ where: { version: CORE_SEED_VERSION } });
+  const coreApplied = await prisma.seedMeta.findUnique({ where: { version: CORE_SEED_VERSION } });
 
   if (!coreApplied) {
     await seedCore();
   }
 
-  const marketingApplied = await SeedMeta.findOne({ where: { version: MARKETING_SEED_VERSION } });
+  const marketingApplied = await prisma.seedMeta.findUnique({ where: { version: MARKETING_SEED_VERSION } });
 
   if (!marketingApplied) {
     await seedMarketing();

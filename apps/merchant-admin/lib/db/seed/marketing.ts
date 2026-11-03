@@ -1,15 +1,4 @@
-import {
-  AnalysisSnapshot,
-  Campaign,
-  Coupon,
-  GoldPeriod,
-  GoldStandard,
-  MerchantTask,
-  Message,
-  Product,
-  SeedMeta,
-  Violation,
-} from '../models';
+import { prisma } from '../client';
 import operationGet from './data/market/analysis/operation/get.json';
 import trendingGet from './data/market/analysis/trending/get.json';
 import workbenchGet from './data/market/analysis/workbench/get.json';
@@ -54,18 +43,20 @@ export async function seedMarketing(): Promise<void> {
     transformAnalysisSnapshot(operationGet, 'operation', ANALYSIS_PERIOD),
   ];
 
-  await Coupon.bulkCreate(coupons, { ignoreDuplicates: true });
-  await Campaign.bulkCreate(campaigns, { ignoreDuplicates: true });
-  await Message.bulkCreate(messages, { ignoreDuplicates: true });
-  await Violation.bulkCreate([violation], { ignoreDuplicates: true });
-  await Product.bulkCreate([product], { ignoreDuplicates: true });
-  await GoldPeriod.bulkCreate([period], { ignoreDuplicates: true });
-  await GoldStandard.bulkCreate(standards, { ignoreDuplicates: true });
-  await MerchantTask.bulkCreate([merchantTask], { ignoreDuplicates: true });
-  await AnalysisSnapshot.bulkCreate(snapshots, { ignoreDuplicates: true });
-
-  await SeedMeta.findOrCreate({
-    where: { version: MARKETING_SEED_VERSION },
-    defaults: { version: MARKETING_SEED_VERSION, appliedAt: new Date() },
-  });
+  await prisma.$transaction([
+    prisma.coupon.createMany({ data: coupons, skipDuplicates: true }),
+    prisma.campaign.createMany({ data: campaigns, skipDuplicates: true }),
+    prisma.message.createMany({ data: messages, skipDuplicates: true }),
+    prisma.violation.createMany({ data: [violation], skipDuplicates: true }),
+    prisma.product.createMany({ data: [product], skipDuplicates: true }),
+    prisma.goldPeriod.createMany({ data: [period], skipDuplicates: true }),
+    prisma.goldStandard.createMany({ data: standards, skipDuplicates: true }),
+    prisma.merchantTask.createMany({ data: [merchantTask], skipDuplicates: true }),
+    prisma.analysisSnapshot.createMany({ data: snapshots, skipDuplicates: true }),
+    prisma.seedMeta.upsert({
+      where: { version: MARKETING_SEED_VERSION },
+      update: { appliedAt: new Date() },
+      create: { version: MARKETING_SEED_VERSION, appliedAt: new Date() },
+    }),
+  ]);
 }
