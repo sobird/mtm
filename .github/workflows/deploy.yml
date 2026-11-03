@@ -49,16 +49,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Upload nginx config
-        uses: appleboy/scp-action@v1
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
-          source: deploy/nginx/mtm.conf
-          target: ${{ secrets.TARGET }}
-          overwrite: true
+      - name: Encode nginx config
+        run: echo "NGINX_CONF_B64=$(base64 -w 0 deploy/nginx/mtm.conf)" >> "$GITHUB_ENV"
 
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1
@@ -67,6 +59,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
+          envs: NGINX_CONF_B64
           script: |
             if [ -n "${{ secrets.GHCR_TOKEN }}" ]; then
               echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
@@ -74,6 +67,9 @@ jobs:
             cd "${{ secrets.TARGET }}"
             docker compose pull
             docker compose up -d
+
+            mkdir -p deploy/nginx
+            printf '%s' "$NGINX_CONF_B64" | base64 -d > deploy/nginx/mtm.conf
 
             # Sync nginx config only when it changed. `reload` is graceful and
             # keeps existing connections; a failed `nginx -t` rolls the file back
