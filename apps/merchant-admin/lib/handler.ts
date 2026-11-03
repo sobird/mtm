@@ -33,6 +33,32 @@ async function resolveParams(context?: RouteContext): Promise<Record<string, str
   return context.params;
 }
 
+const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
+
+/**
+ * Rejects cross-site state-changing requests.
+ *
+ * `sec-fetch-site` and `origin` are browser-controlled; absent headers are
+ * allowed so non-browser and test callers cannot ride a browser cookie.
+ */
+export function assertSameOrigin(request: Request): void {
+  if (SAFE_METHODS.has(request.method.toUpperCase())) {
+    return;
+  }
+
+  const fetchSite = request.headers.get('sec-fetch-site');
+
+  if (fetchSite !== null && fetchSite !== 'same-origin' && fetchSite !== 'none') {
+    throw new AppError('CSRF_FORBIDDEN', 403, '跨站请求被拒绝');
+  }
+
+  const origin = request.headers.get('origin');
+
+  if (origin !== null && origin !== new URL(request.url).origin) {
+    throw new AppError('CSRF_FORBIDDEN', 403, '跨站请求被拒绝');
+  }
+}
+
 /** Authenticated route wrapper: resolves the session, then normalizes the result envelope. */
 export function withAuth<T>(handler: (ctx: HandlerContext) => Promise<T>) {
   return async (request: Request, context?: RouteContext): Promise<NextResponse> => {
@@ -72,6 +98,7 @@ export function withPublic<T>(handler: (ctx: HandlerContext) => Promise<T>) {
 export function withPermission<T>(permission: string, handler: (ctx: PermissionHandlerContext) => Promise<T>) {
   return async (request: Request, context?: RouteContext): Promise<NextResponse> => {
     try {
+      assertSameOrigin(request);
       await initDatabase();
       const { accountId, merchantId } = await requireAccount();
       const permissions = await getAccountPermissions(accountId);

@@ -4,6 +4,7 @@ import { fail, ok } from './api-response';
 import { auth } from './auth';
 import { requireOpsAccount } from './auth-guard';
 import { AppError } from './errors';
+import { assertSameOrigin } from './handler';
 import { getAccountPermissions } from './services/permission';
 
 const DEFAULT_CORE_API_URL = 'http://localhost:4000';
@@ -108,6 +109,7 @@ export async function callCoreApi<T>(path: string, init: CoreApiInit = {}): Prom
 /** Same-origin proxy: authenticates the browser session then forwards to core-api. */
 export async function proxyToCoreApi(request: Request, segments: string[]): Promise<Response> {
   try {
+    assertSameOrigin(request);
     await requireOpsAccount();
 
     const joined = segments.join('/');

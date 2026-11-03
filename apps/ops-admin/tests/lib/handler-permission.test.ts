@@ -65,6 +65,58 @@ test('runs the handler with resolved params when permitted', async () => {
   expect(getAccountPermissionsMock).toHaveBeenCalledWith('ops-account-1');
 });
 
+test('rejects cross-site state-changing requests before authentication', async () => {
+  getAccountPermissionsMock.mockResolvedValue(snapshot(new Set(['account:manage'])));
+  const handler = vi.fn(async () => ({ ok: true }));
+  const route = withPermission('account:manage', handler);
+
+  const response = await route(
+    new Request('http://localhost/api/accounts', {
+      method: 'POST',
+      headers: { 'sec-fetch-site': 'cross-site' },
+      body: '{}',
+    })
+  );
+
+  expect(response.status).toBe(403);
+  expect(await response.json()).toEqual({ code: 'CSRF_FORBIDDEN', message: '跨站请求被拒绝', data: null });
+  expect(handler).not.toHaveBeenCalled();
+  expect(requireOpsAccountMock).not.toHaveBeenCalled();
+});
+
+test('rejects a mismatched origin on state-changing requests', async () => {
+  getAccountPermissionsMock.mockResolvedValue(snapshot(new Set(['account:manage'])));
+  const route = withPermission('account:manage', async () => ({ ok: true }));
+
+  const response = await route(
+    new Request('http://localhost/api/accounts', {
+      method: 'POST',
+      headers: { origin: 'https://evil.example' },
+      body: '{}',
+    })
+  );
+
+  expect(response.status).toBe(403);
+  expect(await response.json()).toMatchObject({ code: 'CSRF_FORBIDDEN' });
+});
+
+test('allows same-origin and headerless state-changing requests', async () => {
+  getAccountPermissionsMock.mockResolvedValue(snapshot(new Set(['account:manage'])));
+  const route = withPermission('account:manage', async () => ({ ok: true }));
+
+  const sameOrigin = await route(
+    new Request('http://localhost/api/accounts', {
+      method: 'POST',
+      headers: { 'sec-fetch-site': 'same-origin', origin: 'http://localhost' },
+      body: '{}',
+    })
+  );
+  expect(sameOrigin.status).toBe(200);
+
+  const headerless = await route(new Request('http://localhost/api/accounts', { method: 'POST', body: '{}' }));
+  expect(headerless.status).toBe(200);
+});
+
 test('propagates a 401 from the auth guard', async () => {
   const { AppError } = await import('@/lib/errors');
   requireOpsAccountMock.mockRejectedValue(new AppError('UNAUTHORIZED', 401, '未登录'));

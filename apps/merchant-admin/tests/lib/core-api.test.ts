@@ -126,6 +126,41 @@ test('proxyToCoreApi forwards allowed paths and keeps the portal envelope', asyn
   expect(fetchMock.mock.calls[0][0]).toBe('http://core.test/api/v1/me?x=1');
 });
 
+test('proxyToCoreApi rejects cross-site state-changing requests', async () => {
+  const response = await proxyToCoreApi(
+    new Request('http://localhost/api/bff/products', {
+      method: 'POST',
+      headers: { 'sec-fetch-site': 'cross-site' },
+      body: JSON.stringify({ name: 'x' }),
+    }),
+    ['products']
+  );
+
+  expect(response.status).toBe(403);
+  expect(await response.json()).toEqual({ code: 'CSRF_FORBIDDEN', message: '跨站请求被拒绝', data: null });
+  expect(fetchMock).not.toHaveBeenCalled();
+});
+
+test('proxyToCoreApi allows same-origin and headerless state-changing requests', async () => {
+  fetchMock.mockResolvedValue(jsonResponse(200, { data: { ok: true } }));
+
+  const sameOrigin = await proxyToCoreApi(
+    new Request('http://localhost/api/bff/products', {
+      method: 'POST',
+      headers: { 'sec-fetch-site': 'same-origin', origin: 'http://localhost' },
+      body: JSON.stringify({ name: 'x' }),
+    }),
+    ['products']
+  );
+  expect(sameOrigin.status).toBe(200);
+
+  const headerless = await proxyToCoreApi(
+    new Request('http://localhost/api/bff/products', { method: 'POST', body: JSON.stringify({ name: 'x' }) }),
+    ['products']
+  );
+  expect(headerless.status).toBe(200);
+});
+
 test('rejects the placeholder secret in production', async () => {
   vi.stubEnv('NODE_ENV', 'production');
   process.env.CORE_API_JWT_SECRET = 'change-me-core';
