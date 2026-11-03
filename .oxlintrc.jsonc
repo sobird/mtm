@@ -52,5 +52,5 @@
     "browser": true,
     "node": true,
   },
-  "ignorePatterns": [],
+  "ignorePatterns": [".next", "src", "packages", "dist"],
 }

@@ -8,9 +8,13 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+.next/
+next-env.d.ts
+*.tsbuildinfo
 dist
 dist-ssr
 *.local
+data/*.sqlite*
 yarn.lock
 package-lock.json
 stats.json
