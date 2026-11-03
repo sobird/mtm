@@ -1,0 +1,17 @@
+{
+  "code": 0,
+  "msg": "SUCCESS",
+  "data": {
+    "scoreSet": {
+      "serviceScoreJudge": 4,
+      "overallScoreJudge": 4,
+      "serviceScore": 3,
+      "overallScore": 3
+    },
+    "rateSet": {
+      "customerReplyRate": 0.3,
+      "collectOnTimeRate": 0.6,
+      "newlyReviewCount": 100
+    }
+  }
+}

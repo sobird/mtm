@@ -1,0 +1,40 @@
+.metrics {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.tile {
+  flex: 1;
+  min-width: 0;
+  padding-top: var(--space-3);
+}
+
+.tileTitle {
+  margin-bottom: var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.tileValue {
+  display: flex;
+  gap: var(--space-1);
+  align-items: baseline;
+}
+
+.value {
+  color: var(--color-text);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.unit {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.extraLink {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  cursor: default;
+}

@@ -8,16 +8,24 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+.next/
+next-env.d.ts
+*.tsbuildinfo
 dist
 dist-ssr
 *.local
-*.lock
+data/*.sqlite*
+yarn.lock
+package-lock.json
 stats.json
 .shared
+.playwright-mcp
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
 .idea
 .DS_Store
 *.suo

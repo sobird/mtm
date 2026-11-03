@@ -1,0 +1,42 @@
+.link {
+  padding: 0;
+  color: var(--color-info);
+  font-size: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.dialog {
+  width: min(640px, calc(100vw - 32px));
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--color-text);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.content p {
+  margin: 0;
+}
+
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.images img {
+  width: 250px;
+  max-width: 100%;
+  border-radius: var(--radius-md);
+}
+
+.required {
+  color: var(--color-danger);
+}

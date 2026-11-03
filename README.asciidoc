@@ -1,63 +1,86 @@
 # 商家电商管理后台系统
 :toc:
 
-> 运营模块集合到主工程中来
+基于 Next.js App Router 的商家管理后台，包含首页仪表盘、营销中心、店铺资料、入驻流程与认证。
 
-## @mtm/shared
+## 技术栈
 
-```
-cd packages/shared
-yarn link
+* Next.js 15（App Router、Route Handlers、Server Components）
+* React 19 + TypeScript
+* Sequelize + SQLite（`sqlite3`）
+* NextAuth（Auth.js v5，Credentials 登录）
+* TanStack Query、Zustand
+* React Hook Form + Zod、Base UI（Dialog/Toast/Select 等）
+* Ant Design（仅限 `components/ui` 封装层内部实现，业务页面只从 `@/components/ui` 导入）、Recharts
+* Vitest + Testing Library、oxlint / oxfmt
 
-cd -
-yarn link @mtm/shared
-```
+## 环境要求
 
-## 全局文本复制
-> 已配置全局文本复制功能
+* Bun 1.4.4（由 `packageManager` 字段固定；可用 `.bun-version` 配合版本管理器）
+* Node.js 20+
 
-使用方法如下：
+## 环境变量
 
-```jsx
-// 查找id为foo的元素内容进行复制
-<span id="foo">foo</span>
-<button class="clipboard" data-clipboard-target="#foo">
-  复制
-</button>
+[source,bash]
+----
+DATABASE_PATH=./data/mtm.sqlite   # 可选，默认 ./data/mtm.sqlite
+AUTH_SECRET=change-me             # 必填，用于会话与验证码签名
+PORT=3000                         # 可选，默认 3000
+----
 
-// 或者
+参考 `.env.example`。生产环境必须提供随机的 `AUTH_SECRET`。
 
-// 直接复制data-clipboard-text设置的文本内容
-<button class="clipboard" data-clipboard-text="foo">
-  复制
-</button>
-```
+## 常用命令
 
-## FAQ
+[source,bash]
+----
+bun install        # 安装依赖
+bun run dev        # 开发服务器
+bun run build      # 生产构建（standalone 输出）
+bun run start      # 启动生产服务（本地调试，生产部署请使用 Docker）
+bun run test       # 运行测试（Vitest）
+bun run test:watch # 监听模式测试
+bun run lint       # oxlint
+bun run lint:fix   # oxlint 自动修复
+bun run typecheck  # tsc --noEmit
+bun run fmt        # oxfmt 格式化
+bun run fmt:check  # 格式检查
+----
 
-### [qiankun] lifecycle not found from xxx entry exports, fallback to get from window['xxx']
+## 目录结构
 
-qiankun是通过html中的最后一个script文件，获取qiankun的生命周期，所以如果最后一个不是入口js文件就拿不到生命周期。
+[source,text]
+----
+app/            # App Router 路由（(admin)、(auth)、(entry)、api）
+components/     # 业务与 UI 组件（ui/ 为基础组件库）
+lib/            # 数据库、服务层、认证、校验与通用工具
+stores/         # Zustand 状态
+styles/         # 全局样式与设计令牌
+tests/          # Vitest 测试与测试初始化
+data/           # SQLite 数据库文件（运行时生成）
+lib/db/seed/data/ # 种子数据（JSON）
+----
 
-可在webpack.config.js文件中修改下面配置修复此问题
-```js
-const config = {
-  ...
-  plugins: [
-    new HtmlPlugin({
-      ...
-      chunks: [ 'app' ]
-    }),
-  ]
-  ...
-}
-```
+## 数据库与种子数据
 
-## 数据规则
+应用启动时通过 `lib/db/seed` 初始化数据库结构并写入 `lib/db/seed/data` 中的种子数据，重复启动不会重复写入。
 
-金钱 单位 元 or 分?
+## Docker 部署
 
-使用 actions/cache@v3 缓存 **/node_modules 目录文件，缩减编译部署时安装依赖所耗费的时间。
+镜像为多阶段构建（Bun 安装/构建 + Node 22 slim 运行），以非 root 用户运行，SQLite 数据存放在 `/data`。Compose 使用命名卷 `mtm-data`，并读取 `.env.production`：
 
+[source,bash]
+----
+docker build -t ghcr.io/sobird/mtm:latest .
+docker compose up -d
+curl -s http://127.0.0.1:3000/api/health
+# {"code":0,"message":"ok","data":{"db":true}}
+----
 
-* 保证金 - cash deposit
+单副本运行；SQLite 卷只能挂载给一个写实例。容器只绑定 `127.0.0.1:3000`，由宿主机 nginx 反向代理对外提供服务。服务器上的 `.env.production` 必须设置真实的随机 `AUTH_SECRET`（仓库中的同名文件只是模板）。
+
+## CI/CD
+
+`.github/workflows/deploy.yml` 在 `master` 分支推送时执行 lint、typecheck、test、build，然后构建镜像并推送 GHCR（`latest` 与 commit SHA 标签），最后通过 SSH 在服务器执行 `docker compose pull && docker compose up -d`。
+
+需要的仓库 Secrets：`HOST`、`USERNAME`、`KEY`、`PORT`、`TARGET`（服务器上 Compose 文件所在目录）。若 GHCR 镜像为私有，另需 `GHCR_USERNAME`、`GHCR_TOKEN`。

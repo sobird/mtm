@@ -1,0 +1,95 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: rgb(0 0 0 / 2%);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 var(--space-4);
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.headerLeft,
+.headerRight {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.headerButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.headerButton:hover {
+  color: var(--color-text);
+  background: rgb(0 0 0 / 4%);
+}
+
+.accountButton {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text);
+  font-size: 13px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.accountButton:hover {
+  background: rgb(0 0 0 / 4%);
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-secondary);
+  background: rgb(0 0 0 / 6%);
+  border-radius: 50%;
+}
+
+.mobile {
+  font-variant-numeric: tabular-nums;
+}
+
+.logoutLabel {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+}

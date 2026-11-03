@@ -1,0 +1,40 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.displayList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 720px;
+  margin-bottom: var(--space-5);
+}
+
+.copyRow {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.placeholder {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.form {
+  max-width: 720px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 142px;
+}
+
+@media (max-width: 768px) {
+  .actions {
+    margin-left: 0;
+  }
+}

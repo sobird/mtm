@@ -1,0 +1,31 @@
+.idCard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.sketch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.sketchImage {
+  width: 88px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.sketchTip {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.error {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 12px;
+  line-height: 1.5;
+}

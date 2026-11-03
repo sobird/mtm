@@ -1,0 +1,28 @@
+.dialog.dialog {
+  width: min(1000px, calc(100vw - 32px));
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: 8px 12px;
+  color: #333;
+  line-height: 1.5;
+  text-align: left;
+  vertical-align: middle;
+  border: 1px solid #e6e6e6;
+}
+
+.table th {
+  font-weight: 600;
+  background-color: #fafafa;
+}
+
+.typeName {
+  white-space: nowrap;
+}

@@ -1,0 +1,42 @@
+{
+  "code": 0,
+  "msg": "success",
+  "data": [
+    {
+      "poiType": 21,
+      "poiTypeName": "专营店",
+      "poiTypeDesc": "适合拥有2个及更多自有品牌或授权品牌的企业申请",
+      "state": 1,
+      "setPoiType": true,
+      "setPoiTypeName": true,
+      "setState": true
+    },
+    {
+      "poiType": 22,
+      "poiTypeName": "专卖店",
+      "poiTypeDesc": "适合拥有1个授权品牌且授权链路小于2级的企业申请",
+      "state": 1,
+      "setPoiType": true,
+      "setPoiTypeName": true,
+      "setState": true
+    },
+    {
+      "poiType": 23,
+      "poiTypeName": "旗舰店",
+      "poiTypeDesc": "适合自有品牌的企业或拥有独占授权品牌的企业申请",
+      "state": 1,
+      "setPoiType": true,
+      "setPoiTypeName": true,
+      "setState": true
+    },
+    {
+      "poiType": 25,
+      "poiTypeName": "工厂店",
+      "poiTypeDesc": "适合生产线企业申请",
+      "state": 1,
+      "setPoiType": true,
+      "setPoiTypeName": true,
+      "setState": true
+    }
+  ]
+}

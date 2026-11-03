@@ -1,0 +1,118 @@
+.head {
+  display: flex;
+  align-items: center;
+  padding: 11px var(--space-4);
+  background: #fbfbfb;
+  border-radius: var(--radius-sm);
+}
+
+.logo {
+  width: 78px;
+  height: auto;
+}
+
+.headText {
+  margin-left: var(--space-3);
+}
+
+.headTitle {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding-top: 6px;
+}
+
+.title {
+  margin: 0;
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.status {
+  padding: 2px 4px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: normal;
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+  user-select: none;
+}
+
+.cycle {
+  font-size: 14px;
+  line-height: 36px;
+}
+
+.cycleRange {
+  color: #666;
+}
+
+.cycleStatus {
+  margin-left: var(--space-2);
+  color: #ff6a00;
+}
+
+.body {
+  margin-top: var(--space-3);
+}
+
+.bodyHead {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: var(--space-3);
+  font-size: 14px;
+}
+
+.bodyTitle {
+  color: #333;
+}
+
+.bodyDesc {
+  margin-left: var(--space-2);
+  color: #999;
+}
+
+.bodyMore {
+  margin-left: auto;
+  color: var(--color-text-secondary);
+  cursor: default;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  border: 1px solid var(--color-border);
+}
+
+.table th {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  background: #fafafa;
+}
+
+.progressLink {
+  color: var(--color-info);
+}
+
+.qualified {
+  color: #00b94b;
+}
+
+.unqualified {
+  color: #dbdbdb;
+}
+
+.extraLink {
+  color: var(--color-info);
+  font-size: 14px;
+}
