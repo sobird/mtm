@@ -25,11 +25,19 @@ export const loginSchema = z
     }
   });
 
+/** Username-or-phone + password login (merchant portal). */
+export const passwordLoginSchema = z.object({
+  identifier: z.string().trim().min(1, '请输入用户名或手机号'),
+  password: z.string().min(1, '密码不能为空'),
+});
+
 export const registerSchema = loginSchema.extend({
   policy: z.literal(true, { error: '请勾选隐私协议' }),
 });
 
 export type LoginValues = z.output<typeof loginSchema>;
+
+export type PasswordLoginValues = z.output<typeof passwordLoginSchema>;
 
 export type RegisterValues = z.output<typeof registerSchema>;
 

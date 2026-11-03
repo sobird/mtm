@@ -21,5 +21,6 @@ declare module 'next-auth/jwt' {
     mobile?: string;
     interCode?: string;
     login?: string;
+    name?: string;
   }
 }

@@ -9,8 +9,8 @@ const SEED_SESSION = {
   merchantId: 1,
   mobile: '13412345678',
   interCode: '86',
-  login: 'mt087320v',
-  name: 'mt087320v',
+  login: 'merchant@example.com',
+  name: '演示商家管理员',
 };
 
 /**
@@ -25,7 +25,7 @@ export async function createSessionCookie(): Promise<string> {
   }
 
   const secure = process.env.NODE_ENV === 'production';
-  const cookieName = secure ? '__Secure-authjs.session-token' : 'authjs.session-token';
+  const cookieName = secure ? '__Secure-merchant.session' : 'merchant.session';
 
   const token = await encode({
     token: SEED_SESSION,

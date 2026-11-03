@@ -20,6 +20,17 @@ export const authConfig = {
   pages: {
     signIn: '/login',
   },
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === 'production' ? '__Secure-merchant.session' : 'merchant.session',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+  },
   providers: [],
   callbacks: {
     /**
@@ -49,6 +60,7 @@ export const authConfig = {
         token.mobile = user.mobile;
         token.interCode = user.interCode;
         token.login = user.login;
+        token.name = user.name;
         token.sub = String(user.accountId);
       }
 
@@ -68,6 +80,7 @@ export const authConfig = {
         session.user.mobile = token.mobile as string;
         session.user.interCode = token.interCode as string;
         session.user.login = token.login as string;
+        session.user.name = token.name as string;
       }
 
       return session;

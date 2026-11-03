@@ -61,3 +61,21 @@ test('signs in with credentials and replaces the route on success', async () => 
   );
   await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
 });
+
+test('signs in with the password provider from the account tab', async () => {
+  renderLoginForm();
+
+  await userEvent.click(screen.getByRole('tab', { name: '账号密码登录' }));
+  await userEvent.type(screen.getByPlaceholderText('请输入用户名或手机号'), 'merchant@example.com');
+  await userEvent.type(screen.getByPlaceholderText('请输入密码'), 'merchant123');
+  await userEvent.click(screen.getByRole('button', { name: '登录' }));
+
+  await waitFor(() =>
+    expect(signIn).toHaveBeenCalledWith('password', {
+      identifier: 'merchant@example.com',
+      password: 'merchant123',
+      redirect: false,
+    })
+  );
+  await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
+});
