@@ -13,6 +13,7 @@ type CategoryRow = {
   sort: number;
   status: 'ACTIVE' | 'DISABLED';
   attributes: Array<{
+    id: string;
     name: string;
     type: 'TEXT' | 'NUMBER' | 'SELECT';
     required: boolean;
@@ -41,6 +42,7 @@ function toCategoryNode(category: CategoryRow): CategoryNodeDTO {
     attributes: [...category.attributes]
       .sort((a, b) => a.sort - b.sort)
       .map(attribute => ({
+        id: attribute.id,
         name: attribute.name,
         type: attribute.type,
         required: attribute.required,
@@ -129,13 +131,36 @@ export async function updateCategory(id: string, input: CategoryUpdateInput): Pr
     });
 
     if (input.attributes !== undefined) {
-      await tx.categoryAttribute.deleteMany({ where: { categoryId: id } });
+      const existingAttributes = await tx.categoryAttribute.findMany({
+        where: { categoryId: id },
+        select: { id: true },
+      });
+      const ownedIds = new Set(existingAttributes.map(attribute => attribute.id));
+      const incomingIds = input.attributes.flatMap(attribute => (attribute.id ? [attribute.id] : []));
 
-      if (input.attributes.length > 0) {
-        await tx.categoryAttribute.createMany({
-          data: input.attributes.map(attribute => attributeCreateData(id, attribute)),
-        });
+      if (incomingIds.some(attributeId => !ownedIds.has(attributeId))) {
+        throw new HttpError('CATEGORY_ATTRIBUTE_INVALID', 400, '属性不属于该类目');
       }
+
+      await tx.categoryAttribute.deleteMany({
+        where: { categoryId: id, id: { notIn: incomingIds } },
+      });
+
+      await Promise.all(
+        input.attributes.map(attribute => {
+          const data = {
+            name: attribute.name,
+            type: attribute.type,
+            required: attribute.required,
+            options: attribute.options.length > 0 ? attribute.options : Prisma.JsonNull,
+            sort: attribute.sort,
+          };
+
+          return attribute.id
+            ? tx.categoryAttribute.update({ where: { id: attribute.id }, data })
+            : tx.categoryAttribute.create({ data: { categoryId: id, ...data } });
+        })
+      );
     }
 
     const category = await tx.category.findUniqueOrThrow({

@@ -11,6 +11,7 @@ export const attributeTypeSchema = z.enum(['TEXT', 'NUMBER', 'SELECT']);
  */
 export const categoryAttributeInputSchema = z
   .object({
+    id: idSchema.optional(),
     name: z.string().trim().min(1).max(50),
     type: attributeTypeSchema,
     required: z.boolean().default(false),
@@ -26,6 +27,18 @@ export const categoryAttributeInputSchema = z
       });
     }
   });
+
+/**
+ * 类目属性输出：带服务端 ID，更新时用它定位并保留属性身份。
+ */
+export const categoryAttributeSchema = z.object({
+  id: idSchema,
+  name: z.string().trim().min(1).max(50),
+  type: attributeTypeSchema,
+  required: z.boolean(),
+  options: z.array(z.string().trim().min(1).max(50)),
+  sort: z.number().int().min(0),
+});
 
 /**
  * 创建类目。`level` / `path` 由服务端根据父类目计算，不在输入中出现。
@@ -60,10 +73,11 @@ export const categoryNodeSchema = z.object({
   path: z.string().min(1).max(1000),
   sort: z.number().int().min(0),
   status: categoryStatusSchema,
-  attributes: z.array(categoryAttributeInputSchema),
+  attributes: z.array(categoryAttributeSchema),
 });
 
 export type CategoryAttributeInput = z.infer<typeof categoryAttributeInputSchema>;
+export type CategoryAttributeDTO = z.infer<typeof categoryAttributeSchema>;
 export type CategoryCreateInput = z.infer<typeof categoryCreateSchema>;
 export type CategoryUpdateInput = z.infer<typeof categoryUpdateSchema>;
 export type CategoryNodeDTO = z.infer<typeof categoryNodeSchema>;

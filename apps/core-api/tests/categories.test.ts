@@ -103,3 +103,56 @@ test('修改类目名称/状态/属性', async () => {
   expect(node.status).toBe('DISABLED');
   expect(node.attributes).toHaveLength(1);
 });
+
+test('更新类目属性保留已有属性 ID 并删除未提交属性', async () => {
+  const leaf = await prisma.category.findFirstOrThrow({
+    where: { level: 3, attributes: { some: {} } },
+    include: { attributes: { orderBy: { sort: 'asc' } } },
+  });
+  const kept = leaf.attributes[0];
+
+  const res = await request(
+    `/api/v1/categories/${leaf.id}`,
+    'PATCH',
+    {
+      attributes: [
+        {
+          id: kept.id,
+          name: kept.name,
+          type: kept.type,
+          required: kept.required,
+          options: Array.isArray(kept.options) ? kept.options : [],
+          sort: 0,
+        },
+        { name: '新属性', type: 'TEXT' },
+      ],
+    },
+    opsToken(['category:manage'])
+  );
+
+  expect(res.status).toBe(200);
+  const node = (await res.json()).data;
+  expect(node.attributes).toHaveLength(2);
+  expect(node.attributes.some((attribute: { id: string }) => attribute.id === kept.id)).toBe(true);
+  expect(await prisma.categoryAttribute.count({ where: { categoryId: leaf.id } })).toBe(2);
+});
+
+test('更新类目属性拒绝其他类目的属性 ID', async () => {
+  const [category, other] = await Promise.all([
+    prisma.category.findFirstOrThrow({ where: { level: 3 } }),
+    prisma.category.findFirstOrThrow({ where: { level: 2 }, orderBy: { id: 'asc' } }),
+  ]);
+  const foreign = await prisma.categoryAttribute.create({
+    data: { categoryId: other.id, name: '外部属性', type: 'TEXT', required: false, sort: 0 },
+  });
+
+  const res = await request(
+    `/api/v1/categories/${category.id}`,
+    'PATCH',
+    { attributes: [{ id: foreign.id, name: '外部属性', type: 'TEXT' }] },
+    opsToken(['category:manage'])
+  );
+
+  expect(res.status).toBe(400);
+  expect(await res.json()).toMatchObject({ error: { code: 'CATEGORY_ATTRIBUTE_INVALID' } });
+});

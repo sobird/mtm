@@ -38,6 +38,7 @@ type AttributeType = CategoryAttributeInput['type'];
 
 interface AttributeDraft {
   key: string;
+  id?: string;
   name: string;
   type: AttributeType;
   required: boolean;
@@ -76,6 +77,7 @@ function createEmptyAttribute(): AttributeDraft {
 function toDraft(attribute: CategoryAttributeInput): AttributeDraft {
   return {
     key: nextAttributeKey(),
+    id: attribute.id,
     name: attribute.name,
     type: attribute.type,
     required: attribute.required,
@@ -86,19 +88,27 @@ function toDraft(attribute: CategoryAttributeInput): AttributeDraft {
 function fromDrafts(drafts: AttributeDraft[]): CategoryAttributeInput[] {
   return drafts
     .filter(draft => draft.name.trim().length > 0)
-    .map((draft, index) => ({
-      name: draft.name.trim(),
-      type: draft.type,
-      required: draft.required,
-      options:
-        draft.type === 'SELECT'
-          ? draft.options
-              .split(',')
-              .map(option => option.trim())
-              .filter(Boolean)
-          : [],
-      sort: index,
-    }));
+    .map((draft, index) => {
+      const input: CategoryAttributeInput = {
+        name: draft.name.trim(),
+        type: draft.type,
+        required: draft.required,
+        options:
+          draft.type === 'SELECT'
+            ? draft.options
+                .split(',')
+                .map(option => option.trim())
+                .filter(Boolean)
+            : [],
+        sort: index,
+      };
+
+      if (draft.id) {
+        input.id = draft.id;
+      }
+
+      return input;
+    });
 }
 
 function AttributeEditor({

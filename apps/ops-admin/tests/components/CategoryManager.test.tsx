@@ -207,6 +207,42 @@ test('删除类目需要确认', async () => {
   await waitFor(() => expect(mocks.apiFetch).toHaveBeenCalledWith('/api/bff/categories/c1', { method: 'DELETE' }));
 });
 
+test('编辑类目时按属性 ID 回传', async () => {
+  mocks.apiFetch.mockImplementation((path: string, init?: { method?: string }) => {
+    if (path === '/api/bff/categories/tree' && (init?.method ?? 'GET') === 'GET') {
+      return Promise.resolve([
+        {
+          id: 'c3',
+          parentId: 'c2',
+          name: '沙发',
+          level: 3,
+          path: '/c1/c2/c3',
+          sort: 0,
+          status: 'ACTIVE',
+          attributes: [{ id: 'attr-1', name: '材质', type: 'TEXT', required: false, options: [], sort: 0 }],
+        },
+      ]);
+    }
+    return Promise.resolve({});
+  });
+
+  renderManager();
+  await userEvent.click(await screen.findByRole('button', { name: '编辑' }));
+  await userEvent.click(screen.getByRole('button', { name: '保存' }));
+
+  await waitFor(() =>
+    expect(mocks.apiFetch).toHaveBeenCalledWith('/api/bff/categories/c3', {
+      method: 'PATCH',
+      body: {
+        name: '沙发',
+        sort: 0,
+        status: 'ACTIVE',
+        attributes: [{ id: 'attr-1', name: '材质', type: 'TEXT', required: false, options: [], sort: 0 }],
+      },
+    })
+  );
+});
+
 test('没有管理权限时不显示操作入口', async () => {
   renderManager([PERMISSIONS.CATEGORY_VIEW]);
 

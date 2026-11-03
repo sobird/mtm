@@ -74,11 +74,44 @@ describe('category', () => {
       path: '/category-demo-1',
       sort: 0,
       status: 'ACTIVE',
-      attributes: [{ name: '材质', type: 'SELECT', required: false, options: ['布艺'], sort: 0 }],
+      attributes: [{ id: 'attr-1', name: '材质', type: 'SELECT', required: false, options: ['布艺'], sort: 0 }],
     };
     expect(categoryNodeSchema.safeParse(node).success).toBe(true);
     expect(categoryNodeSchema.safeParse({ ...node, level: 4 }).success).toBe(false);
     expect(idSchema.safeParse('../etc/passwd').success).toBe(false);
+  });
+
+  test('类目属性输出包含 ID，输入 ID 可选', () => {
+    expect(
+      categoryCreateSchema.safeParse({
+        name: '沙发',
+        attributes: [{ id: 'attr-1', name: '材质', type: 'SELECT', options: ['棉麻'] }],
+      }).success
+    ).toBe(true);
+    expect(
+      categoryNodeSchema.safeParse({
+        id: 'category-demo-1',
+        parentId: null,
+        name: '家居生活',
+        level: 1,
+        path: '/category-demo-1',
+        sort: 0,
+        status: 'ACTIVE',
+        attributes: [{ id: 'attr-1', name: '材质', type: 'SELECT', required: false, options: ['棉麻'], sort: 0 }],
+      }).success
+    ).toBe(true);
+    expect(
+      categoryNodeSchema.safeParse({
+        id: 'category-demo-1',
+        parentId: null,
+        name: '家居生活',
+        level: 1,
+        path: '/category-demo-1',
+        sort: 0,
+        status: 'ACTIVE',
+        attributes: [{ name: '材质', type: 'SELECT', required: false, options: ['棉麻'], sort: 0 }],
+      }).success
+    ).toBe(false);
   });
 });
 
