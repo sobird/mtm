@@ -1,0 +1,128 @@
+// @vitest-environment node
+import { verifyServiceToken } from '@mtm/auth/service-token';
+import { beforeEach, expect, test, vi } from 'vitest';
+
+const { authMock, getAccountPermissionsMock, fetchMock } = vi.hoisted(() => ({
+  authMock: vi.fn(),
+  getAccountPermissionsMock: vi.fn(),
+  fetchMock: vi.fn(),
+}));
+
+vi.mock('@/lib/auth', () => ({ auth: authMock }));
+vi.mock('@/lib/services/permission', () => ({ getAccountPermissions: getAccountPermissionsMock }));
+
+import { callCoreApi, proxyToCoreApi } from '@/lib/core-api';
+import { AppError } from '@/lib/errors';
+
+const SECRET = 'test-core-secret';
+
+function jsonResponse(status: number, body: unknown): Response {
+  return {
+    ok: status >= 200 && status < 300,
+    status,
+    json: async () => body,
+  } as Response;
+}
+
+function authorizationHeader(): string {
+  const [, init] = fetchMock.mock.calls[0] as [string, RequestInit & { headers: Record<string, string> }];
+  return init.headers.authorization;
+}
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  vi.stubGlobal('fetch', fetchMock);
+  process.env.CORE_API_JWT_SECRET = SECRET;
+  process.env.CORE_API_URL = 'http://core.test';
+  authMock.mockResolvedValue({
+    user: { accountId: 'ops-1', username: 'operator', name: '操作员', portal: 'ops' },
+  });
+  getAccountPermissionsMock.mockResolvedValue({
+    codes: ['merchant:view', 'product:audit'],
+    set: new Set(['merchant:view', 'product:audit']),
+    isCrossTenant: false,
+    merchantScope: ['m1'],
+  });
+});
+
+test('calls core-api with a signed ops service token and returns data', async () => {
+  fetchMock.mockResolvedValue(jsonResponse(200, { data: { ok: true } }));
+
+  const result = await callCoreApi('/me');
+
+  expect(result).toEqual({ ok: true });
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+  const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit & { headers: Record<string, string> }];
+  expect(url).toBe('http://core.test/api/v1/me');
+  expect(init.method).toBe('GET');
+  expect(init.cache).toBe('no-store');
+  expect(init.headers.authorization).toMatch(/^Bearer /);
+
+  const claims = await verifyServiceToken(authorizationHeader().slice('Bearer '.length), SECRET);
+  expect(claims).toEqual({
+    portal: 'ops',
+    userId: 'ops-1',
+    merchantId: null,
+    permissions: ['merchant:view', 'product:audit'],
+    merchantScope: ['m1'],
+  });
+});
+
+test('forwards the query string and JSON body', async () => {
+  fetchMock.mockResolvedValue(jsonResponse(200, { data: [] }));
+
+  await callCoreApi('/products', { method: 'POST', body: { name: 'x' }, search: 'page=1' });
+
+  const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit & { headers: Record<string, string> }];
+  expect(url).toBe('http://core.test/api/v1/products?page=1');
+  expect(init.method).toBe('POST');
+  expect(init.headers['content-type']).toBe('application/json');
+  expect(init.body).toBe(JSON.stringify({ name: 'x' }));
+});
+
+test('throws the portal AppError preserving the core-api error code', async () => {
+  fetchMock.mockResolvedValue(jsonResponse(403, { error: { code: 'FORBIDDEN', message: '无权访问', details: null } }));
+
+  const error = await callCoreApi('/me').catch((caught: unknown) => caught);
+
+  expect(error).toBeInstanceOf(AppError);
+  expect(error).toMatchObject({ code: 'FORBIDDEN', status: 403, message: '无权访问' });
+});
+
+test('rejects unauthenticated calls without hitting core-api', async () => {
+  authMock.mockResolvedValue(null);
+
+  const error = await callCoreApi('/me').catch((caught: unknown) => caught);
+
+  expect(error).toBeInstanceOf(AppError);
+  expect(error).toMatchObject({ code: 'UNAUTHORIZED', status: 401 });
+  expect(fetchMock).not.toHaveBeenCalled();
+});
+
+test('proxyToCoreApi rejects unauthenticated requests with 401', async () => {
+  authMock.mockResolvedValue(null);
+
+  const response = await proxyToCoreApi(new Request('http://localhost/api/bff/me'), ['me']);
+
+  expect(response.status).toBe(401);
+  expect(await response.json()).toEqual({ code: 'UNAUTHORIZED', message: '未登录', data: null });
+  expect(fetchMock).not.toHaveBeenCalled();
+});
+
+test('proxyToCoreApi forwards allowed paths and keeps the portal envelope', async () => {
+  fetchMock.mockResolvedValue(jsonResponse(200, { data: { portal: 'ops' } }));
+
+  const response = await proxyToCoreApi(new Request('http://localhost/api/bff/me?x=1'), ['me']);
+
+  expect(response.status).toBe(200);
+  expect(await response.json()).toEqual({ code: 0, message: 'ok', data: { portal: 'ops' } });
+  expect(fetchMock.mock.calls[0][0]).toBe('http://core.test/api/v1/me?x=1');
+});
+
+test('proxyToCoreApi rejects path traversal', async () => {
+  const response = await proxyToCoreApi(new Request('http://localhost/api/bff/..%2Fsecret'), ['..', 'secret']);
+
+  expect(response.status).toBe(400);
+  expect(await response.json()).toEqual({ code: 'INVALID_PATH', message: '路径不合法', data: null });
+  expect(fetchMock).not.toHaveBeenCalled();
+});
