@@ -7,8 +7,8 @@ import Providers from './providers';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: '美团电商商家管理后台',
-  description: '美团电商商家管理后台',
+  title: '开源电商商家管理后台',
+  description: '开源电商商家管理后台',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

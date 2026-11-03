@@ -32,7 +32,8 @@
   line-height: 1.6;
 }
 
-.policy a {
+.policy a,
+.policyName {
   color: var(--color-info);
 }
 

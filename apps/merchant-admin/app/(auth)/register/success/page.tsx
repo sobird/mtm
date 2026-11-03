@@ -16,7 +16,7 @@ export default function RegisterSuccessPage() {
           ✓
         </span>
         <h1 className={styles.title}>注册成功</h1>
-        <p className={styles.subtitle}>恭喜您已成功注册美团商户，请遵守当地法律法规。</p>
+        <p className={styles.subtitle}>恭喜您已成功注册开源电商商户，请遵守当地法律法规。</p>
         <div className={styles.actions}>
           <Button type='button' onClick={() => router.push('/login')}>
             去登录

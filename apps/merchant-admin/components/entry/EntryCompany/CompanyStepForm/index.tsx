@@ -101,18 +101,7 @@ export function CompanyStepForm({ id, defaults, options, onSubmit }: CompanyStep
               <li>请上传清晰的多证合一营业执照（统一社会信用代码）</li>
               <li>文件最多上传1张，大小不得超过20MB</li>
               <li>文件格式支持：JPG/JPEG/PNG/GIF/BPM</li>
-              <li>
-                企业主体需满足{' '}
-                <a
-                  className={styles.link}
-                  target='_blank'
-                  href='https://rules-center.meituan.com/rules-detail/602?commonType=2'
-                  rel='noreferrer'
-                >
-                  美团电商平台入驻标准
-                </a>{' '}
-                要求
-              </li>
+              <li>企业主体需满足开源电商平台入驻标准要求</li>
             </ul>
           </Field>
 

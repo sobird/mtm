@@ -108,9 +108,9 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
   return (
     <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
       <div className={styles.brand}>
-        <Link href='/' className={styles.brandLink} title='美团电商商家管理后台'>
+        <Link href='/' className={styles.brandLink} title='开源电商商家管理后台'>
           <span className={styles.brandMark} aria-hidden='true'>
-            美
+            开
           </span>
           <span className={styles.brandText}>商家管理后台</span>
         </Link>

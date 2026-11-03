@@ -50,7 +50,7 @@ const scoreConfig: Record<ScoreKey, ScoreConfig> = {
   },
 };
 
-const SHOP_JUMP_URL = `${process.env.NEXT_PUBLIC_SHOP_JUMP_URL ?? 'https://mtm.meituan.com/datacenter/middle.html'}?env=prod&poiId=148568&g_source=682`;
+const SHOP_JUMP_URL = process.env.NEXT_PUBLIC_SHOP_JUMP_URL ?? '/';
 
 function formatScore(score: number | undefined): string {
   if (score === undefined || score === null) {
@@ -207,7 +207,7 @@ export function MerchantGrowth({ className, style, bodyStyle }: MerchantGrowthPr
             >
               <div className={styles.qrcode}>
                 <p className={styles.qrcodeTitle}>{shopName || '店铺二维码'}</p>
-                <p className={styles.qrcodeDesc}>打开美团App扫码查看店铺详情</p>
+                <p className={styles.qrcodeDesc}>扫码查看店铺详情</p>
                 <QRCodeSVG size={100} value={SHOP_JUMP_URL} />
               </div>
             </Popover>

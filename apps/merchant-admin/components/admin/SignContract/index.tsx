@@ -11,7 +11,6 @@ import FieldCaptcha from '../FieldCaptcha';
 
 import styles from './SignContract.module.css';
 
-const POLICY_URL = 'https://page.meituan.net/html/1615180237352_38ceb3/index.html';
 const POLICY_TIP =
   '以下协议与纸质协议拥有同等效力，点击“确认合作”视为您同意并接受合作协议条款。如对合作条款有异议，可联系业务经理。';
 
@@ -90,10 +89,7 @@ export function SignContract({ open, onOpenChange, mobile, contractId, bizType, 
             className={styles.policy}
             label={
               <>
-                我已阅读并同意{' '}
-                <a href={POLICY_URL} target='_blank' rel='noreferrer' onClick={event => event.stopPropagation()}>
-                  《美团电商合作协议》
-                </a>
+                我已阅读并同意<span className={styles.policyName}>《开源电商合作协议》</span>
                 <Tooltip content={POLICY_TIP}>
                   <span
                     className={styles.info}

@@ -24,10 +24,19 @@
   height: 60px;
 }
 
-.logo {
+.logoMark {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
   height: 32px;
   margin-right: 10px;
-  width: auto;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  background: linear-gradient(-43deg, #ffc212 0%, #ffd000 100%);
+  border-radius: 8px;
 }
 
 .brand {

@@ -34,8 +34,6 @@ const statusConfig: StatusConfig[] = [
   { value: 4, label: '线上不展示', style: { backgroundColor: '#9f9f9f' } },
 ];
 
-const RULES_URL = 'https://rules-center.meituan.com/rules-detail/445?commonType=2';
-
 function formatCycle(value: string | undefined): string {
   return value ? dayjs(value).format('MM-DD') : '--';
 }
@@ -48,7 +46,6 @@ export function GoldMerchant({ className, style, bodyStyle }: GoldMerchantProps)
 
   const lastPeriodStatus = data?.lastPeriodStatus;
   const status = statusConfig.find(item => item.value === lastPeriodStatus);
-  const logoSrc = lastPeriodStatus === 1 ? '/market/gold-logo-inshow.png' : '/market/gold-logo-noshow.png';
 
   let content;
 
@@ -60,7 +57,9 @@ export function GoldMerchant({ className, style, bodyStyle }: GoldMerchantProps)
     content = (
       <>
         <div className={styles.head}>
-          <img className={styles.logo} src={logoSrc} alt='金牌商家' />
+          <span className={`${styles.logo} ${lastPeriodStatus === 1 ? '' : styles.logoDim}`} aria-hidden='true'>
+            金
+          </span>
           <div className={styles.headText}>
             <div className={styles.headTitle}>
               <h3 className={styles.title}>金牌商家</h3>
@@ -129,15 +128,7 @@ export function GoldMerchant({ className, style, bodyStyle }: GoldMerchantProps)
 
   return (
     <div style={style}>
-      <Card
-        className={className}
-        title='金牌商家'
-        extra={
-          <a className={styles.extraLink} href={RULES_URL} target='_blank' rel='noreferrer'>
-            查看详情
-          </a>
-        }
-      >
+      <Card className={className} title='金牌商家' extra={<span className={styles.extraLink}>查看详情</span>}>
         <div style={bodyStyle}>{content}</div>
       </Card>
     </div>

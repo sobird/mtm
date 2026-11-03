@@ -6,7 +6,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <span className={styles.brand}>美团电商商家管理后台</span>
+        <span className={styles.brand}>开源电商商家管理后台</span>
       </header>
 
       <main className={styles.main}>
@@ -14,8 +14,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       </main>
 
       <footer className={styles.footer}>
-        <p>©2020 meituan.com 京ICP备10211739号</p>
-        <p>京公网安备11000002002052号</p>
+        <p>开源电商商家管理后台 · MIT License</p>
       </footer>
     </div>
   );

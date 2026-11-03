@@ -13,8 +13,6 @@ import { CaptchaField } from '../CaptchaField';
 
 import styles from './RegisterForm.module.css';
 
-const POLICY_URL = 'https://page.meituan.net/html/1615180237352_38ceb3/index.html';
-
 /** Reads submit state from the surrounding `FormProvider`. */
 function RegisterSubmitButton() {
   const { isSubmitting } = useFormState();
@@ -79,10 +77,7 @@ export function RegisterForm() {
         className={styles.policy}
         label={
           <>
-            我已阅读并同意
-            <a href={POLICY_URL} target='_blank' rel='noreferrer' onClick={event => event.stopPropagation()}>
-              《团好货商家版隐私政策》
-            </a>
+            我已阅读并同意<span className={styles.policyName}>《开源电商隐私政策》</span>
           </>
         }
       />

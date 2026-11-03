@@ -21,7 +21,7 @@ const GUIDE_ROWS: GuideRow[] = [
   {
     key: 4,
     poiTypeName: '企业专卖店',
-    poiTypeDesc: '经营一个授权品牌的商品，但未获得品牌（注册商标）权利人独占授权入驻美团开放平台的商家专卖店',
+    poiTypeDesc: '经营一个授权品牌的商品，但未获得品牌（注册商标）权利人独占授权入驻开源电商开放平台的商家专卖店',
   },
   {
     key: 5,

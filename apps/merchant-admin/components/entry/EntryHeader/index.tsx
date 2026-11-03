@@ -11,8 +11,10 @@ export function EntryHeader() {
     <header className={styles.header}>
       <div className={styles.headerBox}>
         <div className={styles.logoRow}>
-          <img className={styles.logo} src='/assets/mtm_logo.png' alt='美团电商' />
-          <span className={styles.brand}>商家入驻平台</span>
+          <span className={styles.logoMark} aria-hidden='true'>
+            开
+          </span>
+          <span className={styles.brand}>开源电商 · 商家入驻平台</span>
         </div>
 
         <div className={styles.item}>

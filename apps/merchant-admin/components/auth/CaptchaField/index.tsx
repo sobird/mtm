@@ -54,7 +54,7 @@ export function CaptchaField() {
       const { captcha } = await apiFetch<CaptchaResponse>('/api/captcha', { query: { mobile } });
 
       toast.success(
-        `【美团】${captcha}（商户注册验证码）。工作人员不会向您索要，请勿向任何人泄露，以免造成账户或资金损失。`
+        `【开源电商】${captcha}（商户注册验证码）。工作人员不会向您索要，请勿向任何人泄露，以免造成账户或资金损失。`
       );
       setRemaining(COUNTDOWN_SECONDS);
     } catch (error) {

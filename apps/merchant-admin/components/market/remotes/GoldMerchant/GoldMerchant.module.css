@@ -7,8 +7,22 @@
 }
 
 .logo {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
   width: 78px;
-  height: auto;
+  height: 48px;
+  color: #8a5a00;
+  font-weight: 700;
+  font-size: 28px;
+  background: linear-gradient(135deg, #ffe04c 0%, #ffc54d 100%);
+  border-radius: 8px;
+}
+
+.logoDim {
+  color: #fff;
+  background: #9f9f9f;
 }
 
 .headText {

@@ -80,8 +80,8 @@
     "commodity": 0,
     "contactConfirm": 1,
     "merchantState": 4,
-    "h5ContactLink": "https://rules-center.meituan.com/m/detail/91?commonType=2",
-    "pcContactLink": "https://rules-center.meituan.com/rules?commonType=2",
+    "h5ContactLink": "",
+    "pcContactLink": "",
     "pubAccountId": 137438993652,
     "bsid": "1rlfNYH3S9uRfFes-a8rrJMxISpw7_zGC6WOPiG_vkENJ0ii_tYHlBn9OR_QfY_QMlvXd-ESHOoD9ku4Bu6TQg",
     "groupInfo": {
