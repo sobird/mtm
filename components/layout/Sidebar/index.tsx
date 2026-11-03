@@ -1,14 +1,13 @@
 'use client';
 
-import { useQueryClient } from '@tanstack/react-query';
 import { PanelLeftClose, PanelLeftOpen, Settings2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 import { Button, useToast } from '@/components/ui';
 import { apiFetch } from '@/lib/api-client';
-import { toggleFavorite } from '@/lib/menu/favorites';
-import { queryKeys } from '@/lib/query-keys';
+import { MAX_FAVORITES, toggleFavorite } from '@/lib/menu/favorites';
 import type { MenuBadgeDTO, MenuItemDTO } from '@/lib/services/menu';
 import { useUiStore } from '@/stores/ui';
 
@@ -16,7 +15,7 @@ import { SidebarMenu } from '../SidebarMenu';
 
 import styles from './Sidebar.module.css';
 
-export const MAX_FAVORITES = 10;
+export { MAX_FAVORITES };
 
 export interface SidebarProps {
   menuItems: MenuItemDTO[];
@@ -45,16 +44,21 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
   const setEditMode = useUiStore(state => state.setSidebarEditMode);
 
   const [localFavorites, setLocalFavorites] = useState<MenuItemDTO[]>(favorites);
+  const [savedFavorites, setSavedFavorites] = useState<MenuItemDTO[]>(favorites);
   const [seededFavorites, setSeededFavorites] = useState<MenuItemDTO[]>(favorites);
   const [saving, setSaving] = useState(false);
 
-  const queryClient = useQueryClient();
+  const router = useRouter();
   const toast = useToast();
 
-  // Re-seed local edit state when the server-provided favorites change.
+  // Re-seed local edit state when the server-provided favorites change. A
+  // refresh while editing must not clobber the in-progress selection.
   if (favorites !== seededFavorites) {
     setSeededFavorites(favorites);
-    setLocalFavorites(favorites);
+    setSavedFavorites(favorites);
+    if (!editMode) {
+      setLocalFavorites(favorites);
+    }
   }
 
   const leaves = useMemo(() => collectLeaves(menuItems), [menuItems]);
@@ -62,19 +66,21 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
 
   const toggle = (item: MenuItemDTO) => {
     try {
-      setLocalFavorites(current => toggleFavorite(current, item, MAX_FAVORITES));
+      // Compute outside the state updater: React cannot catch a throw raised
+      // while re-rendering, which would take down the whole shell.
+      setLocalFavorites(toggleFavorite(localFavorites, item, MAX_FAVORITES));
     } catch (error) {
       toast.error(error instanceof Error ? error.message : '收藏数量不能超过 10 个');
     }
   };
 
   const startEdit = () => {
-    setLocalFavorites(favorites);
+    setLocalFavorites(savedFavorites);
     setEditMode(true);
   };
 
   const cancelEdit = () => {
-    setLocalFavorites(favorites);
+    setLocalFavorites(savedFavorites);
     setEditMode(false);
   };
 
@@ -86,8 +92,11 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
         method: 'PATCH',
         body: { favorites: localFavorites.map(({ id }) => ({ id })) },
       });
-      await queryClient.invalidateQueries({ queryKey: queryKeys.menu });
+      setSavedFavorites(localFavorites);
       setEditMode(false);
+      // The menu arrives as RSC props, so refresh the layout to re-run getMenu;
+      // TanStack invalidation has nothing to invalidate here.
+      router.refresh();
       toast.success('常用功能已保存');
     } catch (error) {
       toast.error(error instanceof Error ? error.message : '保存失败，请稍后重试');

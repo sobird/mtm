@@ -39,10 +39,13 @@ function MenuGroup({ item, badge, children }: { item: MenuItemDTO; badge?: MenuB
   );
 }
 
-/** Recursive navigation tree; leaves are rendered as `next/link` anchors. */
-export function SidebarMenu({ items, badges, className }: SidebarMenuProps) {
-  const badgeMap = new Map(badges.map(badge => [badge.menuId, badge]));
+interface MenuTreeProps {
+  items: MenuItemDTO[];
+  badgeMap: Map<string, MenuBadgeDTO>;
+  className?: string;
+}
 
+function MenuTree({ items, badgeMap, className }: MenuTreeProps) {
   return (
     <ul className={[styles.menuRoot, className].filter(Boolean).join(' ')}>
       {items.map(item => {
@@ -51,7 +54,7 @@ export function SidebarMenu({ items, badges, className }: SidebarMenuProps) {
         if (item.children && item.children.length > 0) {
           return (
             <MenuGroup key={item.id} item={item} badge={badge}>
-              <SidebarMenu items={item.children} badges={badges} />
+              <MenuTree items={item.children} badgeMap={badgeMap} />
             </MenuGroup>
           );
         }
@@ -67,6 +70,13 @@ export function SidebarMenu({ items, badges, className }: SidebarMenuProps) {
       })}
     </ul>
   );
+}
+
+/** Recursive navigation tree; leaves are rendered as `next/link` anchors. */
+export function SidebarMenu({ items, badges, className }: SidebarMenuProps) {
+  const badgeMap = new Map(badges.map(badge => [badge.menuId, badge]));
+
+  return <MenuTree items={items} badgeMap={badgeMap} className={className} />;
 }
 
 export default SidebarMenu;

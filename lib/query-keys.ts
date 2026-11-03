@@ -9,8 +9,8 @@ export const queryKeys = {
   merchant: ['merchant'] as const,
   coupons: (params?: Record<string, unknown>) => ['coupons', params ?? {}] as const,
   coupon: (id: string | number) => ['coupon', id] as const,
-  campaigns: (params?: Record<string, unknown>) => ['campaigns', params ?? {}] as const,
-  messages: (params?: Record<string, unknown>) => ['messages', params ?? {}] as const,
-  violationOverview: (params?: Record<string, unknown>) => ['violationOverview', params ?? {}] as const,
+  campaigns: ['campaigns'] as const,
+  messages: ['messages'] as const,
+  violationOverview: ['violationOverview'] as const,
   analysis: (key: string) => ['analysis', key] as const,
 };

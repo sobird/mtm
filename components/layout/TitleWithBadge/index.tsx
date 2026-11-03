@@ -41,7 +41,9 @@ export function TitleWithBadge({ title, badge }: TitleWithBadgeProps) {
   return (
     <span>
       {title}
-      <Badge tone='danger'>•</Badge>
+      <span aria-hidden='true'>
+        <Badge tone='danger'>•</Badge>
+      </span>
     </span>
   );
 }
