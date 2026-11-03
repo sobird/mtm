@@ -1,16 +1,2 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-}
+@import '../styles/tokens.css';
+@import '../styles/reset.css';
