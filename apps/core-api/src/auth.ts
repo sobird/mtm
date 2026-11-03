@@ -2,6 +2,9 @@ import { verifyServiceToken } from '@mtm/auth/service-token';
 import type { ServiceTokenClaims } from '@mtm/auth/service-token';
 import { createMiddleware } from 'hono/factory';
 
+import { errorBody } from './http';
+import type { AppEnv } from './http';
+
 export type AuthVariables = { auth: ServiceTokenClaims };
 
 /**
@@ -40,6 +43,46 @@ export function requirePermission(code: string) {
   return createMiddleware<{ Variables: AuthVariables }>(async (c, next) => {
     if (!c.get('auth').permissions.includes(code)) {
       return c.json({ error: { code: 'FORBIDDEN', message: '无权访问', details: null } }, 403);
+    }
+
+    await next();
+  });
+}
+
+function forbidden() {
+  return errorBody('FORBIDDEN', '无权访问');
+}
+
+export function requireOpsPermission(code: string) {
+  return createMiddleware<AppEnv>(async (c, next) => {
+    const auth = c.get('auth');
+
+    if (auth.portal !== 'ops' || !auth.permissions.includes(code)) {
+      return c.json(forbidden(), 403);
+    }
+
+    await next();
+  });
+}
+
+export function requireMerchantPermission(code: string) {
+  return createMiddleware<AppEnv>(async (c, next) => {
+    const auth = c.get('auth');
+
+    if (auth.portal !== 'merchant' || !auth.permissions.includes(code)) {
+      return c.json(forbidden(), 403);
+    }
+
+    await next();
+  });
+}
+
+export function requireAnyPermission(codes: readonly string[]) {
+  return createMiddleware<AppEnv>(async (c, next) => {
+    const auth = c.get('auth');
+
+    if (!codes.some(code => auth.permissions.includes(code))) {
+      return c.json(forbidden(), 403);
     }
 
     await next();

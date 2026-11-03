@@ -2,6 +2,9 @@
   "extends": "../../packages/config/tsconfig.base.json",
   "compilerOptions": {
     "types": ["node"],
+    // @hono/zod-openapi 的响应类型依赖 `undefined extends Content` 判断，
+    // 关闭 strictNullChecks 会让该条件恒为真，导致所有 openapi 路由处理器推断为 never。
+    "strictNullChecks": true,
     "paths": {
       "@/*": ["./*"]
     }

@@ -3,8 +3,16 @@ import { Hono } from 'hono';
 import { expect, test, vi } from 'vitest';
 
 import { createApp } from '@/src/app';
-import { requirePermission, requireServiceToken } from '@/src/auth';
+import {
+  requireAnyPermission,
+  requireMerchantPermission,
+  requireOpsPermission,
+  requirePermission,
+  requireServiceToken,
+} from '@/src/auth';
 import type { AuthVariables } from '@/src/auth';
+
+import { merchantToken, opsToken } from './helpers';
 
 process.env.CORE_API_JWT_SECRET = 'test-core-secret';
 
@@ -71,6 +79,59 @@ test('fails closed with the placeholder secret in production', async () => {
     vi.unstubAllEnvs();
     process.env.CORE_API_JWT_SECRET = secret;
   }
+});
+
+test('requireOpsPermission checks both portal and permission code', async () => {
+  const route = new Hono<{ Variables: AuthVariables }>()
+    .use(requireServiceToken)
+    .get('/x', requireOpsPermission('category:manage'), c => c.json({ ok: true }));
+
+  const allowed = await route.request('/x', {
+    headers: { authorization: `Bearer ${await opsToken(['category:manage'])}` },
+  });
+  expect(allowed.status).toBe(200);
+
+  const missing = await route.request('/x', {
+    headers: { authorization: `Bearer ${await opsToken(['category:view'])}` },
+  });
+  expect(missing.status).toBe(403);
+
+  const merchant = await route.request('/x', {
+    headers: { authorization: `Bearer ${await merchantToken('m1', ['category:manage'])}` },
+  });
+  expect(merchant.status).toBe(403);
+});
+
+test('requireMerchantPermission rejects ops tokens even with the code', async () => {
+  const route = new Hono<{ Variables: AuthVariables }>()
+    .use(requireServiceToken)
+    .get('/x', requireMerchantPermission('product:create'), c => c.json({ ok: true }));
+
+  const allowed = await route.request('/x', {
+    headers: { authorization: `Bearer ${await merchantToken('m1', ['product:create'])}` },
+  });
+  expect(allowed.status).toBe(200);
+
+  const ops = await route.request('/x', {
+    headers: { authorization: `Bearer ${await opsToken(['product:create'])}` },
+  });
+  expect(ops.status).toBe(403);
+});
+
+test('requireAnyPermission is portal-agnostic', async () => {
+  const route = new Hono<{ Variables: AuthVariables }>()
+    .use(requireServiceToken)
+    .get('/x', requireAnyPermission(['category:view', 'product:view']), c => c.json({ ok: true }));
+
+  const merchant = await route.request('/x', {
+    headers: { authorization: `Bearer ${await merchantToken('m1', ['product:view'])}` },
+  });
+  expect(merchant.status).toBe(200);
+
+  const denied = await route.request('/x', {
+    headers: { authorization: `Bearer ${await opsToken(['merchant:view'])}` },
+  });
+  expect(denied.status).toBe(403);
 });
 
 test('requirePermission returns 403 without the code and 200 with it', async () => {
