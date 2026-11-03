@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import type { CSSProperties } from 'react';
 
-import { Card, Tooltip } from '@/components/ui';
+import { Card, Empty, Tooltip } from '@/components/ui';
 import { apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import type { WorkbenchDTO, WorkbenchOverviewDTO } from '@/lib/services/analysis';
@@ -56,7 +56,7 @@ const overviewMetrics: OverviewMetric[] = [
 ];
 
 export function Overview({ className, style, bodyStyle }: OverviewProps) {
-  const { data } = useQuery({
+  const { data, isError } = useQuery({
     queryKey: queryKeys.analysis('workbench'),
     queryFn: () => apiFetch<WorkbenchDTO>('/api/analysis/workbench'),
   });
@@ -65,29 +65,33 @@ export function Overview({ className, style, bodyStyle }: OverviewProps) {
 
   return (
     <div style={style}>
-      <Card className={className}>
+      <Card className={className} title='订单概况'>
         <div className={styles.panel} style={bodyStyle}>
-          {overviewMetrics.map(metric => {
-            const value = overview?.[metric.key];
+          {isError ? (
+            <Empty description='加载失败' />
+          ) : (
+            overviewMetrics.map(metric => {
+              const value = overview?.[metric.key];
 
-            return (
-              <div className={styles.tile} key={metric.key}>
-                <div className={styles.tileTitle}>
-                  {metric.tips ? (
-                    <Tooltip content={metric.tips}>
-                      <span className={styles.tooltipTitle}>{metric.title}</span>
-                    </Tooltip>
-                  ) : (
-                    <span>{metric.title}</span>
-                  )}
+              return (
+                <div className={styles.tile} key={metric.key}>
+                  <div className={styles.tileTitle}>
+                    {metric.tips ? (
+                      <Tooltip content={metric.tips}>
+                        <span className={styles.tooltipTitle}>{metric.title}</span>
+                      </Tooltip>
+                    ) : (
+                      <span>{metric.title}</span>
+                    )}
+                  </div>
+                  <div className={styles.tileValue}>
+                    <span className={styles.value}>{value ?? '--'}</span>
+                    <span className={styles.unit}>{metric.unit}</span>
+                  </div>
                 </div>
-                <div className={styles.tileValue}>
-                  <span className={styles.value}>{value ?? '--'}</span>
-                  <span className={styles.unit}>{metric.unit}</span>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </Card>
     </div>

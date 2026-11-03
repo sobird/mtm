@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Card, Empty, Skeleton } from '@/components/ui';
 import { apiFetch } from '@/lib/api-client';
@@ -21,23 +21,30 @@ export interface LatestNewsProps {
 }
 
 export function LatestNews({ className, style, bodyStyle, callback }: LatestNewsProps) {
-  const { data, isPending } = useQuery({
+  const { data, isPending, isError } = useQuery({
     queryKey: queryKeys.analysis('latest-news'),
     queryFn: () => apiFetch<MessageBriefDTO[]>('/api/message/latest-news'),
   });
 
+  const callbackRef = useRef(callback);
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+
   useEffect(() => {
     if (data) {
-      callback?.(data);
+      callbackRef.current?.(data);
     }
-  }, [data, callback]);
+  }, [data]);
 
-  const items = (data ?? []).slice(0, 3);
+  const items = data ?? [];
 
   let content: ReactNode;
 
   if (isPending) {
     content = <Skeleton rows={3} />;
+  } else if (isError) {
+    content = <Empty description='加载失败' />;
   } else if (items.length === 0) {
     content = <Empty description='暂无最新动态' />;
   } else {

@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import type { CSSProperties, ReactNode } from 'react';
 
-import { Card, Tooltip } from '@/components/ui';
+import { Card, Empty, Tooltip } from '@/components/ui';
 import { apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import type { WorkbenchDTO, WorkbenchRealdataDTO } from '@/lib/services/analysis';
@@ -73,7 +73,7 @@ const paidAmountFormatter = new Intl.NumberFormat('zh-CN', {
 });
 
 function formatValue(metric: RealdataMetric, value: number | undefined): string | number {
-  if (value === undefined || value === null) {
+  if (value === undefined) {
     return '--';
   }
 
@@ -98,7 +98,7 @@ function renderMetric(metric: RealdataMetric, value: number | undefined) {
 }
 
 export function Realdata({ className, style, bodyStyle }: RealdataProps) {
-  const { data } = useQuery({
+  const { data, isError } = useQuery({
     queryKey: queryKeys.analysis('workbench'),
     queryFn: () => apiFetch<WorkbenchDTO>('/api/analysis/workbench'),
   });
@@ -110,10 +110,18 @@ export function Realdata({ className, style, bodyStyle }: RealdataProps) {
       <Card className={className} title='实时数据' extra={<a className={styles.extraLink}>数据中心</a>}>
         <div style={bodyStyle}>
           <p className={styles.description}>数据计算可能会存在5-10分钟左右的延迟</p>
-          <div className={styles.rows}>
-            <div className={styles.row}>{realdataRow1.map(metric => renderMetric(metric, realdata?.[metric.key]))}</div>
-            <div className={styles.row}>{realdataRow2.map(metric => renderMetric(metric, realdata?.[metric.key]))}</div>
-          </div>
+          {isError ? (
+            <Empty description='加载失败' />
+          ) : (
+            <div className={styles.rows}>
+              <div className={styles.row}>
+                {realdataRow1.map(metric => renderMetric(metric, realdata?.[metric.key]))}
+              </div>
+              <div className={styles.row}>
+                {realdataRow2.map(metric => renderMetric(metric, realdata?.[metric.key]))}
+              </div>
+            </div>
+          )}
         </div>
       </Card>
     </div>
