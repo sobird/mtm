@@ -1,0 +1,34 @@
+.tiles {
+  display: flex;
+  gap: var(--space-3);
+  height: 104px;
+  margin-top: var(--space-3);
+}
+
+.tile {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  font-size: 14px;
+  background: #fbfbfb;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.tile:hover {
+  background: #f8f8f8;
+}
+
+.tile span:last-child {
+  margin-top: var(--space-2);
+}
+
+.icon {
+  color: #666;
+  font-size: 32px;
+  line-height: 1;
+}
