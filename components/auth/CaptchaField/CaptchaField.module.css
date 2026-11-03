@@ -1,0 +1,16 @@
+.row {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+}
+
+.button {
+  flex: none;
+  min-width: 120px;
+  white-space: nowrap;
+}
