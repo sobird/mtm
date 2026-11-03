@@ -15,6 +15,27 @@ jobs:
     permissions:
       contents: read
       packages: write
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: mtm
+          POSTGRES_PASSWORD: mtm
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U mtm -d postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      AUTH_SECRET: ci-secret
+      MERCHANT_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_merchant?schema=public
+      CORE_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_core?schema=public
+      OPS_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_ops?schema=public
+      MERCHANT_TEST_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_merchant_test?schema=public
+      CORE_TEST_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_core_test?schema=public
     steps:
       - uses: actions/checkout@v4
 
@@ -31,15 +52,20 @@ jobs:
       - run: bun run test
       - run: bun run build
 
-      - uses: docker/setup-buildx-action@v3
+      # Phase 5: re-enable the image build and SSH deploy once the Dockerfile
+      # is ported to the monorepo + Prisma layout.
+      - if: false
+        uses: docker/setup-buildx-action@v3
 
-      - uses: docker/login-action@v3
+      - if: false
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: docker/build-push-action@v6
+      - if: false
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
@@ -49,10 +75,12 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Encode nginx config
+      - if: false
+        name: Encode nginx config
         run: echo "NGINX_CONF_B64=$(base64 -w 0 deploy/nginx/mtm.conf)" >> "$GITHUB_ENV"
 
-      - name: Deploy over SSH
+      - if: false
+        name: Deploy over SSH
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.HOST }}
