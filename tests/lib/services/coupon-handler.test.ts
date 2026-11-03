@@ -80,6 +80,26 @@ test('PATCH updates the coupon name', async () => {
   expect((await res.json()).data.name).toBe('改名优惠券');
 });
 
+test('PATCH derives stime/etime from putTerm and ignores nullish terms', async () => {
+  const updated = await PATCH(
+    jsonRequest('http://localhost/api/merchant/coupon/500145265', 'PATCH', { putTerm: [1700000000, 1700086400] }),
+    { params: Promise.resolve({ id: '500145265' }) }
+  );
+  expect(updated.status).toBe(200);
+  const after = (await updated.json()).data;
+  expect(after.stime).toBe(new Date(1700000000 * 1000).toISOString());
+  expect(after.etime).toBe(new Date(1700086400 * 1000).toISOString());
+
+  const nullish = await PATCH(
+    jsonRequest('http://localhost/api/merchant/coupon/500145265', 'PATCH', { putTerm: [null, null] }),
+    { params: Promise.resolve({ id: '500145265' }) }
+  );
+  expect(nullish.status).toBe(200);
+  const preserved = (await nullish.json()).data;
+  expect(preserved.stime).toBe(after.stime);
+  expect(preserved.etime).toBe(after.etime);
+});
+
 test('GET /api/merchant/campaigns returns the seeded page', async () => {
   const res = await campaignsGET(new Request('http://localhost/api/merchant/campaigns'), {
     params: Promise.resolve({}),

@@ -125,6 +125,16 @@ function toISO(value: unknown): string | null {
   return new Date(seconds * 1000).toISOString();
 }
 
+/** Converts an epoch-second value to a number, rejecting nullish and empty input. */
+function toEpoch(value: unknown): number | undefined {
+  if (value === null || value === undefined || value === '') {
+    return undefined;
+  }
+
+  const seconds = Number(value);
+  return Number.isFinite(seconds) ? seconds : undefined;
+}
+
 function toTerm(value: unknown): [string | null, string | null] {
   const term = Array.isArray(value) ? value : [];
 
@@ -301,13 +311,13 @@ export async function updateCoupon(id: string, input: Partial<CouponUpsertInput>
 
   if (input.putTerm !== undefined) {
     const putTerm = Array.isArray(input.putTerm) ? input.putTerm : [];
-    const stime = Number(putTerm[0]);
-    const etime = Number(putTerm[1]);
+    const stime = toEpoch(putTerm[0]);
+    const etime = toEpoch(putTerm[1]);
 
-    if (input.stime === undefined && Number.isFinite(stime)) {
+    if (input.stime === undefined && stime !== undefined) {
       patch.stime = stime;
     }
-    if (input.etime === undefined && Number.isFinite(etime)) {
+    if (input.etime === undefined && etime !== undefined) {
       patch.etime = etime;
     }
   }
