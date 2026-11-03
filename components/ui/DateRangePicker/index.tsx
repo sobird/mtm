@@ -15,6 +15,8 @@ export interface DateRangePickerProps {
   /** Display format; defaults to `YYYY-MM-DD` or `YYYY-MM-DD HH:mm`. */
   format?: string;
   placeholder?: [string, string];
+  /** Forwarded to the two inner inputs for label association. */
+  id?: string | { start?: string; end?: string };
   disabled?: boolean;
   allowClear?: boolean;
   className?: string;
@@ -26,6 +28,7 @@ export function DateRangePicker({
   showTime = false,
   format,
   placeholder,
+  id,
   disabled,
   allowClear = true,
   className,
@@ -34,6 +37,7 @@ export function DateRangePicker({
 
   return (
     <AntDatePicker.RangePicker
+      id={id}
       className={className}
       value={parsed}
       showTime={showTime ? { format: 'HH:mm' } : false}

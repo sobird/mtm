@@ -123,8 +123,9 @@ export default function MarketCouponsPage() {
   const [stime, setStime] = useState('');
   const [etime, setEtime] = useState('');
   const [target, setTarget] = useState<number | undefined>();
-  const [sort, setSort] = useState<SortKey | undefined>();
-  const [order, setOrder] = useState<SortDirection | undefined>();
+  // Mirrors the service default so the initial sort indicator matches the data.
+  const [sort, setSort] = useState<SortKey | undefined>('ctime');
+  const [order, setOrder] = useState<SortDirection | undefined>('desc');
   const [page, setPage] = useState(1);
 
   const [offlineTarget, setOfflineTarget] = useState<CouponListItemDTO | null>(null);
@@ -300,6 +301,7 @@ export default function MarketCouponsPage() {
         <div className={styles.filter}>
           <span className={styles.filterLabel}>发放时间</span>
           <DateRangePicker
+            id={{ start: 'coupon-stime', end: 'coupon-etime' }}
             showTime
             placeholder={['发放开始', '发放结束']}
             value={[stime, etime]}

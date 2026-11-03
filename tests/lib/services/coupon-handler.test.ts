@@ -64,6 +64,14 @@ test('GET sorts coupons by a whitelisted column', async () => {
   expect(counts.at(-1)).toBe(100);
 });
 
+test('GET rejects a sort field outside the whitelist', async () => {
+  const res = await couponRoutes.GET(new Request('http://localhost/api/merchant/coupon?sort=bogus'), {
+    params: Promise.resolve({}),
+  });
+  expect(res.status).toBe(400);
+  expect((await res.json()).code).toBe('INVALID_QUERY');
+});
+
 test('GET filters coupons by target', async () => {
   const res = await couponRoutes.GET(new Request('http://localhost/api/merchant/coupon?pn=1&ps=100&target=3'), {
     params: Promise.resolve({}),

@@ -82,6 +82,7 @@ export function DataTable<T extends object>({
       columns={columns}
       dataSource={data}
       loading={loading}
+      scroll={{ x: 'max-content' }}
       locale={{ emptyText: <Empty description={emptyText ?? '暂无数据'} /> }}
       pagination={{
         current: page,

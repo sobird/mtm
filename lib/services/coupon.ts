@@ -236,7 +236,12 @@ export async function listCoupons(
     where,
     limit: ps,
     offset,
-    order: [[sortField, sortDirection]],
+    // Sort fields are non-unique; the id tiebreaker keeps LIMIT/OFFSET pages
+    // stable so a row cannot appear on two pages (or vanish) across requests.
+    order: [
+      [sortField, sortDirection],
+      ['id', 'ASC'],
+    ],
   });
 
   const list: CouponListItemDTO[] = [];

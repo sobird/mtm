@@ -56,7 +56,7 @@
     {
       // antd is an implementation detail of the design-system wrapper. Pages and
       // feature components must import from `@/components/ui` instead.
-      "files": ["app/**", "components/**"],
+      "files": ["app/**", "components/**", "lib/**", "scripts/**", "tests/**"],
       "excludeFiles": ["components/ui/**", "app/layout.tsx", "app/providers.tsx"],
       "rules": {
         "no-restricted-imports": [
