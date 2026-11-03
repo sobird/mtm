@@ -8,6 +8,7 @@
         "@ant-design/icons": "^5.1.4",
         "@ant-design/pro-components": "^2.5.9",
         "@base-ui-components/react": "1.0.0-rc.0",
+        "@hookform/resolvers": "^7.0.1",
         "@mdx-js/mdx": "^2.3.0",
         "@mdx-js/react": "^2.3.0",
         "@monaco-editor/react": "^4.6.0",
@@ -33,6 +34,7 @@
         "rc-util": "^5.38.1",
         "react": "^19.3.1",
         "react-dom": "^19.3.1",
+        "react-hook-form": "^7.91.0",
         "react-redux": "^8.1.2",
         "react-router-dom": "^6.17.0",
         "redux": "^4.2.1",
@@ -515,6 +517,8 @@
 
     "@gulpjs/to-absolute-glob": ["@gulpjs/to-absolute-glob@4.0.0", "https://registry.npmmirror.com/@gulpjs/to-absolute-glob/-/to-absolute-glob-4.0.0.tgz", { "dependencies": { "is-negated-glob": "^1.0.0" } }, "sha512-kjotm7XJrJ6v+7knhPaRgaT6q8F8K2jiafwYdNHLzmV0uGLuZY43FK6smNSHUPrhq5kX2slCUy+RGG/xGqmIKA=="],
 
+    "@hookform/resolvers": ["@hookform/resolvers@7.0.1", "https://registry.npmmirror.com/@hookform/resolvers/-/resolvers-7.0.1.tgz", { "dependencies": { "@standard-schema/utils": "^0.3.0" }, "peerDependencies": { "@standard-schema/spec": "^1.0.0", "@vinejs/vine": "^2.0.0 || ^3.0.0 || ^4.0.0", "ajv": "^8.12.0", "ajv-errors": "^3.0.0", "ajv-formats": "^2.1.1", "arktype": "^2.0.0", "ata-validator": "^1.23.0", "class-transformer": ">=0.4.0", "class-validator": ">=0.12.0", "computed-types": "^1.0.0", "effect": "^4.0.0", "fluentvalidation-ts": "^3.0.0", "fp-ts": "^2.7.0", "io-ts": "^2.0.0", "joi": "^17.0.0 || ^18.0.0", "nope-validator": ">=0.12.0", "react-hook-form": "^7.55.0", "superstruct": ">=0.12.0", "typanion": "^3.3.2", "typebox": "^1.0.0", "valibot": ">=0.31.0 || ^1.0.0-beta.4 || ^1.0.0-rc", "vest": ">=6.0.0", "yup": "^1.0.0", "zod": "^3.25.0 || ^4.0.0" }, "optionalPeers": ["@standard-schema/spec", "@vinejs/vine", "ajv", "ajv-errors", "ajv-formats", "arktype", "ata-validator", "class-transformer", "class-validator", "computed-types", "effect", "fluentvalidation-ts", "fp-ts", "io-ts", "joi", "nope-validator", "superstruct", "typanion", "typebox", "valibot", "vest", "yup", "zod"] }, "sha512-F3aM0dDWsRGmFjnnXjogaGLwP7gY2HA6/c5qp4v4Im/UV7pTNkX+WAjcOlM1V0PE0zoMzuPqCyaYtMzUhoFToA=="],
+
     "@img/colour": ["@img/colour@1.1.0", "https://registry.npmmirror.com/@img/colour/-/colour-1.1.0.tgz", {}, "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ=="],
 
     "@img/sharp-darwin-arm64": ["@img/sharp-darwin-arm64@0.35.5", "https://registry.npmmirror.com/@img/sharp-darwin-arm64/-/sharp-darwin-arm64-0.35.5.tgz", { "optionalDependencies": { "@img/sharp-libvips-darwin-arm64": "1.3.4" }, "os": "darwin", "cpu": "arm64" }, "sha512-QRUlFQ0WxvdWyqqG/WtI3iupfD5rBzmCHXSdPsY91sAtVtTo7Q4cb6zOccZ3gqEqkr0f1As1ehLqmEpDsRf+lg=="],
@@ -814,6 +818,8 @@
     "@simple-libs/stream-utils": ["@simple-libs/stream-utils@2.0.0", "https://registry.npmmirror.com/@simple-libs/stream-utils/-/stream-utils-2.0.0.tgz", {}, "sha512-fCTuZK4QBa+39Oz9l4OGfJfz+GpwCp3AqO7Zch3to99xHPgstVsRFpeQ8LNd2o1Gv8raL2mCFwiaHh7bFSp5DQ=="],
 
     "@sinclair/typebox": ["@sinclair/typebox@0.27.12", "https://registry.npmmirror.com/@sinclair/typebox/-/typebox-0.27.12.tgz", {}, "sha512-hhyNJ+nbR6ZR7pToHvllEFun9TL0sbL+tk/ON75lo+Xas054uez98qRbsuNt7MBCyZKK4+8Yli/OAGZhmfBZ/g=="],
+
+    "@standard-schema/utils": ["@standard-schema/utils@0.3.0", "https://registry.npmmirror.com/@standard-schema/utils/-/utils-0.3.0.tgz", {}, "sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g=="],
 
     "@swc/helpers": ["@swc/helpers@0.5.15", "https://registry.npmmirror.com/@swc/helpers/-/helpers-0.5.15.tgz", { "dependencies": { "tslib": "^2.8.0" } }, "sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g=="],
 
@@ -2498,6 +2504,8 @@
     "react": ["react@19.3.1", "https://registry.npmmirror.com/react/-/react-19.3.1.tgz", {}, "sha512-QNhWdt7nrgVWWQG58QuGsAR3jv3Hbe4mb4vz7w2csnHavciZJgda1CPNaldF6eVxv90ud3jUXpKlHL69gO38yw=="],
 
     "react-dom": ["react-dom@19.3.1", "https://registry.npmmirror.com/react-dom/-/react-dom-19.3.1.tgz", { "dependencies": { "scheduler": "^0.28.0" }, "peerDependencies": { "react": "^19.3.1" } }, "sha512-Y0bARz53lhEC1NMCASs0/j+faB/zqt3R8hpvg1e8+61ZVJ4UL0UdC4cBbXfZMcIuhrfgeILTLe+ZeBCavQPtKQ=="],
+
+    "react-hook-form": ["react-hook-form@7.91.0", "https://registry.npmmirror.com/react-hook-form/-/react-hook-form-7.91.0.tgz", { "peerDependencies": { "@types/react": "*", "react": "^16.8.0 || ^17 || ^18 || ^19" }, "optionalPeers": ["@types/react"] }, "sha512-5BEBUnCBwa28AFXYTYmOaB/+CSpJ/+CWVASHEvIGUzFdHyUiPHeRhG7r5hOZ8nZi0yP7pbHdFNXO/p31EKTJFQ=="],
 
     "react-is": ["react-is@18.3.1", "https://registry.npmmirror.com/react-is/-/react-is-18.3.1.tgz", {}, "sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg=="],
 

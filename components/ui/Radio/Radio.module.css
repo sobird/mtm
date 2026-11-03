@@ -1,0 +1,31 @@
+.wrapper {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  cursor: pointer;
+}
+
+.control {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.invalid {
+  outline: 1px solid var(--color-danger);
+  outline-offset: 2px;
+}
+
+.label {
+  color: var(--color-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.error {
+  color: var(--color-danger);
+  font-size: 12px;
+  line-height: 1.5;
+}
