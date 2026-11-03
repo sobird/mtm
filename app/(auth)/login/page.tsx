@@ -6,8 +6,13 @@ export const metadata: Metadata = {
   title: '登录 - 美团电商商家管理后台',
 };
 
-export default async function LoginPage({ searchParams }: { searchParams: Promise<{ callbackUrl?: string }> }) {
-  const { callbackUrl } = await searchParams;
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ callbackUrl?: string | string[] }>;
+}) {
+  const raw = (await searchParams).callbackUrl;
+  const callbackUrl = Array.isArray(raw) ? raw[0] : raw;
 
   return <LoginForm callbackUrl={callbackUrl} />;
 }

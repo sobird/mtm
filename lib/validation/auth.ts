@@ -38,8 +38,9 @@ export type RegisterValues = z.output<typeof registerSchema>;
  * redirects. Only paths starting with a single `/` (and not `//` or `/\`) are
  * allowed; anything else falls back to the admin home page.
  */
-export function safeCallbackUrl(input?: string | null): string {
-  if (!input || !input.startsWith('/')) {
+export function safeCallbackUrl(input?: unknown): string {
+  // Next.js may hand back `string[]` for a repeated query param.
+  if (typeof input !== 'string' || !input.startsWith('/')) {
     return '/';
   }
 

@@ -63,7 +63,13 @@ export function RegisterForm() {
       </Field>
 
       <Field label='手机号' required>
-        <Input name='mobile' placeholder='请输入手机号' autoComplete='tel-national' inputMode='numeric' />
+        <Input
+          name='mobile'
+          placeholder='请输入手机号'
+          aria-label='手机号'
+          autoComplete='tel-national'
+          inputMode='numeric'
+        />
       </Field>
 
       <CaptchaField />

@@ -68,7 +68,7 @@ export function CaptchaField() {
     <Field label='验证码' required>
       <div className={styles.row}>
         <div className={styles.input}>
-          <Input name='captcha' placeholder='请输入验证码' autoComplete='one-time-code' />
+          <Input name='captcha' placeholder='请输入验证码' aria-label='验证码' autoComplete='one-time-code' />
         </div>
         <Button
           type='button'

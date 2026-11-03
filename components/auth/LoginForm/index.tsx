@@ -33,19 +33,23 @@ export function LoginForm({ callbackUrl }: LoginFormProps) {
   const toast = useToast();
 
   const handleSubmit = async (values: LoginValues) => {
-    const result = await signIn('credentials', {
-      interCode: values.interCode,
-      mobile: values.mobile,
-      captcha: values.captcha,
-      redirect: false,
-    });
+    try {
+      const result = await signIn('credentials', {
+        interCode: values.interCode,
+        mobile: values.mobile,
+        captcha: values.captcha,
+        redirect: false,
+      });
 
-    if (result?.error) {
-      toast.error('手机号或验证码错误');
-      return;
+      if (result?.error) {
+        toast.error('手机号或验证码错误');
+        return;
+      }
+
+      router.replace(safeCallbackUrl(callbackUrl));
+    } catch {
+      toast.error('登录失败，请稍后重试');
     }
-
-    router.replace(safeCallbackUrl(callbackUrl));
   };
 
   return (
@@ -62,7 +66,13 @@ export function LoginForm({ callbackUrl }: LoginFormProps) {
       </Field>
 
       <Field label='手机号' required>
-        <Input name='mobile' placeholder='请输入手机号' autoComplete='tel-national' inputMode='numeric' />
+        <Input
+          name='mobile'
+          placeholder='请输入手机号'
+          aria-label='手机号'
+          autoComplete='tel-national'
+          inputMode='numeric'
+        />
       </Field>
 
       <CaptchaField />
