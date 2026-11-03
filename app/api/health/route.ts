@@ -1,12 +1,15 @@
-import { NextResponse } from 'next/server';
-
+import { fail, ok } from '@/lib/api-response';
 import { initDatabase, sequelize } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  await initDatabase();
-  await sequelize.query('SELECT 1');
+  try {
+    await initDatabase();
+    await sequelize.query('SELECT 1');
 
-  return NextResponse.json({ code: 0, message: 'ok', data: { db: true } });
+    return ok({ db: true });
+  } catch (error) {
+    return fail(error);
+  }
 }

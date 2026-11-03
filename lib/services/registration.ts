@@ -1,4 +1,4 @@
-import { Registration } from '@/lib/db/models';
+import { Invitation, Registration } from '@/lib/db/models';
 
 export interface RegisterInput {
   interCode: string;
@@ -17,5 +17,14 @@ export async function register(input: RegisterInput): Promise<void> {
       mobile: input.mobile,
       status: 0,
     },
+  });
+}
+
+/** Marks an invitation code as accepted by the anonymous onboarding flow. */
+export async function acceptInvitation(code: string): Promise<void> {
+  await Invitation.create({
+    code: String(code),
+    mobile: '',
+    usedAt: new Date(),
   });
 }
