@@ -2,6 +2,7 @@ import type {
   AccountCreationAttributes,
   EntryTaskCreationAttributes,
   EntryTypeCreationAttributes,
+  MenuBadgeCreationAttributes,
   MenuItemCreationAttributes,
   MerchantCategoryCreationAttributes,
   MerchantCreationAttributes,
@@ -10,6 +11,7 @@ import type {
 } from '../models';
 
 export type MenuItemRow = MenuItemCreationAttributes;
+export type MenuBadgeRow = MenuBadgeCreationAttributes;
 export type MerchantCategoryRow = MerchantCategoryCreationAttributes;
 export type MerchantRow = MerchantCreationAttributes;
 export type AccountRow = AccountCreationAttributes;
@@ -80,6 +82,15 @@ export function transformMenu(raw: unknown): { items: MenuItemRow[]; favorites: 
   };
 }
 
+export function transformMenuBadges(raw: unknown): MenuBadgeRow[] {
+  return list(dataOf(raw)).map(row => ({
+    menuId: str(row.menuId),
+    actionType: num(row.actionType),
+    noticeStyle: num(row.noticeStyle),
+    noticeContent: str(row.noticeContent),
+  }));
+}
+
 export function transformCategories(raw: unknown): MerchantCategoryRow[] {
   return list(dataOf(raw)).map(row => ({
     id: num(row.id),
@@ -131,7 +142,7 @@ export function transformAccount(raw: unknown): AccountRow {
 export function transformLicenses(raw: unknown): MerchantLicenseRow[] {
   return list(dataOf(raw)).map(row => ({
     id: num(row.id),
-    merchantId: num(row.merchantId),
+    merchantId: 1,
     type: num(row.type),
     name: str(row.licenseTypeStr, str(row.name)),
     url: str(row.src, str(row.license, str(row.url))),

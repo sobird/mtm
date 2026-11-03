@@ -171,15 +171,13 @@ MerchantLicense.init(
 );
 
 export interface MerchantEntryAttributes {
-  id: number;
   merchantId: number;
   step: number;
   status: number;
   payload: unknown;
 }
 
-export interface MerchantEntryCreationAttributes extends Omit<MerchantEntryAttributes, 'id' | 'step' | 'status'> {
-  id?: number;
+export interface MerchantEntryCreationAttributes extends Omit<MerchantEntryAttributes, 'step' | 'status'> {
   step?: number;
   status?: number;
 }
@@ -188,7 +186,6 @@ export class MerchantEntry
   extends Model<MerchantEntryAttributes, MerchantEntryCreationAttributes>
   implements MerchantEntryAttributes
 {
-  declare id: number;
   declare merchantId: number;
   declare step: number;
   declare status: number;
@@ -197,13 +194,9 @@ export class MerchantEntry
 
 MerchantEntry.init(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
     merchantId: {
       type: DataTypes.INTEGER,
+      primaryKey: true,
       allowNull: false,
     },
     step: {
@@ -282,7 +275,7 @@ EntryTask.init(
 export interface EntryTypeAttributes {
   code: string;
   name: string;
-  templateUrl: string;
+  templateUrl: string | null;
   payload: unknown;
 }
 
@@ -291,7 +284,7 @@ export interface EntryTypeCreationAttributes extends EntryTypeAttributes {}
 export class EntryType extends Model<EntryTypeAttributes, EntryTypeCreationAttributes> implements EntryTypeAttributes {
   declare code: string;
   declare name: string;
-  declare templateUrl: string;
+  declare templateUrl: string | null;
   declare payload: unknown;
 }
 

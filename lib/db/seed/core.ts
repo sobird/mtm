@@ -2,6 +2,7 @@ import {
   Account,
   EntryTask,
   EntryType,
+  MenuBadge,
   MenuFavorite,
   MenuItem,
   Merchant,
@@ -12,6 +13,7 @@ import {
   SeedMeta,
 } from '../models';
 import accountGet from './data/main/account/get.json';
+import menuBadgesGet from './data/main/menu/badges/get.json';
 import menuGet from './data/main/menu/get.json';
 import categoryGet from './data/main/merchant/category/get.json';
 import detailGet from './data/main/merchant/detail/get.json';
@@ -34,6 +36,7 @@ import {
   transformEntryTypes,
   transformLicenses,
   transformMenu,
+  transformMenuBadges,
   transformMerchantDetail,
   transformMerchantList,
 } from './transformers';
@@ -46,7 +49,7 @@ function record(value: unknown): Record<string, unknown> {
   return typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : {};
 }
 
-function entryTemplateUrl(): string {
+function entryTemplateUrl(): string | null {
   const data = record(dataOf(entryTemplateUrlGet));
 
   return typeof data.entryHandbookUrl === 'string' ? data.entryHandbookUrl : null;
@@ -58,6 +61,7 @@ export async function seedCore(): Promise<void> {
   const list = transformMerchantList(merchantListGet);
   const account = transformAccount(accountGet);
   const { items, favorites } = transformMenu(menuGet);
+  const badges = transformMenuBadges(menuBadgesGet);
   const licenses = transformLicenses(licensesGet);
   const entry = transformEntry(entryGet);
   const entryTask = transformEntryTask(entryTaskGet);
@@ -72,6 +76,7 @@ export async function seedCore(): Promise<void> {
   await Merchant.bulkCreate([detail, ...list], { ignoreDuplicates: true });
   await Account.bulkCreate([account], { ignoreDuplicates: true });
   await MenuItem.bulkCreate(items, { ignoreDuplicates: true });
+  await MenuBadge.bulkCreate(badges, { ignoreDuplicates: true });
   await MenuFavorite.bulkCreate(
     favorites.map((favorite, index) => ({
       accountId: FIXED_ACCOUNT_ID,
