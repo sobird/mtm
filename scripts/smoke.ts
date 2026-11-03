@@ -1,4 +1,4 @@
-import { mkdirSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 
 import { createSessionCookie } from './session-cookie';
@@ -6,10 +6,11 @@ import { createSessionCookie } from './session-cookie';
 /**
  * Production-build smoke test (Task 25).
  *
- * Start the built server against the same database *after* cleaning the stale
- * file (or let this script clean it before the server's first request — the
- * SQLite connection is opened lazily on the first request). The standalone
- * server changes its cwd to `.next/standalone`, so pass an absolute path:
+ * Delete the stale database, then start the built server against that path;
+ * the script refuses to run while the file exists, because deleting a file a
+ * live SQLite connection holds open leaves the server writing to an unlinked
+ * inode. The standalone server changes its cwd to `.next/standalone`, so pass
+ * an absolute path:
  *
  *   rm -f data/smoke.sqlite
  *   NODE_ENV=production DATABASE_PATH="$(pwd)/data/smoke.sqlite" AUTH_SECRET=test-secret PORT=3000 \
@@ -22,11 +23,21 @@ const DATABASE_PATH = path.resolve(process.env.SMOKE_DATABASE_PATH ?? './data/sm
 const REQUEST_TIMEOUT_MS = 15_000;
 const READY_TIMEOUT_MS = 30_000;
 
-// The smoke process never opens the database itself; point the variable at the
-// smoke file for consistency and remove a stale copy before the first request.
-process.env.DATABASE_PATH = DATABASE_PATH;
 mkdirSync(path.dirname(DATABASE_PATH), { recursive: true });
-rmSync(DATABASE_PATH, { force: true });
+
+// A clean start is part of the contract: the operator deletes the file before
+// starting the server. The persistence rerun opts out explicitly.
+if (existsSync(DATABASE_PATH) && process.env.SMOKE_ALLOW_EXISTING_DB !== '1') {
+  throw new Error(
+    `smoke database already exists: ${DATABASE_PATH}\n` +
+      'Stop the server, delete the file, start the server again, then re-run smoke. ' +
+      'Set SMOKE_ALLOW_EXISTING_DB=1 only for the restart-persistence check.'
+  );
+}
+
+if (!process.env.AUTH_SECRET) {
+  throw new Error('AUTH_SECRET must be set to the same value the smoke server was started with');
+}
 
 const PUBLIC_ROUTES = [
   '/login',
