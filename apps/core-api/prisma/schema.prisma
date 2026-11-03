@@ -1,0 +1,194 @@
+// commerce_core schema: merchant and shop master data, categories, brands,
+// products, product versions, SKUs, audit records, and media assets.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("CORE_DATABASE_URL")
+}
+
+enum MerchantStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum ShopStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum CategoryStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum AttributeType {
+  TEXT
+  NUMBER
+  SELECT
+}
+
+enum BrandStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum ProductVersionStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+  PUBLISHED
+  SUPERSEDED
+  OFFLINE
+}
+
+enum SkuStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum AuditStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Merchant {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  name         String
+  status       MerchantStatus @default(ACTIVE)
+  contactName  String?
+  contactPhone String?
+  profile      Json?                 // 旧 merchant payload / 未建模字段
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  shops        Shop[]
+}
+
+model Shop {
+  id           String   @id @default(cuid())
+  merchantId   String
+  name         String
+  logoUrl      String?
+  status       ShopStatus @default(ACTIVE)
+  description  String?
+  externalLink String?
+  address      String?
+  contactName  String?
+  contactPhone String?
+  profile      Json?                 // 旧 shop payload / 未建模字段
+  createdAt    DateTime @default(now())
+  merchant     Merchant @relation(fields: [merchantId], references: [id])
+}
+
+model Category {
+  id       String  @id @default(cuid())
+  parentId String?
+  name     String
+  level    Int     @default(1)      // 1..3
+  path     String                   // 形如 /root/child/leaf
+  sort     Int     @default(0)
+  status   CategoryStatus @default(ACTIVE)
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryTree")
+  attributes CategoryAttribute[]
+}
+
+model CategoryAttribute {
+  id         String  @id @default(cuid())
+  categoryId String
+  name       String
+  type       AttributeType  // TEXT / NUMBER / SELECT
+  required   Boolean @default(false)
+  options    Json?           // SELECT 类型的选项
+  sort       Int     @default(0)
+  category   Category @relation(fields: [categoryId], references: [id])
+}
+
+model Brand {
+  id      String @id @default(cuid())
+  name    String @unique
+  logoUrl String?
+  status  BrandStatus @default(ACTIVE)
+}
+
+model Product {
+  id                 String  @id @default(cuid())
+  merchantId         String
+  shopId             String
+  categoryId         String
+  brandId            String?
+  code               String  @unique       // 商品编码，用户可见
+  currentVersionId   String?               // 最新草稿/审核中版本
+  publishedVersionId String?               // 线上版本
+  deletedAt          DateTime?             // 软删除
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  versions           ProductVersion[]
+}
+
+model ProductVersion {
+  id           String  @id @default(cuid())
+  productId    String
+  version      Int
+  status       ProductVersionStatus @default(DRAFT)
+  title        String
+  subtitle     String?
+  mainImageUrl String
+  images       Json                 // 图片 URL 数组
+  description  String
+  attributes   Json                 // { [categoryAttributeId]: value }
+  createdBy    String               // 商家端账号 ID
+  createdAt    DateTime @default(now())
+  submittedAt  DateTime?
+  reviewedAt   DateTime?
+  publishedAt  DateTime?
+  audits       AuditRecord[]
+  skus         Sku[]
+  product      Product @relation(fields: [productId], references: [id])
+}
+
+model Sku {
+  id               String  @id @default(cuid())
+  productVersionId String
+  skuCode          String
+  specs            Json    // 例如 { "颜色": "红", "尺码": "L" }
+  price            Decimal @db.Decimal(10, 2)
+  stock            Int     @default(0)
+  status           SkuStatus @default(ACTIVE)
+  productVersion   ProductVersion @relation(fields: [productVersionId], references: [id])
+}
+
+model AuditRecord {
+  id               String  @id @default(cuid())
+  productVersionId String
+  status           AuditStatus @default(PENDING)
+  submitterId      String
+  reviewerId       String?
+  comment          String?
+  submittedAt      DateTime @default(now())
+  reviewedAt       DateTime?
+  productVersion   ProductVersion @relation(fields: [productVersionId], references: [id])
+}
+
+model MediaAsset {
+  id         String   @id @default(cuid())
+  filename   String                    // 随机生成的文件名
+  mimeType   String
+  size       Int
+  url        String                    // 对外可访问 URL
+  uploadedBy String
+  merchantId String?
+  createdAt  DateTime @default(now())
+}
+
+model SeedMeta {
+  version   String   @id
+  appliedAt DateTime @default(now())
+}

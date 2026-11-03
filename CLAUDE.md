@@ -13,9 +13,8 @@
 
 ## 当前状态（重要）
 
-- 设计文档已于 2026-11-03 获用户确认。
-- 阶段 1 实现计划已写好，**尚未开始实施**。
-- 当前应用仍是单体 Next.js + Sequelize + SQLite；阶段 1 将其迁入 monorepo 并切到 PostgreSQL + Prisma。
+- 阶段 1 已完成（monorepo + PostgreSQL/Prisma 数据层）：Turborepo 工作区、`apps/merchant-admin`、`apps/core-api`、三个业务库与测试库、Prisma 迁移与种子数据、一键启动脚本均已就绪。
+- 下一个阶段是阶段 2：认证/权限与 ops-admin。
 - 后续阶段：2 认证/权限与 ops-admin，3 类目/品牌/商家/上传，4 商品/版本/审核，5 i18n/开源化/CI。
 
 ## 必读文档
@@ -45,7 +44,7 @@
 
 - 不把美团品牌、内部域名、员工信息、真实业务数据、密钥带入开源代码。
 - 现有商家功能（店铺 / 营销 / 优惠券）保留，迁移到 `apps/merchant-admin`。
-- 旧 SQLite 数据不迁移；种子数据重新生成，主键统一 cuid。
+- 旧 SQLite 数据不迁移；旧演示表保留原有字符串 ID，新业务表使用 cuid。
 - 运营端商品只读 + 审核；商家端负责商品 CRUD / 提交 / 发布。
 - 商品版本一旦进入审核即不可变；编辑已提交 / 已驳回商品会创建新版本。
 - 发布是商家手动动作。
@@ -55,12 +54,19 @@
 
 ```bash
 bun install
-bun run dev
+cp .env.example .env
+bun run dev        # 启动 PostgreSQL、迁移、种子数据并运行所有工作区应用
+bun run db:migrate
+bun run db:seed
+bun run db:reset
 bun run lint
+bun run fmt:check
 bun run typecheck
 bun run test
-bun run fmt:check
+bun run build
 ```
+
+服务端口：`apps/merchant-admin` 为 3000，`apps/core-api` 为 4000。`bun run dev` 依赖 Docker 启动本地 PostgreSQL。
 
 ## 参考仓库（只读，不直接搬代码）
 
@@ -72,5 +78,6 @@ bun run fmt:check
 
 1. 读本文件、设计文档和当前阶段的实现计划。
 2. 设计已获批准；按计划执行，不要跳过阶段边界。
-3. 阶段 1 从 `2026-11-03-open-commerce-admin-phase1-foundation.md` 开始。
-4. 完成一个阶段后再编写下一阶段的计划。
+3. 阶段 1 已完成，归档计划见 `docs/superpowers/plans/2026-11-03-open-commerce-admin-phase1-foundation.md`。
+4. 下一步：编写并执行阶段 2（认证/权限与 ops-admin）的计划。
+5. 完成一个阶段后再编写下一阶段的计划。
