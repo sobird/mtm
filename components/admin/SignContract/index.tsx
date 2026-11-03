@@ -100,8 +100,16 @@ export function SignContract({ open, onOpenChange, mobile, contractId, bizType, 
                     role='button'
                     tabIndex={0}
                     aria-label='协议说明'
-                    onClick={event => event.stopPropagation()}
-                    onKeyDown={event => event.stopPropagation()}
+                    onClick={event => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }}
+                    onKeyDown={event => {
+                      if (event.key === ' ' || event.key === 'Enter') {
+                        event.preventDefault();
+                        event.stopPropagation();
+                      }
+                    }}
                   >
                     ⓘ
                   </span>

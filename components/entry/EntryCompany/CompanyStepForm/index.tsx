@@ -147,10 +147,10 @@ export function CompanyStepForm({ id, defaults, options, onSubmit }: CompanyStep
               placeholder='可以从品牌定位、品牌产品线、市场占有率或年销量、品牌当下布局、品牌未来规划等方面介绍，最多不得超过1000字'
               aria-label='公司简介'
             />
-            <FieldUploadFile name='company.companyFile' maxCount={10} accept={FILE_ACCEPT} maxSizeMB={50} />
+            <FieldUploadFile name='company.companyFile' maxCount={10} accept={FILE_ACCEPT} maxSizeMB={20} />
             <ul className={styles.notes}>
               <li>支持上传相关公司介绍等相关资料附件</li>
-              <li>文件最多上传10个，单个文件大小不得超过50MB</li>
+              <li>文件最多上传10个，单个文件大小不得超过20MB</li>
               <li>文件格式支持：PDF/PPT/DOC/JPG/JPEG/PNG/GIF/BPM</li>
             </ul>
           </Field>

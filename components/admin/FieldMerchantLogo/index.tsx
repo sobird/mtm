@@ -128,9 +128,9 @@ export function FieldMerchantLogo({ value, defaultValue = [], onChange, status, 
       <p className={styles.description}>
         1.店铺标志会在店铺页，订单页等地方，展示给消费者；
         <br />
-        2.请上传正方形图片，不小于100*100像素；
+        2.请上传正方形图片，不小于200*200像素；
         <br />
-        3.格式支持：JPG/JPEG/PNG/GIF/BPM；
+        3.格式支持：JPG/JPEG/PNG/GIF/BMP；
       </p>
       <p className={styles.tip}>{current[0] && status === 4 ? REVIEW_TIP : NORMAL_TIP}</p>
     </div>
