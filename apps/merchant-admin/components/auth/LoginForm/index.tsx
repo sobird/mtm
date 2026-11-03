@@ -1,11 +1,11 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useFormState } from 'react-hook-form';
 
 import { Button, Field, Form, Input, Select, Tabs, useToast } from '@/components/ui';
+import { signInWithCredentials } from '@/lib/auth-client';
 import { INTER_CODE_OPTIONS, loginSchema, passwordLoginSchema, safeCallbackUrl } from '@/lib/validation/auth';
 import type { LoginValues, PasswordLoginValues } from '@/lib/validation/auth';
 
@@ -34,12 +34,11 @@ export function LoginForm({ callbackUrl }: LoginFormProps) {
 
   const handleCaptchaSubmit = async (values: LoginValues) => {
     try {
-      const result = await signIn('credentials', {
-        interCode: values.interCode,
-        mobile: values.mobile,
-        captcha: values.captcha,
-        redirect: false,
-      });
+      const result = await signInWithCredentials(
+        'credentials',
+        { interCode: values.interCode, mobile: values.mobile, captcha: values.captcha },
+        safeCallbackUrl(callbackUrl)
+      );
 
       if (result?.error) {
         toast.error('手机号或验证码错误');
@@ -54,11 +53,11 @@ export function LoginForm({ callbackUrl }: LoginFormProps) {
 
   const handlePasswordSubmit = async (values: PasswordLoginValues) => {
     try {
-      const result = await signIn('password', {
-        identifier: values.identifier,
-        password: values.password,
-        redirect: false,
-      });
+      const result = await signInWithCredentials(
+        'password',
+        { identifier: values.identifier, password: values.password },
+        safeCallbackUrl(callbackUrl)
+      );
 
       if (result?.error) {
         toast.error('用户名或密码错误');

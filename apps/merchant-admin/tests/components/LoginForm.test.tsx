@@ -5,14 +5,14 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { ToastProvider } from '@/components/ui/Toast';
 
 const replace = vi.fn();
-const signIn = vi.fn();
+const signInWithCredentials = vi.fn();
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ replace, push: vi.fn() }),
 }));
 
-vi.mock('next-auth/react', () => ({
-  signIn: (...args: unknown[]) => signIn(...args),
+vi.mock('@/lib/auth-client', () => ({
+  signInWithCredentials: (...args: unknown[]) => signInWithCredentials(...args),
 }));
 
 import { LoginForm } from '@/components/auth/LoginForm';
@@ -21,8 +21,8 @@ afterEach(cleanup);
 
 beforeEach(() => {
   replace.mockReset();
-  signIn.mockReset();
-  signIn.mockResolvedValue({ error: undefined });
+  signInWithCredentials.mockReset();
+  signInWithCredentials.mockResolvedValue({ error: undefined });
 });
 
 function renderLoginForm() {
@@ -41,7 +41,7 @@ test('does not sign in and shows the error for an invalid mobile', async () => {
   await userEvent.click(screen.getByRole('button', { name: '登录' }));
 
   expect(await screen.findByText('手机号格式不符合要求')).toBeInTheDocument();
-  expect(signIn).not.toHaveBeenCalled();
+  expect(signInWithCredentials).not.toHaveBeenCalled();
 });
 
 test('signs in with credentials and replaces the route on success', async () => {
@@ -52,12 +52,11 @@ test('signs in with credentials and replaces the route on success', async () => 
   await userEvent.click(screen.getByRole('button', { name: '登录' }));
 
   await waitFor(() =>
-    expect(signIn).toHaveBeenCalledWith('credentials', {
-      interCode: '86',
-      mobile: '13412345678',
-      captcha: '123456',
-      redirect: false,
-    })
+    expect(signInWithCredentials).toHaveBeenCalledWith(
+      'credentials',
+      { interCode: '86', mobile: '13412345678', captcha: '123456' },
+      '/'
+    )
   );
   await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
 });
@@ -71,11 +70,11 @@ test('signs in with the password provider from the account tab', async () => {
   await userEvent.click(screen.getByRole('button', { name: '登录' }));
 
   await waitFor(() =>
-    expect(signIn).toHaveBeenCalledWith('password', {
-      identifier: 'merchant@example.com',
-      password: 'merchant123',
-      redirect: false,
-    })
+    expect(signInWithCredentials).toHaveBeenCalledWith(
+      'password',
+      { identifier: 'merchant@example.com', password: 'merchant123' },
+      '/'
+    )
   );
   await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
 });

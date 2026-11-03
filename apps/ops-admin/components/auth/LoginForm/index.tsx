@@ -1,10 +1,10 @@
 'use client';
 
 import { Button, Field, Form, Input, useToast } from '@mtm/ui';
-import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useFormState } from 'react-hook-form';
 
+import { signInWithCredentials } from '@/lib/auth-client';
 import { loginSchema, safeCallbackUrl } from '@/lib/validation/auth';
 import type { LoginValues } from '@/lib/validation/auth';
 
@@ -31,11 +31,11 @@ export function LoginForm({ callbackUrl }: LoginFormProps) {
 
   const handleSubmit = async (values: LoginValues) => {
     try {
-      const result = await signIn('credentials', {
-        username: values.username,
-        password: values.password,
-        redirect: false,
-      });
+      const result = await signInWithCredentials(
+        'credentials',
+        { username: values.username, password: values.password },
+        safeCallbackUrl(callbackUrl)
+      );
 
       if (result?.error) {
         toast.error('用户名或密码错误');
