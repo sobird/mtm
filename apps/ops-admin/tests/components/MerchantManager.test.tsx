@@ -114,6 +114,7 @@ test('渲染商家列表并打开只读详情', async () => {
 
   expect(await screen.findByText('青禾家居旗舰店')).toBeInTheDocument();
   expect(screen.getByText('M1001')).toBeInTheDocument();
+  expect(screen.getByText('编码：M1001')).toBeInTheDocument();
   expect(screen.getByText('青禾生活馆')).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: '新建商家' })).not.toBeInTheDocument();
 });
