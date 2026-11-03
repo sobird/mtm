@@ -5,6 +5,7 @@ import { fail, ok } from './api-response';
 import { requireOpsAccount } from './auth-guard';
 import { initDatabase } from './db';
 import { AppError } from './errors';
+import { getAccountPermissions } from './services/permission';
 
 export interface HandlerContext {
   accountId: string;
@@ -30,13 +31,38 @@ async function resolveParams(context?: RouteContext): Promise<Record<string, str
 
 /**
  * Authenticated ops route wrapper: resolves the session, then normalizes the
- * result envelope. Permission checks are added in Task 10 via `withPermission`.
+ * result envelope.
  */
 export function withAuth<T>(handler: (ctx: HandlerContext) => Promise<T>) {
   return async (request: Request, context?: RouteContext): Promise<NextResponse> => {
     try {
       await initDatabase();
       const { accountId, username, name } = await requireOpsAccount();
+      const params = await resolveParams(context);
+      const data = await handler({ accountId, username, name, request, params });
+
+      return ok(data);
+    } catch (error) {
+      return fail(error);
+    }
+  };
+}
+
+/**
+ * Authenticated route wrapper that also enforces a single permission code from
+ * the account's resolved permission snapshot.
+ */
+export function withPermission<T>(permission: string, handler: (ctx: HandlerContext) => Promise<T>) {
+  return async (request: Request, context?: RouteContext): Promise<NextResponse> => {
+    try {
+      await initDatabase();
+      const { accountId, username, name } = await requireOpsAccount();
+      const snapshot = await getAccountPermissions(accountId);
+
+      if (!snapshot.set.has(permission)) {
+        throw new AppError('FORBIDDEN', 403, '无权访问');
+      }
+
       const params = await resolveParams(context);
       const data = await handler({ accountId, username, name, request, params });
 
