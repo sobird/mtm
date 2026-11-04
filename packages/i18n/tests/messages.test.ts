@@ -20,6 +20,11 @@ describe('messages', () => {
     expect(translateError('NOT_A_REAL_CODE', t)).toBe('Something went wrong. Please try again later.');
   });
 
+  test('throws when a key is missing', () => {
+    const t = createTranslator('en-US');
+    expect(() => t('no.such.key')).toThrow(/MISSING_MESSAGE/);
+  });
+
   test('translates menu keys and leaves business text or missing keys untouched', () => {
     const t = createTranslator('zh-CN');
     expect(translateUiKey('menu.product.list', t)).toBe('商品列表');

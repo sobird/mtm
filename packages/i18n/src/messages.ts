@@ -1,4 +1,5 @@
 import { createTranslator as createNextIntlTranslator } from 'next-intl';
+import type { IntlError } from 'next-intl';
 
 import enUS from '../messages/en-US.json';
 import zhCN from '../messages/zh-CN.json';
@@ -22,6 +23,18 @@ export function getMessages(locale: Locale): Messages {
   return MESSAGES[locale];
 }
 
+export function handleIntlError(error: IntlError): void {
+  if (error.code === 'MISSING_MESSAGE') {
+    throw error;
+  }
+
+  console.error(error);
+}
+
 export function createTranslator(locale: Locale): Translator {
-  return createNextIntlTranslator({ locale, messages: getMessages(locale) }) as unknown as Translator;
+  return createNextIntlTranslator({
+    locale,
+    messages: getMessages(locale),
+    onError: handleIntlError,
+  }) as unknown as Translator;
 }
