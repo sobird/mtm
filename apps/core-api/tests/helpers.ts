@@ -27,6 +27,12 @@ export function merchantToken(merchantId: string, permissions: string[]): Promis
  * from a clean slate. Safe to call when the tables are already empty.
  */
 export async function resetCoreFixtures(): Promise<void> {
+  // Product 与 ProductVersion 互相引用，先清空指针再按依赖顺序删除。
+  await prisma.product.updateMany({ data: { currentVersionId: null, publishedVersionId: null } });
+  await prisma.auditRecord.deleteMany();
+  await prisma.sku.deleteMany();
+  await prisma.productVersion.deleteMany();
+  await prisma.product.deleteMany();
   await prisma.categoryAttribute.deleteMany();
   await prisma.category.deleteMany();
   await prisma.shop.deleteMany();

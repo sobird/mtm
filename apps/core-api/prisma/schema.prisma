@@ -131,6 +131,12 @@ model Product {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
   versions           ProductVersion[]
+  currentVersion     ProductVersion? @relation("ProductCurrentVersion", fields: [currentVersionId], references: [id])
+  publishedVersion   ProductVersion? @relation("ProductPublishedVersion", fields: [publishedVersionId], references: [id])
+
+  @@index([merchantId, deletedAt])
+  @@index([shopId])
+  @@index([categoryId])
 }
 
 model ProductVersion {
@@ -152,6 +158,11 @@ model ProductVersion {
   audits       AuditRecord[]
   skus         Sku[]
   product      Product @relation(fields: [productId], references: [id])
+  currentOf    Product[] @relation("ProductCurrentVersion")
+  publishedOf  Product[] @relation("ProductPublishedVersion")
+
+  @@unique([productId, version])
+  @@index([productId, status])
 }
 
 model Sku {
@@ -163,6 +174,8 @@ model Sku {
   stock            Int     @default(0)
   status           SkuStatus @default(ACTIVE)
   productVersion   ProductVersion @relation(fields: [productVersionId], references: [id])
+
+  @@index([productVersionId])
 }
 
 model AuditRecord {
@@ -175,6 +188,9 @@ model AuditRecord {
   submittedAt      DateTime @default(now())
   reviewedAt       DateTime?
   productVersion   ProductVersion @relation(fields: [productVersionId], references: [id])
+
+  @@index([status, submittedAt])
+  @@index([productVersionId])
 }
 
 model MediaAsset {
