@@ -346,7 +346,8 @@ export async function listProducts(
   query: ProductQuery
 ): Promise<{ items: ProductListRowDTO[]; meta: PageMeta }> {
   const { page, pageSize, skip, take } = normalizePage(query);
-  const where: Prisma.ProductWhereInput = { deletedAt: null };
+  // 与 items 的 flatMap 口径保持一致：没有当前版本的商品不计入 total。
+  const where: Prisma.ProductWhereInput = { deletedAt: null, currentVersionId: { not: null } };
 
   if (auth.portal === 'merchant') {
     where.merchantId = auth.merchantId ?? '__none__';
