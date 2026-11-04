@@ -54,10 +54,18 @@ export interface OpsMenuSeed {
 }
 
 const MENU_SEEDS: readonly Omit<OpsMenuSeed, 'sortId'>[] = [
-  { id: 'ops-menu-dashboard', title: '仪表盘', url: '/', parentId: '-1', level: 0, index: '1', permissionCode: null },
+  {
+    id: 'ops-menu-dashboard',
+    title: 'menu.dashboard',
+    url: '/',
+    parentId: '-1',
+    level: 0,
+    index: '1',
+    permissionCode: null,
+  },
   {
     id: 'ops-menu-products',
-    title: '商品管理',
+    title: 'menu.product.list',
     url: '/products',
     parentId: '-1',
     level: 0,
@@ -66,7 +74,7 @@ const MENU_SEEDS: readonly Omit<OpsMenuSeed, 'sortId'>[] = [
   },
   {
     id: 'ops-menu-categories',
-    title: '类目管理',
+    title: 'menu.category.list',
     url: '/categories',
     parentId: '-1',
     level: 0,
@@ -75,7 +83,7 @@ const MENU_SEEDS: readonly Omit<OpsMenuSeed, 'sortId'>[] = [
   },
   {
     id: 'ops-menu-brands',
-    title: '品牌管理',
+    title: 'menu.brand.list',
     url: '/brands',
     parentId: '-1',
     level: 0,
@@ -84,7 +92,7 @@ const MENU_SEEDS: readonly Omit<OpsMenuSeed, 'sortId'>[] = [
   },
   {
     id: 'ops-menu-audits',
-    title: '商品审核',
+    title: 'menu.audit.list',
     url: '/audits',
     parentId: '-1',
     level: 0,
@@ -93,17 +101,25 @@ const MENU_SEEDS: readonly Omit<OpsMenuSeed, 'sortId'>[] = [
   },
   {
     id: 'ops-menu-merchants',
-    title: '商家管理',
+    title: 'menu.merchant.list',
     url: '/merchants',
     parentId: '-1',
     level: 0,
     index: '50',
     permissionCode: PERMISSIONS.MERCHANT_VIEW,
   },
-  { id: 'ops-menu-system', title: '系统管理', url: '', parentId: '-1', level: 0, index: '90', permissionCode: null },
+  {
+    id: 'ops-menu-system',
+    title: 'menu.system.group',
+    url: '',
+    parentId: '-1',
+    level: 0,
+    index: '90',
+    permissionCode: null,
+  },
   {
     id: 'ops-menu-system-accounts',
-    title: '账号管理',
+    title: 'menu.system.accounts',
     url: '/system/accounts',
     parentId: 'ops-menu-system',
     level: 1,
@@ -112,7 +128,7 @@ const MENU_SEEDS: readonly Omit<OpsMenuSeed, 'sortId'>[] = [
   },
   {
     id: 'ops-menu-system-roles',
-    title: '角色管理',
+    title: 'menu.system.roles',
     url: '/system/roles',
     parentId: 'ops-menu-system',
     level: 1,

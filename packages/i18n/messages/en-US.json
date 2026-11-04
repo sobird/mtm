@@ -10,9 +10,132 @@
     }
   },
   "menu": {
+    "badge": {
+      "new": "New"
+    },
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "analytics": {
+      "group": "Analytics",
+      "overview": "Business overview",
+      "trade": "Trade analytics",
+      "category": "Category analytics",
+      "product": "Product analytics",
+      "service": "Service analytics"
+    },
+    "marketing": {
+      "group": "Marketing",
+      "coupons": "Coupons",
+      "campaigns": "Marketing campaigns"
+    },
+    "funds": {
+      "group": "Funds",
+      "deposit": "Deposits",
+      "payouts": "Small payouts",
+      "wallet": "My wallet",
+      "account": "Account funds"
+    },
     "product": {
-      "list": "Products"
+      "group": "Product management",
+      "list": "Products",
+      "create": "Create product",
+      "diagnosis": "Product diagnosis"
+    },
+    "finance": {
+      "invoices": "Invoices",
+      "billing": "Billing"
+    },
+    "shipping": {
+      "center": "Shipping center",
+      "list": "Shipping management",
+      "tools": "Logistics tools",
+      "waybill": "E-waybills"
+    },
+    "afterSales": {
+      "group": "After-sales",
+      "workbench": "After-sales workbench",
+      "appeals": "Appeals center",
+      "returnShipping": "Return shipping",
+      "flashRefund": "Instant refund"
+    },
+    "growth": {
+      "overview": "Merchant growth",
+      "rewards": "Rewards center",
+      "tasks": "Growth tasks",
+      "gold": "Gold merchant certification"
+    },
+    "orders": {
+      "list": "Orders",
+      "addressReview": "Address review",
+      "addressApproval": "Order address approval",
+      "autoVerify": "Auto order verification"
+    },
+    "system": {
+      "group": "System",
+      "staff": "Staff accounts",
+      "settings": "System settings",
+      "accounts": "Accounts",
+      "roles": "Roles"
+    },
+    "service": {
+      "platform": "Customer service platform"
+    },
+    "shop": {
+      "group": "Shop management",
+      "info": "Shop info"
+    },
+    "messages": {
+      "center": "Message center",
+      "settings": "Message settings",
+      "autoReply": "Auto reply"
+    },
+    "rules": {
+      "center": "Rules center",
+      "list": "Rule management"
+    },
+    "violations": {
+      "list": "Violations"
+    },
+    "customers": {
+      "group": "Customers",
+      "care": "Customer care",
+      "profile": "Customer profiles",
+      "reviews": "Customer reviews"
+    },
+    "settings": {
+      "privacy": "Privacy"
+    },
+    "category": {
+      "list": "Categories"
+    },
+    "brand": {
+      "list": "Brands"
+    },
+    "audit": {
+      "list": "Product audits"
+    },
+    "merchant": {
+      "list": "Merchants"
     }
+  },
+  "permissions": {
+    "productView": "Product view",
+    "productCreate": "Product create",
+    "productUpdate": "Product update",
+    "productDelete": "Product delete",
+    "productSubmit": "Product submit",
+    "productPublish": "Product publish",
+    "productAudit": "Product audit",
+    "categoryView": "Category view",
+    "categoryManage": "Category manage",
+    "brandManage": "Brand manage",
+    "merchantView": "Merchant view",
+    "merchantUpdate": "Merchant update",
+    "shopView": "Shop view",
+    "shopUpdate": "Shop update",
+    "accountManage": "Account manage",
+    "roleManage": "Role manage",
+    "platformCrossTenant": "Cross-tenant access"
   },
   "errors": {
     "UNKNOWN": "Something went wrong. Please try again later.",

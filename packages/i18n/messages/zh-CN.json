@@ -10,9 +10,132 @@
     }
   },
   "menu": {
+    "badge": {
+      "new": "新"
+    },
+    "home": "后台首页",
+    "dashboard": "仪表盘",
+    "analytics": {
+      "group": "数据中心",
+      "overview": "经营概览",
+      "trade": "交易分析",
+      "category": "品类分析",
+      "product": "商品分析",
+      "service": "服务分析"
+    },
+    "marketing": {
+      "group": "营销中心",
+      "coupons": "优惠券",
+      "campaigns": "营销活动"
+    },
+    "funds": {
+      "group": "资金管理",
+      "deposit": "保证金管理",
+      "payouts": "小额打款",
+      "wallet": "我的钱包",
+      "account": "账户资金"
+    },
     "product": {
-      "list": "商品列表"
+      "group": "商品管理",
+      "list": "商品列表",
+      "create": "创建新商品",
+      "diagnosis": "商品诊断"
+    },
+    "finance": {
+      "invoices": "发票管理",
+      "billing": "账单对账"
+    },
+    "shipping": {
+      "center": "发货中心",
+      "list": "发货管理",
+      "tools": "物流工具",
+      "waybill": "电子面单"
+    },
+    "afterSales": {
+      "group": "售后管理",
+      "workbench": "售后工作台",
+      "appeals": "申诉中心",
+      "returnShipping": "退货包运费",
+      "flashRefund": "闪电退款"
+    },
+    "growth": {
+      "overview": "商家成长",
+      "rewards": "奖励中心",
+      "tasks": "成长任务",
+      "gold": "金牌商家认证"
+    },
+    "orders": {
+      "list": "订单列表",
+      "addressReview": "地址审核",
+      "addressApproval": "订单地址审核",
+      "autoVerify": "自动核单"
+    },
+    "system": {
+      "group": "系统管理",
+      "staff": "子账号管理",
+      "settings": "系统设置",
+      "accounts": "账号管理",
+      "roles": "角色管理"
+    },
+    "service": {
+      "platform": "客服平台"
+    },
+    "shop": {
+      "group": "店铺管理",
+      "info": "店铺信息"
+    },
+    "messages": {
+      "center": "消息中心",
+      "settings": "消息设置",
+      "autoReply": "自动回复"
+    },
+    "rules": {
+      "center": "规则中心",
+      "list": "规则管理"
+    },
+    "violations": {
+      "list": "违规列表"
+    },
+    "customers": {
+      "group": "顾客管理",
+      "care": "顾客关怀",
+      "profile": "顾客画像",
+      "reviews": "顾客评价"
+    },
+    "settings": {
+      "privacy": "隐私保护"
+    },
+    "category": {
+      "list": "类目管理"
+    },
+    "brand": {
+      "list": "品牌管理"
+    },
+    "audit": {
+      "list": "商品审核"
+    },
+    "merchant": {
+      "list": "商家管理"
     }
+  },
+  "permissions": {
+    "productView": "商品查看",
+    "productCreate": "商品创建",
+    "productUpdate": "商品编辑",
+    "productDelete": "商品删除",
+    "productSubmit": "商品提交",
+    "productPublish": "商品发布",
+    "productAudit": "商品审核",
+    "categoryView": "类目查看",
+    "categoryManage": "类目管理",
+    "brandManage": "品牌管理",
+    "merchantView": "商家查看",
+    "merchantUpdate": "商家信息维护",
+    "shopView": "店铺查看",
+    "shopUpdate": "店铺设置",
+    "accountManage": "账号管理",
+    "roleManage": "角色管理",
+    "platformCrossTenant": "跨商家访问"
   },
   "errors": {
     "UNKNOWN": "操作失败，请稍后重试",

@@ -1,8 +1,10 @@
 'use client';
 
 import { PERMISSIONS } from '@mtm/contracts';
+import { translatePermissionName } from '@mtm/i18n';
 import { PermissionButton } from '@mtm/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { z } from 'zod';
 
@@ -52,6 +54,7 @@ function groupPermissions(permissions: MerchantPermissionDTO[]): PermissionGroup
 }
 
 function PermissionCheckboxes({ groups }: { groups: PermissionGroup[] }) {
+  const t = useTranslations();
   const firstCode = groups[0]?.items[0]?.code;
 
   return (
@@ -65,7 +68,7 @@ function PermissionCheckboxes({ groups }: { groups: PermissionGroup[] }) {
                 key={permission.code}
                 name='permissionCodes'
                 value={permission.code}
-                label={permission.name}
+                label={translatePermissionName(permission.code, permission.name, t)}
                 showError={permission.code === firstCode}
               />
             ))}

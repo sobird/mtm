@@ -6,6 +6,7 @@ import {
   SEED_PRODUCT_ID,
   SEED_VIOLATION_ID,
 } from './ids';
+import { toMenuTitleKey } from './menu-i18n';
 import type {
   AccountRow,
   AnalysisKey,
@@ -91,10 +92,12 @@ export function jsonOf(value: unknown): JsonValue {
 }
 
 function normalizeMenuItem(row: RawRecord): MenuItemRow {
+  const title = str(row.title);
+
   return {
     id: str(row.id),
     parentId: str(row.parentId),
-    title: str(row.title),
+    title: title ? toMenuTitleKey(title) : '',
     icon: str(row.icon),
     url: str(row.url),
     code: str(row.code),
@@ -117,12 +120,16 @@ export function transformMenu(raw: unknown): { items: MenuItemRow[]; favorites: 
 }
 
 export function transformMenuBadges(raw: unknown): MenuBadgeRow[] {
-  return list(dataOf(raw)).map(row => ({
-    menuId: str(row.menuId),
-    actionType: num(row.actionType),
-    noticeStyle: num(row.noticeStyle),
-    noticeContent: str(row.noticeContent),
-  }));
+  return list(dataOf(raw)).map(row => {
+    const noticeContent = str(row.noticeContent);
+
+    return {
+      menuId: str(row.menuId),
+      actionType: num(row.actionType),
+      noticeStyle: num(row.noticeStyle),
+      noticeContent: noticeContent === '新' ? 'menu.badge.new' : noticeContent,
+    };
+  });
 }
 
 export function transformMenuFavorites(items: MenuItemRow[]): MenuFavoriteRow[] {

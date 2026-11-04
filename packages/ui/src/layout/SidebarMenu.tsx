@@ -1,3 +1,5 @@
+import { translateUiKey } from '@mtm/i18n';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
@@ -23,12 +25,14 @@ function Icon({ name }: { name?: string }) {
 }
 
 function MenuGroup({ item, children }: { item: MenuNode; children: ReactNode }) {
+  const t = useTranslations();
+
   return (
     <li className={styles.menuGroup}>
       <details open>
-        <summary className={styles.menuGroupTitle}>
+        <summary className={styles.menuGroupTitle} data-testid={`menu-${item.id}`}>
           <Icon name={item.icon} />
-          <span>{item.title}</span>
+          <span>{translateUiKey(item.title, t)}</span>
         </summary>
         <ul className={styles.menuList}>{children}</ul>
       </details>
@@ -43,6 +47,8 @@ interface MenuTreeProps {
 }
 
 function MenuTree({ items, pathname, className }: MenuTreeProps) {
+  const t = useTranslations();
+
   return (
     <ul className={cx(styles.menuRoot, className)}>
       {items.map(item => {
@@ -59,9 +65,10 @@ function MenuTree({ items, pathname, className }: MenuTreeProps) {
             <Link
               className={cx(styles.menuLink, isActive(pathname, item.url) && styles.menuLinkActive)}
               href={item.url || '/'}
+              data-testid={`menu-${item.id}`}
             >
               <Icon name={item.icon} />
-              <span>{item.title}</span>
+              <span>{translateUiKey(item.title, t)}</span>
             </Link>
           </li>
         );

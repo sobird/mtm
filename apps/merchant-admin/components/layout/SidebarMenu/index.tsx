@@ -1,3 +1,5 @@
+import { translateUiKey } from '@mtm/i18n';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
@@ -26,12 +28,14 @@ function Icon({ name }: { name: string }) {
 }
 
 function MenuGroup({ item, badge, children }: { item: MenuItemDTO; badge?: MenuBadgeDTO; children: ReactNode }) {
+  const t = useTranslations();
+
   return (
     <li className={styles.menuGroup}>
       <details open>
-        <summary className={styles.menuGroupTitle}>
+        <summary className={styles.menuGroupTitle} data-testid={`menu-${item.id}`}>
           <Icon name={item.icon} />
-          <TitleWithBadge title={item.title} badge={badge} />
+          <TitleWithBadge title={translateUiKey(item.title, t)} badge={badge} />
         </summary>
         <ul className={styles.menuList}>{children}</ul>
       </details>
@@ -46,6 +50,8 @@ interface MenuTreeProps {
 }
 
 function MenuTree({ items, badgeMap, className }: MenuTreeProps) {
+  const t = useTranslations();
+
   return (
     <ul className={[styles.menuRoot, className].filter(Boolean).join(' ')}>
       {items.map(item => {
@@ -61,9 +67,9 @@ function MenuTree({ items, badgeMap, className }: MenuTreeProps) {
 
         return (
           <li key={item.id} className={styles.menuItem}>
-            <Link className={styles.menuLink} href={item.url || '/'}>
+            <Link className={styles.menuLink} href={item.url || '/'} data-testid={`menu-${item.id}`}>
               <Icon name={item.icon} />
-              <TitleWithBadge title={item.title} badge={badge} />
+              <TitleWithBadge title={translateUiKey(item.title, t)} badge={badge} />
             </Link>
           </li>
         );

@@ -1,8 +1,11 @@
+import type { Locale } from '@mtm/i18n';
 import { PermissionProvider, ToastProvider } from '@mtm/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+
+import { renderWithIntl } from '../i18n/render';
 
 const mocks = vi.hoisted(() => ({ apiFetch: vi.fn() }));
 
@@ -51,17 +54,18 @@ const ROLE = {
   accountCount: 1,
 };
 
-function renderManager() {
+function renderManager(locale: Locale = 'zh-CN') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
-  return render(
+  return renderWithIntl(
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <PermissionProvider permissions={[]}>
           <RoleManager />
         </PermissionProvider>
       </ToastProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
+    locale
   );
 }
 
@@ -118,6 +122,17 @@ test('renders every permission checkbox and creates a role with the selected cod
       },
     })
   );
+});
+
+test('renders permission names from the message pack under en-US', async () => {
+  renderManager('en-US');
+
+  expect(await screen.findByText('超级管理员')).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: '新建角色' }));
+
+  expect(await screen.findByLabelText('Product view')).toBeInTheDocument();
+  expect(screen.getByLabelText('Product audit')).toBeInTheDocument();
 });
 
 test('edits a role and sends the updated permission codes', async () => {

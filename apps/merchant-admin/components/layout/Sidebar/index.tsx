@@ -1,6 +1,8 @@
 'use client';
 
+import { translateUiKey } from '@mtm/i18n';
 import { PanelLeftClose, PanelLeftOpen, Settings2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
@@ -38,6 +40,7 @@ function collectLeaves(items: MenuItemDTO[]): MenuItemDTO[] {
 }
 
 export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
+  const t = useTranslations();
   const collapsed = useUiStore(state => state.sidebarCollapsed);
   const toggleSidebar = useUiStore(state => state.toggleSidebar);
   const editMode = useUiStore(state => state.sidebarEditMode);
@@ -135,7 +138,7 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
                 {localFavorites.map(item => (
                   <li key={item.id}>
                     <button type='button' className={styles.favoriteEditItem} onClick={() => toggle(item)}>
-                      <span>{item.title}</span>
+                      <span>{translateUiKey(item.title, t)}</span>
                       <span aria-hidden='true'>−</span>
                     </button>
                   </li>
@@ -152,7 +155,7 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
                         className={`${styles.candidateItem} ${added ? styles.candidateAdded : ''}`}
                         onClick={() => toggle(item)}
                       >
-                        <span>{item.title}</span>
+                        <span>{translateUiKey(item.title, t)}</span>
                         <span aria-hidden='true'>{added ? '−' : '+'}</span>
                       </button>
                     </li>
@@ -170,7 +173,7 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
                   {localFavorites.map(item => (
                     <li key={item.id}>
                       <Link className={styles.favoriteLink} href={item.url || '/'}>
-                        {item.title}
+                        {translateUiKey(item.title, t)}
                       </Link>
                     </li>
                   ))}

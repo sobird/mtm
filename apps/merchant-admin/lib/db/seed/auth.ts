@@ -72,7 +72,7 @@ export interface MerchantMenuSeed {
 export const MERCHANT_MENU_SEEDS: readonly MerchantMenuSeed[] = [
   {
     id: 'seed-menu-system',
-    title: '系统管理',
+    title: 'menu.system.group',
     url: '',
     parentId: '-1',
     level: 0,
@@ -82,7 +82,7 @@ export const MERCHANT_MENU_SEEDS: readonly MerchantMenuSeed[] = [
   },
   {
     id: 'seed-menu-accounts',
-    title: '账号管理',
+    title: 'menu.system.accounts',
     url: '/system/accounts',
     parentId: 'seed-menu-system',
     level: 1,
@@ -92,7 +92,7 @@ export const MERCHANT_MENU_SEEDS: readonly MerchantMenuSeed[] = [
   },
   {
     id: 'seed-menu-roles',
-    title: '角色管理',
+    title: 'menu.system.roles',
     url: '/system/roles',
     parentId: 'seed-menu-system',
     level: 1,
@@ -280,15 +280,15 @@ export async function seedMerchantAuth(tx: Prisma.TransactionClient): Promise<vo
 
   await tx.menuItem.updateMany({
     where: { url: '/product' },
-    data: { url: '', title: '商品管理', permissionCode: PERMISSIONS.PRODUCT_VIEW },
+    data: { url: '', title: 'menu.product.group', permissionCode: PERMISSIONS.PRODUCT_VIEW },
   });
   await tx.menuItem.updateMany({
     where: { url: '/product/list' },
-    data: { url: '/products', title: '商品列表', permissionCode: PERMISSIONS.PRODUCT_VIEW },
+    data: { url: '/products', title: 'menu.product.list', permissionCode: PERMISSIONS.PRODUCT_VIEW },
   });
   await tx.menuItem.updateMany({
     where: { url: '/product/create' },
-    data: { url: '/products/new', title: '创建新商品', permissionCode: PERMISSIONS.PRODUCT_CREATE },
+    data: { url: '/products/new', title: 'menu.product.create', permissionCode: PERMISSIONS.PRODUCT_CREATE },
   });
 }
 
