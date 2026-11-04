@@ -2,7 +2,9 @@
 
 import { LogOut, User } from 'lucide-react';
 import { signOut } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 
+import { LocaleSwitcher } from './LocaleSwitcher';
 import type { ShellAccount } from './types';
 
 import styles from './AdminShell.module.css';
@@ -12,6 +14,8 @@ export interface HeaderProps {
 }
 
 export function Header({ account }: HeaderProps) {
+  const t = useTranslations('common');
+
   return (
     <header className={styles.header}>
       <div className={styles.headerLeft} />
@@ -20,6 +24,7 @@ export function Header({ account }: HeaderProps) {
           <User size={16} />
         </span>
         <span className={styles.accountName}>{account.name}</span>
+        <LocaleSwitcher />
         <button
           type='button'
           className={styles.accountButton}
@@ -28,7 +33,7 @@ export function Header({ account }: HeaderProps) {
           }}
         >
           <LogOut size={14} aria-hidden='true' />
-          <span>退出登录</span>
+          <span>{t('logout')}</span>
         </button>
       </div>
     </header>

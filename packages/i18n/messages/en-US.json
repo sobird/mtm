@@ -1,7 +1,13 @@
 {
   "common": {
     "logout": "Sign out",
-    "language": "Language"
+    "language": "Language",
+    "toggleSidebar": "Toggle sidebar",
+    "accountMenu": "Account menu",
+    "appTitle": {
+      "merchant": "Open Commerce Merchant Admin",
+      "ops": "Open Commerce Ops Admin"
+    }
   },
   "menu": {
     "product": {

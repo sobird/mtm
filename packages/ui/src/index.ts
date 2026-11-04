@@ -99,6 +99,8 @@ export type { SidebarMenuProps } from './layout/SidebarMenu';
 export { Header } from './layout/Header';
 export type { HeaderProps } from './layout/Header';
 
+export { LocaleSwitcher } from './layout/LocaleSwitcher';
+
 export { PageContainer } from './layout/PageContainer';
 export type { PageContainerProps } from './layout/PageContainer';
 

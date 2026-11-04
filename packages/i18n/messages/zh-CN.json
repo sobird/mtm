@@ -1,7 +1,13 @@
 {
   "common": {
     "logout": "退出登录",
-    "language": "语言"
+    "language": "语言",
+    "toggleSidebar": "切换侧边栏",
+    "accountMenu": "账号菜单",
+    "appTitle": {
+      "merchant": "开源电商商家管理后台",
+      "ops": "开源电商运营后台"
+    }
   },
   "menu": {
     "product": {

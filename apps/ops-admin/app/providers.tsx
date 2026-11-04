@@ -1,17 +1,20 @@
 'use client';
 
+import type { Locale } from '@mtm/i18n';
 import { ToastProvider } from '@mtm/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App as AntdApp, ConfigProvider } from 'antd';
-import 'dayjs/locale/zh-cn';
+import enUS from 'antd/locale/en_US';
 import zhCN from 'antd/locale/zh_CN';
 import dayjs from 'dayjs';
+import 'dayjs/locale/en';
+import 'dayjs/locale/zh-cn';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
-dayjs.locale('zh-cn');
+export default function Providers({ children, locale }: { children: ReactNode; locale: Locale }) {
+  dayjs.locale(locale === 'zh-CN' ? 'zh-cn' : 'en');
 
-export default function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -26,7 +29,7 @@ export default function Providers({ children }: { children: ReactNode }) {
 
   return (
     <ConfigProvider
-      locale={zhCN}
+      locale={locale === 'zh-CN' ? zhCN : enUS}
       theme={{
         token: {
           colorPrimary: '#1677ff',

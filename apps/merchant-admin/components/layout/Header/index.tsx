@@ -1,7 +1,9 @@
 'use client';
 
+import { LocaleSwitcher } from '@mtm/ui';
 import { LogOut, Menu as MenuIcon, User } from 'lucide-react';
 import { signOut } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 
 import { Dropdown } from '@/components/ui';
 import type { AccountDTO } from '@/lib/services/account';
@@ -14,20 +16,22 @@ export interface HeaderProps {
 }
 
 export function Header({ account }: HeaderProps) {
+  const t = useTranslations('common');
   const toggleSidebar = useUiStore(state => state.toggleSidebar);
 
   return (
     <header className={styles.header}>
       <div className={styles.headerLeft}>
-        <button type='button' className={styles.headerButton} onClick={toggleSidebar} aria-label='切换侧边栏'>
+        <button type='button' className={styles.headerButton} onClick={toggleSidebar} aria-label={t('toggleSidebar')}>
           <MenuIcon size={18} aria-hidden='true' />
         </button>
       </div>
 
       <div className={styles.headerRight}>
+        <LocaleSwitcher />
         <Dropdown
           trigger={
-            <button type='button' className={styles.accountButton} aria-label='账号菜单'>
+            <button type='button' className={styles.accountButton} aria-label={t('accountMenu')}>
               <span className={styles.avatar} aria-hidden='true'>
                 <User size={16} />
               </span>
@@ -40,7 +44,7 @@ export function Header({ account }: HeaderProps) {
               label: (
                 <span className={styles.logoutLabel}>
                   <LogOut size={14} aria-hidden='true' />
-                  退出登录
+                  {t('logout')}
                 </span>
               ),
               danger: true,
