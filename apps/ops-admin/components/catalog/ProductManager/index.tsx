@@ -1,6 +1,7 @@
 'use client';
 
 import type {
+  CategoryNodeDTO,
   ProductDetailDTO,
   ProductListRowDTO,
   ProductVersionDTO,
@@ -24,7 +25,7 @@ import {
 } from '@mtm/ui';
 import type { DataTableColumns, TagTone } from '@mtm/ui';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { apiFetch, apiFetchWithMeta } from '@/lib/api-client';
 
@@ -155,7 +156,13 @@ const VERSION_COLUMNS: DataTableColumns<ProductVersionSummaryDTO> = [
   },
 ];
 
-function VersionContent({ version }: { version: ProductVersionDTO }) {
+function VersionContent({
+  version,
+  attributeNames,
+}: {
+  version: ProductVersionDTO;
+  attributeNames: Record<string, string>;
+}) {
   const attributeEntries = Object.entries(version.attributes);
 
   return (
@@ -179,7 +186,7 @@ function VersionContent({ version }: { version: ProductVersionDTO }) {
       {attributeEntries.length ? (
         <div className={styles.attributes}>
           {attributeEntries.map(([key, value]) => (
-            <LabelValue key={key} label={key}>
+            <LabelValue key={key} label={attributeNames[key] ?? key}>
               {value || '-'}
             </LabelValue>
           ))}
@@ -209,6 +216,24 @@ function ProductDetailDialog({ productId, onClose }: { productId: string | null;
     queryFn: () => apiFetch<ProductDetailDTO>(`/api/bff/products/${productId}`),
     enabled: productId !== null,
   });
+
+  const categoryTreeQuery = useQuery({
+    queryKey: ['ops', 'categories', 'tree'],
+    queryFn: () => apiFetch<CategoryNodeDTO[]>('/api/bff/categories/tree'),
+    enabled: productId !== null,
+  });
+
+  const attributeNames = useMemo(() => {
+    const names: Record<string, string> = {};
+
+    for (const node of categoryTreeQuery.data ?? []) {
+      for (const attribute of node.attributes) {
+        names[attribute.id] = attribute.name;
+      }
+    }
+
+    return names;
+  }, [categoryTreeQuery.data]);
 
   const product = detailQuery.data;
 
@@ -243,13 +268,13 @@ function ProductDetailDialog({ productId, onClose }: { productId: string | null;
 
           <section className={styles.section}>
             <h3 className={styles.sectionTitle}>当前版本</h3>
-            <VersionContent version={product.currentVersion} />
+            <VersionContent version={product.currentVersion} attributeNames={attributeNames} />
           </section>
 
           <section className={styles.section}>
             <h3 className={styles.sectionTitle}>线上版本</h3>
             {product.publishedVersion ? (
-              <VersionContent version={product.publishedVersion} />
+              <VersionContent version={product.publishedVersion} attributeNames={attributeNames} />
             ) : (
               <p className={styles.muted}>暂无线上版本</p>
             )}
