@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { Button, Field, Input, Select } from '@/components/ui';
@@ -7,11 +8,6 @@ import { Button, Field, Input, Select } from '@/components/ui';
 import type { ProductFormValues, SkuFormRow } from '../ProductForm/schema';
 
 export type { SkuFormRow };
-
-const STATUS_OPTIONS = [
-  { value: 'ACTIVE', label: '启用' },
-  { value: 'DISABLED', label: '停用' },
-];
 
 export interface SkuEditorProps {
   disabled?: boolean;
@@ -24,8 +20,15 @@ export function createEmptySku(): SkuFormRow {
 
 /** 商品 SKU 行编辑，基于 `useFieldArray` 获得稳定行 key。 */
 export function SkuEditor({ disabled = false }: SkuEditorProps) {
+  const t = useTranslations('product.sku');
+  const tCommon = useTranslations('common');
   const { control } = useFormContext<ProductFormValues>();
   const { fields, append, remove } = useFieldArray({ control, name: 'skus' });
+
+  const statusOptions = [
+    { value: 'ACTIVE', label: t('statusActive') },
+    { value: 'DISABLED', label: t('statusDisabled') },
+  ];
 
   return (
     <div style={{ display: 'grid', gap: 12 }}>
@@ -43,28 +46,29 @@ export function SkuEditor({ disabled = false }: SkuEditorProps) {
             borderRadius: 'var(--radius-md)',
           }}
         >
-          <Field label={`SKU 编码 ${index + 1}`}>
+          <Field label={t('code', { index: index + 1 })}>
             <Input
               name={`skus.${index}.skuCode`}
-              aria-label={`SKU 编码 ${index + 1}`}
+              aria-label={t('code', { index: index + 1 })}
+              data-testid={index === 0 ? 'product-sku-code' : undefined}
               maxLength={50}
               disabled={disabled}
             />
           </Field>
 
-          <Field label='规格'>
+          <Field label={t('specs')}>
             <Input
               name={`skus.${index}.specsText`}
-              aria-label={`规格 ${index + 1}`}
+              aria-label={t('specsLabel', { index: index + 1 })}
               maxLength={50}
               disabled={disabled}
             />
           </Field>
 
-          <Field label='价格'>
+          <Field label={t('price')}>
             <Input
               name={`skus.${index}.price`}
-              aria-label={`价格 ${index + 1}`}
+              aria-label={t('priceLabel', { index: index + 1 })}
               type='number'
               min={0}
               step='0.01'
@@ -72,10 +76,10 @@ export function SkuEditor({ disabled = false }: SkuEditorProps) {
             />
           </Field>
 
-          <Field label='库存'>
+          <Field label={t('stock')}>
             <Input
               name={`skus.${index}.stock`}
-              aria-label={`库存 ${index + 1}`}
+              aria-label={t('stockLabel', { index: index + 1 })}
               type='number'
               min={0}
               step='1'
@@ -83,11 +87,11 @@ export function SkuEditor({ disabled = false }: SkuEditorProps) {
             />
           </Field>
 
-          <Field label='状态'>
+          <Field label={t('status')}>
             <Select
               name={`skus.${index}.status`}
-              aria-label={`SKU 状态 ${index + 1}`}
-              options={STATUS_OPTIONS}
+              aria-label={t('statusLabel', { index: index + 1 })}
+              options={statusOptions}
               disabled={disabled}
             />
           </Field>
@@ -95,18 +99,18 @@ export function SkuEditor({ disabled = false }: SkuEditorProps) {
           <Button
             variant='ghost'
             size='sm'
-            aria-label={`删除 SKU ${index + 1}`}
+            aria-label={t('deleteLabel', { index: index + 1 })}
             disabled={disabled || fields.length <= 1}
             onClick={() => remove(index)}
           >
-            删除
+            {tCommon('delete')}
           </Button>
         </div>
       ))}
 
       <div>
         <Button variant='secondary' size='sm' disabled={disabled} onClick={() => append(createEmptySku())}>
-          新增 SKU
+          {t('add')}
         </Button>
       </div>
     </div>

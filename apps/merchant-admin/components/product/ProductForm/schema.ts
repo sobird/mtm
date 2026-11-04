@@ -1,4 +1,5 @@
 import type { CategoryAttributeDTO } from '@mtm/contracts';
+import type { Translate } from '@mtm/i18n';
 import { z } from 'zod';
 
 export const MAX_IMAGES = 5;
@@ -35,18 +36,42 @@ export type ProductFormMode = 'create' | 'edit';
  * 类目属性随选中类目变化，schema 在表单挂载时创建一次，通过 `getAttributes`
  * 在每次校验时读取当前类目属性，避免重建表单丢失输入。
  */
-export function createProductFormSchema(mode: ProductFormMode, getAttributes: () => CategoryAttributeDTO[]) {
+export function createProductFormSchema(
+  mode: ProductFormMode,
+  getAttributes: () => CategoryAttributeDTO[],
+  t: Translate
+) {
   return z
     .object({
-      shopId: mode === 'create' ? z.string().trim().min(1, '请选择店铺') : z.string(),
+      shopId: mode === 'create' ? z.string().trim().min(1, t('validation.productShopRequired')) : z.string(),
       code:
-        mode === 'create' ? z.string().trim().min(1, '请填写商品编码').max(50, '商品编码最多 50 个字符') : z.string(),
-      categoryId: z.string().trim().min(1, '请选择类目'),
+        mode === 'create'
+          ? z
+              .string()
+              .trim()
+              .min(1, t('validation.productCodeRequired'))
+              .max(50, t('validation.productCodeMax', { max: 50 }))
+          : z.string(),
+      categoryId: z.string().trim().min(1, t('validation.productCategoryRequired')),
       brandId: z.string().nullable(),
-      title: z.string().trim().min(1, '请填写商品标题').max(100, '商品标题最多 100 个字符'),
-      subtitle: z.string().trim().max(100, '副标题最多 100 个字符'),
-      images: z.array(z.string().min(1)).min(1, '请至少上传一张图片').max(MAX_IMAGES, `最多上传 ${MAX_IMAGES} 张图片`),
-      description: z.string().trim().min(1, '请填写商品描述').max(5000, '商品描述最多 5000 个字符'),
+      title: z
+        .string()
+        .trim()
+        .min(1, t('validation.productTitleRequired'))
+        .max(100, t('validation.productTitleMax', { max: 100 })),
+      subtitle: z
+        .string()
+        .trim()
+        .max(100, t('validation.productSubtitleMax', { max: 100 })),
+      images: z
+        .array(z.string().min(1))
+        .min(1, t('validation.productImagesRequired'))
+        .max(MAX_IMAGES, t('validation.productImagesMax', { max: MAX_IMAGES })),
+      description: z
+        .string()
+        .trim()
+        .min(1, t('validation.productDescriptionRequired'))
+        .max(5000, t('validation.productDescriptionMax', { max: 5000 })),
       attributes: z.record(z.string(), z.string()),
       skus: z.array(
         z.object({
@@ -62,7 +87,7 @@ export function createProductFormSchema(mode: ProductFormMode, getAttributes: ()
       const filledSkus = value.skus.filter(sku => sku.skuCode.trim() !== '');
 
       if (filledSkus.length === 0) {
-        ctx.addIssue({ code: 'custom', path: ['skus'], message: '至少填写一个 SKU' });
+        ctx.addIssue({ code: 'custom', path: ['skus'], message: t('validation.skuRequired') });
       }
 
       const skuCodes = new Set<string>();
@@ -75,27 +100,35 @@ export function createProductFormSchema(mode: ProductFormMode, getAttributes: ()
         const skuCode = sku.skuCode.trim();
 
         if (skuCode.length > 50) {
-          ctx.addIssue({ code: 'custom', path: ['skus', index, 'skuCode'], message: 'SKU 编码最多 50 个字符' });
+          ctx.addIssue({
+            code: 'custom',
+            path: ['skus', index, 'skuCode'],
+            message: t('validation.skuCodeMax', { max: 50 }),
+          });
         }
 
         const normalized = skuCode.toLowerCase();
 
         if (skuCodes.has(normalized)) {
-          ctx.addIssue({ code: 'custom', path: ['skus', index, 'skuCode'], message: 'SKU 编码重复' });
+          ctx.addIssue({ code: 'custom', path: ['skus', index, 'skuCode'], message: t('validation.skuCodeDuplicate') });
         }
 
         skuCodes.add(normalized);
 
         if (sku.specsText.trim().length > 50) {
-          ctx.addIssue({ code: 'custom', path: ['skus', index, 'specsText'], message: '规格最多 50 个字符' });
+          ctx.addIssue({
+            code: 'custom',
+            path: ['skus', index, 'specsText'],
+            message: t('validation.skuSpecsMax', { max: 50 }),
+          });
         }
 
         if (sku.price.trim() === '' || !Number.isFinite(Number(sku.price)) || Number(sku.price) < 0) {
-          ctx.addIssue({ code: 'custom', path: ['skus', index, 'price'], message: '请填写有效价格' });
+          ctx.addIssue({ code: 'custom', path: ['skus', index, 'price'], message: t('validation.skuPriceInvalid') });
         }
 
         if (sku.stock.trim() === '' || !Number.isInteger(Number(sku.stock)) || Number(sku.stock) < 0) {
-          ctx.addIssue({ code: 'custom', path: ['skus', index, 'stock'], message: '请填写有效库存' });
+          ctx.addIssue({ code: 'custom', path: ['skus', index, 'stock'], message: t('validation.skuStockInvalid') });
         }
       });
 
@@ -104,18 +137,30 @@ export function createProductFormSchema(mode: ProductFormMode, getAttributes: ()
 
         if (raw === '') {
           if (attribute.required) {
-            ctx.addIssue({ code: 'custom', path: ['attributes', attribute.id], message: '请填写该属性' });
+            ctx.addIssue({
+              code: 'custom',
+              path: ['attributes', attribute.id],
+              message: t('validation.attributeRequired'),
+            });
           }
 
           continue;
         }
 
         if (attribute.type === 'NUMBER' && !Number.isFinite(Number(raw))) {
-          ctx.addIssue({ code: 'custom', path: ['attributes', attribute.id], message: '请填写有效数字' });
+          ctx.addIssue({
+            code: 'custom',
+            path: ['attributes', attribute.id],
+            message: t('validation.attributeNumberInvalid'),
+          });
         }
 
         if (attribute.type === 'SELECT' && !attribute.options.includes(raw)) {
-          ctx.addIssue({ code: 'custom', path: ['attributes', attribute.id], message: '请选择有效选项' });
+          ctx.addIssue({
+            code: 'custom',
+            path: ['attributes', attribute.id],
+            message: t('validation.attributeOptionInvalid'),
+          });
         }
       }
     });

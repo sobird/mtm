@@ -1,4 +1,5 @@
 import { PERMISSIONS } from '@mtm/contracts';
+import type { Locale } from '@mtm/i18n';
 import { PermissionProvider, ToastProvider } from '@mtm/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, screen, waitFor } from '@testing-library/react';
@@ -45,7 +46,7 @@ const DRAFT_ROW = {
   updatedAt: '2026-11-04T00:00:00.000Z',
 };
 
-function renderManager(permissions: string[] = Object.values(PERMISSIONS)) {
+function renderManager(permissions: string[] = Object.values(PERMISSIONS), locale: Locale = 'zh-CN') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return renderWithIntl(
     <QueryClientProvider client={queryClient}>
@@ -54,7 +55,8 @@ function renderManager(permissions: string[] = Object.values(PERMISSIONS)) {
           <ProductManager />
         </PermissionProvider>
       </ToastProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
+    locale
   );
 }
 
@@ -129,4 +131,14 @@ test('确认删除对话框后调用删除接口', async () => {
   await userEvent.click(await screen.findByRole('button', { name: '确认删除' }));
 
   await waitFor(() => expect(mocks.apiFetch).toHaveBeenCalledWith('/api/bff/products/p1', { method: 'DELETE' }));
+});
+
+test('en-US 渲染英文表头与新建按钮', async () => {
+  renderManager(Object.values(PERMISSIONS), 'en-US');
+
+  expect(await screen.findByText('测试沙发')).toBeInTheDocument();
+  expect(screen.getByRole('columnheader', { name: 'Product' })).toBeInTheDocument();
+  expect(screen.getByText('Draft')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Create product' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Submit for review' })).toBeInTheDocument();
 });

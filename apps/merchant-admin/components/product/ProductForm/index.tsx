@@ -10,6 +10,7 @@ import type {
 import { PERMISSIONS } from '@mtm/contracts';
 import { usePermissions } from '@mtm/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { MutableRefObject } from 'react';
@@ -18,7 +19,6 @@ import { Controller, useFormContext, useFormState, useWatch } from 'react-hook-f
 import { PageContainer } from '@/components/layout/PageContainer';
 import { Button, Empty, Field, Form, Input, Select, Skeleton, Tag, Textarea, useToast } from '@/components/ui';
 import type { SelectOption, TagTone } from '@/components/ui';
-import { ApiError } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import {
   createProduct,
@@ -31,6 +31,7 @@ import {
   updateProduct,
 } from '@/lib/services/products';
 import { fetchMyMerchant } from '@/lib/services/shop-profile';
+import { translateApiError } from '@/lib/translate-api-error';
 
 import AttributeFields from '../AttributeFields';
 import ProductImageField from '../ProductImageField';
@@ -44,14 +45,14 @@ import styles from './index.module.css';
 
 export type ProductFormProps = { mode: 'create' } | { mode: 'edit'; productId: string };
 
-const STATUS_META: Record<ProductVersionStatus, { label: string; tone: TagTone }> = {
-  DRAFT: { label: '草稿', tone: 'neutral' },
-  SUBMITTED: { label: '审核中', tone: 'warning' },
-  APPROVED: { label: '已通过', tone: 'success' },
-  REJECTED: { label: '已驳回', tone: 'danger' },
-  PUBLISHED: { label: '已发布', tone: 'success' },
-  SUPERSEDED: { label: '已被替换', tone: 'neutral' },
-  OFFLINE: { label: '已下线', tone: 'danger' },
+const STATUS_TONES: Record<ProductVersionStatus, TagTone> = {
+  DRAFT: 'neutral',
+  SUBMITTED: 'warning',
+  APPROVED: 'success',
+  REJECTED: 'danger',
+  PUBLISHED: 'success',
+  SUPERSEDED: 'neutral',
+  OFFLINE: 'danger',
 };
 
 function emptyValues(shopId: string): ProductFormValues {
@@ -142,6 +143,7 @@ interface ProductFormFieldsProps {
 }
 
 function ProductFormFields({ mode, readOnly, categories, brands, shops, attributesRef }: ProductFormFieldsProps) {
+  const t = useTranslations('product');
   const { control, setValue } = useFormContext<ProductFormValues>();
   const { errors, isSubmitted } = useFormState<ProductFormValues>();
   const categoryId = useWatch({ control, name: 'categoryId' }) as string | undefined;
@@ -171,7 +173,7 @@ function ProductFormFields({ mode, readOnly, categories, brands, shops, attribut
     })) ?? [];
 
   const brandOptions: SelectOption[] = [
-    { value: '', label: '不选择品牌' },
+    { value: '', label: t('form.noBrand') },
     ...brands.map(brand => ({ value: brand.id, label: brand.name })),
   ];
 
@@ -180,63 +182,89 @@ function ProductFormFields({ mode, readOnly, categories, brands, shops, attribut
   return (
     <>
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>基本信息</h2>
+        <h2 className={styles.sectionTitle}>{t('form.basicInfo')}</h2>
 
         {mode === 'create' ? (
           <div className={styles.grid}>
-            <Field label='店铺' required>
+            <Field label={t('form.shop')} required>
               <Select
                 name='shopId'
-                aria-label='店铺'
-                placeholder='请选择店铺'
+                aria-label={t('form.shop')}
+                placeholder={t('form.shopPlaceholder')}
                 options={shopOptions}
                 disabled={readOnly}
               />
             </Field>
 
-            <Field label='商品编码' required>
-              <Input name='code' aria-label='商品编码' maxLength={50} placeholder='例如 P1001' disabled={readOnly} />
+            <Field label={t('form.code')} required>
+              <Input
+                name='code'
+                aria-label={t('form.code')}
+                data-testid='product-code'
+                maxLength={50}
+                placeholder={t('form.codePlaceholder')}
+                disabled={readOnly}
+              />
             </Field>
           </div>
         ) : null}
 
         <div className={styles.grid}>
-          <Field label='类目' required>
+          <Field label={t('form.category')} required>
             <Select
               name='categoryId'
-              aria-label='商品类目'
-              placeholder='请选择类目'
+              aria-label={t('form.category')}
+              data-testid='product-category'
+              placeholder={t('form.categoryPlaceholder')}
               options={categoryOptions}
               disabled={readOnly}
             />
           </Field>
 
-          <Field label='品牌'>
-            <Select name='brandId' aria-label='商品品牌' options={brandOptions} disabled={readOnly} />
+          <Field label={t('form.brand')}>
+            <Select
+              name='brandId'
+              aria-label={t('form.brand')}
+              data-testid='product-brand'
+              options={brandOptions}
+              disabled={readOnly}
+            />
           </Field>
         </div>
 
-        <Field label='商品标题' required>
-          <Input name='title' aria-label='商品标题' maxLength={100} disabled={readOnly} />
+        <Field label={t('form.title')} required>
+          <Input
+            name='title'
+            aria-label={t('form.title')}
+            data-testid='product-title'
+            maxLength={100}
+            disabled={readOnly}
+          />
         </Field>
 
-        <Field label='副标题'>
-          <Input name='subtitle' aria-label='副标题' maxLength={100} disabled={readOnly} />
+        <Field label={t('form.subtitle')}>
+          <Input name='subtitle' aria-label={t('form.subtitle')} maxLength={100} disabled={readOnly} />
         </Field>
 
-        <Field label='商品描述' required>
-          <Textarea name='description' aria-label='商品描述' rows={5} maxLength={5000} disabled={readOnly} />
+        <Field label={t('form.description')} required>
+          <Textarea
+            name='description'
+            aria-label={t('form.description')}
+            rows={5}
+            maxLength={5000}
+            disabled={readOnly}
+          />
         </Field>
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>商品图片</h2>
+        <h2 className={styles.sectionTitle}>{t('form.imagesSection')}</h2>
         <Controller
           control={control}
           name='images'
           render={({ field, fieldState }) => (
             <Field
-              label={`图片（最多 ${MAX_IMAGES} 张，第一张为主图）`}
+              label={t('form.imagesLabel', { max: MAX_IMAGES })}
               required
               error={fieldState.error?.message as string | undefined}
             >
@@ -247,16 +275,16 @@ function ProductFormFields({ mode, readOnly, categories, brands, shops, attribut
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>商品属性</h2>
+        <h2 className={styles.sectionTitle}>{t('form.attributesSection')}</h2>
         {categoryId ? (
           <AttributeFields attributes={categoryAttributes} disabled={readOnly} />
         ) : (
-          <p className={styles.muted}>请先选择类目。</p>
+          <p className={styles.muted}>{t('form.chooseCategoryFirst')}</p>
         )}
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>SKU</h2>
+        <h2 className={styles.sectionTitle}>{t('form.skuSection')}</h2>
         <SkuEditor disabled={readOnly} />
         {errors.skus?.message ? (
           <p role='alert' className={styles.error}>
@@ -267,7 +295,7 @@ function ProductFormFields({ mode, readOnly, categories, brands, shops, attribut
 
       {isSubmitted && Object.keys(errors).length > 0 ? (
         <p role='alert' className={styles.error}>
-          请检查表单填写后再保存。
+          {t('form.formInvalid')}
         </p>
       ) : null}
     </>
@@ -279,6 +307,9 @@ export function ProductForm(props: ProductFormProps) {
   const toast = useToast();
   const queryClient = useQueryClient();
   const permissions = usePermissions();
+  const t = useTranslations('product');
+  const tCommon = useTranslations('common');
+  const tRoot = useTranslations();
   const mode: ProductFormMode = props.mode;
   const productId = props.mode === 'edit' ? props.productId : '';
   const isEdit = props.mode === 'edit';
@@ -323,7 +354,7 @@ export function ProductForm(props: ProductFormProps) {
 
   // 校验时才读取最新类目属性；重建表单会丢失输入，因此 schema 在挂载时创建一次。
   // eslint-disable-next-line react/refs -- 仅在表单校验时读取 ref，不参与渲染
-  const schema = useMemo(() => createProductFormSchema(mode, () => attributesRef.current), [mode]);
+  const schema = useMemo(() => createProductFormSchema(mode, () => attributesRef.current, tRoot), [mode, tRoot]);
 
   const invalidateProducts = async () => {
     await queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -334,7 +365,7 @@ export function ProductForm(props: ProductFormProps) {
   };
 
   const onError = (error: unknown) => {
-    toast.error(error instanceof ApiError ? error.message : '操作失败，请稍后重试');
+    toast.error(translateApiError(error, tRoot, 'product.toast.actionFailed'));
   };
 
   const onSuccess = async (message: string) => {
@@ -353,7 +384,7 @@ export function ProductForm(props: ProductFormProps) {
     mutationFn: createProduct,
     onSuccess: () => {
       resetDirtyState();
-      return onSuccess('商品已创建');
+      return onSuccess(t('toast.created'));
     },
     onError,
   });
@@ -361,23 +392,23 @@ export function ProductForm(props: ProductFormProps) {
     mutationFn: (input: ProductVersionInput) => updateProduct(productId, input),
     onSuccess: () => {
       resetDirtyState();
-      return onSuccess('商品已保存');
+      return onSuccess(t('toast.saved'));
     },
     onError,
   });
   const submitMutation = useMutation({
     mutationFn: () => submitProduct(productId),
-    onSuccess: () => onSuccess('已提交审核'),
+    onSuccess: () => onSuccess(t('toast.submitted')),
     onError,
   });
   const publishMutation = useMutation({
     mutationFn: () => publishProduct(productId),
-    onSuccess: () => onSuccess('商品已发布'),
+    onSuccess: () => onSuccess(t('toast.published')),
     onError,
   });
   const offlineMutation = useMutation({
     mutationFn: () => offlineProduct(productId),
-    onSuccess: () => onSuccess('商品已下线'),
+    onSuccess: () => onSuccess(t('toast.offline')),
     onError,
   });
 
@@ -404,7 +435,7 @@ export function ProductForm(props: ProductFormProps) {
 
   if (loading) {
     return (
-      <PageContainer title={isEdit ? '编辑商品' : '新建商品'}>
+      <PageContainer title={isEdit ? t('form.editTitle') : t('form.createTitle')}>
         <Skeleton rows={8} />
       </PageContainer>
     );
@@ -412,8 +443,8 @@ export function ProductForm(props: ProductFormProps) {
 
   if (loadFailed) {
     return (
-      <PageContainer title={isEdit ? '编辑商品' : '新建商品'}>
-        <Empty description='商品信息加载失败' />
+      <PageContainer title={isEdit ? t('form.editTitle') : t('form.createTitle')}>
+        <Empty description={t('form.loadFailed')} />
       </PageContainer>
     );
   }
@@ -423,53 +454,66 @@ export function ProductForm(props: ProductFormProps) {
 
   return (
     <PageContainer
-      title={isEdit ? '编辑商品' : '新建商品'}
-      description={isEdit ? '编辑商品信息，或按当前状态提交审核、发布与下线。' : '填写商品信息并保存为草稿。'}
+      title={isEdit ? t('form.editTitle') : t('form.createTitle')}
+      description={isEdit ? t('form.editDescription') : t('form.createDescription')}
       actions={
         <div className={styles.actions}>
           {canSave ? (
             <Button type='submit' form='product-form' loading={saving}>
-              保存
+              {tCommon('save')}
             </Button>
           ) : null}
           {showSubmit ? (
             <Button
               variant='secondary'
+              data-testid='product-submit'
               loading={submitMutation.isPending}
               disabled={dirty}
               onClick={() => submitMutation.mutate()}
             >
-              提交审核
+              {t('actions.submit')}
             </Button>
           ) : null}
           {showPublish ? (
-            <Button variant='secondary' loading={publishMutation.isPending} onClick={() => publishMutation.mutate()}>
-              发布
+            <Button
+              variant='secondary'
+              data-testid='product-publish'
+              loading={publishMutation.isPending}
+              onClick={() => publishMutation.mutate()}
+            >
+              {t('actions.publish')}
             </Button>
           ) : null}
           {showOffline ? (
-            <Button variant='danger' loading={offlineMutation.isPending} onClick={() => offlineMutation.mutate()}>
-              下线
+            <Button
+              variant='danger'
+              data-testid='product-offline'
+              loading={offlineMutation.isPending}
+              onClick={() => offlineMutation.mutate()}
+            >
+              {t('actions.offline')}
             </Button>
           ) : null}
           <Button variant='ghost' onClick={() => router.push('/products')}>
-            返回列表
+            {t('form.backToList')}
           </Button>
         </div>
       }
     >
       {status === 'REJECTED' && product?.latestAudit?.comment ? (
         <p role='alert' className={styles.reject}>
-          驳回原因：{product.latestAudit.comment}
+          {t('form.rejectReason', { comment: product.latestAudit.comment })}
         </p>
       ) : null}
-      {showSubmit && dirty ? <p className={styles.notice}>请先保存修改，再提交审核。</p> : null}
-      {submitted ? <p className={styles.notice}>审核中不可编辑</p> : null}
-      {isEdit && !canUpdate && !submitted ? <p className={styles.notice}>当前账号无商品编辑权限，仅可查看。</p> : null}
+      {showSubmit && dirty ? <p className={styles.notice}>{t('form.saveBeforeSubmit')}</p> : null}
+      {submitted ? <p className={styles.notice}>{t('form.underReview')}</p> : null}
+      {isEdit && !canUpdate && !submitted ? <p className={styles.notice}>{t('form.readOnlyNotice')}</p> : null}
       {isEdit && status ? (
         <p className={styles.meta}>
-          商品编码：{product?.code ?? '--'}　当前状态：
-          <Tag tone={STATUS_META[status].tone}>{STATUS_META[status].label}</Tag>
+          {t('form.metaCode', { code: product?.code ?? '--' })} {t('form.metaStatus')}{' '}
+          <span data-testid='product-status'>
+            <Tag tone={STATUS_TONES[status]}>{t('status.' + status)}</Tag>
+          </span>
         </p>
       ) : null}
 

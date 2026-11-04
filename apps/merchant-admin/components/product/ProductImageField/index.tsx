@@ -1,10 +1,11 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { Upload, useToast } from '@/components/ui';
-import { ApiError } from '@/lib/api-client';
 import { uploadProductImage } from '@/lib/services/products';
+import { translateApiError } from '@/lib/translate-api-error';
 
 import { MAX_IMAGES } from '../ProductForm/schema';
 
@@ -19,6 +20,8 @@ export interface ProductImageFieldProps {
 
 /** 商品图片上传：限制 PNG / JPEG / WEBP 且单张不超过 10MB。 */
 export function ProductImageField({ value, onChange, disabled = false }: ProductImageFieldProps) {
+  const t = useTranslations('product.image');
+  const tRoot = useTranslations();
   const toast = useToast();
   const [uploading, setUploading] = useState(false);
 
@@ -27,12 +30,12 @@ export function ProductImageField({ value, onChange, disabled = false }: Product
 
     for (const file of files) {
       if (!ALLOWED_TYPES.has(file.type)) {
-        toast.error(`${file.name}：仅支持 PNG / JPEG / WEBP 图片`);
+        toast.error(t('unsupportedType', { name: file.name }));
         continue;
       }
 
       if (file.size > MAX_BYTES) {
-        toast.error(`${file.name}：图片大小不能超过 10MB`);
+        toast.error(t('tooLarge', { name: file.name }));
         continue;
       }
 
@@ -46,12 +49,12 @@ export function ProductImageField({ value, onChange, disabled = false }: Product
     const remaining = MAX_IMAGES - value.length;
 
     if (remaining <= 0) {
-      toast.error(`最多上传 ${MAX_IMAGES} 张图片`);
+      toast.error(t('max', { max: MAX_IMAGES }));
       return;
     }
 
     if (validFiles.length > remaining) {
-      toast.error(`最多上传 ${MAX_IMAGES} 张图片，已忽略多余图片`);
+      toast.error(t('maxIgnored', { max: MAX_IMAGES }));
     }
 
     // 按 brief 要求逐个串行上传；本地 `current` 保证连续追加时不会丢失前一张。
@@ -68,7 +71,7 @@ export function ProductImageField({ value, onChange, disabled = false }: Product
           current = [...current, asset.url].slice(0, MAX_IMAGES);
           onChange(current);
         } catch (error) {
-          toast.error(error instanceof ApiError ? error.message : `${file.name} 上传失败`);
+          toast.error(translateApiError(error, tRoot, 'product.toast.actionFailed'));
         }
       }
     } finally {
@@ -96,12 +99,26 @@ export function ProductImageField({ value, onChange, disabled = false }: Product
                 fontSize: 12,
               }}
             >
-              主图
+              {t('main')}
             </span>
           ) : null
         }
       />
-      {uploading ? <p style={{ marginTop: 8, color: 'var(--color-text-secondary)' }}>图片上传中…</p> : null}
+      {/* Stable E2E hook: the antd Upload input is not addressable by test id. */}
+      <input
+        type='file'
+        data-testid='product-image-input'
+        accept='image/png,image/jpeg,image/webp'
+        multiple
+        hidden
+        disabled={disabled || uploading}
+        onChange={event => {
+          const files = Array.from(event.target.files ?? []);
+          event.target.value = '';
+          void handleFilesSelected(files);
+        }}
+      />
+      {uploading ? <p style={{ marginTop: 8, color: 'var(--color-text-secondary)' }}>{t('uploading')}</p> : null}
     </div>
   );
 }

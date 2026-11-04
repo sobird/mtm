@@ -4,39 +4,39 @@ import type { ProductListRowDTO, ProductVersionStatus } from '@mtm/contracts';
 import { PERMISSIONS } from '@mtm/contracts';
 import { Can, PermissionButton, usePermissions } from '@mtm/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { PageContainer } from '@/components/layout/PageContainer';
 import { Button, DataTable, Dialog, Empty, Field, Input, SearchForm, Select, Tag, useToast } from '@/components/ui';
 import type { DataTableColumns, SelectOptionValue, TagTone } from '@/components/ui';
-import { ApiError } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import { deleteProduct, fetchProducts, offlineProduct, publishProduct, submitProduct } from '@/lib/services/products';
 import type { ProductListParams } from '@/lib/services/products';
+import { translateApiError } from '@/lib/translate-api-error';
 
 import styles from './index.module.css';
 
 const PAGE_SIZE = 10;
 
-const STATUS_META: Record<ProductVersionStatus, { label: string; tone: TagTone }> = {
-  DRAFT: { label: '草稿', tone: 'neutral' },
-  SUBMITTED: { label: '审核中', tone: 'warning' },
-  APPROVED: { label: '已通过', tone: 'success' },
-  REJECTED: { label: '已驳回', tone: 'danger' },
-  PUBLISHED: { label: '已发布', tone: 'success' },
-  SUPERSEDED: { label: '已被替换', tone: 'neutral' },
-  OFFLINE: { label: '已下线', tone: 'danger' },
+const STATUS_TONES: Record<ProductVersionStatus, TagTone> = {
+  DRAFT: 'neutral',
+  SUBMITTED: 'warning',
+  APPROVED: 'success',
+  REJECTED: 'danger',
+  PUBLISHED: 'success',
+  SUPERSEDED: 'neutral',
+  OFFLINE: 'danger',
 };
 
-const STATUS_FILTER_OPTIONS = [
-  { value: '', label: '全部' },
-  { value: 'DRAFT', label: '草稿' },
-  { value: 'SUBMITTED', label: '审核中' },
-  { value: 'APPROVED', label: '已通过' },
-  { value: 'REJECTED', label: '已驳回' },
-  { value: 'PUBLISHED', label: '已发布' },
-  { value: 'OFFLINE', label: '已下线' },
+const STATUS_FILTER_VALUES: ProductVersionStatus[] = [
+  'DRAFT',
+  'SUBMITTED',
+  'APPROVED',
+  'REJECTED',
+  'PUBLISHED',
+  'OFFLINE',
 ];
 
 const EDITABLE_STATUSES = new Set<ProductVersionStatus>(['DRAFT', 'REJECTED', 'OFFLINE']);
@@ -62,6 +62,9 @@ export function ProductManager() {
   const toast = useToast();
   const queryClient = useQueryClient();
   const permissions = usePermissions();
+  const t = useTranslations('product');
+  const tCommon = useTranslations('common');
+  const tRoot = useTranslations();
   const canUpdate = permissions.has(PERMISSIONS.PRODUCT_UPDATE);
 
   const [page, setPage] = useState(1);
@@ -84,7 +87,7 @@ export function ProductManager() {
   });
 
   const onRequestError = (error: unknown) => {
-    toast.error(error instanceof ApiError ? error.message : '操作失败，请稍后重试');
+    toast.error(translateApiError(error, tRoot, 'product.toast.actionFailed'));
   };
 
   const invalidateProducts = () => queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -92,7 +95,7 @@ export function ProductManager() {
   const submitMutation = useMutation({
     mutationFn: submitProduct,
     onSuccess: async () => {
-      toast.success('已提交审核');
+      toast.success(t('toast.submitted'));
       await invalidateProducts();
     },
     onError: onRequestError,
@@ -101,7 +104,7 @@ export function ProductManager() {
   const publishMutation = useMutation({
     mutationFn: publishProduct,
     onSuccess: async () => {
-      toast.success('商品已发布');
+      toast.success(t('toast.published'));
       await invalidateProducts();
     },
     onError: onRequestError,
@@ -110,7 +113,7 @@ export function ProductManager() {
   const offlineMutation = useMutation({
     mutationFn: offlineProduct,
     onSuccess: async () => {
-      toast.success('商品已下线');
+      toast.success(t('toast.offline'));
       await invalidateProducts();
     },
     onError: onRequestError,
@@ -120,7 +123,7 @@ export function ProductManager() {
     mutationFn: deleteProduct,
     onSuccess: async () => {
       setPendingDelete(null);
-      toast.success('商品已删除');
+      toast.success(t('toast.deleted'));
       await invalidateProducts();
     },
     onError: onRequestError,
@@ -146,22 +149,27 @@ export function ProductManager() {
     setPage(1);
   };
 
+  const statusFilterOptions = [
+    { value: '', label: t('list.allStatuses') },
+    ...STATUS_FILTER_VALUES.map(value => ({ value, label: t('status.' + value) })),
+  ];
+
   const renderActions = (row: ProductListRowDTO) => (
     <div className={styles.actions}>
       {EDITABLE_STATUSES.has(row.status) && canUpdate ? (
         <Button variant='ghost' size='sm' onClick={() => router.push(`/products/${row.id}`)}>
-          编辑
+          {tCommon('edit')}
         </Button>
       ) : (
         <Button variant='ghost' size='sm' onClick={() => router.push(`/products/${row.id}`)}>
-          查看
+          {t('actions.view')}
         </Button>
       )}
 
       {row.status === 'APPROVED' ? (
         <Can permission={PERMISSIONS.PRODUCT_PUBLISH}>
           <Button variant='ghost' size='sm' onClick={() => publishMutation.mutate(row.id)}>
-            发布
+            {t('actions.publish')}
           </Button>
         </Can>
       ) : null}
@@ -169,7 +177,7 @@ export function ProductManager() {
       {row.status === 'PUBLISHED' ? (
         <Can permission={PERMISSIONS.PRODUCT_PUBLISH}>
           <Button variant='ghost' size='sm' onClick={() => offlineMutation.mutate(row.id)}>
-            下线
+            {t('actions.offline')}
           </Button>
         </Can>
       ) : null}
@@ -178,12 +186,12 @@ export function ProductManager() {
         <>
           <Can permission={PERMISSIONS.PRODUCT_SUBMIT}>
             <Button variant='ghost' size='sm' onClick={() => submitMutation.mutate(row.id)}>
-              提交审核
+              {t('actions.submit')}
             </Button>
           </Can>
           <Can permission={PERMISSIONS.PRODUCT_DELETE}>
             <Button variant='ghost' size='sm' onClick={() => setPendingDelete(row)}>
-              删除
+              {tCommon('delete')}
             </Button>
           </Can>
         </>
@@ -194,7 +202,7 @@ export function ProductManager() {
   const columns: DataTableColumns<ProductListRowDTO> = [
     {
       key: 'product',
-      title: '商品',
+      title: t('list.productColumn'),
       render: (_, row) => (
         <div className={styles.product}>
           <img className={styles.thumbnail} src={row.mainImageUrl} alt={row.title} />
@@ -204,34 +212,34 @@ export function ProductManager() {
     },
     {
       dataIndex: 'code',
-      title: '编码',
+      title: t('list.code'),
     },
     {
       dataIndex: 'categoryName',
-      title: '类目',
+      title: t('list.category'),
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: t('list.status'),
       render: (value: ProductVersionStatus) => {
-        const meta = STATUS_META[value];
+        const tone = STATUS_TONES[value];
 
-        return meta ? <Tag tone={meta.tone}>{meta.label}</Tag> : <span className={styles.muted}>--</span>;
+        return tone ? <Tag tone={tone}>{t('status.' + value)}</Tag> : <span className={styles.muted}>--</span>;
       },
     },
     {
       dataIndex: 'version',
-      title: '版本',
+      title: t('list.version'),
       render: (value: number) => `V${value}`,
     },
     {
       dataIndex: 'updatedAt',
-      title: '更新时间',
+      title: t('list.updatedAt'),
       render: (value: string) => formatDateTime(value),
     },
     {
       key: 'actions',
-      title: '操作',
+      title: tCommon('actions'),
       render: (_, row) => renderActions(row),
     },
   ];
@@ -240,28 +248,32 @@ export function ProductManager() {
 
   return (
     <PageContainer
-      title='商品列表'
-      description='管理店铺商品、提交审核与发布。'
+      title={t('list.title')}
+      description={t('list.description')}
       actions={
-        <PermissionButton permission={PERMISSIONS.PRODUCT_CREATE} onClick={() => router.push('/products/new')}>
-          新建商品
+        <PermissionButton
+          permission={PERMISSIONS.PRODUCT_CREATE}
+          data-testid='product-create'
+          onClick={() => router.push('/products/new')}
+        >
+          {t('list.create')}
         </PermissionButton>
       }
     >
       <div className={styles.toolbar}>
         <SearchForm onSubmit={applyFilters} onReset={resetFilters}>
-          <Field label='关键字'>
+          <Field label={t('list.keyword')}>
             <Input
-              aria-label='关键字'
-              placeholder='商品标题或编码'
+              aria-label={t('list.keyword')}
+              placeholder={t('list.keywordPlaceholder')}
               value={draftKeyword}
               onChange={event => setDraftKeyword(event.target.value)}
             />
           </Field>
-          <Field label='状态'>
+          <Field label={t('list.status')}>
             <Select
-              aria-label='商品状态筛选'
-              options={STATUS_FILTER_OPTIONS}
+              aria-label={t('list.statusFilter')}
+              options={statusFilterOptions}
               value={draftStatus}
               onChange={value => setDraftStatus(value)}
             />
@@ -270,7 +282,7 @@ export function ProductManager() {
       </div>
 
       {productsQuery.isError ? (
-        <Empty description='加载失败' />
+        <Empty description={t('list.loadFailed')} />
       ) : (
         <DataTable
           columns={columns}
@@ -281,7 +293,7 @@ export function ProductManager() {
           onPageChange={setPage}
           rowKey='id'
           loading={productsQuery.isPending}
-          emptyText='暂无商品'
+          emptyText={t('list.empty')}
         />
       )}
 
@@ -292,19 +304,19 @@ export function ProductManager() {
             setPendingDelete(null);
           }
         }}
-        title='删除商品'
+        title={t('deleteDialog.title')}
         description={
           pendingDelete
-            ? `确定删除「${pendingDelete.title}」（编码 ${pendingDelete.code}）吗？删除后不可恢复。`
+            ? t('deleteDialog.description', { title: pendingDelete.title, code: pendingDelete.code })
             : undefined
         }
         footer={
           <>
             <Button variant='ghost' onClick={() => setPendingDelete(null)}>
-              取消
+              {tCommon('cancel')}
             </Button>
             <Button variant='danger' loading={deleteMutation.isPending} onClick={confirmDelete}>
-              确认删除
+              {t('deleteDialog.confirm')}
             </Button>
           </>
         }

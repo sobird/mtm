@@ -1,8 +1,12 @@
 import type { CategoryAttributeDTO } from '@mtm/contracts';
+import { createTranslator, type Translate } from '@mtm/i18n';
 import { expect, test } from 'vitest';
 
 import { createProductFormSchema } from '@/components/product/ProductForm/schema';
 import type { ProductFormValues } from '@/components/product/ProductForm/schema';
+
+const zh = createTranslator('zh-CN');
+const en = createTranslator('en-US');
 
 const NUMBER_ATTRIBUTE: CategoryAttributeDTO = {
   id: 'attr-number',
@@ -38,8 +42,8 @@ function values(patch: Partial<ProductFormValues> = {}): ProductFormValues {
   };
 }
 
-function validate(attributes: CategoryAttributeDTO[], patch: Partial<ProductFormValues> = {}) {
-  return createProductFormSchema('edit', () => attributes).safeParse(values(patch));
+function validate(attributes: CategoryAttributeDTO[], patch: Partial<ProductFormValues> = {}, t: Translate = zh) {
+  return createProductFormSchema('edit', () => attributes, t).safeParse(values(patch));
 }
 
 test('NUMBER 属性填写非数字时立即报错', () => {
@@ -82,4 +86,11 @@ test('重复 SKU 编码与非法价格被拦截', () => {
   expect(result.success).toBe(false);
   expect(result.error?.issues.some(issue => issue.message === 'SKU 编码重复')).toBe(true);
   expect(result.error?.issues.some(issue => issue.message === '请填写有效价格')).toBe(true);
+});
+
+test('en-US 下必填字段返回英文错误', () => {
+  const result = validate([], { title: '' }, en);
+
+  expect(result.success).toBe(false);
+  expect(result.error?.issues.some(issue => issue.message === 'Product title is required.')).toBe(true);
 });
