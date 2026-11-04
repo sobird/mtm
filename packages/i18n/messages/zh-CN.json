@@ -1629,6 +1629,7 @@
       "attributes": "属性",
       "noDescription": "暂无描述",
       "noAttributes": "暂无属性",
+      "sku": "SKU",
       "noSku": "暂无 SKU"
     },
     "specSeparator": "："

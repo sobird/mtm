@@ -209,3 +209,27 @@ test('renders the product list in English', async () => {
   expect(await screen.findByText('Published')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'View' })).toBeInTheDocument();
 });
+
+test('empty version description falls back to the no-description copy in English', async () => {
+  mocks.apiFetch.mockImplementation((path: string) => {
+    if (path === '/api/bff/categories/tree') {
+      return Promise.resolve(CATEGORY_TREE);
+    }
+
+    if (path === '/api/bff/products/p1') {
+      return Promise.resolve({
+        ...DETAIL,
+        currentVersion: { ...CURRENT_VERSION, description: '' },
+        publishedVersion: { ...CURRENT_VERSION, description: '' },
+      });
+    }
+
+    return Promise.resolve(null);
+  });
+
+  renderManager('en-US');
+
+  await userEvent.click(await screen.findByRole('button', { name: 'View' }));
+
+  expect(await screen.findAllByText('No description')).toHaveLength(2);
+});

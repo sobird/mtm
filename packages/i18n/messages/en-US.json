@@ -1629,6 +1629,7 @@
       "attributes": "Attributes",
       "noDescription": "No description",
       "noAttributes": "No attributes",
+      "sku": "SKU",
       "noSku": "No SKUs"
     },
     "specSeparator": ": "

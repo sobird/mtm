@@ -135,7 +135,7 @@ function VersionContent({
         ))}
       </div>
 
-      <p className={styles.description}>{version.description}</p>
+      <p className={styles.description}>{version.description || t('detail.noDescription')}</p>
 
       <h4 className={styles.subTitle}>{t('detail.attributes')}</h4>
       {attributeEntries.length ? (

@@ -61,6 +61,33 @@ const AUDIT: AuditRecordDTO = {
   },
 };
 
+const VERSION_SNAPSHOT = {
+  id: 'v1',
+  version: 1,
+  status: 'SUBMITTED',
+  title: '星河手机',
+  subtitle: null,
+  mainImageUrl: 'data:image/svg+xml;utf8,<svg/>',
+  images: ['data:image/svg+xml;utf8,<svg/>'],
+  description: '轻旗舰手机',
+  attributes: {},
+  createdBy: 'merchant-demo-1',
+  createdAt: '2026-11-04T08:00:00.000Z',
+  submittedAt: '2026-11-04T09:00:00.000Z',
+  reviewedAt: null,
+  publishedAt: null,
+  skus: [
+    {
+      id: 'sku1',
+      skuCode: 'SKU-001',
+      specs: { 颜色: '曜石黑' },
+      price: '3999.00',
+      stock: 10,
+      status: 'ACTIVE',
+    },
+  ],
+};
+
 function renderManager(locale: Locale = 'zh-CN') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return renderWithIntl(
@@ -231,4 +258,25 @@ test('renders the review dialog in English', async () => {
 
   await userEvent.click(screen.getByTestId('audit-reject'));
   expect(await screen.findByText('Please provide a rejection reason.')).toBeInTheDocument();
+});
+
+test('matched version snapshot renders the SKU section in English', async () => {
+  mocks.apiFetch.mockImplementation((path: string) => {
+    if (path === '/api/bff/products/p1') {
+      return Promise.resolve({ currentVersion: VERSION_SNAPSHOT, publishedVersion: null });
+    }
+
+    if (path === '/api/bff/categories/tree') {
+      return Promise.resolve([]);
+    }
+
+    return Promise.resolve({});
+  });
+
+  renderManager('en-US');
+
+  await userEvent.click(await screen.findByRole('button', { name: 'Review' }));
+
+  expect(await screen.findByRole('heading', { name: 'SKU' })).toBeInTheDocument();
+  expect(await screen.findByText('SKU-001')).toBeInTheDocument();
 });
