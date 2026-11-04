@@ -1,6 +1,6 @@
 'use client';
 
-import { handleIntlError } from '@mtm/i18n';
+import { DEFAULT_TIME_ZONE, handleIntlError } from '@mtm/i18n';
 import type { AbstractIntlMessages } from 'next-intl';
 import { NextIntlClientProvider } from 'next-intl';
 import type { ReactNode } from 'react';
@@ -15,7 +15,7 @@ export function IntlProvider({
   children: ReactNode;
 }) {
   return (
-    <NextIntlClientProvider locale={locale} messages={messages} onError={handleIntlError}>
+    <NextIntlClientProvider locale={locale} timeZone={DEFAULT_TIME_ZONE} messages={messages} onError={handleIntlError}>
       {children}
     </NextIntlClientProvider>
   );

@@ -3,7 +3,7 @@ import type { IntlError } from 'next-intl';
 
 import enUS from '../messages/en-US.json';
 import zhCN from '../messages/zh-CN.json';
-import type { Locale } from './locale';
+import { DEFAULT_TIME_ZONE, type Locale } from './locale';
 
 export type Messages = typeof zhCN;
 
@@ -34,6 +34,7 @@ export function handleIntlError(error: IntlError): void {
 export function createTranslator(locale: Locale): Translator {
   return createNextIntlTranslator({
     locale,
+    timeZone: DEFAULT_TIME_ZONE,
     messages: getMessages(locale),
     onError: handleIntlError,
   }) as unknown as Translator;

@@ -1,4 +1,4 @@
-export { DEFAULT_LOCALE, LOCALE_COOKIE, SUPPORTED_LOCALES, normalizeLocale } from './locale';
+export { DEFAULT_LOCALE, DEFAULT_TIME_ZONE, LOCALE_COOKIE, SUPPORTED_LOCALES, normalizeLocale } from './locale';
 export type { Locale } from './locale';
 export { createTranslator, getMessages, handleIntlError } from './messages';
 export type { Messages, Translate, Translator } from './messages';
