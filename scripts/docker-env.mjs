@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import { existsSync, writeFileSync } from 'node:fs';
 
 const DEFAULT_RANDOM = () => randomBytes(32).toString('hex');
 
@@ -20,4 +21,13 @@ export function buildDockerEnv(existing, env = {}) {
     'SEED_DEMO_DATA=true',
     '',
   ].join('\n');
+}
+
+// Compose expects `.env.docker` to exist for every service, so any entry point
+// that invokes `docker compose` must create it first on a fresh checkout.
+// Returns true when a new file was written, false when an existing one was kept.
+export function ensureDockerEnvFile(filePath) {
+  if (existsSync(filePath)) return false;
+  writeFileSync(filePath, buildDockerEnv(null), { mode: 0o600 });
+  return true;
 }

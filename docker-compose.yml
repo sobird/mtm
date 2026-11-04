@@ -25,7 +25,8 @@ services:
       postgres:
         condition: service_healthy
     command: >-
-      sh -c "cd apps/merchant-admin && bunx prisma migrate deploy &&
+      sh -c "bun scripts/docker-databases.mjs &&
+      cd apps/merchant-admin && bunx prisma migrate deploy &&
       cd ../core-api && bunx prisma migrate deploy &&
       cd ../ops-admin && bunx prisma migrate deploy &&
       if [ \"$$SEED_DEMO_DATA\" = \"true\" ]; then

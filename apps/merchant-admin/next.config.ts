@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   // Trace from the monorepo root so the standalone bundle keeps the workspace
   // layout the Docker images expect (`apps/<app>/server.js`).
-  outputFileTracingRoot: path.resolve(process.cwd(), '../..'),
+  outputFileTracingRoot: path.resolve(import.meta.dirname, '../..'),
   reactStrictMode: true,
   transpilePackages: ['@mtm/ui', '@mtm/i18n', '@mtm/auth', '@mtm/contracts'],
   // Argon2 ships a native binding: keep it external so webpack does not try to
