@@ -21,6 +21,12 @@ function auditNotFound(): HttpError {
   return new HttpError('AUDIT_NOT_FOUND', 404, '审核记录不存在');
 }
 
+/** Empty or whitespace-only comments are stored as null, never as ''. */
+function normalizeComment(comment: string | undefined): string | null {
+  const trimmed = comment?.trim();
+  return trimmed ? trimmed : null;
+}
+
 function hasFullScope(auth: ServiceTokenClaims): boolean {
   return auth.permissions.includes(PERMISSIONS.PLATFORM_CROSS_TENANT) || auth.merchantScope === null;
 }
@@ -72,13 +78,14 @@ function toAuditRecord(row: AuditRow, names: AuditNames): AuditRecordDTO {
 
 /**
  * Builds the audit list filter. Merchant scope is applied through the owning
- * product relation, and soft-deleted products stay hidden from operations.
+ * product relation. Soft-deleted products are intentionally still listed so
+ * their audit history remains visible (deletion keeps records for traceability).
  */
 function auditWhere(auth: ServiceTokenClaims, query: AuditQuery): Prisma.AuditRecordWhereInput {
-  const versionFilter: Prisma.ProductVersionWhereInput = { product: { deletedAt: null } };
+  const versionFilter: Prisma.ProductVersionWhereInput = {};
 
   if (!hasFullScope(auth)) {
-    versionFilter.product = { deletedAt: null, merchantId: { in: auth.merchantScope ?? [] } };
+    versionFilter.product = { merchantId: { in: auth.merchantScope ?? [] } };
   }
 
   if (query.keyword) {
@@ -126,7 +133,7 @@ export async function getAudit(auth: ServiceTokenClaims, id: string): Promise<Au
     include: { productVersion: { include: { product: true } } },
   });
 
-  if (!row || row.productVersion.product.deletedAt) {
+  if (!row) {
     throw auditNotFound();
   }
 
@@ -153,7 +160,7 @@ async function decide(
     include: { productVersion: { include: { product: true } } },
   });
 
-  if (!existing || existing.productVersion.product.deletedAt) {
+  if (!existing) {
     throw auditNotFound();
   }
 
@@ -164,7 +171,7 @@ async function decide(
   await prisma.$transaction(async tx => {
     const auditUpdated = await tx.auditRecord.updateMany({
       where: { id, status: 'PENDING' },
-      data: { status: next, reviewerId: auth.userId, reviewedAt: now, comment: comment ?? null },
+      data: { status: next, reviewerId: auth.userId, reviewedAt: now, comment: normalizeComment(comment) },
     });
 
     if (auditUpdated.count === 0) {
