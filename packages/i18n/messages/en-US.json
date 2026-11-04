@@ -1,0 +1,17 @@
+{
+  "common": {
+    "logout": "Sign out",
+    "language": "Language",
+    "language.zh-CN": "中文",
+    "language.en-US": "English"
+  },
+  "menu": {
+    "product": {
+      "list": "Products"
+    }
+  },
+  "errors": {
+    "UNKNOWN": "Something went wrong. Please try again later.",
+    "PRODUCT_NOT_FOUND": "Product not found"
+  }
+}

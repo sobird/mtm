@@ -1,0 +1,17 @@
+{
+  "common": {
+    "logout": "退出登录",
+    "language": "语言",
+    "language.zh-CN": "中文",
+    "language.en-US": "English"
+  },
+  "menu": {
+    "product": {
+      "list": "商品列表"
+    }
+  },
+  "errors": {
+    "UNKNOWN": "操作失败，请稍后重试",
+    "PRODUCT_NOT_FOUND": "商品不存在"
+  }
+}
