@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 export interface ForbiddenProps {
@@ -5,6 +8,8 @@ export interface ForbiddenProps {
 }
 
 export function Forbidden({ homeHref = '/' }: ForbiddenProps) {
+  const t = useTranslations();
+
   return (
     <div
       role='alert'
@@ -20,9 +25,9 @@ export function Forbidden({ homeHref = '/' }: ForbiddenProps) {
       }}
     >
       <p style={{ margin: 0, color: 'var(--color-text-secondary)', fontSize: 48, fontWeight: 600 }}>403</p>
-      <h1 style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>无权访问该页面</h1>
+      <h1 style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>{t('common.noPermission')}</h1>
       <Link href={homeHref} style={{ color: 'var(--color-info)' }}>
-        返回首页
+        {t('common.backHome')}
       </Link>
     </div>
   );

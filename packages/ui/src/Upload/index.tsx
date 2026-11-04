@@ -1,6 +1,7 @@
 'use client';
 
 import { Upload as AntUpload } from 'antd';
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
@@ -35,9 +36,9 @@ function isImageUrl(url: string): boolean {
   return url.startsWith('data:image/') || IMAGE_PATTERN.test(url);
 }
 
-function fileName(url: string): string {
+function fileName(url: string, fallback: string): string {
   if (url.startsWith('data:')) {
-    return '图片';
+    return fallback;
   }
 
   const segment = url.split('?')[0].split('/').pop();
@@ -58,6 +59,7 @@ export function Upload({
   autoHidden = true,
   itemOverlay,
 }: UploadProps) {
+  const t = useTranslations();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const pendingFiles = useRef<File[]>([]);
@@ -126,16 +128,21 @@ export function Upload({
               type='button'
               className={cx(styles.thumb, isImageUrl(url) && styles.imageThumb)}
               onClick={() => handlePreview(url)}
-              title={fileName(url)}
+              title={fileName(url, t('common.image'))}
             >
               {isImageUrl(url) ? (
-                <img className={styles.image} src={url} alt={fileName(url)} />
+                <img className={styles.image} src={url} alt={fileName(url, t('common.image'))} />
               ) : (
-                <span className={styles.fileName}>{fileName(url)}</span>
+                <span className={styles.fileName}>{fileName(url, t('common.image'))}</span>
               )}
             </button>
             {!disabled ? (
-              <button type='button' className={styles.remove} aria-label='删除文件' onClick={() => handleRemove(index)}>
+              <button
+                type='button'
+                className={styles.remove}
+                aria-label={t('common.removeFile')}
+                onClick={() => handleRemove(index)}
+              >
                 ×
               </button>
             ) : null}
@@ -163,7 +170,7 @@ export function Upload({
                     <span className={styles.plus} aria-hidden='true'>
                       +
                     </span>
-                    <span>点击上传</span>
+                    <span>{t('common.upload')}</span>
                   </span>
                 )}
               </span>
@@ -172,8 +179,8 @@ export function Upload({
         ) : null}
       </ul>
 
-      <Dialog open={previewOpen} onOpenChange={setPreviewOpen} title='预览' footer={null}>
-        {previewUrl ? <img className={styles.preview} src={previewUrl} alt='预览' /> : null}
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen} title={t('common.preview')} footer={null}>
+        {previewUrl ? <img className={styles.preview} src={previewUrl} alt={t('common.preview')} /> : null}
       </Dialog>
     </div>
   );

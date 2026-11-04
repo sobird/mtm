@@ -1,6 +1,7 @@
 'use client';
 
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -17,6 +18,7 @@ export interface SidebarProps {
 }
 
 export function Sidebar({ title, menu }: SidebarProps) {
+  const t = useTranslations();
   const pathname = usePathname() ?? '/';
   const [collapsed, setCollapsed] = useState(false);
 
@@ -32,7 +34,7 @@ export function Sidebar({ title, menu }: SidebarProps) {
       </div>
 
       <div className={styles.scroll}>
-        <nav className={styles.nav} aria-label='主菜单'>
+        <nav className={styles.nav} aria-label={t('common.mainMenu')}>
           <SidebarMenu items={menu} pathname={pathname} />
         </nav>
       </div>
@@ -41,7 +43,7 @@ export function Sidebar({ title, menu }: SidebarProps) {
         type='button'
         className={styles.collapseButton}
         onClick={() => setCollapsed(value => !value)}
-        aria-label={collapsed ? '展开侧边栏' : '收起侧边栏'}
+        aria-label={collapsed ? t('common.expandSidebar') : t('common.collapseSidebar')}
       >
         {collapsed ? <PanelLeftOpen size={16} aria-hidden='true' /> : <PanelLeftClose size={16} aria-hidden='true' />}
       </button>

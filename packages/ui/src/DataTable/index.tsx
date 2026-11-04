@@ -2,6 +2,7 @@
 
 import { Table } from 'antd';
 import type { TableColumnsType, TableProps } from 'antd';
+import { useTranslations } from 'next-intl';
 import type { Key } from 'react';
 
 import { Empty } from '../Empty';
@@ -49,6 +50,7 @@ export function DataTable<T extends object>({
   emptyText,
   onTableChange,
 }: DataTableProps<T>) {
+  const t = useTranslations();
   const handleChange: TableProps<T>['onChange'] = (pagination, filters, sorter, extra) => {
     if (extra.action === 'paginate') {
       const nextPage = pagination.current ?? 1;
@@ -83,13 +85,13 @@ export function DataTable<T extends object>({
       dataSource={data}
       loading={loading}
       scroll={{ x: 'max-content' }}
-      locale={{ emptyText: <Empty description={emptyText ?? '暂无数据'} /> }}
+      locale={{ emptyText: <Empty description={emptyText ?? t('common.noData')} /> }}
       pagination={{
         current: page,
         pageSize,
         total,
         showSizeChanger: false,
-        showTotal: value => `共 ${value} 条`,
+        showTotal: value => t('common.totalItems', { value }),
       }}
       onChange={handleChange}
     />

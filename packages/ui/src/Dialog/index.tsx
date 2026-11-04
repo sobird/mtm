@@ -1,6 +1,7 @@
 'use client';
 
 import { Dialog as BaseDialog } from '@base-ui-components/react/dialog';
+import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
 import { cx } from '../cx';
@@ -18,6 +19,8 @@ export interface DialogProps {
 }
 
 export function Dialog({ open, onOpenChange, title, description, children, footer, className }: DialogProps) {
+  const t = useTranslations();
+
   return (
     <BaseDialog.Root open={open} onOpenChange={onOpenChange}>
       <BaseDialog.Portal>
@@ -25,7 +28,7 @@ export function Dialog({ open, onOpenChange, title, description, children, foote
         <BaseDialog.Popup className={cx(styles.popup, className)}>
           <header className={styles.header}>
             <BaseDialog.Title className={styles.title}>{title}</BaseDialog.Title>
-            <BaseDialog.Close className={styles.close} aria-label='关闭'>
+            <BaseDialog.Close className={styles.close} aria-label={t('common.close')}>
               ×
             </BaseDialog.Close>
           </header>

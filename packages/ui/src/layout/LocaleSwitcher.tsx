@@ -5,7 +5,7 @@ import { persistLocale } from '@mtm/i18n/browser';
 import { useLocale, useTranslations } from 'next-intl';
 
 const LOCALE_LABELS: Record<Locale, string> = {
-  'zh-CN': '中文',
+  'zh-CN': '中文', // i18n-ignore: locale display names are static data, not UI copy
   'en-US': 'English',
 };
 

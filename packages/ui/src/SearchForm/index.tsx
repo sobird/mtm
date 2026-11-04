@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import type { FormEvent, ReactNode } from 'react';
 
 import { Button } from '../Button';
@@ -15,6 +16,7 @@ export interface SearchFormProps {
 }
 
 export function SearchForm({ children, onSubmit, onReset, className }: SearchFormProps) {
+  const t = useTranslations();
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSubmit();
@@ -34,10 +36,10 @@ export function SearchForm({ children, onSubmit, onReset, className }: SearchFor
       <div className={styles.fields}>{children}</div>
       <div className={styles.actions}>
         <Button type='submit' size='md'>
-          查询
+          {t('common.search')}
         </Button>
         <Button type='reset' size='md' variant='secondary'>
-          重置
+          {t('common.reset')}
         </Button>
       </div>
     </form>

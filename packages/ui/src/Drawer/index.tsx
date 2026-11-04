@@ -1,6 +1,7 @@
 'use client';
 
 import { Dialog as BaseDialog } from '@base-ui-components/react/dialog';
+import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
 import { cx } from '../cx';
@@ -31,17 +32,19 @@ export function Drawer({
   side = 'right',
   className,
 }: DrawerProps) {
+  const t = useTranslations();
+
   return (
     <BaseDialog.Root open={open} onOpenChange={onOpenChange}>
       <BaseDialog.Portal>
         <BaseDialog.Backdrop className={styles.backdrop} />
         <BaseDialog.Popup
-          aria-label={title === undefined ? (ariaLabel ?? '抽屉') : undefined}
+          aria-label={title === undefined ? (ariaLabel ?? t('common.drawer')) : undefined}
           className={cx(styles.popup, styles[side], className)}
         >
           <header className={styles.header}>
             {title !== undefined ? <BaseDialog.Title className={styles.title}>{title}</BaseDialog.Title> : <span />}
-            <BaseDialog.Close className={styles.close} aria-label='关闭'>
+            <BaseDialog.Close className={styles.close} aria-label={t('common.close')}>
               ×
             </BaseDialog.Close>
           </header>
