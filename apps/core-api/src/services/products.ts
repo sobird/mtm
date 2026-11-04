@@ -6,6 +6,7 @@ import {
   type ProductDetailDTO,
   type ProductListRowDTO,
   type ProductQuery,
+  type ProductUpdateInput,
   type ProductVersionDTO,
   type ProductVersionInput,
   type ProductVersionStatus,
@@ -331,6 +332,99 @@ export async function createProduct(auth: ServiceTokenClaims, input: ProductCrea
   }
 
   return getProduct(auth, productId);
+}
+
+export async function updateProduct(
+  auth: ServiceTokenClaims,
+  id: string,
+  input: ProductUpdateInput
+): Promise<ProductDetailDTO> {
+  if (auth.portal !== 'merchant' || !auth.merchantId) {
+    throw new HttpError('FORBIDDEN', 403, '无权访问');
+  }
+
+  const product = await prisma.product.findFirst({
+    where: { id, deletedAt: null },
+    include: { currentVersion: true },
+  });
+
+  if (!product || product.merchantId !== auth.merchantId || !product.currentVersion) {
+    throw productNotFound();
+  }
+
+  if (product.currentVersion.status === 'SUBMITTED') {
+    throw new HttpError('PRODUCT_IN_REVIEW', 409, '商品审核中，无法编辑');
+  }
+
+  await assertVersionInput(input);
+
+  const versionData = {
+    title: input.title,
+    subtitle: input.subtitle,
+    mainImageUrl: input.images[0],
+    images: input.images,
+    description: input.description,
+    attributes: input.attributes,
+  };
+
+  const skus = input.skus.map(sku => ({
+    skuCode: sku.skuCode,
+    specs: sku.specs,
+    price: sku.price,
+    stock: sku.stock,
+    status: sku.status,
+  }));
+
+  try {
+    if (product.currentVersion.status === 'DRAFT') {
+      // 草稿原地更新：版本号与版本 ID 保持不变，SKU 全量替换。
+      await prisma.$transaction([
+        prisma.productVersion.update({
+          where: { id: product.currentVersion.id },
+          data: {
+            ...versionData,
+            skus: { deleteMany: {}, create: skus },
+          },
+        }),
+        prisma.product.update({
+          where: { id },
+          data: { categoryId: input.categoryId, brandId: input.brandId },
+        }),
+      ]);
+    } else {
+      // 已审核/已发布等版本不可变，编辑产生新的 DRAFT 版本并切换当前指针。
+      await prisma.$transaction(async tx => {
+        const latest = await tx.productVersion.aggregate({
+          where: { productId: id },
+          _max: { version: true },
+        });
+
+        const created = await tx.productVersion.create({
+          data: {
+            productId: id,
+            version: (latest._max.version ?? 0) + 1,
+            status: 'DRAFT',
+            ...versionData,
+            createdBy: auth.userId,
+            skus: { create: skus },
+          },
+        });
+
+        await tx.product.update({
+          where: { id },
+          data: { categoryId: input.categoryId, brandId: input.brandId, currentVersionId: created.id },
+        });
+      });
+    }
+  } catch (error) {
+    if (isUniqueConstraintError(error)) {
+      throw new HttpError('PRODUCT_VERSION_CONFLICT', 409, '商品版本冲突，请重试');
+    }
+
+    throw error;
+  }
+
+  return getProduct(auth, id);
 }
 
 function allowedOpsStatuses(status?: ProductVersionStatus): ProductVersionStatus[] {

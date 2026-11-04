@@ -9,12 +9,13 @@ import {
   productDetailSchema,
   productListRowSchema,
   productQuerySchema,
+  productUpdateSchema,
 } from '@mtm/contracts';
 
 import { requireAnyPermission, requireMerchantPermission } from '../auth';
 import type { AppEnv } from '../http';
 import { sendData, sendPage } from '../http';
-import { createProduct, getProduct, listProducts } from '../services/products';
+import { createProduct, getProduct, listProducts, updateProduct } from '../services/products';
 
 const productIdParamsSchema = z.object({ id: idSchema });
 
@@ -81,6 +82,27 @@ const productDetailRoute = createRoute({
   },
 });
 
+const updateProductRoute = createRoute({
+  method: 'patch',
+  path: '/api/v1/products/{id}',
+  tags: ['product'],
+  security: [{ bearerAuth: [] }],
+  middleware: requireMerchantPermission(PERMISSIONS.PRODUCT_UPDATE),
+  request: {
+    params: productIdParamsSchema,
+    body: { required: true, content: { 'application/json': { schema: productUpdateSchema } } },
+  },
+  responses: {
+    200: {
+      description: '更新后的商品详情',
+      content: { 'application/json': { schema: productDetailEnvelopeSchema } },
+    },
+    ...sharedErrors,
+    404: errorResponse('商品不存在'),
+    409: errorResponse('商品审核中或版本冲突'),
+  },
+});
+
 export function registerProductRoutes(app: OpenAPIHono<AppEnv>): void {
   app.openapi(listProductsRoute, async c => {
     const { items, meta } = await listProducts(c.get('auth'), c.req.valid('query'));
@@ -91,5 +113,9 @@ export function registerProductRoutes(app: OpenAPIHono<AppEnv>): void {
 
   app.openapi(productDetailRoute, async c =>
     sendData(c, await getProduct(c.get('auth'), c.req.valid('param').id), 200)
+  );
+
+  app.openapi(updateProductRoute, async c =>
+    sendData(c, await updateProduct(c.get('auth'), c.req.valid('param').id, c.req.valid('json')), 200)
   );
 }

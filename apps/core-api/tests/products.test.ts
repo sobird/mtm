@@ -153,6 +153,62 @@ test('详情可见性：运营不可见 DRAFT，提交后可见；商家可见�
   expect((await submittedAsOps.json()).data.id).toBe(productId);
 });
 
+test('草稿就地更新，版本号不变', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:update', 'product:view']);
+  const created = await request('/api/v1/products', 'POST', CREATE_BODY, token);
+  const detail = (await created.json()).data;
+
+  const res = await request(`/api/v1/products/${detail.id}`, 'PATCH', { ...CREATE_BODY, title: '改名沙发' }, token);
+  expect(res.status).toBe(200);
+  const updated = (await res.json()).data;
+  expect(updated.currentVersionId).toBe(detail.currentVersionId);
+  expect(updated.version).toBe(1);
+  expect(updated.title).toBe('改名沙发');
+});
+
+test('已提交商品编辑返回 409', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:update', 'product:view']);
+  const created = await request('/api/v1/products', 'POST', CREATE_BODY, token);
+  const detail = (await created.json()).data;
+  await prisma.productVersion.update({ where: { id: detail.currentVersionId }, data: { status: 'SUBMITTED' } });
+
+  const res = await request(`/api/v1/products/${detail.id}`, 'PATCH', { ...CREATE_BODY, title: '改名' }, token);
+  expect(res.status).toBe(409);
+  expect(await res.json()).toMatchObject({ error: { code: 'PRODUCT_IN_REVIEW' } });
+});
+
+test('编辑已驳回版本创建 v2 草稿且保留 v1', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:update', 'product:view']);
+  const created = await request('/api/v1/products', 'POST', CREATE_BODY, token);
+  const detail = (await created.json()).data;
+  await prisma.productVersion.update({ where: { id: detail.currentVersionId }, data: { status: 'REJECTED' } });
+
+  const res = await request(`/api/v1/products/${detail.id}`, 'PATCH', { ...CREATE_BODY, title: '第二版沙发' }, token);
+  expect(res.status).toBe(200);
+  const updated = (await res.json()).data;
+  expect(updated.version).toBe(2);
+  expect(updated.status).toBe('DRAFT');
+  expect(updated.currentVersionId).not.toBe(detail.currentVersionId);
+
+  const v1 = await prisma.productVersion.findUniqueOrThrow({ where: { id: detail.currentVersionId } });
+  expect(v1.status).toBe('REJECTED');
+  expect(v1.title).toBe('测试沙发');
+});
+
+test('跨租户编辑返回 404', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:update', 'product:view']);
+  const created = await request('/api/v1/products', 'POST', CREATE_BODY, token);
+  const detail = (await created.json()).data;
+
+  const res = await request(
+    `/api/v1/products/${detail.id}`,
+    'PATCH',
+    { ...CREATE_BODY, title: '越权' },
+    merchantToken('merchant-demo-2', ['product:update'])
+  );
+  expect(res.status).toBe(404);
+});
+
 test('运营状态过滤作用于当前版本且分页 meta 正确', async () => {
   const merchantTokenValue = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:view']);
 
