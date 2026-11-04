@@ -1,6 +1,12 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
 import { authConfig } from '@/lib/auth.config';
+
+function expectsSecureCookies(): boolean {
+  if (process.env.AUTH_COOKIE_SECURE === 'true') return true;
+  if (process.env.AUTH_COOKIE_SECURE === 'false') return false;
+  return process.env.NODE_ENV === 'production';
+}
 
 const redirect = authConfig.callbacks.redirect;
 
@@ -27,9 +33,33 @@ describe('redirect callback', () => {
 
 test('uses an explicit ops secret and the ops session cookie', () => {
   expect(authConfig.secret).toBe(process.env.OPS_AUTH_SECRET);
-  expect(authConfig.cookies?.sessionToken?.name).toBe(
-    process.env.NODE_ENV === 'production' ? '__Secure-ops.session' : 'ops.session'
-  );
+  expect(authConfig.cookies?.sessionToken?.name).toBe(expectsSecureCookies() ? '__Secure-ops.session' : 'ops.session');
+});
+
+test('disables secure cookies when AUTH_COOKIE_SECURE=false', async () => {
+  const env = process.env as Record<string, string | undefined>;
+  const originalNodeEnv = env.NODE_ENV;
+  const originalFlag = env.AUTH_COOKIE_SECURE;
+
+  try {
+    env.NODE_ENV = 'production';
+    env.AUTH_COOKIE_SECURE = 'false';
+    vi.resetModules();
+
+    const { authConfig: config } = await import('@/lib/auth.config');
+
+    expect(config.useSecureCookies).toBe(false);
+    expect(config.cookies?.sessionToken?.name).toBe('ops.session');
+    expect(config.cookies?.sessionToken?.options?.secure).toBe(false);
+  } finally {
+    env.NODE_ENV = originalNodeEnv;
+    if (originalFlag === undefined) {
+      delete env.AUTH_COOKIE_SECURE;
+    } else {
+      env.AUTH_COOKIE_SECURE = originalFlag;
+    }
+    vi.resetModules();
+  }
 });
 
 test('writes the ops claims onto the jwt', () => {

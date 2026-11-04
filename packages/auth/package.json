@@ -7,7 +7,8 @@
     "./password": "./src/password.ts",
     "./rate-limit": "./src/rate-limit.ts",
     "./service-token": "./src/service-token.ts",
-    "./menu-filter": "./src/menu-filter.ts"
+    "./menu-filter": "./src/menu-filter.ts",
+    "./cookies": "./src/cookies.ts"
   },
   "scripts": {
     "format": "oxfmt --check --config ../../packages/config/oxfmt.jsonc",

@@ -14,7 +14,8 @@
     "CORE_API_URL",
     "CORE_PUBLIC_URL",
     "UPLOAD_DIR",
-    "UPLOAD_MAX_BYTES"
+    "UPLOAD_MAX_BYTES",
+    "AUTH_COOKIE_SECURE"
   ],
   "globalDependencies": ["packages/config/**"],
   "tasks": {
