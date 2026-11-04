@@ -1,13 +1,14 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { expect, test, vi } from 'vitest';
 
 vi.mock('next/navigation', () => ({ usePathname: () => '/system/accounts' }));
 vi.mock('next-auth/react', () => ({ signOut: vi.fn() }));
 
 import { AdminShell } from '../src';
+import { renderWithIntl } from './render';
 
 test('renders menu, account and children', () => {
-  render(
+  renderWithIntl(
     <AdminShell
       title='运营后台'
       account={{ name: '超级管理员', username: 'admin' }}
