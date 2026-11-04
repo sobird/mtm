@@ -1,8 +1,11 @@
 import { expect, test } from '@playwright/test';
 
+const MERCHANT_URL = process.env.E2E_MERCHANT_URL ?? 'http://localhost:3000';
+const OPS_URL = process.env.E2E_OPS_URL ?? 'http://localhost:3001';
+
 test.describe('login smoke', () => {
   test('ops admin can sign in with the demo account', async ({ page }) => {
-    await page.goto('http://localhost:3001/login');
+    await page.goto(`${OPS_URL}/login`);
 
     await page.locator('input[name="username"]').fill('admin');
     await page.locator('input[name="password"]').fill('admin123');
@@ -14,7 +17,7 @@ test.describe('login smoke', () => {
   });
 
   test('merchant admin can sign in with the demo password account', async ({ page }) => {
-    await page.goto('http://localhost:3000/login');
+    await page.goto(`${MERCHANT_URL}/login`);
 
     // The merchant login defaults to the mobile + captcha tab; switch to the
     // password tab so the test does not depend on the captcha endpoint.

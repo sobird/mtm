@@ -1,10 +1,10 @@
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { handleIntlError, normalizeLocale } from '@mtm/i18n';
+import { normalizeLocale } from '@mtm/i18n';
 import type { Metadata } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
 
+import { IntlProvider } from './intl-provider';
 import Providers from './providers';
 
 import './globals.css';
@@ -22,11 +22,11 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang={locale}>
       <body>
-        <NextIntlClientProvider locale={locale} messages={messages} onError={handleIntlError}>
+        <IntlProvider locale={locale} messages={messages}>
           <AntdRegistry>
             <Providers locale={locale}>{children}</Providers>
           </AntdRegistry>
-        </NextIntlClientProvider>
+        </IntlProvider>
       </body>
     </html>
   );
