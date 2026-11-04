@@ -72,7 +72,21 @@ export function createProductFormSchema(
         .trim()
         .min(1, t('validation.productDescriptionRequired'))
         .max(5000, t('validation.productDescriptionMax', { max: 5000 })),
-      attributes: z.record(z.string(), z.string()),
+      // react-hook-form keeps own keys for untouched attribute Controllers with `undefined`
+      // values; drop those before the record check so blank optional attributes do not fail
+      // with Zod's default message. Empty strings stay and are handled as blank below.
+      attributes: z.preprocess(
+        value => {
+          if (!value || typeof value !== 'object') {
+            return {};
+          }
+
+          return Object.fromEntries(
+            Object.entries(value as Record<string, unknown>).filter(([, item]) => item !== undefined)
+          );
+        },
+        z.record(z.string(), z.string())
+      ),
       skus: z.array(
         z.object({
           skuCode: z.string(),

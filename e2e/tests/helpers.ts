@@ -81,7 +81,7 @@ export async function openMerchantProduct(page: Page, code: string): Promise<voi
 export async function searchAudits(
   page: Page,
   keyword: string,
-  statusOption?: 'PENDING' | 'APPROVED' | 'REJECTED'
+  statusOption?: 'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'
 ): Promise<void> {
   await page.goto(`${OPS_URL}/audits`);
 
@@ -96,8 +96,10 @@ export async function searchAudits(
   await searchForm.getByRole('button', { name: /查询|Search/ }).click();
 }
 
-function statusLabel(status: 'PENDING' | 'APPROVED' | 'REJECTED'): RegExp {
+function statusLabel(status: 'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'): RegExp {
   switch (status) {
+    case 'ALL':
+      return /全部|All/;
     case 'PENDING':
       return /待审核|Pending/;
     case 'APPROVED':

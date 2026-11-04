@@ -16,22 +16,21 @@ test.describe('ops audit', () => {
     const categoryRow = page.getByRole('row').filter({ hasText: categoryName });
     await expect(categoryRow).toBeVisible();
 
-    // The seed leaves P1002 submitted; the list defaults to the PENDING filter.
-    await searchAudits(page, 'P1002');
+    // The seed leaves P1002 submitted, but a previous partial run may already have approved
+    // it. Search across all statuses and only take the decision when it is still pending.
+    await searchAudits(page, 'P1002', 'ALL');
 
-    const pendingRow = page.getByRole('row').filter({ hasText: 'P1002' });
-    await expect(pendingRow).toBeVisible();
+    const row = page.getByRole('row').filter({ hasText: 'P1002' });
+    await expect(row).toBeVisible();
+    await expect(row).toContainText(/待审核|Pending|已通过|Approved|已驳回|Rejected/);
 
-    await pendingRow.getByTestId('audit-open').click();
-    await expect(page.getByTestId('audit-status')).toContainText(/待审核|Pending/);
-    await page.getByTestId('audit-approve').click();
-    await expect(page.getByTestId('audit-approve')).toBeHidden();
+    if (!/已通过|Approved/.test(await row.innerText())) {
+      await row.getByTestId('audit-open').click();
+      await expect(page.getByTestId('audit-status')).toContainText(/待审核|Pending/);
+      await page.getByTestId('audit-approve').click();
+      await expect(page.getByTestId('audit-approve')).toBeHidden();
+    }
 
-    // After approval the PENDING filter no longer contains the row; switch to APPROVED.
-    await searchAudits(page, 'P1002', 'APPROVED');
-
-    const approvedRow = page.getByRole('row').filter({ hasText: 'P1002' });
-    await expect(approvedRow).toBeVisible();
-    await expect(approvedRow).toContainText(/已通过|Approved/);
+    await expect(page.getByRole('row').filter({ hasText: 'P1002' })).toContainText(/已通过|Approved/);
   });
 });

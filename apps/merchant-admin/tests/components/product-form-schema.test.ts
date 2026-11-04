@@ -68,6 +68,33 @@ test('必填 SELECT 属性为空或选项无效时报错', () => {
   expect(invalidResult.error?.issues.some(issue => issue.path.join('.') === 'attributes.attr-select')).toBe(true);
 });
 
+test('可选属性值为 undefined 时通过，解析结果丢弃该键', () => {
+  const result = validate([NUMBER_ATTRIBUTE], {
+    attributes: { 'attr-number': undefined } as unknown as Record<string, string>,
+  });
+
+  expect(result.success).toBe(true);
+
+  if (result.success) {
+    expect(result.data.attributes).toEqual({});
+    expect('attr-number' in result.data.attributes).toBe(false);
+  }
+});
+
+test('必填属性值为 undefined 时返回翻译后的必填错误', () => {
+  const result = validate([SELECT_ATTRIBUTE], {
+    attributes: { 'attr-select': undefined } as unknown as Record<string, string>,
+  });
+
+  expect(result.success).toBe(false);
+  expect(
+    result.error?.issues.some(
+      issue => issue.path.join('.') === 'attributes.attr-select' && issue.message === '请填写该属性'
+    )
+  ).toBe(true);
+  expect(result.error?.issues.some(issue => /expected string/.test(issue.message))).toBe(false);
+});
+
 test('全部 SKU 行为空时报错交给表单拦截', () => {
   const result = validate([], { skus: [{ skuCode: '', specsText: '', price: '', stock: '', status: 'ACTIVE' }] });
 

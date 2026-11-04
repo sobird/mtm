@@ -15,7 +15,8 @@ const E2E = {
 export default defineConfig({
   testDir: './tests',
   timeout: 120_000,
-  retries: 1,
+  // The E2E database is shared and mutable, so retries would only re-run against mutated state.
+  retries: 0,
   // The specs share one seeded database, so files must not mutate it in parallel.
   workers: 1,
   use: {

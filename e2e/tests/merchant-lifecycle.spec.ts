@@ -39,7 +39,6 @@ test.describe('merchant product lifecycle', () => {
       await merchant.getByTestId('product-image-input').setInputFiles('fixtures/product.png');
       await expect(merchant.locator('img[src*="/uploads/"]').first()).toBeVisible();
       await chooseOption(merchant, 'attribute-attr-demo-home-sofa-material', /棉麻/);
-      await merchant.getByTestId('attribute-attr-demo-home-sofa-size').fill('三人位 200cm');
       await merchant.getByTestId('product-sku-code').fill(`${code}-A`);
       await merchant.locator('input[name="skus.0.price"]').fill('199.00');
       await merchant.locator('input[name="skus.0.stock"]').fill('5');
