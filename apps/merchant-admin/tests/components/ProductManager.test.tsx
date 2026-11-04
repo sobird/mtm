@@ -86,3 +86,11 @@ test('新建商品跳转到表单页', async () => {
   await userEvent.click(screen.getByRole('button', { name: '新建商品' }));
   expect(mocks.push).toHaveBeenCalledWith('/products/new');
 });
+
+test('编辑商品跳转到详情编辑页', async () => {
+  renderManager();
+  await screen.findByText('测试沙发');
+
+  await userEvent.click(screen.getByRole('button', { name: '编辑' }));
+  expect(mocks.push).toHaveBeenCalledWith('/products/p1');
+});

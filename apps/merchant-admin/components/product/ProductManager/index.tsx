@@ -140,7 +140,7 @@ export function ProductManager() {
     <div className={styles.actions}>
       {EDITABLE_STATUSES.has(row.status) ? (
         <Can permission={PERMISSIONS.PRODUCT_UPDATE}>
-          <Button variant='ghost' size='sm' onClick={() => router.push(`/products/${row.id}/edit`)}>
+          <Button variant='ghost' size='sm' onClick={() => router.push(`/products/${row.id}`)}>
             编辑
           </Button>
         </Can>
