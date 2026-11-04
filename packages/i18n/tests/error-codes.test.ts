@@ -26,7 +26,7 @@ function collectCodes(): Set<string> {
   ];
   for (const file of sources) {
     const text = readFileSync(file, 'utf8');
-    for (const match of text.matchAll(/new (?:HttpError|AppError)\('([A-Z][A-Z0-9_]+)'/g)) codes.add(match[1]);
+    for (const match of text.matchAll(/new (?:HttpError|AppError|ApiError)\('([A-Z][A-Z0-9_]+)'/g)) codes.add(match[1]);
     for (const match of text.matchAll(/code: '([A-Z][A-Z0-9_]+)'/g)) codes.add(match[1]);
   }
   return codes;
