@@ -98,7 +98,25 @@
     "mobileFormat": "手机号格式不符合要求",
     "identifierRequired": "请输入用户名或手机号",
     "passwordRequired": "密码不能为空",
-    "policyRequired": "请勾选隐私协议"
+    "policyRequired": "请勾选隐私协议",
+    "companyLicenseRequired": "营业执照不能为空",
+    "socialCreditCodeRequired": "统一社会信用代码不能为空",
+    "companyNameRequired": "公司名称不能为空",
+    "addressRequired": "经营地址不能为空",
+    "termRequired": "请选择有效截止日期",
+    "businessTermRequired": "营业期限不能为空",
+    "capitalRequired": "注册资金不能为空",
+    "legalPersonNameRequired": "法人姓名不能为空",
+    "idNumberRequired": "证件号码不能为空",
+    "chinaMobileInvalid": "请输入正确的中国大陆11位手机号码",
+    "idPhotosRequired": "请上传法人证件照",
+    "companyTypeRequired": "公司类型不能为空",
+    "bankOpenRequired": "银行开户证明不能为空",
+    "officeAddressRequired": "办公地址不能为空",
+    "companyDescRequired": "公司简介不能为空",
+    "companyDescMax": "公司简介最多1000字",
+    "captchaSixDigits": "请输入6位手机验证码",
+    "cooperationPolicyRequired": "请勾选合作协议"
   },
   "menu": {
     "badge": {
@@ -287,5 +305,244 @@
     "UPLOAD_TOO_LARGE": "上传文件过大",
     "UPLOAD_UNSUPPORTED_TYPE": "不支持的文件类型",
     "USERNAME_TAKEN": "用户名已存在"
+  },
+  "entry": {
+    "meta": {
+      "home": "商家入驻",
+      "shop": "选择店铺类型",
+      "company": "填写入驻资料",
+      "settleinpc": "入驻提示"
+    },
+    "header": {
+      "brand": "开源电商 · 商家入驻平台"
+    },
+    "invitation": {
+      "submit": "立即入住",
+      "code": "邀请码",
+      "codePlaceholder": "邀请码非必填，如有请填写服务商招商码或推荐商家邀请码",
+      "failed": "提交失败，请稍后重试"
+    },
+    "steps": {
+      "prepare": {
+        "title": "准备入驻资料",
+        "item1": "准备店铺信息",
+        "item2": "准备经营资质",
+        "item3": "开店铺人证件"
+      },
+      "chooseType": {
+        "title": "选择店铺类型",
+        "item1": "店铺类型了解",
+        "item2": "明确资质要求",
+        "item3": "确认店铺类型"
+      },
+      "apply": {
+        "title": "填写入驻申请",
+        "item1": "主体信息",
+        "item2": "资质证件",
+        "item3": "经营信息"
+      },
+      "review": {
+        "title": "提交等待审核",
+        "item1": "招商初审",
+        "item2": "证件复审",
+        "item3": "账户开户"
+      },
+      "operate": {
+        "title": "开店线上经营",
+        "item1": "发布商品信息",
+        "item2": "设置提现账户",
+        "item3": "线上售卖经营"
+      }
+    },
+    "warning": {
+      "message": "友情提示：拟入驻开源电商的商家您好，入驻时无需支付给任何招商服务商和第三方费用，请您知悉！",
+      "description": "目前平台仅开放数码家电/办公、宠物生活、母婴玩具、服饰鞋包、运动户外、汽配摩托、医药健康类目的商家自入驻，其余类目邀约制入驻请勿提交申请。入驻审核时效预计在7个工作日内，感谢支持。"
+    },
+    "settleinpc": {
+      "notice": "抱歉，您当前登陆的手机号已经注册过店铺，请先点击退出登陆，然后更换一个新的手机号重新注册登陆即可。给您带来不便，还请谅解。"
+    },
+    "storeTypeGuide": {
+      "title": "企业店铺类型和资质说明",
+      "confirm": "我知道了",
+      "typeColumn": "店铺类型",
+      "descriptionColumn": "店铺说明",
+      "names": {
+        "flagship": "企业旗舰店",
+        "franchise": "企业专卖店",
+        "exclusive": "企业专营店",
+        "factory": "企业工厂店"
+      },
+      "rows": {
+        "1": "经营一个品牌商品的旗舰店",
+        "2": "经营多个品牌商品，且各品牌归属于同一实际控制人的旗舰店",
+        "3": "卖场型品牌（服务类商标）商标权利人开设的旗舰店",
+        "4": "经营一个授权品牌的商品，但未获得品牌（注册商标）权利人独占授权入驻开源电商开放平台的商家专卖店",
+        "5": "经营多个授权品牌的商品，且各品牌归同一实际控制人的商家专卖店",
+        "6": "经营多个自有品牌商品的专营店",
+        "7": "经营多个授权品牌商品，持有相应注册商标权利人出具的销售授权文件",
+        "8": "同时经营自有品牌商品和授权品牌商品的专营店",
+        "9": "经营一个或多个品牌商品的工厂店",
+        "10": "经营商品的商标持有人或持有相应注册商标权利人出具的销售授权文件",
+        "11": "经营商品均为自主生产的工厂店"
+      }
+    },
+    "storeTypeSelector": {
+      "enterprisePrefix": "企业",
+      "confirmTitle": "确定更改店铺类型为 {name} ？",
+      "confirm": "确定",
+      "changeTip": "温馨提示：如果更换店铺类型，店铺名称会被清空，需重新上传"
+    },
+    "company": {
+      "loadFailed": "加载失败",
+      "previous": "上一步",
+      "next": "下一步",
+      "done": "完成",
+      "steps": {
+        "subject": "填写主体信息",
+        "overview": "填写公司概况",
+        "qualification": "填写资质信息",
+        "shop": "填写店铺信息"
+      },
+      "placeholders": {
+        "none": "暂无内容",
+        "qualification": "填写资质信息",
+        "shop": "填写店铺信息"
+      },
+      "subjectCardTitle": "企业主体信息",
+      "legalPersonCardTitle": "法人证件信息",
+      "companyType": "公司类型",
+      "distChannel": "销售渠道",
+      "businessLicense": "营业执照",
+      "businessLicenseNote1": "请上传清晰的多证合一营业执照（统一社会信用代码）",
+      "businessLicenseNote2": "文件最多上传1张，大小不得超过20MB",
+      "businessLicenseNote3": "文件格式支持：JPG/JPEG/PNG/GIF/BPM",
+      "businessLicenseNote4": "企业主体需满足开源电商平台入驻标准要求",
+      "taxpayer": "一般纳税人资格证电子版",
+      "taxpayerNote1": "请上传清晰的一般纳税人资格证，复印件需加盖公司印章",
+      "taxpayerNote2": "文件最多上传1张，大小不得超过20MB",
+      "taxpayerNote3": "文件格式支持：JPG/JPEG/PNG/GIF/BPM",
+      "bankOpen": "银行开户证明",
+      "bankOpenNote1": "请上传清晰的证照，如果是复印件需加盖公司印章",
+      "bankOpenNote2": "文件最多上传1张，大小不得超过20MB",
+      "bankOpenNote3": "文件格式支持：JPG/JPEG/PNG/GIF/BPM",
+      "bankOpenNote4": "上传银行开户许可证或基本存款账户信息扫描件",
+      "officeAddress": "办公地址",
+      "officeAddressPlaceholder": "请填写真实的办公地址",
+      "companyDesc": "公司简介",
+      "companyDescPlaceholder": "可以从品牌定位、品牌产品线、市场占有率或年销量、品牌当下布局、品牌未来规划等方面介绍，最多不得超过1000字",
+      "companyFileNote1": "支持上传相关公司介绍等相关资料附件",
+      "companyFileNote2": "文件最多上传10个，单个文件大小不得超过20MB",
+      "companyFileNote3": "文件格式支持：PDF/PPT/DOC/JPG/JPEG/PNG/GIF/BPM",
+      "idType": "证件类型",
+      "idPhotos": "电子证件照",
+      "idPhotosHelp": "请上传手持证件正反面照，或身份证件的正反面彩色扫描照片，或正反面复印件加盖入驻主体鲜章，",
+      "viewExample": "查看示例",
+      "legalPersonMobile": "法人手机号",
+      "legalPersonMobilePlaceholder": "请填写法人手机号",
+      "licenseVerifyTitle": "请核对营业执照信息，若信息不符，请手动修改",
+      "socialCreditCode": "统一社会信用代码",
+      "socialCreditCodePlaceholder": "请填写营业执照上的注册号",
+      "companyName": "公司名称",
+      "companyNamePlaceholder": "请按照营业执照，填写公司名称",
+      "businessAddress": "经营地址",
+      "businessAddressPlaceholder": "请按照营业执照，填写公司地址",
+      "businessTerm": "营业期限",
+      "registeredCapital": "注册资金",
+      "registeredCapitalHint": "若注册资金币种不是人民币，可按照当前汇率换算成人民币后进行填写",
+      "registeredCapitalPlaceholder": "请输入",
+      "registeredCapitalUnit": "万元",
+      "identityVerifyTitle": "请核对身份信息，若信息不符合，可手动修改",
+      "legalName": "姓名",
+      "legalNamePlaceholder": "请保持与身份证件上的姓名一致",
+      "idNumber": "证件号码",
+      "idNumberPlaceholder": "请保持与身份证件上的证件号一致",
+      "validUntil": "有效截止日",
+      "ocrFailed": "证件识别失败，请手动填写"
+    },
+    "idTypes": {
+      "mainland": "中国大陆居民身份证",
+      "passport": "海外护照",
+      "hkMacau": "港澳居民往来内地通行证",
+      "taiwan": "台湾居民往来大陆通行证"
+    },
+    "idUploadDemo": {
+      "title": "身份证件上传示例",
+      "confirm": "我知道了",
+      "copyNote": "1. 身份证件正反面复印件，加盖开店公司印章：",
+      "alt1": "身份证件示例1",
+      "alt2": "身份证件示例2",
+      "holdingNote": "2. 手持身份证件的正反面照片：",
+      "alt3": "身份证件示例3",
+      "alt4": "身份证件示例4",
+      "reminderNote": "注：身份信息请勿打马赛克，请保持所有字迹清晰可见"
+    },
+    "shop": {
+      "loadFailed": "加载失败",
+      "heading": "请选择您的店铺类型及主营类目",
+      "category": "主营类目",
+      "categoryPlaceholder": "主营类目决定您店铺的经营范围，请谨慎选择",
+      "type": "店铺类型",
+      "howToChoose": "该如何选择？",
+      "next": "下一步",
+      "categoryRequired": "请选择主营类目",
+      "typeRequired": "请选择店铺类型",
+      "saveFailed": "保存失败，请稍后重试"
+    },
+    "ocr": {
+      "recognizing": "识别中…",
+      "failed": "图片识别失败"
+    },
+    "upload": {
+      "tooLarge": "文件大小不能超过{max}MB",
+      "failed": "文件上传失败",
+      "uploading": "上传中…"
+    },
+    "captcha": {
+      "invalidMobile": "手机号格式不符合要求",
+      "failed": "获取验证码失败",
+      "placeholder": "请输入验证码",
+      "label": "验证码",
+      "resendIn": "{seconds} 秒后重新获取",
+      "send": "获取验证码"
+    },
+    "termPicker": {
+      "start": "开始日期",
+      "end": "结束日期",
+      "to": "至",
+      "longTerm": "长期有效"
+    },
+    "signContract": {
+      "policyTip": "以下协议与纸质协议拥有同等效力，点击“确认合作”视为您同意并接受合作协议条款。如对合作条款有异议，可联系业务经理。",
+      "submit": "确认合作",
+      "title": "签约合作协议",
+      "expiredNotice": "您的协议已到期，我们将通过短信验证来确认您与平台继续达成合作",
+      "notice": "我们将通过短信验证来确认您与平台正式达成合作",
+      "captchaSentTo": "验证码将发送到",
+      "changeMobileTip": "，如需更换手机号请联系招商经理",
+      "policyPrefix": "我已阅读并同意",
+      "policyName": "《开源电商合作协议》",
+      "policyInfo": "协议说明",
+      "success": "恭喜您与平台达成合作",
+      "failed": "签署合约异常"
+    },
+    "merchantLogo": {
+      "statusReviewing": "审核中",
+      "statusRejected": "审核驳回",
+      "statusApproved": "审核通过",
+      "reviewTip": "您已申请修改店铺标志，当前处于审核中，审核通过前，会向消费者展示原来的店铺标志，感谢您的耐心等待",
+      "normalTip": "新上传的店铺标志通过审核后，会替换掉原有的店铺标志，点击右上角的保存后上传",
+      "tooLarge": "照片大小不能超过10MB",
+      "squareRequired": "请上传正方形的店铺标志图片",
+      "minSize": "店铺标志图片需要大于200*200像素",
+      "readFailed": "图片读取失败，请重新上传",
+      "changeArrow": "修改为 》",
+      "description1": "店铺标志会在店铺页，订单页等地方，展示给消费者；",
+      "description2": "请上传正方形图片，不小于200*200像素；",
+      "description3": "格式支持：JPG/JPEG/PNG/GIF/BMP；"
+    },
+    "idCard": {
+      "portrait": "人像面",
+      "emblem": "国徽面"
+    }
   }
 }

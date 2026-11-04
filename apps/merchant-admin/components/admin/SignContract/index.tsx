@@ -1,23 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import type { Translate } from '@mtm/i18n';
+import { useTranslations } from 'next-intl';
+import { useMemo, useState } from 'react';
 import { useFormState } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button, Checkbox, Dialog, Field, Form, Tooltip, useToast } from '@/components/ui';
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
+import { translateApiError } from '@/lib/translate-api-error';
 
 import FieldCaptcha from '../FieldCaptcha';
 
 import styles from './SignContract.module.css';
 
-const POLICY_TIP =
-  '以下协议与纸质协议拥有同等效力，点击“确认合作”视为您同意并接受合作协议条款。如对合作条款有异议，可联系业务经理。';
-
-const signSchema = z.object({
-  captcha: z.string().regex(/^\d{6}$/, '请输入6位手机验证码'),
-  policy: z.boolean().refine(value => value, '请勾选合作协议'),
-});
+function createSignSchema(t: Translate) {
+  return z.object({
+    captcha: z.string().regex(/^\d{6}$/, t('validation.captchaSixDigits')),
+    policy: z.boolean().refine(value => value, t('validation.cooperationPolicyRequired')),
+  });
+}
 
 export interface SignContractProps {
   open: boolean;
@@ -29,18 +31,23 @@ export interface SignContractProps {
 }
 
 function SignSubmitButton({ loading }: { loading: boolean }) {
+  const t = useTranslations('entry.signContract');
   const { isSubmitting } = useFormState();
 
   return (
     <Button type='submit' className={styles.submit} loading={loading || isSubmitting}>
-      确认合作
+      {t('submit')}
     </Button>
   );
 }
 
 export function SignContract({ open, onOpenChange, mobile, contractId, bizType, state }: SignContractProps) {
+  const t = useTranslations('entry.signContract');
+  const tCaptcha = useTranslations('entry.captcha');
+  const tRoot = useTranslations();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
+  const schema = useMemo(() => createSignSchema(tRoot), [tRoot]);
   const expired = bizType === 100 && state === 30;
 
   const handleSubmit = async () => {
@@ -52,36 +59,36 @@ export function SignContract({ open, onOpenChange, mobile, contractId, bizType, 
         body: { contractId },
       });
 
-      toast.success('恭喜您与平台达成合作');
+      toast.success(t('success'));
       onOpenChange(false);
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : '签署合约异常');
+      toast.error(translateApiError(error, tRoot, 'entry.signContract.failed'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} title='签约合作协议'>
+    <Dialog open={open} onOpenChange={onOpenChange} title={t('title')}>
       <div className={styles.box}>
         <div className={styles.alert} role='alert'>
-          {expired
-            ? '您的协议已到期，我们将通过短信验证来确认您与平台继续达成合作'
-            : '我们将通过短信验证来确认您与平台正式达成合作'}
+          {expired ? t('expiredNotice') : t('notice')}
         </div>
 
         <p className={styles.tip}>
-          验证码将发送到 <strong>{mobile}</strong>，如需更换手机号请联系招商经理
+          {t('captchaSentTo')}
+          <strong>{mobile}</strong>
+          {t('changeMobileTip')}
         </p>
 
         <Form
-          schema={signSchema}
+          schema={schema}
           defaultValues={{ captcha: '', policy: false }}
           onSubmit={handleSubmit}
           className={styles.form}
         >
-          <Field label='验证码' required>
-            <FieldCaptcha name='captcha' mobile={mobile} placeholder='请输入验证码' />
+          <Field label={tCaptcha('label')} required>
+            <FieldCaptcha name='captcha' mobile={mobile} placeholder={tCaptcha('placeholder')} />
           </Field>
 
           <Checkbox
@@ -89,13 +96,14 @@ export function SignContract({ open, onOpenChange, mobile, contractId, bizType, 
             className={styles.policy}
             label={
               <>
-                我已阅读并同意<span className={styles.policyName}>《开源电商合作协议》</span>
-                <Tooltip content={POLICY_TIP}>
+                {t('policyPrefix')}
+                <span className={styles.policyName}>{t('policyName')}</span>
+                <Tooltip content={t('policyTip')}>
                   <span
                     className={styles.info}
                     role='button'
                     tabIndex={0}
-                    aria-label='协议说明'
+                    aria-label={t('policyInfo')}
                     onClick={event => {
                       event.preventDefault();
                       event.stopPropagation();

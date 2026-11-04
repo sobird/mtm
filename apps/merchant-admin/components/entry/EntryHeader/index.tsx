@@ -1,20 +1,24 @@
 'use client';
 
 import { signOut } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 
 import { Dropdown } from '@/components/ui';
 
 import styles from './EntryHeader.module.css';
 
 export function EntryHeader() {
+  const t = useTranslations('entry');
+  const tCommon = useTranslations('common');
+
   return (
     <header className={styles.header}>
       <div className={styles.headerBox}>
         <div className={styles.logoRow}>
           <span className={styles.logoMark} aria-hidden='true'>
-            开
+            {tCommon('brandMark')}
           </span>
-          <span className={styles.brand}>开源电商 · 商家入驻平台</span>
+          <span className={styles.brand}>{t('header.brand')}</span>
         </div>
 
         <div className={styles.item}>
@@ -27,7 +31,7 @@ export function EntryHeader() {
             items={[
               {
                 key: 'logout',
-                label: '退出登录',
+                label: tCommon('logout'),
                 onClick: () => {
                   void signOut({ callbackUrl: '/login' });
                 },

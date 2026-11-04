@@ -1,13 +1,15 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
 import { Button, Card, Empty, Field, Form, Select, Skeleton, useToast } from '@/components/ui';
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
+import { translateApiError } from '@/lib/translate-api-error';
 
 import StoreTypeGuideDialog from '../StoreTypeGuideDialog';
 import StoreTypeSelector from '../StoreTypeSelector';
@@ -46,6 +48,9 @@ function buildCategoryOptions(categories: MerchantCategoryItem[]) {
 }
 
 export function EntryShop() {
+  const t = useTranslations('entry.shop');
+  const tWarning = useTranslations('entry.warning');
+  const tRoot = useTranslations();
   const router = useRouter();
   const toast = useToast();
   const [guideOpen, setGuideOpen] = useState(false);
@@ -78,7 +83,7 @@ export function EntryShop() {
     return (
       <div className={styles.page}>
         <div className={styles.main}>
-          <Empty description='加载失败' />
+          <Empty description={t('loadFailed')} />
         </div>
       </div>
     );
@@ -99,12 +104,12 @@ export function EntryShop() {
 
   const handleSubmit = async (values: ShopValues) => {
     if (values.category === undefined || values.category === null || values.category === '') {
-      toast.error('请选择主营类目');
+      toast.error(t('categoryRequired'));
       return;
     }
 
     if (values.poiType === undefined || values.poiType === null || values.poiType === '') {
-      toast.error('请选择店铺类型');
+      toast.error(t('typeRequired'));
       return;
     }
 
@@ -124,7 +129,7 @@ export function EntryShop() {
       });
       router.push('/settleinjx/company');
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : '保存失败，请稍后重试');
+      toast.error(translateApiError(error, tRoot, 'entry.shop.saveFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -134,12 +139,12 @@ export function EntryShop() {
     <div className={styles.page}>
       <div className={styles.tips}>
         <div className={styles.alert} role='alert'>
-          目前平台仅开放数码家电/办公、宠物生活、母婴玩具、服饰鞋包、运动户外、汽配摩托、医药健康类目的商家自入驻，其余类目邀约制入驻请勿提交申请。入驻审核时效预计在7个工作日内，感谢支持。
+          {tWarning('description')}
         </div>
       </div>
 
       <div className={styles.main}>
-        <h2 className={styles.heading}>请选择您的店铺类型及主营类目</h2>
+        <h2 className={styles.heading}>{t('heading')}</h2>
 
         <Card>
           <Form
@@ -152,21 +157,17 @@ export function EntryShop() {
             onSubmit={handleSubmit}
             className={styles.form}
           >
-            <Field className={styles.bigField} label='主营类目'>
-              <Select
-                name='category'
-                options={categoryOptions}
-                placeholder='主营类目决定您店铺的经营范围，请谨慎选择'
-              />
+            <Field className={styles.bigField} label={t('category')}>
+              <Select name='category' options={categoryOptions} placeholder={t('categoryPlaceholder')} />
             </Field>
 
             <Field
               className={styles.bigField}
               label={
                 <span>
-                  店铺类型
+                  {t('type')}
                   <button type='button' className={styles.how} onClick={() => setGuideOpen(true)}>
-                    该如何选择？
+                    {t('howToChoose')}
                   </button>
                 </span>
               }
@@ -179,7 +180,7 @@ export function EntryShop() {
 
       <div className={styles.footer}>
         <Button type='submit' form={FORM_ID} loading={submitting}>
-          下一步
+          {t('next')}
         </Button>
       </div>
 

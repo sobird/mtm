@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 
@@ -15,6 +16,7 @@ const DEMO_IMAGES = [
 ];
 
 export function IdUploadDemo({ children }: { children: ReactNode }) {
+  const t = useTranslations('entry.idUploadDemo');
   const [open, setOpen] = useState(false);
 
   return (
@@ -26,24 +28,24 @@ export function IdUploadDemo({ children }: { children: ReactNode }) {
       <Dialog
         open={open}
         onOpenChange={setOpen}
-        title='身份证件上传示例'
-        footer={<Button onClick={() => setOpen(false)}>我知道了</Button>}
+        title={t('title')}
+        footer={<Button onClick={() => setOpen(false)}>{t('confirm')}</Button>}
         className={styles.dialog}
       >
         <div className={styles.content}>
-          <p>1. 身份证件正反面复印件，加盖开店公司印章：</p>
+          <p>{t('copyNote')}</p>
           <div className={styles.images}>
-            <img src={DEMO_IMAGES[0]} alt='身份证件示例1' />
-            <img src={DEMO_IMAGES[1]} alt='身份证件示例2' />
+            <img src={DEMO_IMAGES[0]} alt={t('alt1')} />
+            <img src={DEMO_IMAGES[1]} alt={t('alt2')} />
           </div>
-          <p>2. 手持身份证件的正反面照片：</p>
+          <p>{t('holdingNote')}</p>
           <div className={styles.images}>
-            <img src={DEMO_IMAGES[2]} alt='身份证件示例3' />
-            <img src={DEMO_IMAGES[3]} alt='身份证件示例4' />
+            <img src={DEMO_IMAGES[2]} alt={t('alt3')} />
+            <img src={DEMO_IMAGES[3]} alt={t('alt4')} />
           </div>
           <p>
             <span className={styles.required}>*</span>
-            注：身份信息请勿打马赛克，请保持所有字迹清晰可见
+            {t('reminderNote')}
           </p>
         </div>
       </Dialog>

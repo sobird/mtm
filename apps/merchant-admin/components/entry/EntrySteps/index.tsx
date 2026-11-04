@@ -1,34 +1,38 @@
+import { getTranslations } from 'next-intl/server';
+
 import styles from './EntrySteps.module.css';
 
-const STEPS = [
-  {
-    number: '01.',
-    title: '准备入驻资料',
-    items: ['准备店铺信息', '准备经营资质', '开店铺人证件'],
-  },
-  {
-    number: '02.',
-    title: '选择店铺类型',
-    items: ['店铺类型了解', '明确资质要求', '确认店铺类型'],
-  },
-  {
-    number: '03.',
-    title: '填写入驻申请',
-    items: ['主体信息', '资质证件', '经营信息'],
-  },
-  {
-    number: '04.',
-    title: '提交等待审核',
-    items: ['招商初审', '证件复审', '账户开户'],
-  },
-  {
-    number: '05.',
-    title: '开店线上经营',
-    items: ['发布商品信息', '设置提现账户', '线上售卖经营'],
-  },
-];
+export async function EntrySteps() {
+  const t = await getTranslations('entry.steps');
 
-export function EntrySteps() {
+  const STEPS = [
+    {
+      number: '01.',
+      title: t('prepare.title'),
+      items: [t('prepare.item1'), t('prepare.item2'), t('prepare.item3')],
+    },
+    {
+      number: '02.',
+      title: t('chooseType.title'),
+      items: [t('chooseType.item1'), t('chooseType.item2'), t('chooseType.item3')],
+    },
+    {
+      number: '03.',
+      title: t('apply.title'),
+      items: [t('apply.item1'), t('apply.item2'), t('apply.item3')],
+    },
+    {
+      number: '04.',
+      title: t('review.title'),
+      items: [t('review.item1'), t('review.item2'), t('review.item3')],
+    },
+    {
+      number: '05.',
+      title: t('operate.title'),
+      items: [t('operate.item1'), t('operate.item2'), t('operate.item3')],
+    },
+  ];
+
   return (
     <div className={styles.steps}>
       {STEPS.map((step, index) => (

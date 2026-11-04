@@ -98,7 +98,25 @@
     "mobileFormat": "Invalid mobile number format.",
     "identifierRequired": "Username or phone is required.",
     "passwordRequired": "Password is required.",
-    "policyRequired": "Please accept the privacy policy."
+    "policyRequired": "Please accept the privacy policy.",
+    "companyLicenseRequired": "Business license is required.",
+    "socialCreditCodeRequired": "Unified social credit code is required.",
+    "companyNameRequired": "Company name is required.",
+    "addressRequired": "Business address is required.",
+    "termRequired": "Please select a valid end date.",
+    "businessTermRequired": "Business term is required.",
+    "capitalRequired": "Registered capital is required.",
+    "legalPersonNameRequired": "Legal representative name is required.",
+    "idNumberRequired": "ID number is required.",
+    "chinaMobileInvalid": "Enter a valid 11-digit mainland China mobile number.",
+    "idPhotosRequired": "Please upload the legal representative's ID photos.",
+    "companyTypeRequired": "Company type is required.",
+    "bankOpenRequired": "Bank account opening certificate is required.",
+    "officeAddressRequired": "Office address is required.",
+    "companyDescRequired": "Company profile is required.",
+    "companyDescMax": "The company profile must not exceed 1000 characters.",
+    "captchaSixDigits": "Enter the 6-digit SMS verification code.",
+    "cooperationPolicyRequired": "Please accept the cooperation agreement."
   },
   "menu": {
     "badge": {
@@ -287,5 +305,244 @@
     "UPLOAD_TOO_LARGE": "The uploaded file is too large.",
     "UPLOAD_UNSUPPORTED_TYPE": "Unsupported file type.",
     "USERNAME_TAKEN": "Username already exists."
+  },
+  "entry": {
+    "meta": {
+      "home": "Merchant onboarding",
+      "shop": "Select a store type",
+      "company": "Onboarding information",
+      "settleinpc": "Onboarding notice"
+    },
+    "header": {
+      "brand": "Open Commerce · Business onboarding"
+    },
+    "invitation": {
+      "submit": "Settle in now",
+      "code": "Invitation code",
+      "codePlaceholder": "Optional. Enter a service provider's recruitment code or a referrer's invitation code.",
+      "failed": "Submission failed. Please try again later."
+    },
+    "steps": {
+      "prepare": {
+        "title": "Prepare onboarding documents",
+        "item1": "Prepare store information",
+        "item2": "Prepare business qualifications",
+        "item3": "Prepare the store owner's ID"
+      },
+      "chooseType": {
+        "title": "Choose a store type",
+        "item1": "Understand store types",
+        "item2": "Confirm qualification requirements",
+        "item3": "Confirm the store type"
+      },
+      "apply": {
+        "title": "Submit the onboarding application",
+        "item1": "Company details",
+        "item2": "Qualification documents",
+        "item3": "Business information"
+      },
+      "review": {
+        "title": "Submit and wait for review",
+        "item1": "Preliminary merchant review",
+        "item2": "Document re-review",
+        "item3": "Account opening"
+      },
+      "operate": {
+        "title": "Open the store and start selling online",
+        "item1": "Publish products",
+        "item2": "Set up a payout account",
+        "item3": "Sell online"
+      }
+    },
+    "warning": {
+      "message": "Friendly reminder: Merchants planning to join Open Commerce do not need to pay any recruitment service provider or third party during onboarding. Please be aware.",
+      "description": "Currently, only merchants in the digital appliances/office, pet supplies, maternal and infant toys, apparel and footwear, sports and outdoor, auto parts and motorcycles, and healthcare categories may apply for self-onboarding. Do not submit applications for other invitation-only categories. Onboarding reviews are expected to be completed within 7 business days. Thank you for your support."
+    },
+    "settleinpc": {
+      "notice": "Sorry, the mobile number you are currently signed in with is already registered to a store. Please sign out, then register and sign in again with a new mobile number. We apologize for the inconvenience."
+    },
+    "storeTypeGuide": {
+      "title": "Enterprise store types and qualifications",
+      "confirm": "Got it",
+      "typeColumn": "Store type",
+      "descriptionColumn": "Description",
+      "names": {
+        "flagship": "Enterprise flagship store",
+        "franchise": "Enterprise franchise store",
+        "exclusive": "Enterprise exclusive store",
+        "factory": "Enterprise factory store"
+      },
+      "rows": {
+        "1": "A flagship store selling products of a single brand",
+        "2": "A flagship store selling multiple brands owned by the same actual controller",
+        "3": "A flagship store opened by the trademark owner of a marketplace-type brand (service mark)",
+        "4": "A merchant franchise store selling products of one licensed brand without exclusive authorization from the brand (registered trademark) owner to join the Open Commerce open platform",
+        "5": "A merchant franchise store selling multiple licensed brands owned by the same actual controller",
+        "6": "An exclusive store selling multiple proprietary brands",
+        "7": "An exclusive store selling multiple licensed brands with sales authorization documents issued by the respective registered trademark owners",
+        "8": "An exclusive store selling both proprietary and licensed brand products",
+        "9": "A factory store selling products of one or more brands",
+        "10": "A factory store whose operator is the trademark holder of the products or holds sales authorization documents issued by the respective registered trademark owners",
+        "11": "A factory store whose products are all self-produced"
+      }
+    },
+    "storeTypeSelector": {
+      "enterprisePrefix": "Enterprise ",
+      "confirmTitle": "Change the store type to {name}?",
+      "confirm": "Confirm",
+      "changeTip": "Note: If you change the store type, the store name will be cleared and must be uploaded again."
+    },
+    "company": {
+      "loadFailed": "Failed to load",
+      "previous": "Previous",
+      "next": "Next",
+      "done": "Finish",
+      "steps": {
+        "subject": "Company details",
+        "overview": "Company overview",
+        "qualification": "Qualifications",
+        "shop": "Store details"
+      },
+      "placeholders": {
+        "none": "No content yet",
+        "qualification": "Qualifications",
+        "shop": "Store details"
+      },
+      "subjectCardTitle": "Company details",
+      "legalPersonCardTitle": "Legal representative details",
+      "companyType": "Company type",
+      "distChannel": "Sales channels",
+      "businessLicense": "Business license",
+      "businessLicenseNote1": "Upload a clear, multi-certificate-in-one business license (unified social credit code).",
+      "businessLicenseNote2": "Up to 1 file, no larger than 20 MB.",
+      "businessLicenseNote3": "Supported formats: JPG/JPEG/PNG/GIF/BMP.",
+      "businessLicenseNote4": "The company must meet the Open Commerce platform onboarding requirements.",
+      "taxpayer": "General taxpayer qualification certificate (electronic copy)",
+      "taxpayerNote1": "Upload a clear general taxpayer qualification certificate. Copies must be stamped with the company seal.",
+      "taxpayerNote2": "Up to 1 file, no larger than 20 MB.",
+      "taxpayerNote3": "Supported formats: JPG/JPEG/PNG/GIF/BMP.",
+      "bankOpen": "Bank account opening certificate",
+      "bankOpenNote1": "Upload a clear certificate. Copies must be stamped with the company seal.",
+      "bankOpenNote2": "Up to 1 file, no larger than 20 MB.",
+      "bankOpenNote3": "Supported formats: JPG/JPEG/PNG/GIF/BMP.",
+      "bankOpenNote4": "Upload a scan of the bank account opening permit or basic deposit account information.",
+      "officeAddress": "Office address",
+      "officeAddressPlaceholder": "Enter the actual office address",
+      "companyDesc": "Company profile",
+      "companyDescPlaceholder": "Describe the brand positioning, product lines, market share or annual sales, current layout, and future plans. Up to 1000 characters.",
+      "companyFileNote1": "You may upload company introduction and other related attachments.",
+      "companyFileNote2": "Up to 10 files, each no larger than 20 MB.",
+      "companyFileNote3": "Supported formats: PDF/PPT/DOC/JPG/JPEG/PNG/GIF/BMP.",
+      "idType": "ID type",
+      "idPhotos": "Electronic ID photo",
+      "idPhotosHelp": "Upload photos of you holding both sides of your ID, color scans of both sides, or copies of both sides stamped with the entity's official seal. ",
+      "viewExample": "View examples",
+      "legalPersonMobile": "Legal representative's mobile number",
+      "legalPersonMobilePlaceholder": "Enter the legal representative's mobile number",
+      "licenseVerifyTitle": "Verify the business license information. If it is incorrect, edit it manually.",
+      "socialCreditCode": "Unified social credit code",
+      "socialCreditCodePlaceholder": "Enter the registration number on the business license",
+      "companyName": "Company name",
+      "companyNamePlaceholder": "Enter the company name exactly as shown on the business license",
+      "businessAddress": "Business address",
+      "businessAddressPlaceholder": "Enter the company address exactly as shown on the business license",
+      "businessTerm": "Business term",
+      "registeredCapital": "Registered capital",
+      "registeredCapitalHint": "If the registered capital is not in CNY, convert it using the current exchange rate.",
+      "registeredCapitalPlaceholder": "Enter",
+      "registeredCapitalUnit": "10k CNY",
+      "identityVerifyTitle": "Verify the identity information. If it is incorrect, you can edit it manually.",
+      "legalName": "Name",
+      "legalNamePlaceholder": "Must match the name on the ID document",
+      "idNumber": "ID number",
+      "idNumberPlaceholder": "Must match the number on the ID document",
+      "validUntil": "Valid until",
+      "ocrFailed": "ID recognition failed. Please fill it in manually."
+    },
+    "idTypes": {
+      "mainland": "Mainland China resident ID card",
+      "passport": "Overseas passport",
+      "hkMacau": "Exit-entry permit for Hong Kong and Macau residents",
+      "taiwan": "Exit-entry permit for Taiwan residents"
+    },
+    "idUploadDemo": {
+      "title": "ID upload examples",
+      "confirm": "Got it",
+      "copyNote": "1. Copies of both sides of the ID stamped with the store company's seal:",
+      "alt1": "ID example 1",
+      "alt2": "ID example 2",
+      "holdingNote": "2. Photos of you holding both sides of the ID:",
+      "alt3": "ID example 3",
+      "alt4": "ID example 4",
+      "reminderNote": "Note: Do not blur the identity information and keep all text clearly legible."
+    },
+    "shop": {
+      "loadFailed": "Failed to load",
+      "heading": "Choose your store type and main category",
+      "category": "Main category",
+      "categoryPlaceholder": "The main category determines your store's business scope. Choose carefully.",
+      "type": "Store type",
+      "howToChoose": "How should I choose?",
+      "next": "Next",
+      "categoryRequired": "Please select a main category.",
+      "typeRequired": "Please select a store type.",
+      "saveFailed": "Failed to save. Please try again later."
+    },
+    "ocr": {
+      "recognizing": "Recognizing…",
+      "failed": "Image recognition failed."
+    },
+    "upload": {
+      "tooLarge": "File size must not exceed {max} MB.",
+      "failed": "File upload failed.",
+      "uploading": "Uploading…"
+    },
+    "captcha": {
+      "invalidMobile": "Invalid mobile number format.",
+      "failed": "Failed to send the verification code.",
+      "placeholder": "Enter the verification code",
+      "label": "Verification code",
+      "resendIn": "Resend in {seconds}s",
+      "send": "Get code"
+    },
+    "termPicker": {
+      "start": "Start date",
+      "end": "End date",
+      "to": "to",
+      "longTerm": "Long-term valid"
+    },
+    "signContract": {
+      "policyTip": "The following agreement has the same effect as a paper agreement. Clicking \"Confirm cooperation\" means you agree to and accept the terms of the cooperation agreement. If you have any objections, please contact your business manager.",
+      "submit": "Confirm cooperation",
+      "title": "Sign the cooperation agreement",
+      "expiredNotice": "Your agreement has expired. We will send an SMS to confirm that you will continue cooperating with the platform.",
+      "notice": "We will send an SMS to confirm that you are officially entering into cooperation with the platform.",
+      "captchaSentTo": "The verification code will be sent to ",
+      "changeMobileTip": ". To change the mobile number, please contact your recruitment manager.",
+      "policyPrefix": "I have read and agree to ",
+      "policyName": "the Open Commerce Cooperation Agreement",
+      "policyInfo": "Agreement details",
+      "success": "Congratulations, you have entered into cooperation with the platform.",
+      "failed": "Failed to sign the agreement."
+    },
+    "merchantLogo": {
+      "statusReviewing": "Under review",
+      "statusRejected": "Review rejected",
+      "statusApproved": "Approved",
+      "reviewTip": "You have requested a store logo change and it is under review. Until it is approved, consumers will see the original store logo. Thank you for your patience.",
+      "normalTip": "After the newly uploaded store logo is approved, it will replace the original logo. Click Save in the top right corner to upload.",
+      "tooLarge": "The image must not exceed 10 MB.",
+      "squareRequired": "Please upload a square store logo.",
+      "minSize": "The store logo must be at least 200 × 200 pixels.",
+      "readFailed": "Failed to read the image. Please upload it again.",
+      "changeArrow": "Change to 》",
+      "description1": "The store logo is shown to consumers on the store page, order page, and elsewhere.",
+      "description2": "Upload a square image of at least 200 × 200 pixels.",
+      "description3": "Supported formats: JPG/JPEG/PNG/GIF/BMP."
+    },
+    "idCard": {
+      "portrait": "Portrait side",
+      "emblem": "Emblem side"
+    }
   }
 }

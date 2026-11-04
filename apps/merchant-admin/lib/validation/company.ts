@@ -1,8 +1,9 @@
+import type { Translate } from '@mtm/i18n';
 import { z } from 'zod';
 
 import { isMobilePhone } from './phone';
 
-/** `[长期有效, 开始日期, 结束日期]`; long-term checked or at least one date present. */
+/** `[long-term valid, start date, end date]`; long-term checked or at least one date present. */
 export function isTermValid(term: unknown): boolean {
   if (!Array.isArray(term)) {
     return false;
@@ -11,62 +12,72 @@ export function isTermValid(term: unknown): boolean {
   return Boolean(term[0]) || term.slice(1).some(Boolean);
 }
 
-const termSchema = z.array(z.unknown()).refine(isTermValid, '请选择有效截止日期');
+export function createBusinessLicenseSchema(t: Translate) {
+  const termSchema = z.array(z.unknown()).refine(isTermValid, t('validation.termRequired'));
 
-export const businessLicenseSchema = z
-  .object({
-    url: z.string().min(1, '营业执照不能为空'),
-    socialCreditCode: z.string().optional(),
-    name: z.string().optional(),
-    address: z.string().optional(),
-    term: termSchema.optional(),
-    capital: z.string().optional(),
-  })
-  .superRefine((value, ctx) => {
-    if (!value.url) {
-      return;
-    }
-    if (!value.socialCreditCode) {
-      ctx.addIssue({ code: 'custom', path: ['socialCreditCode'], message: '统一社会信用代码不能为空' });
-    }
-    if (!value.name) {
-      ctx.addIssue({ code: 'custom', path: ['name'], message: '公司名称不能为空' });
-    }
-    if (!value.address) {
-      ctx.addIssue({ code: 'custom', path: ['address'], message: '经营地址不能为空' });
-    }
-    if (!isTermValid(value.term)) {
-      ctx.addIssue({ code: 'custom', path: ['term'], message: '营业期限不能为空' });
-    }
-    if (!value.capital) {
-      ctx.addIssue({ code: 'custom', path: ['capital'], message: '注册资金不能为空' });
-    }
+  return z
+    .object({
+      url: z.string().min(1, t('validation.companyLicenseRequired')),
+      socialCreditCode: z.string().optional(),
+      name: z.string().optional(),
+      address: z.string().optional(),
+      term: termSchema.optional(),
+      capital: z.string().optional(),
+    })
+    .superRefine((value, ctx) => {
+      if (!value.url) {
+        return;
+      }
+      if (!value.socialCreditCode) {
+        ctx.addIssue({ code: 'custom', path: ['socialCreditCode'], message: t('validation.socialCreditCodeRequired') });
+      }
+      if (!value.name) {
+        ctx.addIssue({ code: 'custom', path: ['name'], message: t('validation.companyNameRequired') });
+      }
+      if (!value.address) {
+        ctx.addIssue({ code: 'custom', path: ['address'], message: t('validation.addressRequired') });
+      }
+      if (!isTermValid(value.term)) {
+        ctx.addIssue({ code: 'custom', path: ['term'], message: t('validation.businessTermRequired') });
+      }
+      if (!value.capital) {
+        ctx.addIssue({ code: 'custom', path: ['capital'], message: t('validation.capitalRequired') });
+      }
+    });
+}
+
+export function createLegalPersonSchema(t: Translate) {
+  const termSchema = z.array(z.unknown()).refine(isTermValid, t('validation.termRequired'));
+
+  return z.object({
+    idType: z.coerce.number().optional(),
+    name: z.string().min(1, t('validation.legalPersonNameRequired')),
+    idNum: z.string().min(1, t('validation.idNumberRequired')),
+    term: termSchema,
+    mobile: z.string().refine(value => isMobilePhone(value, '86'), t('validation.chinaMobileInvalid')),
+    idPhotos: z.array(z.string()).min(1, t('validation.idPhotosRequired')),
   });
+}
 
-export const legalPersonSchema = z.object({
-  idType: z.coerce.number().optional(),
-  name: z.string().min(1, '法人姓名不能为空'),
-  idNum: z.string().min(1, '证件号码不能为空'),
-  term: termSchema,
-  mobile: z.string().refine(value => isMobilePhone(value, '86'), '请输入正确的中国大陆11位手机号码'),
-  idPhotos: z.array(z.string()).min(1, '请上传法人证件照'),
-});
+export function createCompanyInfoSchema(t: Translate) {
+  return z.object({
+    companyType: z.coerce.number().min(1, t('validation.companyTypeRequired')),
+    distChannel: z.array(z.coerce.number()).optional(),
+    businessLicense: createBusinessLicenseSchema(t),
+    certificateTaxpayer: z.array(z.string()).optional(),
+    certificateBankOpen: z.array(z.string()).min(1, t('validation.bankOpenRequired')),
+    officeAddress: z.string().min(1, t('validation.officeAddressRequired')),
+    companyDesc: z.string().min(1, t('validation.companyDescRequired')).max(1000, t('validation.companyDescMax')),
+    companyFile: z.array(z.string()).optional(),
+    legalPerson: createLegalPersonSchema(t),
+  });
+}
 
-export const companyInfoSchema = z.object({
-  companyType: z.coerce.number().min(1, '公司类型不能为空'),
-  distChannel: z.array(z.coerce.number()).optional(),
-  businessLicense: businessLicenseSchema,
-  certificateTaxpayer: z.array(z.string()).optional(),
-  certificateBankOpen: z.array(z.string()).min(1, '银行开户证明不能为空'),
-  officeAddress: z.string().min(1, '办公地址不能为空'),
-  companyDesc: z.string().min(1, '公司简介不能为空').max(1000, '公司简介最多1000字'),
-  companyFile: z.array(z.string()).optional(),
-  legalPerson: legalPersonSchema,
-});
+export function createCompanySchema(t: Translate) {
+  return z.object({
+    company: createCompanyInfoSchema(t),
+  });
+}
 
-export const companySchema = z.object({
-  company: companyInfoSchema,
-});
-
-export type CompanyFormValues = z.infer<typeof companySchema>;
-export type CompanyInfoValues = z.infer<typeof companyInfoSchema>;
+export type CompanyFormValues = z.infer<ReturnType<typeof createCompanySchema>>;
+export type CompanyInfoValues = z.infer<ReturnType<typeof createCompanyInfoSchema>>;

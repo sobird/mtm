@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -14,6 +15,7 @@ export interface StoreTypeSelectorProps {
 }
 
 export function StoreTypeSelector({ types }: StoreTypeSelectorProps) {
+  const t = useTranslations('entry.storeTypeSelector');
   const { control } = useFormContext();
   const poiType = useWatch({ control, name: 'poiType' });
   const initialized = useRef(false);
@@ -56,7 +58,10 @@ export function StoreTypeSelector({ types }: StoreTypeSelectorProps) {
             className={styles.card}
             label={
               <>
-                <span className={styles.title}>企业{item.poiTypeName}</span>
+                <span className={styles.title}>
+                  {t('enterprisePrefix')}
+                  {item.poiTypeName}
+                </span>
                 <span className={styles.desc}>{item.poiTypeDesc}</span>
               </>
             }
@@ -67,10 +72,10 @@ export function StoreTypeSelector({ types }: StoreTypeSelectorProps) {
       <Dialog
         open={open}
         onOpenChange={setOpen}
-        title={`确定更改店铺类型为 ${selectedName} ？`}
-        footer={<Button onClick={() => setOpen(false)}>确定</Button>}
+        title={t('confirmTitle', { name: selectedName })}
+        footer={<Button onClick={() => setOpen(false)}>{t('confirm')}</Button>}
       >
-        温馨提示：如果更换店铺类型，店铺名称会被清空，需重新上传
+        {t('changeTip')}
       </Dialog>
     </>
   );

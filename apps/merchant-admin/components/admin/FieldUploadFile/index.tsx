@@ -1,11 +1,13 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Upload, useToast } from '@/components/ui';
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
+import { translateApiError } from '@/lib/translate-api-error';
 
 import styles from './FieldUploadFile.module.css';
 
@@ -60,6 +62,8 @@ function FieldUploadFileView({
   className,
   itemOverlay,
 }: ViewProps) {
+  const t = useTranslations('entry.upload');
+  const tRoot = useTranslations();
   const toast = useToast();
   const [uploading, setUploading] = useState(false);
 
@@ -70,7 +74,7 @@ function FieldUploadFileView({
       const results = await Promise.all(
         files.map(async file => {
           if (file.size > maxSizeMB * 1024 * 1024) {
-            toast.error(`文件大小不能超过${maxSizeMB}MB`);
+            toast.error(t('tooLarge', { max: maxSizeMB }));
             return null;
           }
 
@@ -89,7 +93,7 @@ function FieldUploadFileView({
 
             return res?.url ? res : null;
           } catch (uploadError) {
-            toast.error(uploadError instanceof ApiError ? uploadError.message : '文件上传失败');
+            toast.error(translateApiError(uploadError, tRoot, 'entry.upload.failed'));
             return null;
           }
         })
@@ -119,7 +123,7 @@ function FieldUploadFileView({
       >
         {children}
       </Upload>
-      {uploading ? <p className={styles.hint}>上传中…</p> : null}
+      {uploading ? <p className={styles.hint}>{t('uploading')}</p> : null}
       {error ? (
         <p role='alert' className={styles.error}>
           {error}

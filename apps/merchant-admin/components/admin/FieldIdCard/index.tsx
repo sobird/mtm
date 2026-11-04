@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import FieldUploadFile from '../FieldUploadFile';
@@ -33,6 +34,7 @@ interface ViewProps extends Omit<FieldIdCardProps, 'name' | 'value' | 'defaultVa
 }
 
 function FieldIdCardView({ value, onChange, onUploadSuccess, disabled, error }: ViewProps) {
+  const t = useTranslations('entry.idCard');
   const update = (index: 0 | 1, next: string[]) => {
     const pair: FieldIdCardValue = [value[0] ?? '', value[1] ?? ''];
     pair[index] = next[0] ?? '';
@@ -51,8 +53,8 @@ function FieldIdCardView({ value, onChange, onUploadSuccess, disabled, error }: 
         disabled={disabled}
       >
         <span className={styles.sketch}>
-          <img className={styles.sketchImage} src='/assets/idcard_1.png' alt='人像面' />
-          <span className={styles.sketchTip}>人像面</span>
+          <img className={styles.sketchImage} src='/assets/idcard_1.png' alt={t('portrait')} />
+          <span className={styles.sketchTip}>{t('portrait')}</span>
         </span>
       </FieldUploadFile>
 
@@ -66,8 +68,8 @@ function FieldIdCardView({ value, onChange, onUploadSuccess, disabled, error }: 
         disabled={disabled}
       >
         <span className={styles.sketch}>
-          <img className={styles.sketchImage} src='/assets/idcard_2.png' alt='国徽面' />
-          <span className={styles.sketchTip}>国徽面</span>
+          <img className={styles.sketchImage} src='/assets/idcard_2.png' alt={t('emblem')} />
+          <span className={styles.sketchTip}>{t('emblem')}</span>
         </span>
       </FieldUploadFile>
 
