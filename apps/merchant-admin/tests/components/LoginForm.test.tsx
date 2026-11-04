@@ -1,8 +1,10 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
 import { ToastProvider } from '@/components/ui/Toast';
+
+import { renderWithIntl } from '../i18n/render';
 
 const replace = vi.fn();
 const signInWithCredentials = vi.fn();
@@ -26,7 +28,7 @@ beforeEach(() => {
 });
 
 function renderLoginForm() {
-  return render(
+  return renderWithIntl(
     <ToastProvider>
       <LoginForm />
     </ToastProvider>
@@ -38,7 +40,7 @@ test('does not sign in and shows the error for an invalid mobile', async () => {
 
   await userEvent.type(screen.getByPlaceholderText('请输入手机号'), '123');
   await userEvent.type(screen.getByPlaceholderText('请输入验证码'), '123456');
-  await userEvent.click(screen.getByRole('button', { name: '登录' }));
+  await userEvent.click(screen.getByTestId('login-submit'));
 
   expect(await screen.findByText('手机号格式不符合要求')).toBeInTheDocument();
   expect(signInWithCredentials).not.toHaveBeenCalled();
@@ -49,7 +51,7 @@ test('signs in with credentials and replaces the route on success', async () => 
 
   await userEvent.type(screen.getByPlaceholderText('请输入手机号'), '13412345678');
   await userEvent.type(screen.getByPlaceholderText('请输入验证码'), '123456');
-  await userEvent.click(screen.getByRole('button', { name: '登录' }));
+  await userEvent.click(screen.getByTestId('login-submit'));
 
   await waitFor(() =>
     expect(signInWithCredentials).toHaveBeenCalledWith(
@@ -67,7 +69,7 @@ test('signs in with the password provider from the account tab', async () => {
   await userEvent.click(screen.getByRole('tab', { name: '账号密码登录' }));
   await userEvent.type(screen.getByPlaceholderText('请输入用户名或手机号'), 'merchant@example.com');
   await userEvent.type(screen.getByPlaceholderText('请输入密码'), 'merchant123');
-  await userEvent.click(screen.getByRole('button', { name: '登录' }));
+  await userEvent.click(screen.getByTestId('login-submit'));
 
   await waitFor(() =>
     expect(signInWithCredentials).toHaveBeenCalledWith(
@@ -77,4 +79,18 @@ test('signs in with the password provider from the account tab', async () => {
     )
   );
   await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
+});
+
+test('renders in English', async () => {
+  renderWithIntl(
+    <ToastProvider>
+      <LoginForm />
+    </ToastProvider>,
+    'en-US'
+  );
+
+  expect(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('tab', { name: 'Sign in with password' }));
+  expect(screen.getByPlaceholderText('Username or phone')).toBeInTheDocument();
 });

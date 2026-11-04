@@ -1,7 +1,7 @@
 import { PERMISSIONS } from '@mtm/contracts';
 import { PermissionProvider } from '@mtm/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
@@ -30,6 +30,8 @@ vi.mock('@/lib/api-client', () => ({
 
 import { AccountManager } from '@/components/system/AccountManager';
 import { ToastProvider } from '@/components/ui';
+
+import { renderWithIntl } from '../i18n/render';
 
 const OWNER_ACCOUNT = {
   id: 'merchant-account-owner',
@@ -83,7 +85,7 @@ const ROLES = [
 function renderManager(permissions: string[] = [PERMISSIONS.ACCOUNT_MANAGE]) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
-  return render(
+  return renderWithIntl(
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <PermissionProvider permissions={permissions}>

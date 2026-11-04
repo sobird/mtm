@@ -1,6 +1,8 @@
 'use client';
 
+import type { Translate } from '@mtm/i18n';
 import { Upload as AntUpload } from 'antd';
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
@@ -21,7 +23,7 @@ export interface UploadProps {
   disabled?: boolean;
   multiple?: boolean;
   className?: string;
-  /** Trigger content; defaults to a 点击上传 tile. */
+  /** Trigger content; defaults to a "click to upload" tile. */
   children?: ReactNode;
   /** Hide the trigger once `maxCount` items are present. Defaults to true. */
   autoHidden?: boolean;
@@ -35,9 +37,9 @@ function isImageUrl(url: string): boolean {
   return url.startsWith('data:image/') || IMAGE_PATTERN.test(url);
 }
 
-function fileName(url: string): string {
+function fileName(url: string, t: Translate): string {
   if (url.startsWith('data:')) {
-    return '图片';
+    return t('image');
   }
 
   const segment = url.split('?')[0].split('/').pop();
@@ -58,6 +60,7 @@ export function Upload({
   autoHidden = true,
   itemOverlay,
 }: UploadProps) {
+  const t = useTranslations('common');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const pendingFiles = useRef<File[]>([]);
@@ -126,16 +129,21 @@ export function Upload({
               type='button'
               className={cx(styles.thumb, isImageUrl(url) && styles.imageThumb)}
               onClick={() => handlePreview(url)}
-              title={fileName(url)}
+              title={fileName(url, t)}
             >
               {isImageUrl(url) ? (
-                <img className={styles.image} src={url} alt={fileName(url)} />
+                <img className={styles.image} src={url} alt={fileName(url, t)} />
               ) : (
-                <span className={styles.fileName}>{fileName(url)}</span>
+                <span className={styles.fileName}>{fileName(url, t)}</span>
               )}
             </button>
             {!disabled ? (
-              <button type='button' className={styles.remove} aria-label='删除文件' onClick={() => handleRemove(index)}>
+              <button
+                type='button'
+                className={styles.remove}
+                aria-label={t('removeFile')}
+                onClick={() => handleRemove(index)}
+              >
                 ×
               </button>
             ) : null}
@@ -163,7 +171,7 @@ export function Upload({
                     <span className={styles.plus} aria-hidden='true'>
                       +
                     </span>
-                    <span>点击上传</span>
+                    <span>{t('upload')}</span>
                   </span>
                 )}
               </span>
@@ -172,8 +180,8 @@ export function Upload({
         ) : null}
       </ul>
 
-      <Dialog open={previewOpen} onOpenChange={setPreviewOpen} title='预览' footer={null}>
-        {previewUrl ? <img className={styles.preview} src={previewUrl} alt='预览' /> : null}
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen} title={t('preview')} footer={null}>
+        {previewUrl ? <img className={styles.preview} src={previewUrl} alt={t('preview')} /> : null}
       </Dialog>
     </div>
   );

@@ -1,4 +1,5 @@
 import { verifyPassword } from '@mtm/auth/password';
+import { DEFAULT_LOCALE, createTranslator } from '@mtm/i18n';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { cookies } from 'next/headers';
@@ -17,6 +18,10 @@ import {
 import { verifyCaptcha } from '@/lib/services/captcha';
 import { passwordLoginSchema } from '@/lib/validation/auth';
 import { isMobilePhone } from '@/lib/validation/phone';
+
+// Auth.js only renders these credential labels on its built-in pages, which
+// this app does not use; keep them in the default locale.
+const t = createTranslator(DEFAULT_LOCALE);
 
 export interface MerchantSessionUser {
   id: string;
@@ -90,9 +95,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Credentials({
       id: 'credentials',
       credentials: {
-        interCode: { label: '区号', type: 'text' },
-        mobile: { label: '手机号', type: 'text' },
-        captcha: { label: '验证码', type: 'text' },
+        interCode: { label: t('auth.login.interCode'), type: 'text' },
+        mobile: { label: t('auth.login.mobile'), type: 'text' },
+        captcha: { label: t('auth.login.captcha'), type: 'text' },
       },
       async authorize(credentials) {
         await initDatabase();
@@ -139,8 +144,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Credentials({
       id: 'password',
       credentials: {
-        identifier: { label: '用户名或手机号', type: 'text' },
-        password: { label: '密码', type: 'password' },
+        identifier: { label: t('auth.login.identifier'), type: 'text' },
+        password: { label: t('auth.login.password'), type: 'password' },
       },
       async authorize(credentials) {
         const parsed = passwordLoginSchema.safeParse(credentials);

@@ -1,7 +1,7 @@
 import { PERMISSIONS } from '@mtm/contracts';
 import { PermissionProvider, ToastProvider } from '@mtm/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
@@ -22,6 +22,8 @@ vi.mock('@/lib/api-client', () => ({
 }));
 
 import { ProductManager } from '@/components/product/ProductManager';
+
+import { renderWithIntl } from '../i18n/render';
 
 const DRAFT_ROW = {
   id: 'p1',
@@ -45,7 +47,7 @@ const DRAFT_ROW = {
 
 function renderManager(permissions: string[] = Object.values(PERMISSIONS)) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  return render(
+  return renderWithIntl(
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <PermissionProvider permissions={permissions}>

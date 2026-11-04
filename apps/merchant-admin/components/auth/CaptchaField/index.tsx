@@ -1,10 +1,12 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 
 import { Button, Field, Input, useToast } from '@/components/ui';
-import { apiFetch, ApiError } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
+import { translateApiError } from '@/lib/translate-api-error';
 import { isMobilePhone } from '@/lib/validation/phone';
 
 import styles from './CaptchaField.module.css';
@@ -17,11 +19,13 @@ interface CaptchaResponse {
 }
 
 /**
- * Captcha input plus a 获取验证码 button. Must be rendered inside a `Form`: the
+ * Captcha input plus a get-code button. Must be rendered inside a `Form`: the
  * input registers as `captcha`, while the button reads `mobile` and `interCode`
  * from the surrounding form context.
  */
 export function CaptchaField() {
+  const t = useTranslations('auth.login');
+  const tRoot = useTranslations();
   const toast = useToast();
   const mobile = String(useWatch({ name: 'mobile' }) ?? '');
   const interCode = String(useWatch({ name: 'interCode' }) ?? '86');
@@ -44,7 +48,7 @@ export function CaptchaField() {
     }
 
     if (!isMobilePhone(mobile, interCode)) {
-      toast.error('手机号格式不符合要求');
+      toast.error(t('invalidMobileFormat'));
       return;
     }
 
@@ -53,22 +57,25 @@ export function CaptchaField() {
     try {
       const { captcha } = await apiFetch<CaptchaResponse>('/api/captcha', { query: { mobile } });
 
-      toast.success(
-        `【开源电商】${captcha}（商户注册验证码）。工作人员不会向您索要，请勿向任何人泄露，以免造成账户或资金损失。`
-      );
+      toast.success(t('captchaSent', { captcha: String(captcha) }));
       setRemaining(COUNTDOWN_SECONDS);
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : '获取验证码失败');
+      toast.error(translateApiError(error, tRoot, 'auth.login.captchaSendFailed'));
     } finally {
       setSending(false);
     }
   };
 
   return (
-    <Field label='验证码' required>
+    <Field label={t('captcha')} required>
       <div className={styles.row}>
         <div className={styles.input}>
-          <Input name='captcha' placeholder='请输入验证码' aria-label='验证码' autoComplete='one-time-code' />
+          <Input
+            name='captcha'
+            placeholder={t('captchaPlaceholder')}
+            aria-label={t('captcha')}
+            autoComplete='one-time-code'
+          />
         </div>
         <Button
           type='button'
@@ -77,7 +84,7 @@ export function CaptchaField() {
           disabled={remaining > 0 || sending}
           onClick={handleSend}
         >
-          {remaining > 0 ? `${remaining} 秒后重新获取` : '获取验证码'}
+          {remaining > 0 ? t('resendIn', { seconds: remaining }) : t('sendCaptcha')}
         </Button>
       </div>
     </Field>

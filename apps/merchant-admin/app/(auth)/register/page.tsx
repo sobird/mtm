@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
 import { RegisterForm } from '@/components/auth/RegisterForm';
 
-export const metadata: Metadata = {
-  title: '注册 - 开源电商商家管理后台',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const [t, app] = await Promise.all([getTranslations('auth.register'), getTranslations('common.appTitle')]);
+
+  return { title: `${t('title')} - ${app('merchant')}` };
+}
 
 export default function RegisterPage() {
   return <RegisterForm />;

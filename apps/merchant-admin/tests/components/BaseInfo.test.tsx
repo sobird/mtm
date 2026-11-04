@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
@@ -49,6 +49,8 @@ vi.mock('@/components/admin/FieldMerchantLogo', () => ({
 import { BaseInfo } from '@/components/shop/profile/BaseInfo';
 import { ToastProvider } from '@/components/ui';
 
+import { renderWithIntl } from '../i18n/render';
+
 const LEGACY_DETAIL = {
   id: 148568,
   merchantManagerInfo: { email: 'legacy@example.com' },
@@ -76,7 +78,7 @@ const CORE_MERCHANT = {
 function renderBaseInfo() {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
-  return render(
+  return renderWithIntl(
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <BaseInfo />

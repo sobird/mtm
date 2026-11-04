@@ -1,4 +1,4 @@
-import { act, cleanup, render, waitFor } from '@testing-library/react';
+import { act, cleanup, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
@@ -11,6 +11,8 @@ vi.mock('@/lib/services/products', () => ({
 }));
 
 import ProductImageField from '@/components/product/ProductImageField';
+
+import { renderWithIntl } from '../i18n/render';
 
 function imageFile(name: string): File {
   return new File(['fake'], name, { type: 'image/png' });
@@ -38,7 +40,7 @@ beforeEach(() => {
 test('逐个串行上传，最多保留 5 张', async () => {
   const resolvers = deferredUploads();
   const onChange = vi.fn();
-  const { container } = render(
+  const { container } = renderWithIntl(
     <ToastProvider>
       <ProductImageField value={[]} onChange={onChange} />
     </ToastProvider>
@@ -80,7 +82,7 @@ test('已有 4 张时只再上传 1 张', async () => {
   const resolvers = deferredUploads();
   const onChange = vi.fn();
   const existing = ['a', 'b', 'c', 'd'];
-  const { container } = render(
+  const { container } = renderWithIntl(
     <ToastProvider>
       <ProductImageField value={existing} onChange={onChange} />
     </ToastProvider>
