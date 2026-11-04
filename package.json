@@ -5,7 +5,8 @@
   "description": "开源电商运营后台",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "e2e"
   ],
   "scripts": {
     "build": "turbo run build",
@@ -15,11 +16,13 @@
     "db:reset": "bun scripts/dev-bootstrap.mjs && turbo run db:reset",
     "db:seed": "turbo run db:seed",
     "dev": "bun scripts/dev-bootstrap.mjs && turbo run dev",
+    "e2e:bootstrap": "bun scripts/e2e-bootstrap.mjs",
     "fmt": "oxfmt --config packages/config/oxfmt.jsonc scripts && turbo run format:fix",
     "fmt:check": "oxfmt --check --config packages/config/oxfmt.jsonc scripts && turbo run format",
     "lint": "oxlint -c packages/config/oxlint.jsonc scripts && turbo run lint",
     "prepare": "husky",
     "test": "turbo run test",
+    "test:e2e": "bun --cwd=e2e run test:e2e",
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {

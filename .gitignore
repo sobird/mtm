@@ -24,6 +24,8 @@ package-lock.json
 stats.json
 .shared
 .playwright-mcp
+e2e/test-results/
+e2e/playwright-report/
 .claude/worktrees/
 .superpowers/
 apps/core-api/var/
