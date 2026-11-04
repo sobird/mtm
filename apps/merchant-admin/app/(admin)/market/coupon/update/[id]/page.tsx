@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -15,6 +16,8 @@ export default async function CouponUpdatePage({ params }: { params: Promise<{ i
   const { id } = await params;
   await initDatabase();
 
+  const [t, common] = await Promise.all([getTranslations('marketing'), getTranslations('common')]);
+
   let coupon: CouponDetailDTO;
 
   try {
@@ -25,17 +28,17 @@ export default async function CouponUpdatePage({ params }: { params: Promise<{ i
 
   return (
     <PageContainer
-      title='编辑优惠券'
+      title={t('coupon.editTitle')}
       breadcrumbs={[
-        { label: '首页', href: '/' },
-        { label: '营销中心' },
-        { label: '优惠券', href: '/market/coupons' },
-        { label: '编辑优惠券' },
+        { label: common('home'), href: '/' },
+        { label: t('home.title') },
+        { label: t('coupon.title'), href: '/market/coupons' },
+        { label: t('coupon.editTitle') },
       ]}
       actions={
         <div className={styles.actions}>
           <Link className={styles.actionLink} href='/market/coupons'>
-            返回
+            {t('coupon.back')}
           </Link>
         </div>
       }

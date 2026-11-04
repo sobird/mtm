@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
+import { useTranslations } from 'next-intl';
 import type { CSSProperties } from 'react';
 
 import { Card, Empty, Skeleton } from '@/components/ui';
@@ -19,19 +20,19 @@ export interface GoldMerchantProps {
 
 interface StatusConfig {
   value: number;
-  label: string;
+  labelKey: string;
   style: CSSProperties;
 }
 
 const statusConfig: StatusConfig[] = [
   {
     value: 1,
-    label: '线上展示中',
+    labelKey: 'online',
     style: { color: '#333', backgroundImage: 'linear-gradient(to bottom right, #ffe04c, #ffc54d)' },
   },
-  { value: 2, label: '线上不展示', style: { backgroundColor: '#9f9f9f' } },
-  { value: 3, label: '因违规取消线上展示', style: { backgroundColor: '#ff4338' } },
-  { value: 4, label: '线上不展示', style: { backgroundColor: '#9f9f9f' } },
+  { value: 2, labelKey: 'hidden', style: { backgroundColor: '#9f9f9f' } },
+  { value: 3, labelKey: 'canceled', style: { backgroundColor: '#ff4338' } },
+  { value: 4, labelKey: 'hidden', style: { backgroundColor: '#9f9f9f' } },
 ];
 
 function formatCycle(value: string | undefined): string {
@@ -39,6 +40,8 @@ function formatCycle(value: string | undefined): string {
 }
 
 export function GoldMerchant({ className, style, bodyStyle }: GoldMerchantProps) {
+  const t = useTranslations('dashboard.gold');
+  const tCommon = useTranslations('common');
   const { data, isPending, isError } = useQuery({
     queryKey: queryKeys.gold,
     queryFn: () => apiFetch<GoldDTO>('/api/merchant/gold'),
@@ -52,44 +55,46 @@ export function GoldMerchant({ className, style, bodyStyle }: GoldMerchantProps)
   if (isPending) {
     content = <Skeleton rows={3} />;
   } else if (isError) {
-    content = <Empty description='加载失败' />;
+    content = <Empty description={tCommon('loadFailed')} />;
   } else {
     content = (
       <>
         <div className={styles.head}>
           <span className={`${styles.logo} ${lastPeriodStatus === 1 ? '' : styles.logoDim}`} aria-hidden='true'>
-            金
+            {t('logo')}
           </span>
           <div className={styles.headText}>
             <div className={styles.headTitle}>
-              <h3 className={styles.title}>金牌商家</h3>
+              <h3 className={styles.title}>{t('title')}</h3>
               {status ? (
                 <span className={styles.status} style={status.style}>
-                  {status.label}
+                  {t(status.labelKey)}
                 </span>
               ) : null}
             </div>
             <div className={styles.cycle}>
               <span className={styles.cycleRange}>
-                当前考核周期:{formatCycle(data?.currentPeriodSTime)} - {formatCycle(data?.currentPeriodETime)}
+                {t('cycleRange', {
+                  range: `${formatCycle(data?.currentPeriodSTime)} - ${formatCycle(data?.currentPeriodETime)}`,
+                })}
               </span>
-              <span className={styles.cycleStatus}>正在考核中</span>
+              <span className={styles.cycleStatus}>{t('assessing')}</span>
             </div>
           </div>
         </div>
         <div className={styles.body}>
           <div className={styles.bodyHead}>
-            <span className={styles.bodyTitle}>当前考核详情</span>
-            <span className={styles.bodyDesc}>以下仅是部分指标</span>
-            <span className={styles.bodyMore}>查看更多指标细节</span>
+            <span className={styles.bodyTitle}>{t('detailTitle')}</span>
+            <span className={styles.bodyDesc}>{t('partialHint')}</span>
+            <span className={styles.bodyMore}>{t('moreMetrics')}</span>
           </div>
           <table className={styles.table}>
             <thead>
               <tr>
-                <th scope='col'>指标名称</th>
-                <th scope='col'>认证标准</th>
-                <th scope='col'>当前状态</th>
-                <th scope='col'>是否达标</th>
+                <th scope='col'>{t('columnName')}</th>
+                <th scope='col'>{t('columnStandard')}</th>
+                <th scope='col'>{t('columnStatus')}</th>
+                <th scope='col'>{t('columnQualified')}</th>
               </tr>
             </thead>
             <tbody>
@@ -108,11 +113,11 @@ export function GoldMerchant({ className, style, bodyStyle }: GoldMerchantProps)
                   </td>
                   <td>
                     {row.qualified === 1 ? (
-                      <span className={styles.qualified} aria-label='已达标'>
+                      <span className={styles.qualified} aria-label={t('qualified')}>
                         ✓
                       </span>
                     ) : (
-                      <span className={styles.unqualified} aria-label='未达标'>
+                      <span className={styles.unqualified} aria-label={t('unqualified')}>
                         —
                       </span>
                     )}
@@ -128,7 +133,11 @@ export function GoldMerchant({ className, style, bodyStyle }: GoldMerchantProps)
 
   return (
     <div style={style}>
-      <Card className={className} title='金牌商家' extra={<span className={styles.extraLink}>查看详情</span>}>
+      <Card
+        className={className}
+        title={t('title')}
+        extra={<span className={styles.extraLink}>{t('viewDetail')}</span>}
+      >
         <div style={bodyStyle}>{content}</div>
       </Card>
     </div>

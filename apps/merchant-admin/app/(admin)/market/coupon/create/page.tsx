@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 import { PageContainer } from '@/components/layout/PageContainer';
@@ -16,19 +17,21 @@ export default async function CouponCreatePage({
   const value = Number(Array.isArray(raw) ? raw[0] : raw);
   const target = VALID_TARGETS.has(value) ? value : 1;
 
+  const [t, common] = await Promise.all([getTranslations('marketing'), getTranslations('common')]);
+
   return (
     <PageContainer
-      title='创建优惠券'
+      title={t('coupon.createTitle')}
       breadcrumbs={[
-        { label: '首页', href: '/' },
-        { label: '营销中心' },
-        { label: '优惠券', href: '/market/coupons' },
-        { label: '创建优惠券' },
+        { label: common('home'), href: '/' },
+        { label: t('home.title') },
+        { label: t('coupon.title'), href: '/market/coupons' },
+        { label: t('coupon.createTitle') },
       ]}
       actions={
         <div className={styles.actions}>
           <Link className={styles.actionLink} href='/market/coupons'>
-            返回
+            {t('coupon.back')}
           </Link>
         </div>
       }

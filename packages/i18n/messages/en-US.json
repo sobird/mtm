@@ -165,7 +165,13 @@
     "adminNameRequired": "Administrator name is required.",
     "adminNameMax": "Name must be at most 30 characters.",
     "citizenIdInvalid": "Enter a valid ID card number.",
-    "authLetterRequired": "If the administrator is not the legal representative, please upload an authorization letter."
+    "authLetterRequired": "If the administrator is not the legal representative, please upload an authorization letter.",
+    "couponTimeRange": "End time must be later than start time.",
+    "couponNameRequired": "Coupon name is required.",
+    "couponNameMax": "Coupon name must be at most 10 characters.",
+    "couponDisplayNameRequired": "Coupon copy is required.",
+    "couponStockInvalid": "Stock must be greater than 0.",
+    "couponLimitInvalid": "Limit per user must be greater than 0."
   },
   "product": {
     "list": {
@@ -1005,6 +1011,242 @@
         "namePlaceholder": "Enter role name",
         "permissions": "Permissions"
       }
+    }
+  },
+  "marketing": {
+    "home": {
+      "title": "Marketing Center"
+    },
+    "target": {
+      "product": "Shop product coupon",
+      "universal": "Shop universal coupon",
+      "service": "Shop customer service coupon"
+    },
+    "coupon": {
+      "title": "Coupons",
+      "description": "Advanced forms are typically used to enter and submit large batches of data at once.",
+      "create": "Create coupon",
+      "detailTitle": "Coupon details",
+      "createTitle": "Create coupon",
+      "editTitle": "Edit coupon",
+      "back": "Back",
+      "edit": "Edit",
+      "view": "View",
+      "offline": "Offline",
+      "statusFilterLabel": "Status",
+      "putTimeFilterLabel": "Distribution time",
+      "statusAria": "Coupon status",
+      "putStartPlaceholder": "Distribution start",
+      "putEndPlaceholder": "Distribution end",
+      "empty": "No coupons",
+      "offlineDialogTitle": "Take coupon offline",
+      "offlineDialogDescription": "Are you sure you want to take this coupon offline?",
+      "offlineSuccess": "Coupon taken offline.",
+      "offlineFailed": "Failed to take the coupon offline. Please try again later.",
+      "actionFailed": "Something went wrong. Please try again later.",
+      "status": {
+        "all": "All",
+        "notStarted": "Not started",
+        "ongoing": "Ongoing",
+        "ended": "Ended",
+        "offline": "Offline"
+      },
+      "type": {
+        "fullReduction": "Amount-off coupon",
+        "discount": "Discount coupon"
+      },
+      "column": {
+        "code": "Coupon code",
+        "name": "Coupon name",
+        "type": "Discount type",
+        "target": "Coupon type",
+        "putTerm": "Distribution period",
+        "useTerm": "Valid period",
+        "sendCount": "Issued",
+        "leftCount": "Remaining",
+        "ctime": "Created at",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "useTermRange": "{start} to {end}",
+      "useTermDays": "{days} days after claiming",
+      "dateRange": "{start} to {end}",
+      "entry": {
+        "title": "Select a coupon type",
+        "next": "Next",
+        "productDescription": "Issue product promotion coupons for the shop to improve product conversion and drive sales. Users can claim them on product detail pages, in IM chats and other channels.",
+        "universalDescription": "Issue universal coupons for the shop to improve overall store conversion. Users can claim them on product detail pages and other channels.",
+        "serviceDescription": "Issue coupons for consolation, compensation and rewards to improve service experience and strengthen customer relationships. Users can claim them in IM customer service channels."
+      },
+      "form": {
+        "typeLabel": "Coupon type",
+        "placeholder": "Please select",
+        "nameLabel": "Coupon name",
+        "namePlaceholder": "Enter a coupon name",
+        "displayNameLabel": "Coupon copy",
+        "putTermLabel": "Distribution time",
+        "putStart": "Distribution start time",
+        "putEnd": "Distribution end time",
+        "stockLabel": "Coupon quantity",
+        "stockPlaceholder": "Enter a positive integer from 1 to 1,000,000",
+        "limitLabel": "Limit per user",
+        "limit1": "1",
+        "limit2": "2",
+        "limit3": "3",
+        "unlimited": "Unlimited",
+        "useTermLabel": "Valid period",
+        "claimAfter": "Claimed",
+        "claimDaysAria": "Days after claiming",
+        "daysUnit": "days",
+        "custom": "Custom",
+        "useStart": "Valid start date",
+        "useEnd": "Valid end date",
+        "thresholdLabel": "Threshold and amount",
+        "full": "Spend",
+        "yuan": "CNY",
+        "minus": "Off",
+        "thresholdPlaceholder": "Enter a threshold",
+        "thresholdAria": "Discount threshold",
+        "amountPlaceholder": "Enter an amount",
+        "amountAria": "Discount amount",
+        "submit": "Submit",
+        "createDate": "Created at",
+        "updateSuccess": "Coupon updated.",
+        "createSuccess": "Coupon created."
+      }
+    }
+  },
+  "dashboard": {
+    "home": {
+      "title": "Business overview",
+      "description": "Welcome back to the Open Commerce merchant admin."
+    },
+    "units": {
+      "order": " orders",
+      "person": " people",
+      "times": " times",
+      "yuan": " CNY",
+      "item": " items",
+      "record": " records",
+      "day": " days",
+      "points": " pts"
+    },
+    "latestNews": {
+      "title": "Latest updates",
+      "more": "More",
+      "empty": "No latest updates"
+    },
+    "overview": {
+      "title": "Order overview",
+      "unpaid": "Awaiting payment",
+      "unfilled": "Awaiting shipment",
+      "unfilledTip": "Orders awaiting shipment in the last 90 days",
+      "refund": "Refunds / After-sales",
+      "refundTip": "Orders in refund or after-sales in the last 90 days",
+      "willDelay": "Shipping soon to be delayed",
+      "willDelayTip": "Orders in the last 90 days that will soon be delayed",
+      "delayed": "Shipment delayed",
+      "delayedTip": "Orders in the last 90 days past the promised shipping time"
+    },
+    "realdata": {
+      "title": "Real-time data",
+      "dataCenter": "Data center",
+      "description": "Data calculations may be delayed by about 5-10 minutes",
+      "improveConversion": "How to improve conversion",
+      "paidAmount": "Paid amount",
+      "paidAmountTip": "Total amount paid for orders in this shop, including buyer payments and platform coupon usage, excluding after-sales orders",
+      "paidOrderCount": "Paid orders",
+      "paidOrderCountTip": "Total paid orders in the shop. Each payment has a unique order number; multiple payments by one buyer within the period count as multiple orders",
+      "paidUserCount": "Paying customers",
+      "paidUserCountTip": "Unique paying buyers in this shop. Multiple payments by one buyer count once, excluding after-sales orders",
+      "itemUniqueVisitor": "Product visitors",
+      "itemUniqueVisitorTip": "Unique visitors to all products in the shop during the period",
+      "itemPaveView": "Product views",
+      "itemPaveViewTip": "Total views of all product detail pages in the shop during the period",
+      "conversionRate": "Payment conversion rate",
+      "conversionRateTip": "Paying buyers / visitors during the period, i.e. the share of visitors who became paying buyers"
+    },
+    "growth": {
+      "title": "Merchant growth",
+      "defaultShopName": "Merchant store",
+      "serviceScore": "Service rating",
+      "serviceScoreTip": "A metric that evaluates the merchant's overall service across after-sales, logistics, customer service and disputes. Merchants with a service rating of 4 or above are excellent merchants.",
+      "replyRate": "3-minute reply rate (last 30 days)",
+      "collectRate": "On-time shipping and pickup rate (last 30 days)",
+      "overallScore": "Overall rating",
+      "overallScoreTip": "The average order rating of all proactive reviews in the shop over the last 30 days. Shops with fewer than 20 valid reviews are not scored and receive 0; below 4.0 is abnormal.",
+      "newReviews": "New reviews",
+      "excellent": "Excellent merchant",
+      "notExcellent": "Not an excellent merchant",
+      "notCounted": "Not yet scored",
+      "normal": "Normal",
+      "warning": "Warning",
+      "calculating": "(Calculating...)",
+      "focusHint": "Focus on the following metrics:",
+      "taskPending": "{count} tasks to complete",
+      "taskAward": "{count} rewards to view",
+      "taskSeparator": ", ",
+      "qrcode": "QR code",
+      "qrcodeTitle": "Shop QR code",
+      "qrcodeDesc": "Scan to view shop details"
+    },
+    "violations": {
+      "title": "Violations",
+      "listLink": "Violation list",
+      "issueCount": "Violations (today)",
+      "appealCount": "Pending appeals",
+      "ticketAmount": "Fines (this month)"
+    },
+    "productManage": {
+      "title": "Product management",
+      "selling": "On sale",
+      "create": "Create product"
+    },
+    "fund": {
+      "title": "Fund management",
+      "wallet": "My wallet",
+      "statement": "Statements"
+    },
+    "gold": {
+      "title": "Gold merchant",
+      "logo": "G",
+      "viewDetail": "View details",
+      "online": "Displayed online",
+      "hidden": "Not displayed online",
+      "canceled": "Online display canceled for violations",
+      "cycleRange": "Current assessment period: {range}",
+      "assessing": "Under assessment",
+      "detailTitle": "Current assessment details",
+      "partialHint": "Only some metrics are shown",
+      "moreMetrics": "View more metric details",
+      "columnName": "Metric",
+      "columnStandard": "Standard",
+      "columnStatus": "Current status",
+      "columnQualified": "Qualified",
+      "qualified": "Qualified",
+      "unqualified": "Unqualified"
+    },
+    "activity": {
+      "title": "Marketing campaigns",
+      "more": "View more",
+      "tabOngoing": "Open campaigns",
+      "tabMine": "My campaigns",
+      "emptyOngoing": "No open campaigns",
+      "emptyMine": "You have not joined any campaigns",
+      "signupTime": "Sign-up period: {start} to {end}",
+      "signupNow": "Sign up",
+      "viewDetail": "View details",
+      "actionAria": "{action}: {name}"
+    },
+    "trending": {
+      "title": "Business trends",
+      "noData": "No data",
+      "range7": "Last 7 days",
+      "range30": "Last 30 days",
+      "lineTransaction": "Items sold",
+      "linePaymentAmount": "Paid amount",
+      "lineReview": "Reviews",
+      "lineServiceReplyRate": "3-minute reply rate"
     }
   }
 }

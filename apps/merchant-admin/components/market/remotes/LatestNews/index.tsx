@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
 import { useEffect, useRef } from 'react';
@@ -21,6 +22,8 @@ export interface LatestNewsProps {
 }
 
 export function LatestNews({ className, style, bodyStyle, callback }: LatestNewsProps) {
+  const t = useTranslations('dashboard.latestNews');
+  const tCommon = useTranslations('common');
   const { data, isPending, isError } = useQuery({
     queryKey: queryKeys.analysis('latest-news'),
     queryFn: () => apiFetch<MessageBriefDTO[]>('/api/message/latest-news'),
@@ -44,9 +47,9 @@ export function LatestNews({ className, style, bodyStyle, callback }: LatestNews
   if (isPending) {
     content = <Skeleton rows={3} />;
   } else if (isError) {
-    content = <Empty description='加载失败' />;
+    content = <Empty description={tCommon('loadFailed')} />;
   } else if (items.length === 0) {
-    content = <Empty description='暂无最新动态' />;
+    content = <Empty description={t('empty')} />;
   } else {
     content = (
       <ul className={styles.list}>
@@ -66,10 +69,10 @@ export function LatestNews({ className, style, bodyStyle, callback }: LatestNews
     <div style={style}>
       <Card
         className={className}
-        title='最新动态'
+        title={t('title')}
         extra={
           <Link className={styles.more} href='/site-notice/'>
-            更多
+            {t('more')}
           </Link>
         }
       >

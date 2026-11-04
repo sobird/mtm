@@ -165,7 +165,13 @@
     "adminNameRequired": "管理员姓名不能为空",
     "adminNameMax": "姓名过长，不得超过30个字",
     "citizenIdInvalid": "请输入正确的身份证号码",
-    "authLetterRequired": "当管理员与法人不一致的时候，请上传授权书"
+    "authLetterRequired": "当管理员与法人不一致的时候，请上传授权书",
+    "couponTimeRange": "结束时间必须晚于开始时间",
+    "couponNameRequired": "请填写优惠券名称",
+    "couponNameMax": "优惠券名称最多填写10个字",
+    "couponDisplayNameRequired": "请填写优惠券文案",
+    "couponStockInvalid": "发放张数必须大于 0",
+    "couponLimitInvalid": "每人限领张数必须大于 0"
   },
   "product": {
     "list": {
@@ -1005,6 +1011,242 @@
         "namePlaceholder": "请输入角色名称",
         "permissions": "权限"
       }
+    }
+  },
+  "marketing": {
+    "home": {
+      "title": "营销中心"
+    },
+    "target": {
+      "product": "店铺商品券",
+      "universal": "店铺通用券",
+      "service": "店铺客服体验券"
+    },
+    "coupon": {
+      "title": "优惠券",
+      "description": "高级表单常见于一次性输入和提交大批量数据的场景。",
+      "create": "创建优惠券",
+      "detailTitle": "优惠券详情",
+      "createTitle": "创建优惠券",
+      "editTitle": "编辑优惠券",
+      "back": "返回",
+      "edit": "编辑",
+      "view": "查看",
+      "offline": "下线",
+      "statusFilterLabel": "状态",
+      "putTimeFilterLabel": "发放时间",
+      "statusAria": "优惠券状态",
+      "putStartPlaceholder": "发放开始",
+      "putEndPlaceholder": "发放结束",
+      "empty": "暂无优惠券",
+      "offlineDialogTitle": "下线优惠券",
+      "offlineDialogDescription": "您确定要下线该优惠券吗？",
+      "offlineSuccess": "优惠券已下线",
+      "offlineFailed": "下线失败，请稍后重试",
+      "actionFailed": "操作失败，请稍后重试",
+      "status": {
+        "all": "全部",
+        "notStarted": "未开始",
+        "ongoing": "进行中",
+        "ended": "已结束",
+        "offline": "已下线"
+      },
+      "type": {
+        "fullReduction": "满减券",
+        "discount": "折扣券"
+      },
+      "column": {
+        "code": "优惠券编码",
+        "name": "优惠券名称",
+        "type": "优惠类型",
+        "target": "券类型",
+        "putTerm": "发放时段",
+        "useTerm": "使用时间",
+        "sendCount": "发放数量",
+        "leftCount": "当前余量",
+        "ctime": "创建时间",
+        "status": "状态",
+        "actions": "操作"
+      },
+      "useTermRange": "{start} 到 {end}",
+      "useTermDays": "领取后 {days} 天",
+      "dateRange": "{start} 至 {end}",
+      "entry": {
+        "title": "请选择券类型",
+        "next": "下一步",
+        "productDescription": "发放店铺商品促销优惠券，提升商品转化，带动商品销量，用户可在商详页、IM等渠道领券后使用",
+        "universalDescription": "发放店铺通用优惠券，提升店铺整体转化效果，用户可在商详页等渠道领取后使用",
+        "serviceDescription": "发放用户安慰、赔付、奖励优惠券，提升用户服务体验，强化客户关系，用户可在IM客服渠道领券后使用"
+      },
+      "form": {
+        "typeLabel": "优惠券类型",
+        "placeholder": "请选择",
+        "nameLabel": "优惠券名称",
+        "namePlaceholder": "请填写优惠券名称",
+        "displayNameLabel": "优惠券文案",
+        "putTermLabel": "发放时间",
+        "putStart": "发放开始时间",
+        "putEnd": "发放结束时间",
+        "stockLabel": "发放张数",
+        "stockPlaceholder": "请输入1-1,000,000的正整数",
+        "limitLabel": "每人限领张数",
+        "limit1": "1张",
+        "limit2": "2张",
+        "limit3": "3张",
+        "unlimited": "不限",
+        "useTermLabel": "使用时间",
+        "claimAfter": "领取后",
+        "claimDaysAria": "领取后天数",
+        "daysUnit": "天",
+        "custom": "自定义",
+        "useStart": "使用开始日期",
+        "useEnd": "使用结束日期",
+        "thresholdLabel": "门槛及面额",
+        "full": "满",
+        "yuan": "元",
+        "minus": "减",
+        "thresholdPlaceholder": "请输入门槛",
+        "thresholdAria": "满减门槛",
+        "amountPlaceholder": "请输入面额",
+        "amountAria": "优惠面额",
+        "submit": "提交",
+        "createDate": "创建日期",
+        "updateSuccess": "更新优惠券成功",
+        "createSuccess": "创建优惠券成功"
+      }
+    }
+  },
+  "dashboard": {
+    "home": {
+      "title": "经营概览",
+      "description": "欢迎回到开源电商商家管理后台"
+    },
+    "units": {
+      "order": "单",
+      "person": "人",
+      "times": "次",
+      "yuan": "元",
+      "item": "件",
+      "record": "条",
+      "day": "天",
+      "points": "分"
+    },
+    "latestNews": {
+      "title": "最新动态",
+      "more": "更多",
+      "empty": "暂无最新动态"
+    },
+    "overview": {
+      "title": "订单概况",
+      "unpaid": "待付款",
+      "unfilled": "待发货",
+      "unfilledTip": "近90天内的所有待发货订单数",
+      "refund": "退款/售后",
+      "refundTip": "近90天所有处在售后和退款中的订单数",
+      "willDelay": "即将延迟发货",
+      "willDelayTip": "近90天数据即将会延迟发货的订单数",
+      "delayed": "已延期发货",
+      "delayedTip": "近90天已过承诺发货时间的订单数"
+    },
+    "realdata": {
+      "title": "实时数据",
+      "dataCenter": "数据中心",
+      "description": "数据计算可能会存在5-10分钟左右的延迟",
+      "improveConversion": "如何提高转化率",
+      "paidAmount": "支付金额",
+      "paidAmountTip": "该店铺支付订单的总金额，包含买家实际支付和使用平台优惠券的总金额，未剔除售后订单",
+      "paidOrderCount": "支付订单数",
+      "paidOrderCountTip": "店铺全部支付的订单数，一个支付订单对应唯一订单号，一个买家在统计时间内支付多个订单则记为多次",
+      "paidUserCount": "支付人数",
+      "paidUserCountTip": "该店铺所有支付买家的去重人数，即一个买家多次支付，仅记一人，未剔除售后订单",
+      "itemUniqueVisitor": "商品访客数",
+      "itemUniqueVisitorTip": "统计周期内，访问店铺所有商品的去重人数",
+      "itemPaveView": "商品浏览量",
+      "itemPaveViewTip": "统计周期内，该店铺内所有商品详情页的被访问累加人次",
+      "conversionRate": "支付转化率",
+      "conversionRateTip": "统计周期内，支付买家数/访客数，即访客用户数转化为支付买家的比例"
+    },
+    "growth": {
+      "title": "商家成长",
+      "defaultShopName": "商家经营",
+      "serviceScore": "服务评价分",
+      "serviceScoreTip": "平台从售后、物流、客服、纠纷四个维度对商家的整体服务分进行评估的数据指标。服务分达到4分及以上的商家为优秀商家。",
+      "replyRate": "近30天3分钟回复率",
+      "collectRate": "近30天发货及揽收准时率",
+      "overallScore": "综合评价分",
+      "overallScoreTip": "综合评价分为近30天店铺下所有主动评价的订单分数的平均值。有效评价数不足20个的店铺暂不统计评分，综合评价分为0；低于4.0分属于异常。",
+      "newReviews": "新增评价数",
+      "excellent": "已达到优秀商家",
+      "notExcellent": "未达到优秀商家",
+      "notCounted": "暂未统计",
+      "normal": "正常",
+      "warning": "预警",
+      "calculating": "（计算中...）",
+      "focusHint": "请重点关注以下数据:",
+      "taskPending": "有{count}个任务待完成",
+      "taskAward": "有{count}个奖励待查看",
+      "taskSeparator": "，",
+      "qrcode": "二维码",
+      "qrcodeTitle": "店铺二维码",
+      "qrcodeDesc": "扫码查看店铺详情"
+    },
+    "violations": {
+      "title": "违规情况",
+      "listLink": "违规列表",
+      "issueCount": "违规数量(当天)",
+      "appealCount": "违规待申诉数量",
+      "ticketAmount": "罚款金额(当月)"
+    },
+    "productManage": {
+      "title": "商品管理",
+      "selling": "在售中",
+      "create": "创建新商品"
+    },
+    "fund": {
+      "title": "资金管理",
+      "wallet": "我的钱包",
+      "statement": "对账单"
+    },
+    "gold": {
+      "title": "金牌商家",
+      "logo": "金",
+      "viewDetail": "查看详情",
+      "online": "线上展示中",
+      "hidden": "线上不展示",
+      "canceled": "因违规取消线上展示",
+      "cycleRange": "当前考核周期:{range}",
+      "assessing": "正在考核中",
+      "detailTitle": "当前考核详情",
+      "partialHint": "以下仅是部分指标",
+      "moreMetrics": "查看更多指标细节",
+      "columnName": "指标名称",
+      "columnStandard": "认证标准",
+      "columnStatus": "当前状态",
+      "columnQualified": "是否达标",
+      "qualified": "已达标",
+      "unqualified": "未达标"
+    },
+    "activity": {
+      "title": "营销活动",
+      "more": "查看更多",
+      "tabOngoing": "报名中的活动",
+      "tabMine": "我报名的活动",
+      "emptyOngoing": "暂无报名中的活动",
+      "emptyMine": "暂无我报名的活动",
+      "signupTime": "报名时间：{start} 至 {end}",
+      "signupNow": "立即报名",
+      "viewDetail": "查看详情",
+      "actionAria": "{action}：{name}"
+    },
+    "trending": {
+      "title": "经营趋势",
+      "noData": "暂无数据",
+      "range7": "近7天",
+      "range30": "近30天",
+      "lineTransaction": "商品成交件数",
+      "linePaymentAmount": "支付金额",
+      "lineReview": "评价数",
+      "lineServiceReplyRate": "3分钟客服回复率"
     }
   }
 }

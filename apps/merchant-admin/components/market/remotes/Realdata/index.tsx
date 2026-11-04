@@ -1,7 +1,9 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import type { CSSProperties, ReactNode } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { useMemo } from 'react';
+import type { CSSProperties } from 'react';
 
 import { Card, Empty, Tooltip } from '@/components/ui';
 import { apiFetch } from '@/lib/api-client';
@@ -16,109 +18,132 @@ export interface RealdataProps {
   bodyStyle?: CSSProperties;
 }
 
+type UnitKey = 'yuan' | 'order' | 'person' | 'times' | '%';
+
 interface RealdataMetric {
-  title: string;
-  tips: string;
+  titleKey: string;
+  tipKey: string;
   key: keyof WorkbenchRealdataDTO;
-  unit: string;
-  extra?: ReactNode;
+  unit: UnitKey;
+  showConversionLink?: boolean;
 }
 
 const realdataRow1: RealdataMetric[] = [
   {
-    title: '支付金额',
-    tips: '该店铺支付订单的总金额，包含买家实际支付和使用平台优惠券的总金额，未剔除售后订单',
+    titleKey: 'paidAmount',
+    tipKey: 'paidAmountTip',
     key: 'paidAmount',
-    unit: '元',
+    unit: 'yuan',
   },
   {
-    title: '支付订单数',
-    tips: '店铺全部支付的订单数，一个支付订单对应唯一订单号，一个买家在统计时间内支付多个订单则记为多次',
+    titleKey: 'paidOrderCount',
+    tipKey: 'paidOrderCountTip',
     key: 'paidOrderCount',
-    unit: '单',
+    unit: 'order',
   },
   {
-    title: '支付人数',
-    tips: '该店铺所有支付买家的去重人数，即一个买家多次支付，仅记一人，未剔除售后订单',
+    titleKey: 'paidUserCount',
+    tipKey: 'paidUserCountTip',
     key: 'paidUserCount',
-    unit: '人',
+    unit: 'person',
   },
 ];
 
 const realdataRow2: RealdataMetric[] = [
   {
-    title: '商品访客数',
-    tips: '统计周期内，访问店铺所有商品的去重人数',
+    titleKey: 'itemUniqueVisitor',
+    tipKey: 'itemUniqueVisitorTip',
     key: 'itemUniqueVisitor',
-    unit: '人',
+    unit: 'person',
   },
   {
-    title: '商品浏览量',
-    tips: '统计周期内，该店铺内所有商品详情页的被访问累加人次',
+    titleKey: 'itemPaveView',
+    tipKey: 'itemPaveViewTip',
     key: 'itemPaveView',
-    unit: '次',
+    unit: 'times',
   },
   {
-    title: '支付转化率',
-    tips: '统计周期内，支付买家数/访客数，即访客用户数转化为支付买家的比例',
+    titleKey: 'conversionRate',
+    tipKey: 'conversionRateTip',
     key: 'conversionRate',
     unit: '%',
-    extra: <a className={styles.metricExtra}>如何提高转化率</a>,
+    showConversionLink: true,
   },
 ];
 
-const paidAmountFormatter = new Intl.NumberFormat('zh-CN', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
-function formatValue(metric: RealdataMetric, value: number | undefined): string | number {
+function formatValue(metric: RealdataMetric, value: number | undefined, formatter: Intl.NumberFormat): string | number {
   if (value === undefined) {
     return '--';
   }
 
-  return metric.key === 'paidAmount' ? paidAmountFormatter.format(value) : value;
-}
-
-function renderMetric(metric: RealdataMetric, value: number | undefined) {
-  return (
-    <div className={styles.tile} key={metric.key}>
-      <div className={styles.tileTitle}>
-        <Tooltip content={metric.tips}>
-          <span className={styles.tooltipTitle}>{metric.title}</span>
-        </Tooltip>
-      </div>
-      <div className={styles.tileValue}>
-        <span className={styles.value}>{formatValue(metric, value)}</span>
-        <span className={styles.unit}>{metric.unit}</span>
-      </div>
-      {metric.extra ? <div>{metric.extra}</div> : null}
-    </div>
-  );
+  return metric.key === 'paidAmount' ? formatter.format(value) : value;
 }
 
 export function Realdata({ className, style, bodyStyle }: RealdataProps) {
+  const t = useTranslations('dashboard.realdata');
+  const tDashboard = useTranslations('dashboard');
+  const tCommon = useTranslations('common');
+  const locale = useLocale();
   const { data, isError } = useQuery({
     queryKey: queryKeys.analysis('workbench'),
     queryFn: () => apiFetch<WorkbenchDTO>('/api/analysis/workbench'),
   });
 
+  const formatter = useMemo(
+    () =>
+      new Intl.NumberFormat(locale, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    [locale]
+  );
+
   const realdata = data?.realdata;
+  const label = (unit: UnitKey) => (unit === '%' ? '%' : tDashboard(`units.${unit}`));
 
   return (
     <div style={style}>
-      <Card className={className} title='实时数据' extra={<a className={styles.extraLink}>数据中心</a>}>
+      <Card className={className} title={t('title')} extra={<a className={styles.extraLink}>{t('dataCenter')}</a>}>
         <div style={bodyStyle}>
-          <p className={styles.description}>数据计算可能会存在5-10分钟左右的延迟</p>
+          <p className={styles.description}>{t('description')}</p>
           {isError ? (
-            <Empty description='加载失败' />
+            <Empty description={tCommon('loadFailed')} />
           ) : (
             <div className={styles.rows}>
               <div className={styles.row}>
-                {realdataRow1.map(metric => renderMetric(metric, realdata?.[metric.key]))}
+                {realdataRow1.map(metric => (
+                  <div className={styles.tile} key={metric.key}>
+                    <div className={styles.tileTitle}>
+                      <Tooltip content={t(metric.tipKey)}>
+                        <span className={styles.tooltipTitle}>{t(metric.titleKey)}</span>
+                      </Tooltip>
+                    </div>
+                    <div className={styles.tileValue}>
+                      <span className={styles.value}>{formatValue(metric, realdata?.[metric.key], formatter)}</span>
+                      <span className={styles.unit}>{label(metric.unit)}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
               <div className={styles.row}>
-                {realdataRow2.map(metric => renderMetric(metric, realdata?.[metric.key]))}
+                {realdataRow2.map(metric => (
+                  <div className={styles.tile} key={metric.key}>
+                    <div className={styles.tileTitle}>
+                      <Tooltip content={t(metric.tipKey)}>
+                        <span className={styles.tooltipTitle}>{t(metric.titleKey)}</span>
+                      </Tooltip>
+                    </div>
+                    <div className={styles.tileValue}>
+                      <span className={styles.value}>{formatValue(metric, realdata?.[metric.key], formatter)}</span>
+                      <span className={styles.unit}>{label(metric.unit)}</span>
+                    </div>
+                    {metric.showConversionLink ? (
+                      <div>
+                        <a className={styles.metricExtra}>{t('improveConversion')}</a>
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
               </div>
             </div>
           )}

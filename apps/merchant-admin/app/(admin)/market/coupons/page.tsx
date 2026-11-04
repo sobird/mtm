@@ -1,6 +1,8 @@
 'use client';
 
+import type { Translate } from '@mtm/i18n';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -8,9 +10,10 @@ import { PageContainer } from '@/components/layout/PageContainer';
 import CreateCouponEntry from '@/components/market/coupon/CreateCouponEntry';
 import { Button, DataTable, DateRangePicker, Dialog, Empty, Select, Tag, useToast } from '@/components/ui';
 import type { DataTableChange, DataTableColumns, SelectOptionValue, TagTone } from '@/components/ui';
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import type { CouponListItemDTO } from '@/lib/services/coupon';
+import { translateApiError } from '@/lib/translate-api-error';
 
 import styles from './page.module.css';
 
@@ -23,37 +26,32 @@ interface CouponListResponse {
   list: CouponListItemDTO[];
 }
 
-const STATUS_OPTIONS = [
-  { value: -1, label: '全部' },
-  { value: 0, label: '未开始' },
-  { value: 1, label: '进行中' },
-  { value: 2, label: '已结束' },
-  { value: 6, label: '已下线' },
-];
-
-const STATUS_MAP: Record<number, { label: string; tone: TagTone }> = {
-  0: { label: '未开始', tone: 'neutral' },
-  1: { label: '进行中', tone: 'success' },
-  2: { label: '已结束', tone: 'info' },
-  6: { label: '已下线', tone: 'danger' },
+const STATUS_VALUES = [-1, 0, 1, 2, 6] as const;
+const STATUS_LABEL_KEYS: Record<number, string> = {
+  [-1]: 'all',
+  0: 'notStarted',
+  1: 'ongoing',
+  2: 'ended',
+  6: 'offline',
 };
 
-const TYPE_MAP: Record<number, string> = {
-  0: '满减券',
-  1: '折扣券',
+const STATUS_META: Record<number, { labelKey: string; tone: TagTone }> = {
+  0: { labelKey: 'notStarted', tone: 'neutral' },
+  1: { labelKey: 'ongoing', tone: 'success' },
+  2: { labelKey: 'ended', tone: 'info' },
+  6: { labelKey: 'offline', tone: 'danger' },
 };
 
-const TARGET_MAP: Record<number, string> = {
-  1: '店铺商品券',
-  2: '店铺通用券',
-  3: '店铺客服体验券',
+const TYPE_KEYS: Record<number, string> = {
+  0: 'fullReduction',
+  1: 'discount',
 };
 
-const TARGET_FILTERS = [
-  { text: '店铺商品券', value: 1 },
-  { text: '店铺通用券', value: 2 },
-  { text: '店铺客服体验券', value: 3 },
-];
+const TARGET_KEYS: Record<number, string> = {
+  1: 'target.product',
+  2: 'target.universal',
+  3: 'target.service',
+};
 
 const SORTABLE_COLUMNS = new Set(['ctime', 'sendCount', 'leftCount']);
 
@@ -92,7 +90,7 @@ function formatEpochDate(value: unknown): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
-function formatUseTerm(value: unknown): string {
+function formatUseTerm(value: unknown, t: Translate): string {
   if (!Array.isArray(value)) {
     return '--';
   }
@@ -100,10 +98,10 @@ function formatUseTerm(value: unknown): string {
   const [days, range] = value;
 
   if (Array.isArray(range) && range.length >= 2) {
-    return `${formatEpochDate(range[0])} 到 ${formatEpochDate(range[1])}`;
+    return t('coupon.useTermRange', { start: formatEpochDate(range[0]), end: formatEpochDate(range[1]) });
   }
 
-  return `领取后 ${typeof days === 'number' ? days : '-'} 天`;
+  return t('coupon.useTermDays', { days: typeof days === 'number' ? days : '-' });
 }
 
 function toEpoch(value: string): number | undefined {
@@ -118,6 +116,9 @@ function toEpoch(value: string): number | undefined {
 export default function MarketCouponsPage() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const t = useTranslations('marketing');
+  const tCommon = useTranslations('common');
+  const tRoot = useTranslations();
 
   const [status, setStatus] = useState<SelectOptionValue>(-1);
   const [stime, setStime] = useState('');
@@ -130,6 +131,13 @@ export default function MarketCouponsPage() {
 
   const [offlineTarget, setOfflineTarget] = useState<CouponListItemDTO | null>(null);
   const [offlinePending, setOfflinePending] = useState(false);
+
+  const statusOptions = STATUS_VALUES.map(value => ({
+    value,
+    label: t(`coupon.status.${STATUS_LABEL_KEYS[value]}`),
+  }));
+
+  const targetFilters = [1, 2, 3].map(value => ({ text: t(TARGET_KEYS[value]), value }));
 
   const params = {
     pn: page,
@@ -158,11 +166,11 @@ export default function MarketCouponsPage() {
 
     try {
       await apiFetch(`/api/merchant/coupon/${offlineTarget.id}`, { method: 'DELETE' });
-      toast.success('优惠券已下线');
+      toast.success(t('coupon.offlineSuccess'));
       await queryClient.invalidateQueries({ queryKey: ['coupons'] });
       setOfflineTarget(null);
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : '下线失败，请稍后重试');
+      toast.error(translateApiError(error, tRoot, 'marketing.coupon.offlineFailed'));
     } finally {
       setOfflinePending(false);
     }
@@ -189,12 +197,12 @@ export default function MarketCouponsPage() {
   const columns: DataTableColumns<CouponListItemDTO> = [
     {
       dataIndex: 'id',
-      title: '优惠券编码',
+      title: t('coupon.column.code'),
       render: (_, row) => row.id,
     },
     {
       dataIndex: 'name',
-      title: '优惠券名称',
+      title: t('coupon.column.name'),
       render: (_, row) => (
         <Link className={styles.link} href={`/market/coupon/${row.id}`}>
           {row.name}
@@ -203,71 +211,85 @@ export default function MarketCouponsPage() {
     },
     {
       dataIndex: 'type',
-      title: '优惠类型',
-      render: (_, row) => TYPE_MAP[row.type] ?? '--',
+      title: t('coupon.column.type'),
+      render: (_, row) => {
+        const typeKey = TYPE_KEYS[row.type];
+        return typeKey ? t(`coupon.type.${typeKey}`) : '--';
+      },
     },
     {
       dataIndex: 'target',
-      title: '券类型',
-      filters: TARGET_FILTERS,
+      title: t('coupon.column.target'),
+      filters: targetFilters,
       filteredValue: target === undefined ? null : [target],
-      render: (value: number) => TARGET_MAP[value] ?? '--',
+      render: (value: number) => {
+        const targetKey = TARGET_KEYS[value];
+        return targetKey ? t(targetKey) : '--';
+      },
     },
     {
       key: 'putTerm',
-      title: '发放时段',
-      render: (_, row) => `${formatISO(row.putTerm?.[0])} 至 ${formatISO(row.putTerm?.[1])}`,
+      title: t('coupon.column.putTerm'),
+      render: (_, row) =>
+        t('coupon.dateRange', {
+          start: formatISO(row.putTerm?.[0]),
+          end: formatISO(row.putTerm?.[1]),
+        }),
     },
     {
       key: 'useTerm',
-      title: '使用时间',
-      render: (_, row) => formatUseTerm(row.useTerm),
+      title: t('coupon.column.useTerm'),
+      render: (_, row) => formatUseTerm(row.useTerm, t),
     },
     {
       dataIndex: 'sendCount',
-      title: '发放数量',
+      title: t('coupon.column.sendCount'),
       sorter: true,
       sortOrder: sortOrderFor('sendCount'),
       render: (value: number) => value,
     },
     {
       dataIndex: 'leftCount',
-      title: '当前余量',
+      title: t('coupon.column.leftCount'),
       sorter: true,
       sortOrder: sortOrderFor('leftCount'),
       render: (value: number) => value,
     },
     {
       dataIndex: 'ctime',
-      title: '创建时间',
+      title: t('coupon.column.ctime'),
       sorter: true,
       sortOrder: sortOrderFor('ctime'),
       render: (_, row) => formatISO(row.ctime),
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: t('coupon.column.status'),
       render: (value: number) => {
-        const statusMeta = STATUS_MAP[value];
+        const statusMeta = STATUS_META[value];
 
-        return statusMeta ? <Tag tone={statusMeta.tone}>{statusMeta.label}</Tag> : <span>--</span>;
+        return statusMeta ? (
+          <Tag tone={statusMeta.tone}>{t(`coupon.status.${statusMeta.labelKey}`)}</Tag>
+        ) : (
+          <span>--</span>
+        );
       },
     },
     {
       key: 'actions',
-      title: '操作',
+      title: t('coupon.column.actions'),
       render: (_, row) => (
         <div className={styles.actions}>
           <Link className={styles.link} href={`/market/coupon/${row.id}`}>
-            查看
+            {t('coupon.view')}
           </Link>
           {row.status < 2 ? (
             <>
               <Link className={styles.link} href={`/market/coupon/update/${row.id}`}>
-                编辑
+                {t('coupon.edit')}
               </Link>
               <Button variant='ghost' size='sm' onClick={() => setOfflineTarget(row)}>
-                下线
+                {t('coupon.offline')}
               </Button>
             </>
           ) : null}
@@ -280,17 +302,17 @@ export default function MarketCouponsPage() {
 
   return (
     <PageContainer
-      title='优惠券'
-      description='高级表单常见于一次性输入和提交大批量数据的场景。'
-      breadcrumbs={[{ label: '首页', href: '/' }, { label: '营销中心' }, { label: '优惠券' }]}
-      actions={<CreateCouponEntry>创建优惠券</CreateCouponEntry>}
+      title={t('coupon.title')}
+      description={t('coupon.description')}
+      breadcrumbs={[{ label: tCommon('home'), href: '/' }, { label: t('home.title') }, { label: t('coupon.title') }]}
+      actions={<CreateCouponEntry>{t('coupon.create')}</CreateCouponEntry>}
     >
       <div className={styles.filters}>
         <div className={styles.filter}>
-          <span className={styles.filterLabel}>状态</span>
+          <span className={styles.filterLabel}>{t('coupon.statusFilterLabel')}</span>
           <Select
-            aria-label='优惠券状态'
-            options={STATUS_OPTIONS}
+            aria-label={t('coupon.statusAria')}
+            options={statusOptions}
             value={status}
             onChange={value => {
               setStatus(value);
@@ -299,11 +321,11 @@ export default function MarketCouponsPage() {
           />
         </div>
         <div className={styles.filter}>
-          <span className={styles.filterLabel}>发放时间</span>
+          <span className={styles.filterLabel}>{t('coupon.putTimeFilterLabel')}</span>
           <DateRangePicker
             id={{ start: 'coupon-stime', end: 'coupon-etime' }}
             showTime
-            placeholder={['发放开始', '发放结束']}
+            placeholder={[t('coupon.putStartPlaceholder'), t('coupon.putEndPlaceholder')]}
             value={[stime, etime]}
             onChange={value => {
               setStime(value?.[0] ?? '');
@@ -315,7 +337,7 @@ export default function MarketCouponsPage() {
       </div>
 
       {couponsQuery.isError ? (
-        <Empty description='加载失败' />
+        <Empty description={tCommon('loadFailed')} />
       ) : (
         <DataTable
           columns={columns}
@@ -327,7 +349,7 @@ export default function MarketCouponsPage() {
           onTableChange={handleTableChange}
           rowKey='id'
           loading={couponsQuery.isPending}
-          emptyText='暂无优惠券'
+          emptyText={t('coupon.empty')}
         />
       )}
 
@@ -338,15 +360,15 @@ export default function MarketCouponsPage() {
             setOfflineTarget(null);
           }
         }}
-        title='下线优惠券'
-        description='您确定要下线该优惠券吗？'
+        title={t('coupon.offlineDialogTitle')}
+        description={t('coupon.offlineDialogDescription')}
         footer={
           <div className={styles.dialogFooter}>
             <Button variant='secondary' onClick={() => setOfflineTarget(null)}>
-              取消
+              {tCommon('cancel')}
             </Button>
             <Button variant='danger' loading={offlinePending} onClick={handleOffline}>
-              确定
+              {tCommon('confirm')}
             </Button>
           </div>
         }

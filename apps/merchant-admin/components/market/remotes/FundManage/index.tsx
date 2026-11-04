@@ -1,9 +1,9 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import type { CSSProperties } from 'react';
 
 import { Card, useToast } from '@/components/ui';
-import { NO_PERMISSION_MESSAGE } from '@/lib/messages';
 
 import styles from './FundManage.module.css';
 
@@ -15,22 +15,24 @@ export interface FundManageProps {
 
 export function FundManage({ className, style, bodyStyle }: FundManageProps) {
   const toast = useToast();
+  const t = useTranslations('dashboard.fund');
+  const tCommon = useTranslations('common');
 
   return (
     <div style={style}>
-      <Card className={className} title='资金管理'>
+      <Card className={className} title={t('title')}>
         <div className={styles.tiles} style={bodyStyle}>
-          <button type='button' className={styles.tile} onClick={() => toast.error(NO_PERMISSION_MESSAGE)}>
+          <button type='button' className={styles.tile} onClick={() => toast.error(tCommon('noPermission'))}>
             <span className={styles.icon} aria-hidden='true'>
               ¥
             </span>
-            <span>我的钱包</span>
+            <span>{t('wallet')}</span>
           </button>
-          <button type='button' className={styles.tile} onClick={() => toast.error(NO_PERMISSION_MESSAGE)}>
+          <button type='button' className={styles.tile} onClick={() => toast.error(tCommon('noPermission'))}>
             <span className={styles.icon} aria-hidden='true'>
               ≡
             </span>
-            <span>对账单</span>
+            <span>{t('statement')}</span>
           </button>
         </div>
       </Card>
