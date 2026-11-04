@@ -1,15 +1,17 @@
 'use client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useFormState } from 'react-hook-form';
 
 import FieldMerchantLogo from '@/components/admin/FieldMerchantLogo';
 import { Button, Card, Empty, Field, Form, Input, LabelValue, Skeleton, Textarea, useToast } from '@/components/ui';
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import type { MerchantCategoryDTO } from '@/lib/services/merchant';
 import { fetchMyMerchant, updateMyShop } from '@/lib/services/shop-profile';
-import { baseInfoSchema, type BaseInfoValues } from '@/lib/validation/profile';
+import { translateApiError } from '@/lib/translate-api-error';
+import { createBaseInfoSchema, type BaseInfoValues } from '@/lib/validation/profile';
 
 import AdminForm from '../../admin/AdminForm';
 import ContactForm from '../ContactForm';
@@ -18,13 +20,13 @@ import type { MerchantProfileDTO } from '../types';
 
 import styles from './BaseInfo.module.css';
 
-const SHOP_TYPE_LABELS: Record<number, string> = {
-  10: '个人普通店铺',
-  20: '企业普通店铺',
-  21: '企业专营店铺',
-  22: '企业专卖店铺',
-  23: '企业旗舰店铺',
-  99: '其他',
+const SHOP_TYPE_KEYS: Record<number, string> = {
+  10: 'shopType.10',
+  20: 'shopType.20',
+  21: 'shopType.21',
+  22: 'shopType.22',
+  23: 'shopType.23',
+  99: 'shopType.99',
 };
 
 function categoryPath(categoryId: number | undefined, categories: MerchantCategoryDTO[]): string {
@@ -46,13 +48,13 @@ function categoryPath(categoryId: number | undefined, categories: MerchantCatego
   return names.length > 0 ? names.join(' > ') : '--';
 }
 
-function BaseInfoSubmitButton() {
+function BaseInfoSubmitButton({ label }: { label: string }) {
   const { isSubmitting } = useFormState();
 
   return (
     <div className={styles.actions}>
       <Button type='submit' loading={isSubmitting}>
-        更新店铺基本信息
+        {label}
       </Button>
     </div>
   );
@@ -61,6 +63,11 @@ function BaseInfoSubmitButton() {
 export function BaseInfo() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const t = useTranslations('shop');
+  const tCommon = useTranslations('common');
+  const tRoot = useTranslations();
+  const baseInfoSchema = createBaseInfoSchema(tRoot);
+
   const merchantQuery = useQuery({
     queryKey: queryKeys.merchant,
     queryFn: () => apiFetch<MerchantProfileDTO>('/api/merchant/detail'),
@@ -83,7 +90,7 @@ export function BaseInfo() {
   }
 
   if (merchantQuery.isError || categoriesQuery.isError) {
-    return <Empty description='加载失败' />;
+    return <Empty description={tCommon('loadFailed')} />;
   }
 
   const merchant = merchantQuery.data;
@@ -92,16 +99,16 @@ export function BaseInfo() {
 
   const handleSubmit = async (values: BaseInfoValues) => {
     if (!shopId) {
-      toast.error('店铺信息尚未加载完成，请稍后重试');
+      toast.error(t('notReady'));
       return;
     }
 
     try {
       await updateMyShop(shopId, values);
-      toast.success('店铺基本信息已更新');
+      toast.success(t('toast.saved'));
       await queryClient.invalidateQueries({ queryKey: queryKeys.myMerchant });
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : '保存失败，请稍后重试');
+      toast.error(translateApiError(error, tRoot, 'common.actionFailed'));
     }
   };
 
@@ -112,36 +119,36 @@ export function BaseInfo() {
 
     try {
       await navigator.clipboard.writeText(String(shop.id));
-      toast.success('店铺编号已复制');
+      toast.success(t('toast.copied'));
     } catch {
-      toast.error('复制失败，请手动复制');
+      toast.error(t('toast.copyFailed'));
     }
   };
 
   return (
     <div className={styles.panel}>
-      <Card title='基础信息'>
+      <Card title={t('baseInfo.title')}>
         <div className={styles.displayList}>
-          <LabelValue label='店铺编号'>
+          <LabelValue label={t('baseInfo.id')}>
             <span className={styles.copyRow}>
               {display(shop?.id)}
               <Button
                 variant='ghost'
                 size='sm'
-                aria-label='复制店铺编号'
+                aria-label={t('baseInfo.copyId')}
                 onClick={handleCopy}
                 disabled={shop?.id === undefined || shop?.id === null}
               >
-                复制
+                {tCommon('copy')}
               </Button>
             </span>
           </LabelValue>
-          <LabelValue label='店铺名称'>{display(shop?.name)}</LabelValue>
-          <LabelValue label='店铺类型'>
-            {shop?.type === undefined ? '--' : (SHOP_TYPE_LABELS[shop.type] ?? '--')}
+          <LabelValue label={t('baseInfo.name')}>{display(shop?.name)}</LabelValue>
+          <LabelValue label={t('baseInfo.type')}>
+            {shop?.type === undefined ? '--' : t(SHOP_TYPE_KEYS[shop.type] ?? 'shopType.99')}
           </LabelValue>
-          <LabelValue label='主营类目'>{categoryPath(shop?.category, categories)}</LabelValue>
-          <LabelValue label='店铺标志'>
+          <LabelValue label={t('baseInfo.category')}>{categoryPath(shop?.category, categories)}</LabelValue>
+          <LabelValue label={t('baseInfo.logo')}>
             <FieldMerchantLogo status={6} defaultValue={shop?.logo ? [shop.logo] : []} />
           </LabelValue>
         </div>
@@ -153,37 +160,37 @@ export function BaseInfo() {
             onSubmit={handleSubmit}
             className={styles.form}
           >
-            <Field label='店铺简介' hint='最多200个字符'>
+            <Field label={t('baseInfo.description')} hint={t('baseInfo.descriptionHint')}>
               <Textarea
                 name='description'
-                placeholder='填写店铺简介，可让消费者更了解您的店铺'
+                placeholder={t('baseInfo.descriptionPlaceholder')}
                 maxLength={200}
                 rows={5}
-                aria-label='店铺简介'
+                aria-label={t('baseInfo.description')}
               />
             </Field>
 
-            <Field label='第三方平台店铺链接'>
+            <Field label={t('baseInfo.externalLink')}>
               <Input
                 name='externalLink'
-                placeholder='填写真实的其他平台店铺链接'
+                placeholder={t('baseInfo.externalLinkPlaceholder')}
                 maxLength={1000}
-                aria-label='第三方平台店铺链接'
+                aria-label={t('baseInfo.externalLink')}
               />
             </Field>
 
-            <BaseInfoSubmitButton />
+            <BaseInfoSubmitButton label={tCommon('save')} />
           </Form>
         ) : myMerchantQuery.isError ? (
           <div className={styles.actions}>
-            <Empty description='店铺信息加载失败' />
+            <Empty description={t('loadFailed')} />
             <Button
               variant='ghost'
               onClick={() => {
                 void myMerchantQuery.refetch();
               }}
             >
-              重试
+              {tCommon('retry')}
             </Button>
           </div>
         ) : (
@@ -191,11 +198,11 @@ export function BaseInfo() {
         )}
       </Card>
 
-      <Card title='管理员信息'>
+      <Card title={t('baseInfo.adminCard')}>
         <AdminForm />
       </Card>
 
-      <Card title='联系方式'>
+      <Card title={t('baseInfo.contactCard')}>
         <ContactForm defaultEmail={merchant?.merchantManagerInfo?.email} defaultServicePhone={shop?.servicePhoneNum} />
       </Card>
     </div>

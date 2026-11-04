@@ -1,5 +1,7 @@
 'use client';
 
+import { useLocale, useTranslations } from 'next-intl';
+
 import { Button, Card, LabelValue, Tag, Tooltip, useToast } from '@/components/ui';
 
 import styles from './WalletCard.module.css';
@@ -16,11 +18,6 @@ export interface WalletCardProps {
   onChangeWallet?: () => void;
 }
 
-const BALANCE_FORMAT = new Intl.NumberFormat('zh-CN', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
 export function WalletCard({
   account,
   type,
@@ -33,7 +30,14 @@ export function WalletCard({
   onChangeWallet,
 }: WalletCardProps) {
   const toast = useToast();
-  const typeLabel = type === 1 ? '企业钱包' : '个人钱包';
+  const t = useTranslations('shop.wallet');
+  const tCommon = useTranslations('common');
+  const locale = useLocale();
+  const balanceFormat = new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  const typeLabel = type === 1 ? t('types.enterprise') : t('types.personal');
   const hasBankCard = Boolean(bindingBankCardNum);
 
   let note = null;
@@ -41,20 +45,20 @@ export function WalletCard({
     if (!hasBankCard) {
       note = (
         <div className={styles.note}>
-          绑定银行卡后可正常使用提现业务，请前往
-          <Button variant='ghost' size='sm' onClick={() => toast.info('功能即将上线')}>
-            绑定银行卡
+          {t('bankCardNote')}
+          <Button variant='ghost' size='sm' onClick={() => toast.info(tCommon('comingSoon'))}>
+            {t('bindBankCard')}
           </Button>
         </div>
       );
     }
   } else {
-    note = <div className={styles.note}>如需提现，请先变更为当前使用</div>;
+    note = <div className={styles.note}>{t('changeNote')}</div>;
   }
 
   const withdrawButton = (
-    <Button variant='secondary' size='sm' disabled={balance === 0} onClick={() => toast.info('功能即将上线')}>
-      去提现
+    <Button variant='secondary' size='sm' disabled={balance === 0} onClick={() => toast.info(tCommon('comingSoon'))}>
+      {t('withdraw')}
     </Button>
   );
 
@@ -64,23 +68,23 @@ export function WalletCard({
       extra={
         <div className={styles.headerActions}>
           <Button variant='ghost' size='sm' onClick={onChangeWallet}>
-            切换为当前使用
+            {t('switchCurrent')}
           </Button>
-          <Tag tone={current ? 'info' : 'neutral'}>{current ? '当前使用中' : '曾经使用过'}</Tag>
+          <Tag tone={current ? 'info' : 'neutral'}>{current ? t('status.current') : t('status.previous')}</Tag>
         </div>
       }
     >
       <div className={styles.balanceRow}>
         <div className={styles.balanceCol}>
-          <p className={styles.balanceLabel}>钱包余额</p>
+          <p className={styles.balanceLabel}>{t('balance')}</p>
           <p className={styles.balanceValue}>
             <span className={styles.balanceUnit}>¥</span>
-            <span>{BALANCE_FORMAT.format(balance)}</span>
+            <span>{balanceFormat.format(balance)}</span>
           </p>
         </div>
         {current ? (
           balance === 0 ? (
-            <Tooltip content='暂无余额'>
+            <Tooltip content={t('noBalance')}>
               <span>{withdrawButton}</span>
             </Tooltip>
           ) : (
@@ -92,10 +96,10 @@ export function WalletCard({
       {note}
 
       <div className={styles.meta}>
-        <LabelValue label={type === 1 ? '企业名称' : '姓名'}>{name ?? '--'}</LabelValue>
-        <LabelValue label='钱包账号'>{account}</LabelValue>
-        <LabelValue label='绑定手机'>{phone ?? '--'}</LabelValue>
-        <LabelValue label='钱包ID'>{walletId ?? '--'}</LabelValue>
+        <LabelValue label={type === 1 ? t('enterpriseName') : t('name')}>{name ?? '--'}</LabelValue>
+        <LabelValue label={t('account')}>{account}</LabelValue>
+        <LabelValue label={t('phone')}>{phone ?? '--'}</LabelValue>
+        <LabelValue label={t('id')}>{walletId ?? '--'}</LabelValue>
       </div>
     </Card>
   );

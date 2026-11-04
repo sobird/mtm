@@ -3,6 +3,7 @@
 import { PERMISSIONS } from '@mtm/contracts';
 import { PermissionButton } from '@mtm/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { z } from 'zod';
 
@@ -22,43 +23,17 @@ import {
   useToast,
 } from '@/components/ui';
 import type { DataTableColumns, SelectOptionValue } from '@/components/ui';
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
 import type { MerchantAccountDTO, MerchantAccountStatus } from '@/lib/services/account-admin';
 import type { MerchantRoleDTO } from '@/lib/services/role-admin';
+import { translateApiError } from '@/lib/translate-api-error';
+import { accountStatusSchema, createAccountCreateSchema, createAccountPasswordSchema } from '@/lib/validation/system';
 
 import styles from './index.module.css';
 
 const PAGE_SIZE = 10;
 
-const STATUS_FILTER_OPTIONS = [
-  { value: '', label: '全部' },
-  { value: 'ACTIVE', label: '启用' },
-  { value: 'DISABLED', label: '停用' },
-];
-
-const STATUS_OPTIONS = [
-  { value: 'ACTIVE', label: '启用' },
-  { value: 'DISABLED', label: '停用' },
-];
-
-const accountCreateSchema = z.object({
-  username: z.string().regex(/^[a-zA-Z0-9._@-]{3,64}$/, '用户名格式不合法'),
-  name: z.string().min(1, '姓名不能为空').max(50, '姓名不得超过 50 个字符'),
-  password: z.string().min(8, '密码至少 8 位').max(128, '密码不得超过 128 位'),
-  roleIds: z.array(z.string()),
-});
-
-const accountEditSchema = z.object({
-  name: z.string().min(1, '姓名不能为空').max(50, '姓名不得超过 50 个字符'),
-  status: z.enum(['ACTIVE', 'DISABLED']),
-  roleIds: z.array(z.string()),
-});
-
-const passwordSchema = z.object({
-  password: z.string().min(8, '密码至少 8 位').max(128, '密码不得超过 128 位'),
-});
-
-type CreateValues = z.output<typeof accountCreateSchema>;
+type CreateValues = z.output<ReturnType<typeof createAccountCreateSchema>>;
 
 interface AccountListResponse {
   items: MerchantAccountDTO[];
@@ -75,11 +50,7 @@ function pad(value: number): string {
   return String(value).padStart(2, '0');
 }
 
-function formatDateTime(value: string | null): string {
-  if (!value) {
-    return '从未登录';
-  }
-
+function formatDateTime(value: string): string {
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
@@ -92,12 +63,14 @@ function formatDateTime(value: string | null): string {
 }
 
 function RoleCheckboxes({ roles, loading }: { roles: MerchantRoleDTO[] | undefined; loading: boolean }) {
+  const t = useTranslations('system.accounts');
+
   if (loading) {
-    return <p className={styles.muted}>角色加载中…</p>;
+    return <p className={styles.muted}>{t('rolesLoading')}</p>;
   }
 
   if (!roles || roles.length === 0) {
-    return <p className={styles.muted}>暂无可分配角色</p>;
+    return <p className={styles.muted}>{t('noRoles')}</p>;
   }
 
   return (
@@ -112,6 +85,17 @@ function RoleCheckboxes({ roles, loading }: { roles: MerchantRoleDTO[] | undefin
 export function AccountManager() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const t = useTranslations('system.accounts');
+  const tCommon = useTranslations('common');
+  const tRoot = useTranslations();
+
+  const accountCreateSchema = createAccountCreateSchema(tRoot);
+  const accountPasswordSchema = createAccountPasswordSchema(tRoot);
+  const accountEditSchema = z.object({
+    name: z.string().min(1, tRoot('validation.nameRequired')).max(50, tRoot('validation.nameMax')),
+    status: accountStatusSchema,
+    roleIds: z.array(z.string()),
+  });
 
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
@@ -119,6 +103,17 @@ export function AccountManager() {
   const [draftKeyword, setDraftKeyword] = useState('');
   const [draftStatus, setDraftStatus] = useState<SelectOptionValue>('');
   const [dialog, setDialog] = useState<DialogState>(null);
+
+  const statusFilterOptions = [
+    { value: '', label: t('filterStatus.all') },
+    { value: 'ACTIVE', label: t('filterStatus.active') },
+    { value: 'DISABLED', label: t('filterStatus.disabled') },
+  ];
+
+  const statusOptions = [
+    { value: 'ACTIVE', label: t('status.active') },
+    { value: 'DISABLED', label: t('status.disabled') },
+  ];
 
   const params = {
     page,
@@ -138,7 +133,7 @@ export function AccountManager() {
   });
 
   const onRequestError = (error: unknown) => {
-    toast.error(error instanceof ApiError ? error.message : '操作失败，请稍后重试');
+    toast.error(translateApiError(error, tRoot, 'common.actionFailed'));
   };
 
   const invalidateAccounts = () => queryClient.invalidateQueries({ queryKey: ['merchant', 'accounts'] });
@@ -147,7 +142,7 @@ export function AccountManager() {
     mutationFn: (values: CreateValues) =>
       apiFetch<MerchantAccountDTO>('/api/accounts', { method: 'POST', body: values }),
     onSuccess: async () => {
-      toast.success('子账号已创建');
+      toast.success(t('toast.created'));
       setDialog(null);
       await invalidateAccounts();
     },
@@ -163,7 +158,7 @@ export function AccountManager() {
       body: { name?: string; status?: MerchantAccountStatus; roleIds?: string[] };
     }) => apiFetch<MerchantAccountDTO>(`/api/accounts/${id}`, { method: 'PATCH', body }),
     onSuccess: async () => {
-      toast.success('子账号已更新');
+      toast.success(t('toast.updated'));
       setDialog(null);
       await invalidateAccounts();
     },
@@ -174,7 +169,7 @@ export function AccountManager() {
     mutationFn: ({ id, password }: { id: string; password: string }) =>
       apiFetch<null>(`/api/accounts/${id}/password`, { method: 'POST', body: { password } }),
     onSuccess: async () => {
-      toast.success('密码已重置');
+      toast.success(t('toast.passwordReset'));
       setDialog(null);
       await invalidateAccounts();
     },
@@ -207,26 +202,26 @@ export function AccountManager() {
   const columns: DataTableColumns<MerchantAccountDTO> = [
     {
       dataIndex: 'username',
-      title: '用户名',
+      title: t('columns.username'),
       render: (_, row) => (
         <span className={styles.identity}>
           {row.username}
-          {row.isOwner ? <Tag tone='info'>主账号</Tag> : null}
+          {row.isOwner ? <Tag tone='info'>{t('owner')}</Tag> : null}
         </span>
       ),
     },
     {
       dataIndex: 'name',
-      title: '姓名',
+      title: t('columns.name'),
     },
     {
       dataIndex: 'phone',
-      title: '手机号',
+      title: t('columns.phone'),
       render: (value: string | null) => value ?? <span className={styles.muted}>--</span>,
     },
     {
       key: 'roles',
-      title: '角色',
+      title: t('columns.roles'),
       render: (_, row) =>
         row.roles.length > 0 ? (
           <span className={styles.tags}>
@@ -242,31 +237,35 @@ export function AccountManager() {
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: t('columns.status'),
       render: (value: MerchantAccountStatus) =>
-        value === 'ACTIVE' ? <Tag tone='success'>启用</Tag> : <Tag tone='danger'>停用</Tag>,
+        value === 'ACTIVE' ? (
+          <Tag tone='success'>{t('status.active')}</Tag>
+        ) : (
+          <Tag tone='danger'>{t('status.disabled')}</Tag>
+        ),
     },
     {
       dataIndex: 'lastLoginAt',
-      title: '最近登录',
-      render: (value: string | null) => formatDateTime(value),
+      title: t('columns.lastLogin'),
+      render: (value: string | null) => (value ? formatDateTime(value) : t('neverLoggedIn')),
     },
     {
       key: 'actions',
-      title: '操作',
+      title: t('columns.actions'),
       render: (_, row) =>
         row.isOwner ? (
-          <span className={styles.muted}>主账号不可修改</span>
+          <span className={styles.muted}>{t('ownerReadonly')}</span>
         ) : (
           <div className={styles.actions}>
             <Button variant='ghost' size='sm' onClick={() => setDialog({ type: 'edit', account: row })}>
-              编辑
+              {tCommon('edit')}
             </Button>
             <Button variant='ghost' size='sm' onClick={() => setDialog({ type: 'password', account: row })}>
-              重置密码
+              {t('dialog.passwordTitle')}
             </Button>
             <Button variant='ghost' size='sm' onClick={() => toggleStatus(row)}>
-              {row.status === 'ACTIVE' ? '停用' : '启用'}
+              {row.status === 'ACTIVE' ? t('status.disabled') : t('status.active')}
             </Button>
           </div>
         ),
@@ -287,29 +286,29 @@ export function AccountManager() {
           onOpenChange={open => {
             if (!open) closeDialog();
           }}
-          title='重置密码'
-          description={`为子账号 ${dialog.account.username} 设置新密码`}
+          title={t('dialog.passwordTitle')}
+          description={t('dialog.passwordDescription', { username: dialog.account.username })}
         >
           <Form
-            schema={passwordSchema}
+            schema={accountPasswordSchema}
             defaultValues={{ password: '' }}
             onSubmit={values => passwordMutation.mutate({ id: dialog.account.id, password: values.password })}
           >
-            <Field label='新密码' required>
+            <Field label={t('dialog.newPassword')} required>
               <Input
                 name='password'
                 type='password'
-                aria-label='新密码'
-                placeholder='至少 8 位'
+                aria-label={t('dialog.newPassword')}
+                placeholder={t('dialog.newPasswordPlaceholder')}
                 autoComplete='new-password'
               />
             </Field>
             <div className={styles.formActions}>
               <Button type='button' variant='secondary' onClick={closeDialog}>
-                取消
+                {tCommon('cancel')}
               </Button>
               <Button type='submit' loading={passwordMutation.isPending}>
-                保存
+                {tCommon('save')}
               </Button>
             </div>
           </Form>
@@ -324,7 +323,7 @@ export function AccountManager() {
           onOpenChange={open => {
             if (!open) closeDialog();
           }}
-          title='编辑子账号'
+          title={t('dialog.editTitle')}
           description={dialog.account.username}
         >
           <Form
@@ -341,21 +340,21 @@ export function AccountManager() {
               })
             }
           >
-            <Field label='姓名' required>
-              <Input name='name' aria-label='姓名' placeholder='请输入姓名' />
+            <Field label={t('dialog.name')} required>
+              <Input name='name' aria-label={t('dialog.name')} placeholder={t('dialog.namePlaceholder')} />
             </Field>
-            <Field label='状态' required>
-              <Select name='status' aria-label='账号状态' options={STATUS_OPTIONS} />
+            <Field label={t('dialog.status')} required>
+              <Select name='status' aria-label={t('dialog.status')} options={statusOptions} />
             </Field>
-            <Field label='角色'>
+            <Field label={t('dialog.roles')}>
               <RoleCheckboxes roles={rolesQuery.data} loading={rolesQuery.isPending} />
             </Field>
             <div className={styles.formActions}>
               <Button type='button' variant='secondary' onClick={closeDialog}>
-                取消
+                {tCommon('cancel')}
               </Button>
               <Button type='submit' loading={updateMutation.isPending}>
-                保存
+                {tCommon('save')}
               </Button>
             </div>
           </Form>
@@ -369,38 +368,43 @@ export function AccountManager() {
         onOpenChange={open => {
           if (!open) closeDialog();
         }}
-        title='新建子账号'
-        description='子账号按角色获得权限，主账号始终拥有全部权限。'
+        title={t('dialog.createTitle')}
+        description={t('dialog.createDescription')}
       >
         <Form
           schema={accountCreateSchema}
           defaultValues={{ username: '', name: '', password: '', roleIds: [] }}
           onSubmit={values => createMutation.mutate(values)}
         >
-          <Field label='用户名' required>
-            <Input name='username' aria-label='用户名' placeholder='请输入用户名' autoComplete='off' />
+          <Field label={t('dialog.username')} required>
+            <Input
+              name='username'
+              aria-label={t('dialog.username')}
+              placeholder={t('dialog.usernamePlaceholder')}
+              autoComplete='off'
+            />
           </Field>
-          <Field label='姓名' required>
-            <Input name='name' aria-label='姓名' placeholder='请输入姓名' />
+          <Field label={t('dialog.name')} required>
+            <Input name='name' aria-label={t('dialog.name')} placeholder={t('dialog.namePlaceholder')} />
           </Field>
-          <Field label='密码' required>
+          <Field label={t('dialog.password')} required>
             <Input
               name='password'
               type='password'
-              aria-label='密码'
-              placeholder='至少 8 位'
+              aria-label={t('dialog.password')}
+              placeholder={t('dialog.passwordPlaceholder')}
               autoComplete='new-password'
             />
           </Field>
-          <Field label='角色'>
+          <Field label={t('dialog.roles')}>
             <RoleCheckboxes roles={rolesQuery.data} loading={rolesQuery.isPending} />
           </Field>
           <div className={styles.formActions}>
             <Button type='button' variant='secondary' onClick={closeDialog}>
-              取消
+              {tCommon('cancel')}
             </Button>
             <Button type='submit' loading={createMutation.isPending}>
-              保存
+              {tCommon('save')}
             </Button>
           </div>
         </Form>
@@ -410,28 +414,28 @@ export function AccountManager() {
 
   return (
     <PageContainer
-      title='子账号管理'
-      description='管理商家子账号及其角色分配。'
+      title={t('title')}
+      description={t('description')}
       actions={
         <PermissionButton permission={PERMISSIONS.ACCOUNT_MANAGE} onClick={() => setDialog({ type: 'create' })}>
-          新建账号
+          {t('create')}
         </PermissionButton>
       }
     >
       <div className={styles.toolbar}>
         <SearchForm onSubmit={applyFilters} onReset={resetFilters}>
-          <Field label='关键字'>
+          <Field label={t('fields.keyword')}>
             <Input
-              aria-label='关键字'
-              placeholder='用户名或姓名'
+              aria-label={t('fields.keyword')}
+              placeholder={t('fields.keywordPlaceholder')}
               value={draftKeyword}
               onChange={event => setDraftKeyword(event.target.value)}
             />
           </Field>
-          <Field label='状态'>
+          <Field label={t('fields.status')}>
             <Select
-              aria-label='账号状态筛选'
-              options={STATUS_FILTER_OPTIONS}
+              aria-label={t('fields.statusFilter')}
+              options={statusFilterOptions}
               value={draftStatus}
               onChange={value => setDraftStatus(value)}
             />
@@ -440,7 +444,7 @@ export function AccountManager() {
       </div>
 
       {accountsQuery.isError ? (
-        <Empty description='加载失败' />
+        <Empty description={tCommon('loadFailed')} />
       ) : (
         <DataTable
           columns={columns}
@@ -451,7 +455,7 @@ export function AccountManager() {
           onPageChange={setPage}
           rowKey='id'
           loading={accountsQuery.isPending}
-          emptyText='暂无子账号'
+          emptyText={t('empty')}
         />
       )}
 

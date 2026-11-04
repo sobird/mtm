@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 
 import { Card, Empty, LabelValue, Skeleton } from '@/components/ui';
 import { apiFetch } from '@/lib/api-client';
@@ -11,7 +12,7 @@ import type { MerchantProfileDTO } from '../types';
 
 import styles from './PrincipalInfo.module.css';
 
-function PhotoLinks({ photos }: { photos?: string[] | null }) {
+function PhotoLinks({ photos, label }: { photos?: string[] | null; label: string }) {
   const list = (photos ?? []).filter(Boolean);
 
   if (list.length === 0) {
@@ -22,7 +23,7 @@ function PhotoLinks({ photos }: { photos?: string[] | null }) {
     <span className={styles.links}>
       {list.map(url => (
         <a key={url} href={url} target='_blank' rel='noreferrer' className={styles.link}>
-          查看证件照片
+          {label}
         </a>
       ))}
     </span>
@@ -30,6 +31,8 @@ function PhotoLinks({ photos }: { photos?: string[] | null }) {
 }
 
 export function PrincipalInfo() {
+  const t = useTranslations('shop.principal');
+  const tCommon = useTranslations('common');
   const merchantQuery = useQuery({
     queryKey: queryKeys.merchant,
     queryFn: () => apiFetch<MerchantProfileDTO>('/api/merchant/detail'),
@@ -40,7 +43,7 @@ export function PrincipalInfo() {
   }
 
   if (merchantQuery.isError) {
-    return <Empty description='加载失败' />;
+    return <Empty description={tCommon('loadFailed')} />;
   }
 
   const legal = merchantQuery.data?.legalPersonInfo;
@@ -48,36 +51,38 @@ export function PrincipalInfo() {
 
   return (
     <div className={styles.panel}>
-      <Card title='法人信息'>
+      <Card title={t('legalTitle')}>
         <div className={styles.list}>
-          <LabelValue label='法人姓名'>{display(legal?.name)}</LabelValue>
-          <LabelValue label='法人电话'>{display(legal?.phone)}</LabelValue>
-          <LabelValue label='法人证件类型'>{legal?.cardValidateType === 1 ? '身份证' : '--'}</LabelValue>
-          <LabelValue label='法人证件号'>{display(legal?.cardNum)}</LabelValue>
-          <LabelValue label='证件有效期'>{display(legal?.validate)}</LabelValue>
-          <LabelValue label='证件照片'>
-            <PhotoLinks photos={legal?.idCardPhotos} />
+          <LabelValue label={t('legalName')}>{display(legal?.name)}</LabelValue>
+          <LabelValue label={t('legalPhone')}>{display(legal?.phone)}</LabelValue>
+          <LabelValue label={t('legalCardType')}>
+            {legal?.cardValidateType === 1 ? t('legalCardTypeId') : '--'}
+          </LabelValue>
+          <LabelValue label={t('legalCardNum')}>{display(legal?.cardNum)}</LabelValue>
+          <LabelValue label={t('legalValid')}>{display(legal?.validate)}</LabelValue>
+          <LabelValue label={t('legalPhotos')}>
+            <PhotoLinks photos={legal?.idCardPhotos} label={t('viewPhoto')} />
           </LabelValue>
         </div>
       </Card>
 
-      <Card title='企业信息'>
+      <Card title={t('companyTitle')}>
         <div className={styles.list}>
-          <LabelValue label='营业执照'>
+          <LabelValue label={t('businessLicense')}>
             {company?.businessLicense ? (
               <a href={company.businessLicense} target='_blank' rel='noreferrer' className={styles.link}>
-                查看营业执照
+                {t('viewBusinessLicense')}
               </a>
             ) : (
               '--'
             )}
           </LabelValue>
-          <LabelValue label='执照有效期'>{display(company?.operatingTime)}</LabelValue>
-          <LabelValue label='统一社会信用代码'>{display(company?.socialCreditCode)}</LabelValue>
-          <LabelValue label='公司名称'>{display(company?.name)}</LabelValue>
-          <LabelValue label='公司类型'>{display(company?.type)}</LabelValue>
-          <LabelValue label='经营地址'>{display(company?.address || company?.operatingAddress)}</LabelValue>
-          <LabelValue label='注册资本'>{display(company?.registeredCapital)}</LabelValue>
+          <LabelValue label={t('operatingTime')}>{display(company?.operatingTime)}</LabelValue>
+          <LabelValue label={t('socialCreditCode')}>{display(company?.socialCreditCode)}</LabelValue>
+          <LabelValue label={t('companyName')}>{display(company?.name)}</LabelValue>
+          <LabelValue label={t('companyType')}>{display(company?.type)}</LabelValue>
+          <LabelValue label={t('address')}>{display(company?.address || company?.operatingAddress)}</LabelValue>
+          <LabelValue label={t('registeredCapital')}>{display(company?.registeredCapital)}</LabelValue>
         </div>
       </Card>
     </div>

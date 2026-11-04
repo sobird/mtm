@@ -1,9 +1,10 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useFormState } from 'react-hook-form';
 
 import { Button, Field, Form, Input, useToast } from '@/components/ui';
-import { contactSchema } from '@/lib/validation/profile';
+import { createContactSchema } from '@/lib/validation/profile';
 
 import styles from './ContactForm.module.css';
 
@@ -12,13 +13,13 @@ export interface ContactFormProps {
   defaultServicePhone?: string;
 }
 
-function ContactSubmitButton() {
+function ContactSubmitButton({ label }: { label: string }) {
   const { isSubmitting } = useFormState();
 
   return (
     <div className={styles.actions}>
       <Button type='submit' loading={isSubmitting}>
-        更新联系方式
+        {label}
       </Button>
     </div>
   );
@@ -26,6 +27,9 @@ function ContactSubmitButton() {
 
 export function ContactForm({ defaultEmail = '', defaultServicePhone = '' }: ContactFormProps) {
   const toast = useToast();
+  const t = useTranslations('shop.contactForm');
+  const tRoot = useTranslations();
+  const contactSchema = createContactSchema(tRoot);
 
   return (
     <Form
@@ -38,36 +42,36 @@ export function ContactForm({ defaultEmail = '', defaultServicePhone = '' }: Con
         captcha: '',
       }}
       onSubmit={() => {
-        toast.success('联系方式已更新');
+        toast.success(t('saved'));
       }}
       className={styles.form}
     >
-      <Field label='联系邮箱' required>
-        <Input name='managerEmail' placeholder='请输入邮箱地址' aria-label='联系邮箱' />
+      <Field label={t('email')} required>
+        <Input name='managerEmail' placeholder={t('emailPlaceholder')} aria-label={t('email')} />
       </Field>
 
-      <Field label='客服电话' hint='最多30个字符'>
-        <Input name='servicePhoneNum' placeholder='请您及时填写客服电话' aria-label='客服电话' />
+      <Field label={t('servicePhone')} hint={t('servicePhoneHint')}>
+        <Input name='servicePhoneNum' placeholder={t('servicePhonePlaceholder')} aria-label={t('servicePhone')} />
       </Field>
 
-      <Field label='紧急联系人姓名' required>
-        <Input name='emergencyContact' placeholder='请输入紧急联系人姓名' aria-label='紧急联系人姓名' />
+      <Field label={t('contactName')} required>
+        <Input name='emergencyContact' placeholder={t('contactNamePlaceholder')} aria-label={t('contactName')} />
       </Field>
 
-      <Field label='紧急联系人手机' required>
+      <Field label={t('contactPhone')} required>
         <Input
           name='emergencyContactPhone'
-          placeholder='请输入紧急联系人电话'
+          placeholder={t('contactPhonePlaceholder')}
           inputMode='numeric'
-          aria-label='紧急联系人手机'
+          aria-label={t('contactPhone')}
         />
       </Field>
 
-      <Field label='验证码' required>
-        <Input name='captcha' placeholder='请查看手机短信，输入验证码' inputMode='numeric' aria-label='验证码' />
+      <Field label={t('captcha')} required>
+        <Input name='captcha' placeholder={t('captchaPlaceholder')} inputMode='numeric' aria-label={t('captcha')} />
       </Field>
 
-      <ContactSubmitButton />
+      <ContactSubmitButton label={t('title')} />
     </Form>
   );
 }

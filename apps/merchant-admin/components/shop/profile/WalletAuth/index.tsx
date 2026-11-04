@@ -1,9 +1,10 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { Button, Dialog, Field, Form, Input, Steps, useToast } from '@/components/ui';
-import { walletAuthSchema } from '@/lib/validation/profile';
+import { createWalletAuthSchema } from '@/lib/validation/profile';
 
 import styles from './WalletAuth.module.css';
 
@@ -13,14 +14,19 @@ export interface WalletAuthProps {
 }
 
 const FORM_ID = 'wallet-auth-form';
-const STEP_ITEMS = [
-  { key: 'admin', title: '管理员认证' },
-  { key: 'confirm', title: '确认钱包信息' },
-];
 
 export function WalletAuth({ open, onOpenChange }: WalletAuthProps) {
   const toast = useToast();
+  const t = useTranslations('shop.wallet.auth');
+  const tCommon = useTranslations('common');
+  const tRoot = useTranslations();
+  const walletAuthSchema = createWalletAuthSchema(tRoot);
   const [step, setStep] = useState(0);
+
+  const stepItems = [
+    { key: 'admin', title: t('stepAdmin') },
+    { key: 'confirm', title: t('stepConfirm') },
+  ];
 
   useEffect(() => {
     if (!open) {
@@ -32,30 +38,30 @@ export function WalletAuth({ open, onOpenChange }: WalletAuthProps) {
     step === 0 ? (
       <>
         <Button variant='secondary' onClick={() => onOpenChange(false)}>
-          取消
+          {tCommon('cancel')}
         </Button>
         <Button type='submit' form={FORM_ID}>
-          下一步
+          {t('next')}
         </Button>
       </>
     ) : (
       <>
         <Button variant='secondary' onClick={() => setStep(0)}>
-          上一步
+          {t('previous')}
         </Button>
         <Button type='submit' form={FORM_ID}>
-          确认
+          {tCommon('confirm')}
         </Button>
       </>
     );
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} title='变更为个人钱包' footer={footer}>
+    <Dialog open={open} onOpenChange={onOpenChange} title={t('title')} footer={footer}>
       <div role='alert' className={styles.warning}>
-        更换钱包，原钱包余额不会自动转入新钱包，建议先提现再更换
+        {t('warning')}
       </div>
 
-      <Steps items={STEP_ITEMS} current={step} className={styles.steps} />
+      <Steps items={stepItems} current={step} className={styles.steps} />
 
       <Form
         id={FORM_ID}
@@ -67,25 +73,25 @@ export function WalletAuth({ open, onOpenChange }: WalletAuthProps) {
             return;
           }
 
-          toast.success('钱包变更申请已提交');
+          toast.success(t('submitted'));
           onOpenChange(false);
         }}
         className={styles.form}
       >
-        <Field label='企业名称' required>
-          <Input name='companyName' placeholder='请输入企业名称' aria-label='企业名称' />
+        <Field label={t('companyName')} required>
+          <Input name='companyName' placeholder={t('companyNamePlaceholder')} aria-label={t('companyName')} />
         </Field>
 
-        <Field label='企业证件号' required>
-          <Input name='companyIdCard' placeholder='请输入企业证件号' aria-label='企业证件号' />
+        <Field label={t('companyIdCard')} required>
+          <Input name='companyIdCard' placeholder={t('companyIdCardPlaceholder')} aria-label={t('companyIdCard')} />
         </Field>
 
-        <Field label='钱包绑定手机' required>
-          <Input name='phone' placeholder='请输入手机号' inputMode='numeric' aria-label='钱包绑定手机' />
+        <Field label={t('phone')} required>
+          <Input name='phone' placeholder={t('phonePlaceholder')} inputMode='numeric' aria-label={t('phone')} />
         </Field>
 
-        <Field label='验证码' required>
-          <Input name='captcha' placeholder='请输入验证码' inputMode='numeric' aria-label='验证码' />
+        <Field label={t('captcha')} required>
+          <Input name='captcha' placeholder={t('captchaPlaceholder')} inputMode='numeric' aria-label={t('captcha')} />
         </Field>
       </Form>
     </Dialog>

@@ -11,31 +11,17 @@ import { z } from 'zod';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { Button, Checkbox, DataTable, Dialog, Empty, Field, Form, Input, useToast } from '@/components/ui';
 import type { DataTableColumns } from '@/components/ui';
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
 import type { MerchantPermissionDTO, MerchantRoleDTO } from '@/lib/services/role-admin';
+import { translateApiError } from '@/lib/translate-api-error';
+import { createRoleCreateSchema, createRoleUpdateSchema } from '@/lib/validation/system';
 
 import styles from './index.module.css';
 
-const PERMISSION_TYPE_ORDER = ['MENU', 'BUTTON'] as const;
+const PERMISSION_TYPE_ORDER = ['MENU', 'BUTTON', 'API'] as const;
 
-const PERMISSION_TYPE_LABELS: Record<string, string> = {
-  MENU: '菜单权限',
-  BUTTON: '按钮权限',
-};
-
-const roleCreateSchema = z.object({
-  code: z.string().regex(/^[a-zA-Z0-9._@-]{3,64}$/, '角色编码格式不合法'),
-  name: z.string().min(1, '名称不能为空').max(50, '名称不得超过 50 个字符'),
-  permissionCodes: z.array(z.string()),
-});
-
-const roleEditSchema = z.object({
-  name: z.string().min(1, '名称不能为空').max(50, '名称不得超过 50 个字符'),
-  permissionCodes: z.array(z.string()),
-});
-
-type CreateValues = z.output<typeof roleCreateSchema>;
-type EditValues = z.output<typeof roleEditSchema>;
+type CreateValues = z.output<ReturnType<typeof createRoleCreateSchema>>;
+type EditValues = z.output<ReturnType<typeof createRoleUpdateSchema>>;
 
 interface PermissionGroup {
   type: string;
@@ -44,14 +30,6 @@ interface PermissionGroup {
 }
 
 type DialogState = { type: 'create' } | { type: 'edit'; role: MerchantRoleDTO } | null;
-
-function groupPermissions(permissions: MerchantPermissionDTO[]): PermissionGroup[] {
-  return PERMISSION_TYPE_ORDER.map(type => ({
-    type,
-    label: PERMISSION_TYPE_LABELS[type] ?? type,
-    items: permissions.filter(permission => permission.type === type),
-  })).filter(group => group.items.length > 0);
-}
 
 function PermissionCheckboxes({ groups }: { groups: PermissionGroup[] }) {
   const t = useTranslations();
@@ -82,6 +60,13 @@ function PermissionCheckboxes({ groups }: { groups: PermissionGroup[] }) {
 export function RoleManager() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const t = useTranslations('system.roles');
+  const tPermissionType = useTranslations('system.permissionType');
+  const tCommon = useTranslations('common');
+  const tRoot = useTranslations();
+
+  const roleCreateSchema = createRoleCreateSchema(tRoot);
+  const roleEditSchema = createRoleUpdateSchema(tRoot);
 
   const [dialog, setDialog] = useState<DialogState>(null);
 
@@ -96,7 +81,7 @@ export function RoleManager() {
   });
 
   const onRequestError = (error: unknown) => {
-    toast.error(error instanceof ApiError ? error.message : '操作失败，请稍后重试');
+    toast.error(translateApiError(error, tRoot, 'common.actionFailed'));
   };
 
   const invalidateRoles = () => queryClient.invalidateQueries({ queryKey: ['merchant', 'roles'] });
@@ -112,7 +97,7 @@ export function RoleManager() {
         },
       }),
     onSuccess: async () => {
-      toast.success('角色已创建');
+      toast.success(t('toast.created'));
       setDialog(null);
       await invalidateRoles();
     },
@@ -129,7 +114,7 @@ export function RoleManager() {
         },
       }),
     onSuccess: async () => {
-      toast.success('角色已更新');
+      toast.success(t('toast.updated'));
       setDialog(null);
       await invalidateRoles();
     },
@@ -138,13 +123,18 @@ export function RoleManager() {
 
   const closeDialog = () => setDialog(null);
 
-  const groups = groupPermissions(permissionsQuery.data ?? []);
+  const groups: PermissionGroup[] = PERMISSION_TYPE_ORDER.map(type => ({
+    type,
+    label: tPermissionType(type),
+    items: (permissionsQuery.data ?? []).filter(permission => permission.type === type),
+  })).filter(group => group.items.length > 0);
+
   const roles = rolesQuery.data ?? [];
 
   const columns: DataTableColumns<MerchantRoleDTO> = [
     {
       dataIndex: 'name',
-      title: '角色',
+      title: t('columns.role'),
       render: (_, row) => (
         <span className={styles.roleName}>
           {row.name}
@@ -154,19 +144,19 @@ export function RoleManager() {
     },
     {
       key: 'permissionCount',
-      title: '权限数',
+      title: t('columns.permissionCount'),
       render: (_, row) => row.permissions.length,
     },
     {
       dataIndex: 'accountCount',
-      title: '账号数',
+      title: t('columns.accountCount'),
     },
     {
       key: 'actions',
-      title: '操作',
+      title: t('columns.actions'),
       render: (_, row) => (
         <Button variant='ghost' size='sm' onClick={() => setDialog({ type: 'edit', role: row })}>
-          编辑
+          {tCommon('edit')}
         </Button>
       ),
     },
@@ -184,8 +174,8 @@ export function RoleManager() {
           onOpenChange={open => {
             if (!open) closeDialog();
           }}
-          title='编辑角色'
-          description={`角色编码：${dialog.role.code}（创建后不可修改）`}
+          title={t('dialog.editTitle')}
+          description={t('dialog.editDescription', { code: dialog.role.code })}
         >
           <Form
             schema={roleEditSchema}
@@ -195,18 +185,18 @@ export function RoleManager() {
             }}
             onSubmit={values => updateMutation.mutate({ id: dialog.role.id, values })}
           >
-            <Field label='角色名称' required>
-              <Input name='name' aria-label='角色名称' placeholder='请输入角色名称' />
+            <Field label={t('dialog.name')} required>
+              <Input name='name' aria-label={t('dialog.name')} placeholder={t('dialog.namePlaceholder')} />
             </Field>
-            <Field label='权限'>
+            <Field label={t('dialog.permissions')}>
               <PermissionCheckboxes groups={groups} />
             </Field>
             <div className={styles.formActions}>
               <Button type='button' variant='secondary' onClick={closeDialog}>
-                取消
+                {tCommon('cancel')}
               </Button>
               <Button type='submit' loading={updateMutation.isPending}>
-                保存
+                {tCommon('save')}
               </Button>
             </div>
           </Form>
@@ -220,29 +210,34 @@ export function RoleManager() {
         onOpenChange={open => {
           if (!open) closeDialog();
         }}
-        title='新建角色'
-        description='角色编码创建后不可修改。'
+        title={t('dialog.createTitle')}
+        description={t('dialog.createDescription')}
       >
         <Form
           schema={roleCreateSchema}
           defaultValues={{ code: '', name: '', permissionCodes: [] }}
           onSubmit={values => createMutation.mutate(values)}
         >
-          <Field label='角色编码' required>
-            <Input name='code' aria-label='角色编码' placeholder='请输入角色编码' autoComplete='off' />
+          <Field label={t('dialog.code')} required>
+            <Input
+              name='code'
+              aria-label={t('dialog.code')}
+              placeholder={t('dialog.codePlaceholder')}
+              autoComplete='off'
+            />
           </Field>
-          <Field label='角色名称' required>
-            <Input name='name' aria-label='角色名称' placeholder='请输入角色名称' />
+          <Field label={t('dialog.name')} required>
+            <Input name='name' aria-label={t('dialog.name')} placeholder={t('dialog.namePlaceholder')} />
           </Field>
-          <Field label='权限'>
+          <Field label={t('dialog.permissions')}>
             <PermissionCheckboxes groups={groups} />
           </Field>
           <div className={styles.formActions}>
             <Button type='button' variant='secondary' onClick={closeDialog}>
-              取消
+              {tCommon('cancel')}
             </Button>
             <Button type='submit' loading={createMutation.isPending}>
-              保存
+              {tCommon('save')}
             </Button>
           </div>
         </Form>
@@ -252,16 +247,16 @@ export function RoleManager() {
 
   return (
     <PageContainer
-      title='角色管理'
-      description='子账号按角色获得权限，主账号始终拥有全部权限'
+      title={t('title')}
+      description={t('description')}
       actions={
         <PermissionButton permission={PERMISSIONS.ROLE_MANAGE} onClick={() => setDialog({ type: 'create' })}>
-          新建角色
+          {t('create')}
         </PermissionButton>
       }
     >
       {rolesQuery.isError ? (
-        <Empty description='加载失败' />
+        <Empty description={tCommon('loadFailed')} />
       ) : (
         <DataTable
           columns={columns}
@@ -272,7 +267,7 @@ export function RoleManager() {
           onPageChange={() => {}}
           rowKey='id'
           loading={rolesQuery.isPending}
-          emptyText='暂无角色'
+          emptyText={t('empty')}
         />
       )}
 

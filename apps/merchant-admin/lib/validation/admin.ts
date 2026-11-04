@@ -1,3 +1,4 @@
+import type { Translate } from '@mtm/i18n';
 import { z } from 'zod';
 
 import { isIdentityCard } from './id-card';
@@ -12,29 +13,31 @@ export function isTermValue(value: unknown): boolean {
   return Boolean(value[0]) || value.slice(1).some(Boolean);
 }
 
-const termSchema = z.array(z.unknown()).refine(isTermValue, '身份证件有效截止日期不能为空');
-
 /**
  * Shop-admin form validation, ported from the legacy Antd rules in
  * `src/pages/shop/admin/components/admin-form`.
  */
-export const adminSchema = z.object({
-  idCardPhotos: z.array(z.string()).superRefine((value, ctx) => {
-    if (!value?.[0] && !value?.[1]) {
-      ctx.addIssue({ code: 'custom', message: '电子证件照不能为空' });
-      return;
-    }
-    if (!value[0]) {
-      ctx.addIssue({ code: 'custom', message: '请上传身份证人像面' });
-    }
-    if (!value[1]) {
-      ctx.addIssue({ code: 'custom', message: '请上传身份证国徽面' });
-    }
-  }),
-  name: z.string().min(1, '管理员姓名不能为空').max(30, '姓名过长，不得超过30个字'),
-  citizenId: z.string().refine(isIdentityCard, '请输入正确的身份证号码'),
-  validdate: termSchema,
-  mobile: z.string().refine(value => isMobilePhone(value, '86'), '请输入正确的中国大陆11位手机号码'),
-  captcha: z.string().regex(/^\d{6}$/, '手机验证码不正确，请重新输入'),
-  authLetter: z.array(z.string()).min(1, '当管理员与法人不一致的时候，请上传授权书'),
-});
+export function createAdminSchema(t: Translate) {
+  const termSchema = z.array(z.unknown()).refine(isTermValue, t('validation.termRequired'));
+
+  return z.object({
+    idCardPhotos: z.array(z.string()).superRefine((value, ctx) => {
+      if (!value?.[0] && !value?.[1]) {
+        ctx.addIssue({ code: 'custom', message: t('validation.idCardPhotosRequired') });
+        return;
+      }
+      if (!value[0]) {
+        ctx.addIssue({ code: 'custom', message: t('validation.idCardFrontRequired') });
+      }
+      if (!value[1]) {
+        ctx.addIssue({ code: 'custom', message: t('validation.idCardBackRequired') });
+      }
+    }),
+    name: z.string().min(1, t('validation.adminNameRequired')).max(30, t('validation.adminNameMax')),
+    citizenId: z.string().refine(isIdentityCard, t('validation.citizenIdInvalid')),
+    validdate: termSchema,
+    mobile: z.string().refine(value => isMobilePhone(value, '86'), t('validation.chinaMobileInvalid')),
+    captcha: z.string().regex(/^\d{6}$/, t('validation.profileCaptchaInvalid')),
+    authLetter: z.array(z.string()).min(1, t('validation.authLetterRequired')),
+  });
+}

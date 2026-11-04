@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useToast } from '@/components/ui';
 
 import { ButtonTab } from '../ButtonTab';
@@ -10,15 +12,16 @@ import { ButtonTab } from '../ButtonTab';
  */
 export function TrademarkButtonTab() {
   const toast = useToast();
+  const t = useTranslations('shop.trademark');
 
   return (
     <ButtonTab
       items={[
         {
           key: 'add',
-          text: '新增商标',
+          text: t('add'),
           variant: 'primary',
-          onClick: () => toast.info('商标功能暂未开放'),
+          onClick: () => toast.info(t('comingSoon')),
         },
       ]}
     />

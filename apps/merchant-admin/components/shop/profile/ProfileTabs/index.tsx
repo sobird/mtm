@@ -1,23 +1,25 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import styles from './ProfileTabs.module.css';
 
 const TABS = [
-  { href: '/shop/profile', label: '基本信息' },
-  { href: '/shop/profile/principal', label: '主体信息' },
-  { href: '/shop/profile/license', label: '店铺经营许可' },
-  { href: '/shop/profile/wallet', label: '钱包信息' },
-  { href: '/shop/profile/settlement', label: '结算信息' },
+  { href: '/shop/profile', labelKey: 'tabs.basic' },
+  { href: '/shop/profile/principal', labelKey: 'tabs.principal' },
+  { href: '/shop/profile/license', labelKey: 'tabs.license' },
+  { href: '/shop/profile/wallet', labelKey: 'tabs.wallet' },
+  { href: '/shop/profile/settlement', labelKey: 'tabs.settlement' },
 ] as const;
 
 export function ProfileTabs() {
   const pathname = usePathname();
+  const t = useTranslations('shop.profile');
 
   return (
-    <nav className={styles.tabs} aria-label='店铺资料导航'>
+    <nav className={styles.tabs} aria-label={t('tabsLabel')}>
       {TABS.map(tab => {
         const active = tab.href === '/shop/profile' ? pathname === tab.href : pathname.startsWith(tab.href);
 
@@ -28,7 +30,7 @@ export function ProfileTabs() {
             className={active ? `${styles.tab} ${styles.active}` : styles.tab}
             aria-current={active ? 'page' : undefined}
           >
-            {tab.label}
+            {t(tab.labelKey)}
           </Link>
         );
       })}

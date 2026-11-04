@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { Button, Card, DataTable, Empty, Tag, Tooltip, useToast } from '@/components/ui';
@@ -15,10 +16,10 @@ import styles from './LicenseList.module.css';
 
 const PAGE_SIZE = 10;
 
-const STATUS_MAP: Record<number, { label: string; tone: TagTone }> = {
-  4: { label: '审核中', tone: 'warning' },
-  5: { label: '审核驳回', tone: 'danger' },
-  6: { label: '审核通过', tone: 'success' },
+const STATUS_MAP: Record<number, { labelKey: string; tone: TagTone }> = {
+  4: { labelKey: 'statuses.reviewing', tone: 'warning' },
+  5: { labelKey: 'statuses.rejected', tone: 'danger' },
+  6: { labelKey: 'statuses.approved', tone: 'success' },
 };
 
 function isExpired(expireAt: string | null | undefined): boolean {
@@ -33,6 +34,8 @@ function isExpired(expireAt: string | null | undefined): boolean {
 
 export function LicenseList() {
   const toast = useToast();
+  const t = useTranslations('shop.license');
+  const tCommon = useTranslations('common');
   const [page, setPage] = useState(1);
   const licensesQuery = useQuery({
     queryKey: queryKeys.licenses,
@@ -40,7 +43,7 @@ export function LicenseList() {
   });
 
   const placeholder = () => {
-    toast.info('功能即将上线');
+    toast.info(tCommon('comingSoon'));
   };
 
   const list = licensesQuery.data ?? [];
@@ -48,12 +51,12 @@ export function LicenseList() {
   const columns: DataTableColumns<LicenseDTO> = [
     {
       dataIndex: 'type',
-      title: '证照类型',
+      title: t('type'),
       render: (_, row) => display(row.type),
     },
     {
       key: 'url',
-      title: '许可证照',
+      title: t('file'),
       render: (_, row) => (
         <Button
           variant='ghost'
@@ -65,41 +68,41 @@ export function LicenseList() {
             }
           }}
         >
-          证照预览
+          {t('preview')}
         </Button>
       ),
     },
     {
       dataIndex: 'expireAt',
-      title: '证照有效截止日期',
+      title: t('expireAt'),
       render: (_, row) => (
         <span>
           {display(row.expireAt)}
-          {isExpired(row.expireAt) ? <span className={styles.expired}>已过期</span> : null}
+          {isExpired(row.expireAt) ? <span className={styles.expired}>{t('expired')}</span> : null}
         </span>
       ),
     },
     {
       dataIndex: 'status',
-      title: '审核状态',
+      title: t('status'),
       render: (_, row) => {
         const status = STATUS_MAP[row.status];
 
-        return status ? <Tag tone={status.tone}>{status.label}</Tag> : <span>--</span>;
+        return status ? <Tag tone={status.tone}>{t(status.labelKey)}</Tag> : <span>--</span>;
       },
     },
     {
       key: 'actions',
-      title: '操作',
+      title: tCommon('actions'),
       render: (_, row) => {
         const { status, expireAt } = row;
 
         if (status === 4) {
           return (
-            <Tooltip content='审核中，暂时不支持删除'>
+            <Tooltip content={t('reviewingDelete')}>
               <span>
-                <Button variant='ghost' size='sm' disabled aria-label='删除证照'>
-                  删除
+                <Button variant='ghost' size='sm' disabled aria-label={t('deleteLabel')}>
+                  {tCommon('delete')}
                 </Button>
               </span>
             </Tooltip>
@@ -110,10 +113,10 @@ export function LicenseList() {
           return (
             <div className={styles.actions}>
               <Button variant='ghost' size='sm' onClick={placeholder}>
-                修改
+                {tCommon('edit')}
               </Button>
               <Button variant='ghost' size='sm' onClick={placeholder}>
-                删除
+                {tCommon('delete')}
               </Button>
             </div>
           );
@@ -121,10 +124,10 @@ export function LicenseList() {
 
         if (status === 6 && !isExpired(expireAt)) {
           return (
-            <Tooltip content='当前许可证件正在使用中，暂时不支持删除'>
+            <Tooltip content={t('approvedDelete')}>
               <span>
-                <Button variant='ghost' size='sm' disabled aria-label='删除证照'>
-                  删除
+                <Button variant='ghost' size='sm' disabled aria-label={t('deleteLabel')}>
+                  {tCommon('delete')}
                 </Button>
               </span>
             </Tooltip>
@@ -134,7 +137,7 @@ export function LicenseList() {
         if (status === 6 && isExpired(expireAt)) {
           return (
             <Button variant='ghost' size='sm' onClick={placeholder}>
-              删除
+              {tCommon('delete')}
             </Button>
           );
         }
@@ -146,15 +149,15 @@ export function LicenseList() {
 
   return (
     <Card
-      title='许可证列表'
+      title={t('title')}
       extra={
         <Button variant='secondary' size='sm' onClick={placeholder}>
-          添加证照
+          {t('add')}
         </Button>
       }
     >
       {licensesQuery.isError ? (
-        <Empty description='加载失败' />
+        <Empty description={tCommon('loadFailed')} />
       ) : (
         <DataTable
           columns={columns}
@@ -165,7 +168,7 @@ export function LicenseList() {
           onPageChange={setPage}
           rowKey='id'
           loading={licensesQuery.isPending}
-          emptyText='暂无许可证'
+          emptyText={t('empty')}
         />
       )}
     </Card>

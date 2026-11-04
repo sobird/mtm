@@ -44,7 +44,14 @@
     "saveFailed": "Failed to save. Please try again later.",
     "notFoundTitle": "Page not found",
     "notFoundDescription": "The page you are looking for may have been removed, or the address is incorrect.",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "home": "Home",
+    "copy": "Copy",
+    "retry": "Retry",
+    "view": "View",
+    "comingSoon": "This feature is coming soon",
+    "loadFailed": "Failed to load",
+    "actionFailed": "Something went wrong. Please try again later."
   },
   "auth": {
     "interCode": {
@@ -136,7 +143,29 @@
     "skuStockInvalid": "Enter a valid stock quantity.",
     "attributeRequired": "This attribute is required.",
     "attributeNumberInvalid": "Enter a valid number.",
-    "attributeOptionInvalid": "Select a valid option."
+    "attributeOptionInvalid": "Select a valid option.",
+    "profileDescriptionMax": "Shop description must be at most 200 characters.",
+    "profileExternalLinkMax": "The third-party platform link must be at most 1000 characters.",
+    "profileEmailInvalid": "Invalid email address.",
+    "profileServicePhoneMax": "Customer service phone must be at most 30 characters.",
+    "profileContactNameInvalid": "Enter a valid Chinese name.",
+    "profileCaptchaInvalid": "Incorrect SMS verification code. Please try again.",
+    "profileCompanyNameMax": "Company name must be at most 60 characters.",
+    "profileCompanyIdCardInvalid": "Enter a valid unified social credit code.",
+    "idInvalid": "Invalid ID format.",
+    "usernameInvalid": "Invalid username format.",
+    "nameRequired": "Name is required.",
+    "nameMax": "Name must be at most 50 characters.",
+    "passwordMin": "Password must be at least 8 characters.",
+    "passwordMax": "Password must be at most 128 characters.",
+    "roleCodeInvalid": "Invalid role code format.",
+    "idCardPhotosRequired": "ID photos are required.",
+    "idCardFrontRequired": "Please upload the portrait side of the ID card.",
+    "idCardBackRequired": "Please upload the emblem side of the ID card.",
+    "adminNameRequired": "Administrator name is required.",
+    "adminNameMax": "Name must be at most 30 characters.",
+    "citizenIdInvalid": "Enter a valid ID card number.",
+    "authLetterRequired": "If the administrator is not the legal representative, please upload an authorization letter."
   },
   "product": {
     "list": {
@@ -670,6 +699,312 @@
     "idCard": {
       "portrait": "Portrait side",
       "emblem": "Emblem side"
+    }
+  },
+  "shop": {
+    "breadcrumb": {
+      "home": "Home",
+      "shop": "Shop",
+      "trademark": "Trademark"
+    },
+    "profile": {
+      "title": "Shop profile",
+      "tabsLabel": "Shop profile navigation",
+      "tabs": {
+        "basic": "Basic info",
+        "principal": "Business entity",
+        "license": "Licenses",
+        "wallet": "Wallet",
+        "settlement": "Settlement"
+      }
+    },
+    "baseInfo": {
+      "title": "Basic info",
+      "id": "Shop ID",
+      "name": "Shop name",
+      "type": "Shop type",
+      "category": "Main category",
+      "logo": "Shop logo",
+      "description": "Shop description",
+      "descriptionHint": "At most 200 characters",
+      "descriptionPlaceholder": "Describe your shop so customers can learn more about it",
+      "externalLink": "Third-party platform shop link",
+      "externalLinkPlaceholder": "Enter the shop link on another platform",
+      "copyId": "Copy shop ID",
+      "adminCard": "Administrator info",
+      "contactCard": "Contact info"
+    },
+    "shopType": {
+      "10": "Individual standard shop",
+      "20": "Enterprise standard shop",
+      "21": "Enterprise franchise shop",
+      "22": "Enterprise exclusive shop",
+      "23": "Enterprise flagship shop",
+      "99": "Other"
+    },
+    "loadFailed": "Failed to load shop info",
+    "notReady": "Shop info is not ready yet. Please try again later.",
+    "toast": {
+      "saved": "Shop basic info updated",
+      "copied": "Shop ID copied",
+      "copyFailed": "Copy failed. Please copy manually."
+    },
+    "contactForm": {
+      "title": "Update contact info",
+      "email": "Contact email",
+      "emailPlaceholder": "Enter email address",
+      "servicePhone": "Customer service phone",
+      "servicePhoneHint": "At most 30 characters",
+      "servicePhonePlaceholder": "Enter the customer service phone",
+      "contactName": "Emergency contact name",
+      "contactNamePlaceholder": "Enter the emergency contact name",
+      "contactPhone": "Emergency contact phone",
+      "contactPhonePlaceholder": "Enter the emergency contact phone",
+      "captcha": "Verification code",
+      "captchaPlaceholder": "Enter the SMS verification code",
+      "saved": "Contact info updated"
+    },
+    "license": {
+      "title": "License list",
+      "add": "Add license",
+      "type": "License type",
+      "file": "License file",
+      "preview": "Preview license",
+      "expireAt": "License expiry date",
+      "expired": "Expired",
+      "status": "Review status",
+      "empty": "No licenses",
+      "deleteLabel": "Delete license",
+      "reviewingDelete": "Under review. Deleting is not available yet.",
+      "approvedDelete": "This license is in use. Deleting is not available yet.",
+      "statuses": {
+        "reviewing": "Under review",
+        "rejected": "Rejected",
+        "approved": "Approved"
+      }
+    },
+    "principal": {
+      "legalTitle": "Legal representative info",
+      "companyTitle": "Company info",
+      "legalName": "Legal representative",
+      "legalPhone": "Legal representative phone",
+      "legalCardType": "ID type",
+      "legalCardTypeId": "ID card",
+      "legalCardNum": "Legal representative ID number",
+      "legalValid": "ID validity",
+      "legalPhotos": "ID photos",
+      "viewPhoto": "View ID photos",
+      "businessLicense": "Business license",
+      "viewBusinessLicense": "View business license",
+      "operatingTime": "License validity",
+      "socialCreditCode": "Unified social credit code",
+      "companyName": "Company name",
+      "companyType": "Company type",
+      "address": "Business address",
+      "registeredCapital": "Registered capital"
+    },
+    "settlement": {
+      "title": "Basic info",
+      "depositThreshold": "Deposit threshold",
+      "depositThresholdValue": "CNY 10,000",
+      "rate": "Settlement rate",
+      "rateValue": "20%"
+    },
+    "wallet": {
+      "types": {
+        "enterprise": "Enterprise wallet",
+        "personal": "Personal wallet"
+      },
+      "bankCardNote": "Bind a bank card to withdraw funds. Go to",
+      "bindBankCard": "Bind bank card",
+      "changeNote": "To withdraw, switch this wallet to active first.",
+      "withdraw": "Withdraw",
+      "switchCurrent": "Switch to active",
+      "status": {
+        "current": "Active",
+        "previous": "Previously used"
+      },
+      "balance": "Wallet balance",
+      "noBalance": "No balance",
+      "name": "Name",
+      "enterpriseName": "Enterprise name",
+      "account": "Wallet account",
+      "phone": "Bound phone",
+      "id": "Wallet ID",
+      "demo": {
+        "account": "Demo Home Flagship Store",
+        "name": "Demo Contact"
+      },
+      "auth": {
+        "title": "Switch to personal wallet",
+        "warning": "Switching wallets does not transfer the existing balance. Withdraw the balance before switching.",
+        "stepAdmin": "Administrator verification",
+        "stepConfirm": "Confirm wallet info",
+        "next": "Next",
+        "previous": "Back",
+        "submitted": "Wallet change request submitted",
+        "companyName": "Enterprise name",
+        "companyNamePlaceholder": "Enter enterprise name",
+        "companyIdCard": "Enterprise certificate number",
+        "companyIdCardPlaceholder": "Enter enterprise certificate number",
+        "phone": "Wallet phone",
+        "phonePlaceholder": "Enter mobile number",
+        "captcha": "Verification code",
+        "captchaPlaceholder": "Enter verification code"
+      }
+    },
+    "admin": {
+      "submit": "Update shop administrator info",
+      "cardType": "ID type",
+      "cardTypeValue": "Mainland China resident ID card",
+      "cardTypeHint": "(Shop administrators can only apply with a mainland China resident ID card)",
+      "idCardPhotos": "ID photos",
+      "name": "Administrator name",
+      "namePlaceholder": "Must match the name on the ID card",
+      "citizenId": "ID card number",
+      "citizenIdPlaceholder": "Must match the ID number on the ID card",
+      "validUntil": "Valid until",
+      "mobile": "Administrator phone",
+      "mobilePlaceholder": "Enter the administrator phone",
+      "captcha": "Verification code",
+      "captchaPlaceholder": "Enter the SMS verification code",
+      "authLetter": "Authorization letter",
+      "note1": "If the shop administrator is not the legal representative, upload an authorization letter",
+      "note2": "Download the template, stamp it with the company seal, then upload it",
+      "note3": "Upload 1 file, no larger than 10MB",
+      "note4": "Supported formats: JPG/JPEG/PNG/GIF/BMP",
+      "ocrFailed": "ID recognition failed. Please fill in the form manually.",
+      "saved": "Shop administrator info saved"
+    },
+    "rejection": {
+      "title": "Rejected. Reasons:",
+      "reason1": "Not approved",
+      "reason2": "The username is incorrect"
+    },
+    "trademark": {
+      "title": "Trademark management",
+      "empty": "No trademark info",
+      "add": "Add trademark",
+      "comingSoon": "Trademark features are not available yet"
+    },
+    "adminPage": {
+      "title": "Shop administrator",
+      "reviewing": "You have requested an administrator change. It is under review and cannot be edited again until the review completes.",
+      "viewApplication": "View application",
+      "rejected": "Rejected. Your administrator change was not approved. Please revise it based on the reason and submit again.",
+      "edit": "Edit"
+    }
+  },
+  "setting": {
+    "title": "Account settings",
+    "navLabel": "Account settings navigation",
+    "nav": {
+      "basic": "Basic info",
+      "password": "Password",
+      "mobile": "Mobile number",
+      "loginSettings": "Login settings",
+      "loginRecords": "Login history"
+    },
+    "basicInfo": "Basic info",
+    "profile": {
+      "shopId": "Shop ID",
+      "account": "Account name",
+      "password": "Password",
+      "mobile": "Bound phone",
+      "mobileVerify": "Mobile verification",
+      "lastLogin": "Last login",
+      "off": "Off"
+    }
+  },
+  "system": {
+    "permissionType": {
+      "MENU": "Menu permission",
+      "BUTTON": "Button permission",
+      "API": "API permission"
+    },
+    "accounts": {
+      "title": "Sub-account management",
+      "description": "Manage merchant sub-accounts and their roles.",
+      "create": "New account",
+      "filterStatus": {
+        "all": "All",
+        "active": "Active",
+        "disabled": "Disabled"
+      },
+      "status": {
+        "active": "Active",
+        "disabled": "Disabled"
+      },
+      "columns": {
+        "username": "Username",
+        "name": "Name",
+        "phone": "Phone",
+        "roles": "Roles",
+        "status": "Status",
+        "lastLogin": "Last login",
+        "actions": "Actions"
+      },
+      "fields": {
+        "keyword": "Keyword",
+        "keywordPlaceholder": "Username or name",
+        "status": "Status",
+        "statusFilter": "Account status filter"
+      },
+      "owner": "Owner",
+      "ownerReadonly": "The owner account cannot be modified",
+      "neverLoggedIn": "Never signed in",
+      "rolesLoading": "Loading roles…",
+      "noRoles": "No roles available",
+      "empty": "No sub-accounts",
+      "toast": {
+        "created": "Sub-account created",
+        "updated": "Sub-account updated",
+        "passwordReset": "Password reset"
+      },
+      "dialog": {
+        "createTitle": "New sub-account",
+        "createDescription": "Sub-accounts get permissions from roles. The owner always has all permissions.",
+        "editTitle": "Edit sub-account",
+        "passwordTitle": "Reset password",
+        "passwordDescription": "Set a new password for sub-account {username}",
+        "username": "Username",
+        "usernamePlaceholder": "Enter username",
+        "name": "Name",
+        "namePlaceholder": "Enter name",
+        "password": "Password",
+        "passwordPlaceholder": "At least 8 characters",
+        "newPassword": "New password",
+        "newPasswordPlaceholder": "At least 8 characters",
+        "status": "Status",
+        "roles": "Roles"
+      }
+    },
+    "roles": {
+      "title": "Role management",
+      "description": "Sub-accounts get permissions from roles. The owner always has all permissions.",
+      "create": "New role",
+      "columns": {
+        "role": "Role",
+        "permissionCount": "Permissions",
+        "accountCount": "Accounts",
+        "actions": "Actions"
+      },
+      "empty": "No roles",
+      "toast": {
+        "created": "Role created",
+        "updated": "Role updated"
+      },
+      "dialog": {
+        "createTitle": "New role",
+        "createDescription": "The role code cannot be changed after creation.",
+        "editTitle": "Edit role",
+        "editDescription": "Role code: {code} (cannot be changed after creation)",
+        "code": "Role code",
+        "codePlaceholder": "Enter role code",
+        "name": "Role name",
+        "namePlaceholder": "Enter role name",
+        "permissions": "Permissions"
+      }
     }
   }
 }

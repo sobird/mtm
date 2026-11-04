@@ -44,7 +44,14 @@
     "saveFailed": "保存失败，请稍后重试",
     "notFoundTitle": "页面不存在",
     "notFoundDescription": "您访问的页面可能已下线，或地址输入有误。",
-    "backHome": "返回首页"
+    "backHome": "返回首页",
+    "home": "首页",
+    "copy": "复制",
+    "retry": "重试",
+    "view": "查看",
+    "comingSoon": "功能即将上线",
+    "loadFailed": "加载失败",
+    "actionFailed": "操作失败，请稍后重试"
   },
   "auth": {
     "interCode": {
@@ -136,7 +143,29 @@
     "skuStockInvalid": "请填写有效库存",
     "attributeRequired": "请填写该属性",
     "attributeNumberInvalid": "请填写有效数字",
-    "attributeOptionInvalid": "请选择有效选项"
+    "attributeOptionInvalid": "请选择有效选项",
+    "profileDescriptionMax": "店铺简介最多200个字符",
+    "profileExternalLinkMax": "第三方平台链接最多1000个字符",
+    "profileEmailInvalid": "邮箱格式不合法",
+    "profileServicePhoneMax": "客服电话最多30个字符",
+    "profileContactNameInvalid": "请输入正确的中国人名",
+    "profileCaptchaInvalid": "手机验证码不正确，请重新输入",
+    "profileCompanyNameMax": "企业名称最多60个字符",
+    "profileCompanyIdCardInvalid": "请输入正确的企业证件号（统一社会信用代码）",
+    "idInvalid": "ID 格式不合法",
+    "usernameInvalid": "用户名格式不合法",
+    "nameRequired": "名称不能为空",
+    "nameMax": "名称不得超过 50 个字符",
+    "passwordMin": "密码至少 8 位",
+    "passwordMax": "密码不得超过 128 位",
+    "roleCodeInvalid": "角色编码格式不合法",
+    "idCardPhotosRequired": "电子证件照不能为空",
+    "idCardFrontRequired": "请上传身份证人像面",
+    "idCardBackRequired": "请上传身份证国徽面",
+    "adminNameRequired": "管理员姓名不能为空",
+    "adminNameMax": "姓名过长，不得超过30个字",
+    "citizenIdInvalid": "请输入正确的身份证号码",
+    "authLetterRequired": "当管理员与法人不一致的时候，请上传授权书"
   },
   "product": {
     "list": {
@@ -670,6 +699,312 @@
     "idCard": {
       "portrait": "人像面",
       "emblem": "国徽面"
+    }
+  },
+  "shop": {
+    "breadcrumb": {
+      "home": "首页",
+      "shop": "店铺",
+      "trademark": "商标"
+    },
+    "profile": {
+      "title": "店铺信息",
+      "tabsLabel": "店铺资料导航",
+      "tabs": {
+        "basic": "基本信息",
+        "principal": "主体信息",
+        "license": "店铺经营许可",
+        "wallet": "钱包信息",
+        "settlement": "结算信息"
+      }
+    },
+    "baseInfo": {
+      "title": "基础信息",
+      "id": "店铺编号",
+      "name": "店铺名称",
+      "type": "店铺类型",
+      "category": "主营类目",
+      "logo": "店铺标志",
+      "description": "店铺简介",
+      "descriptionHint": "最多200个字符",
+      "descriptionPlaceholder": "填写店铺简介，可让消费者更了解您的店铺",
+      "externalLink": "第三方平台店铺链接",
+      "externalLinkPlaceholder": "填写真实的其他平台店铺链接",
+      "copyId": "复制店铺编号",
+      "adminCard": "管理员信息",
+      "contactCard": "联系方式"
+    },
+    "shopType": {
+      "10": "个人普通店铺",
+      "20": "企业普通店铺",
+      "21": "企业专营店铺",
+      "22": "企业专卖店铺",
+      "23": "企业旗舰店铺",
+      "99": "其他"
+    },
+    "loadFailed": "店铺信息加载失败",
+    "notReady": "店铺信息尚未加载完成，请稍后重试",
+    "toast": {
+      "saved": "店铺基本信息已更新",
+      "copied": "店铺编号已复制",
+      "copyFailed": "复制失败，请手动复制"
+    },
+    "contactForm": {
+      "title": "更新联系方式",
+      "email": "联系邮箱",
+      "emailPlaceholder": "请输入邮箱地址",
+      "servicePhone": "客服电话",
+      "servicePhoneHint": "最多30个字符",
+      "servicePhonePlaceholder": "请您及时填写客服电话",
+      "contactName": "紧急联系人姓名",
+      "contactNamePlaceholder": "请输入紧急联系人姓名",
+      "contactPhone": "紧急联系人手机",
+      "contactPhonePlaceholder": "请输入紧急联系人电话",
+      "captcha": "验证码",
+      "captchaPlaceholder": "请查看手机短信，输入验证码",
+      "saved": "联系方式已更新"
+    },
+    "license": {
+      "title": "许可证列表",
+      "add": "添加证照",
+      "type": "证照类型",
+      "file": "许可证照",
+      "preview": "证照预览",
+      "expireAt": "证照有效截止日期",
+      "expired": "已过期",
+      "status": "审核状态",
+      "empty": "暂无许可证",
+      "deleteLabel": "删除证照",
+      "reviewingDelete": "审核中，暂时不支持删除",
+      "approvedDelete": "当前许可证件正在使用中，暂时不支持删除",
+      "statuses": {
+        "reviewing": "审核中",
+        "rejected": "审核驳回",
+        "approved": "审核通过"
+      }
+    },
+    "principal": {
+      "legalTitle": "法人信息",
+      "companyTitle": "企业信息",
+      "legalName": "法人姓名",
+      "legalPhone": "法人电话",
+      "legalCardType": "法人证件类型",
+      "legalCardTypeId": "身份证",
+      "legalCardNum": "法人证件号",
+      "legalValid": "证件有效期",
+      "legalPhotos": "证件照片",
+      "viewPhoto": "查看证件照片",
+      "businessLicense": "营业执照",
+      "viewBusinessLicense": "查看营业执照",
+      "operatingTime": "执照有效期",
+      "socialCreditCode": "统一社会信用代码",
+      "companyName": "公司名称",
+      "companyType": "公司类型",
+      "address": "经营地址",
+      "registeredCapital": "注册资本"
+    },
+    "settlement": {
+      "title": "基本信息",
+      "depositThreshold": "保证金阈值",
+      "depositThresholdValue": "10000元",
+      "rate": "结算费率",
+      "rateValue": "20%"
+    },
+    "wallet": {
+      "types": {
+        "enterprise": "企业钱包",
+        "personal": "个人钱包"
+      },
+      "bankCardNote": "绑定银行卡后可正常使用提现业务，请前往",
+      "bindBankCard": "绑定银行卡",
+      "changeNote": "如需提现，请先变更为当前使用",
+      "withdraw": "去提现",
+      "switchCurrent": "切换为当前使用",
+      "status": {
+        "current": "当前使用中",
+        "previous": "曾经使用过"
+      },
+      "balance": "钱包余额",
+      "noBalance": "暂无余额",
+      "name": "姓名",
+      "enterpriseName": "企业名称",
+      "account": "钱包账号",
+      "phone": "绑定手机",
+      "id": "钱包ID",
+      "demo": {
+        "account": "示例家居旗舰店",
+        "name": "示例联系人"
+      },
+      "auth": {
+        "title": "变更为个人钱包",
+        "warning": "更换钱包，原钱包余额不会自动转入新钱包，建议先提现再更换",
+        "stepAdmin": "管理员认证",
+        "stepConfirm": "确认钱包信息",
+        "next": "下一步",
+        "previous": "上一步",
+        "submitted": "钱包变更申请已提交",
+        "companyName": "企业名称",
+        "companyNamePlaceholder": "请输入企业名称",
+        "companyIdCard": "企业证件号",
+        "companyIdCardPlaceholder": "请输入企业证件号",
+        "phone": "钱包绑定手机",
+        "phonePlaceholder": "请输入手机号",
+        "captcha": "验证码",
+        "captchaPlaceholder": "请输入验证码"
+      }
+    },
+    "admin": {
+      "submit": "更新店铺管理员信息",
+      "cardType": "证件类型",
+      "cardTypeValue": "中国大陆居民身份证",
+      "cardTypeHint": "(店铺管理员仅支持大陆居民身份证申请)",
+      "idCardPhotos": "电子证件照",
+      "name": "管理员姓名",
+      "namePlaceholder": "请保持与身份证件上的姓名一致",
+      "citizenId": "身份证件号",
+      "citizenIdPlaceholder": "请保持与身份证件上的证件号一致",
+      "validUntil": "有效截止日",
+      "mobile": "管理员手机号",
+      "mobilePlaceholder": "请填写管理员手机号",
+      "captcha": "验证码",
+      "captchaPlaceholder": "请查看手机短信，输入验证码",
+      "authLetter": "授权书",
+      "note1": "当店铺管理员与法人不一致时，请上传管理员授权书",
+      "note2": "请使用模板下载后加盖公司印章后上传",
+      "note3": "支持上传1张文件，大小不得超过10MB",
+      "note4": "格式支持JPG/JPEG/PNG/GIF/BPM",
+      "ocrFailed": "证件识别失败，请手动填写",
+      "saved": "店铺管理员信息已保存"
+    },
+    "rejection": {
+      "title": "审核不通过，原因如下：",
+      "reason1": "不通过",
+      "reason2": "用户名填写错误哦"
+    },
+    "trademark": {
+      "title": "商标管理",
+      "empty": "暂无商标信息",
+      "add": "新增商标",
+      "comingSoon": "商标功能暂未开放"
+    },
+    "adminPage": {
+      "title": "店铺管理员",
+      "reviewing": "您已申请修改管理员信息，当前处于审核中，审核期间不可以再次修改信息，感谢您的耐心等待。",
+      "viewApplication": "查看申请信息",
+      "rejected": "审核驳回。您申请修改的管理员信息审核不通过，请针对驳回原因进行修改后再次提交",
+      "edit": "去修改"
+    }
+  },
+  "setting": {
+    "title": "账户设置",
+    "navLabel": "账户设置导航",
+    "nav": {
+      "basic": "基本信息",
+      "password": "登录密码",
+      "mobile": "手机号码",
+      "loginSettings": "登录设置",
+      "loginRecords": "登录记录"
+    },
+    "basicInfo": "基本信息",
+    "profile": {
+      "shopId": "店铺ID",
+      "account": "账号名",
+      "password": "登录密码",
+      "mobile": "绑定手机",
+      "mobileVerify": "手机验证",
+      "lastLogin": "最近登录",
+      "off": "关闭"
+    }
+  },
+  "system": {
+    "permissionType": {
+      "MENU": "菜单权限",
+      "BUTTON": "按钮权限",
+      "API": "接口权限"
+    },
+    "accounts": {
+      "title": "子账号管理",
+      "description": "管理商家子账号及其角色分配。",
+      "create": "新建账号",
+      "filterStatus": {
+        "all": "全部",
+        "active": "启用",
+        "disabled": "停用"
+      },
+      "status": {
+        "active": "启用",
+        "disabled": "停用"
+      },
+      "columns": {
+        "username": "用户名",
+        "name": "姓名",
+        "phone": "手机号",
+        "roles": "角色",
+        "status": "状态",
+        "lastLogin": "最近登录",
+        "actions": "操作"
+      },
+      "fields": {
+        "keyword": "关键字",
+        "keywordPlaceholder": "用户名或姓名",
+        "status": "状态",
+        "statusFilter": "账号状态筛选"
+      },
+      "owner": "主账号",
+      "ownerReadonly": "主账号不可修改",
+      "neverLoggedIn": "从未登录",
+      "rolesLoading": "角色加载中…",
+      "noRoles": "暂无可分配角色",
+      "empty": "暂无子账号",
+      "toast": {
+        "created": "子账号已创建",
+        "updated": "子账号已更新",
+        "passwordReset": "密码已重置"
+      },
+      "dialog": {
+        "createTitle": "新建子账号",
+        "createDescription": "子账号按角色获得权限，主账号始终拥有全部权限。",
+        "editTitle": "编辑子账号",
+        "passwordTitle": "重置密码",
+        "passwordDescription": "为子账号 {username} 设置新密码",
+        "username": "用户名",
+        "usernamePlaceholder": "请输入用户名",
+        "name": "姓名",
+        "namePlaceholder": "请输入姓名",
+        "password": "密码",
+        "passwordPlaceholder": "至少 8 位",
+        "newPassword": "新密码",
+        "newPasswordPlaceholder": "至少 8 位",
+        "status": "状态",
+        "roles": "角色"
+      }
+    },
+    "roles": {
+      "title": "角色管理",
+      "description": "子账号按角色获得权限，主账号始终拥有全部权限",
+      "create": "新建角色",
+      "columns": {
+        "role": "角色",
+        "permissionCount": "权限数",
+        "accountCount": "账号数",
+        "actions": "操作"
+      },
+      "empty": "暂无角色",
+      "toast": {
+        "created": "角色已创建",
+        "updated": "角色已更新"
+      },
+      "dialog": {
+        "createTitle": "新建角色",
+        "createDescription": "角色编码创建后不可修改。",
+        "editTitle": "编辑角色",
+        "editDescription": "角色编码：{code}（创建后不可修改）",
+        "code": "角色编码",
+        "codePlaceholder": "请输入角色编码",
+        "name": "角色名称",
+        "namePlaceholder": "请输入角色名称",
+        "permissions": "权限"
+      }
     }
   }
 }

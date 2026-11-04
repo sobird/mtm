@@ -49,7 +49,7 @@ const ROLE = {
   accountCount: 1,
 };
 
-function renderManager(permissions: string[] = [PERMISSIONS.ROLE_MANAGE]) {
+function renderManager(permissions: string[] = [PERMISSIONS.ROLE_MANAGE], locale: 'zh-CN' | 'en-US' = 'zh-CN') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
   return renderWithIntl(
@@ -59,7 +59,8 @@ function renderManager(permissions: string[] = [PERMISSIONS.ROLE_MANAGE]) {
           <RoleManager />
         </PermissionProvider>
       </ToastProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
+    locale
   );
 }
 
@@ -154,4 +155,16 @@ test('hides the create button without the role permission', async () => {
 
   expect(await screen.findByText('店员角色')).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: '新建角色' })).not.toBeInTheDocument();
+});
+
+test('renders role management chrome and permission names in English', async () => {
+  renderManager([PERMISSIONS.ROLE_MANAGE], 'en-US');
+
+  expect(screen.getByRole('heading', { name: 'Role management' })).toBeInTheDocument();
+
+  await userEvent.click(await screen.findByRole('button', { name: 'New role' }));
+
+  expect(await screen.findByText('Product view')).toBeInTheDocument();
+  expect(screen.getByText('Menu permission')).toBeInTheDocument();
+  expect(screen.getByText('Button permission')).toBeInTheDocument();
 });

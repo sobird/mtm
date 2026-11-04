@@ -75,7 +75,7 @@ const CORE_MERCHANT = {
   ],
 };
 
-function renderBaseInfo() {
+function renderBaseInfo(locale: 'zh-CN' | 'en-US' = 'zh-CN') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
   return renderWithIntl(
@@ -83,7 +83,8 @@ function renderBaseInfo() {
       <ToastProvider>
         <BaseInfo />
       </ToastProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
+    locale
   );
 }
 
@@ -136,7 +137,7 @@ test('店铺简介默认值来自 core-api 店铺并保存到同一店铺', asyn
   const externalLink = screen.getByLabelText('第三方平台店铺链接');
   expect(externalLink).toHaveValue('https://core.example');
 
-  const submit = screen.getByRole('button', { name: '更新店铺基本信息' });
+  const submit = screen.getByRole('button', { name: '保存' });
   await waitFor(() => expect(submit).toBeEnabled());
   await userEvent.click(submit);
 
@@ -147,4 +148,11 @@ test('店铺简介默认值来自 core-api 店铺并保存到同一店铺', asyn
     })
   );
   expect(mocks.updateMyShop).not.toHaveBeenCalledWith(148568, expect.anything());
+});
+
+test('renders the shop base info form in English', async () => {
+  renderBaseInfo('en-US');
+
+  expect(await screen.findByText('Shop name')).toBeInTheDocument();
+  expect(await screen.findByRole('button', { name: 'Save' })).toBeInTheDocument();
 });
