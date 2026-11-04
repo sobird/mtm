@@ -50,6 +50,11 @@ RUN bun run build -- --concurrency=1
 # Merchant portal: Next standalone bundle traced from the monorepo root.
 FROM node:22-slim AS merchant
 WORKDIR /app
+# Prisma detects the OpenSSL version through the `openssl` binary; the slim
+# image omits it and falls back to openssl-1.1.x, which has no generated engine.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssl \
+    && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     PORT=3000 \
@@ -63,6 +68,10 @@ CMD ["node", "apps/merchant-admin/server.js"]
 # Ops portal.
 FROM node:22-slim AS ops
 WORKDIR /app
+# Same Prisma/OpenSSL detection requirement as the merchant image.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssl \
+    && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     PORT=3001 \
