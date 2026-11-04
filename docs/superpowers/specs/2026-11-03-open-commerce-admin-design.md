@@ -589,7 +589,7 @@ DRAFT ──提交──▶ SUBMITTED ──通过──▶ APPROVED ──发�
 - **已发布商品编辑**：创建 `version + 1` 的新草稿，线上版本不受影响；新版本通过并发布后，线上内容才切换。
 - **版本不可变**：一旦某个版本产生 `AuditRecord`，就不再原地修改。
   - `DRAFT`（尚未提交）：允许原地编辑。
-  - `REJECTED` / `APPROVED` / `PUBLISHED` / `SUPERSEDED` / `OFFLINE`：编辑时创建 `version + 1` 的新草稿，旧版本与审核记录保持原样。
+  - `REJECTED` / `APPROVED` / `PUBLISHED` / `OFFLINE`：编辑时创建 `version + 1` 的新草稿，旧版本与审核记录保持原样。（`SUPERSEDED` 是发布切换旧线上版本时的标记，不会成为当前版本，编辑路径不可达。）
   - `SUBMITTED` 期间不允许编辑；需要修改时等待审核结果（V1 不提供撤回）。
 - **删除**：商品使用软删除（`deletedAt`）。存在 `SUBMITTED` 审核或已发布版本时禁止删除，需先下架；删除不物理清除版本与审核记录，操作留痕保留。
 - **SKU 价格与库存**：随版本快照。V1 没有订单，库存为手工维护；从线上版本创建新草稿时复制 SKU 价格与库存，发布新版本时线上库存以新版本为准。库存流水留作扩展点。
@@ -651,7 +651,7 @@ DELETE /products/:id
 POST   /products/:id/submit
 POST   /products/:id/publish
 POST   /products/:id/offline
-GET    /products/:id/versions
+GET    /products/:id/versions   # 当前实现未单独提供该路由，版本历史随商品详情返回
 
 GET    /audits
 GET    /audits/:id
@@ -706,7 +706,7 @@ GET    /me
 | `PRODUCT_NOT_PUBLISHED`      | 409  | 无线上版本时不能下线（阶段 4 新增）          |
 | `PRODUCT_PUBLISHED`          | 409  | 存在线上版本时不能删除                       |
 | `PRODUCT_VERSION_CONFLICT`   | 409  | 并发创建版本冲突，可重试                     |
-| `AUDIT_NOT_FOUND`            | 404  | 审核记录不存在或不在运营范围内               |
+| `AUDIT_NOT_FOUND`            | 404  | 审核记录不存在                               |
 | `AUDIT_ALREADY_REVIEWED`     | 409  | 审核已被处理（并发后到者）                   |
 | `AUDIT_VERSION_CONFLICT`     | 409  | 审核决策时商品版本状态已变化                 |
 | `FORBIDDEN`                  | 403  | 权限不足或商家范围不符                       |
