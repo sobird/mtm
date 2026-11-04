@@ -277,6 +277,19 @@ export async function seedMerchantAuth(tx: Prisma.TransactionClient): Promise<vo
     where: { url: '/staff/sub-account' },
     data: { permissionCode: PERMISSIONS.ACCOUNT_MANAGE },
   });
+
+  await tx.menuItem.updateMany({
+    where: { url: '/product' },
+    data: { url: '', title: '商品管理', permissionCode: PERMISSIONS.PRODUCT_VIEW },
+  });
+  await tx.menuItem.updateMany({
+    where: { url: '/product/list' },
+    data: { url: '/products', title: '商品列表', permissionCode: PERMISSIONS.PRODUCT_VIEW },
+  });
+  await tx.menuItem.updateMany({
+    where: { url: '/product/create' },
+    data: { url: '/products/new', title: '创建新商品', permissionCode: PERMISSIONS.PRODUCT_CREATE },
+  });
 }
 
 /** Alias kept for the seed index and later tasks that refer to the auth seed by name. */

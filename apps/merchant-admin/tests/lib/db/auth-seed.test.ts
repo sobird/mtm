@@ -51,3 +51,19 @@ test('seeds owner and staff accounts with scoped roles', async () => {
   const shopAdminPermission = await prisma.merchantPermission.findFirst({ where: { path: '/shop/admin' } });
   expect(shopAdminPermission?.code).toBe('merchant:update');
 });
+
+test('商品菜单映射到新路由并挂上权限码', async () => {
+  await initDatabase();
+  await seedMerchantAuth(prisma);
+
+  const products = await prisma.menuItem.findMany({ where: { id: { in: ['1382', '1383', '19245'] } } });
+  const byId = new Map(products.map(item => [item.id, item]));
+
+  expect(byId.get('1382')).toMatchObject({ url: '', title: '商品管理', permissionCode: 'product:view' });
+  expect(byId.get('1383')).toMatchObject({ url: '/products', title: '商品列表', permissionCode: 'product:view' });
+  expect(byId.get('19245')).toMatchObject({
+    url: '/products/new',
+    title: '创建新商品',
+    permissionCode: 'product:create',
+  });
+});
