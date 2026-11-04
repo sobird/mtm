@@ -575,8 +575,7 @@ DRAFT ──提交──▶ SUBMITTED ──通过──▶ APPROVED ──发�
   ▲                 │                                      │
   │                 └──驳回──▶ REJECTED ──编辑──▶ DRAFT     │
   │                                                        │
-  └────────────────────────────────────────────────────────┘
-                         下架 → DRAFT
+  └──编辑（新版本）── OFFLINE ◀────────下架────────────────┘
 ```
 
 规则：
@@ -590,7 +589,7 @@ DRAFT ──提交──▶ SUBMITTED ──通过──▶ APPROVED ──发�
 - **已发布商品编辑**：创建 `version + 1` 的新草稿，线上版本不受影响；新版本通过并发布后，线上内容才切换。
 - **版本不可变**：一旦某个版本产生 `AuditRecord`，就不再原地修改。
   - `DRAFT`（尚未提交）：允许原地编辑。
-  - `REJECTED` / `SUBMITTED`：编辑时创建 `version + 1` 的新草稿，旧版本与审核记录保持原样。
+  - `REJECTED` / `APPROVED` / `PUBLISHED` / `SUPERSEDED` / `OFFLINE`：编辑时创建 `version + 1` 的新草稿，旧版本与审核记录保持原样。
   - `SUBMITTED` 期间不允许编辑；需要修改时等待审核结果（V1 不提供撤回）。
 - **删除**：商品使用软删除（`deletedAt`）。存在 `SUBMITTED` 审核或已发布版本时禁止删除，需先下架；删除不物理清除版本与审核记录，操作留痕保留。
 - **SKU 价格与库存**：随版本快照。V1 没有订单，库存为手工维护；从线上版本创建新草稿时复制 SKU 价格与库存，发布新版本时线上库存以新版本为准。库存流水留作扩展点。
@@ -685,6 +684,32 @@ GET    /me
 - **ops-admin 本地 Route Handlers**：登录、菜单、账号/角色；其余通过 core-api。
 - 现有商家接口保留原路径，避免页面大改；新增四模块统一走 `/api/v1`。
 - 两边的本地接口仍遵循统一响应格式与 Zod 校验。
+
+### 9.5 商品 / 审核错误码（阶段 4 实现）
+
+阶段 4 在 §9.1 的错误封装下使用以下稳定错误码，门户负责翻译：
+
+| 错误码                       | HTTP | 场景                                         |
+| ---------------------------- | ---- | -------------------------------------------- |
+| `PRODUCT_NOT_FOUND`          | 404  | 商品不存在、跨租户访问，或不在运营可见范围内 |
+| `PRODUCT_CODE_EXISTS`        | 409  | 商品编码重复                                 |
+| `PRODUCT_CATEGORY_INVALID`   | 400  | 类目不存在                                   |
+| `PRODUCT_BRAND_INVALID`      | 400  | 品牌不存在或已禁用                           |
+| `PRODUCT_SHOP_INVALID`       | 400  | 店铺不属于当前商家                           |
+| `PRODUCT_ATTRIBUTE_UNKNOWN`  | 400  | 提交了类目未定义的属性                       |
+| `PRODUCT_ATTRIBUTE_REQUIRED` | 400  | 缺少必填属性                                 |
+| `PRODUCT_ATTRIBUTE_INVALID`  | 400  | 属性值不符合类目定义                         |
+| `PRODUCT_SKU_DUPLICATE`      | 400  | SKU 编码重复（忽略大小写）                   |
+| `PRODUCT_IN_REVIEW`          | 409  | 审核中的商品不可编辑或删除                   |
+| `PRODUCT_NOT_DRAFT`          | 409  | 仅草稿可提交审核                             |
+| `PRODUCT_NOT_APPROVED`       | 409  | 仅审核通过的版本可发布                       |
+| `PRODUCT_NOT_PUBLISHED`      | 409  | 无线上版本时不能下线（阶段 4 新增）          |
+| `PRODUCT_PUBLISHED`          | 409  | 存在线上版本时不能删除                       |
+| `PRODUCT_VERSION_CONFLICT`   | 409  | 并发创建版本冲突，可重试                     |
+| `AUDIT_NOT_FOUND`            | 404  | 审核记录不存在或不在运营范围内               |
+| `AUDIT_ALREADY_REVIEWED`     | 409  | 审核已被处理（并发后到者）                   |
+| `AUDIT_VERSION_CONFLICT`     | 409  | 审核决策时商品版本状态已变化                 |
+| `FORBIDDEN`                  | 403  | 权限不足或商家范围不符                       |
 
 ## 10. 认证
 

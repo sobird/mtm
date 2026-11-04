@@ -17,8 +17,8 @@
 - 阶段 1 已完成（monorepo + PostgreSQL/Prisma 数据层）：Turborepo 工作区、`apps/merchant-admin`、`apps/core-api`、三个业务库与测试库、Prisma 迁移与种子数据、一键启动脚本均已就绪。
 - 阶段 2 已完成（认证 / 权限与 ops-admin）：两个门户独立登录与会话 Cookie、集中权限码与菜单过滤、页面 403、账号 / 角色管理、BFF 60 秒签名 JWT 与 `core-api` 服务间鉴权、共享 UI 壳层均已就绪。
 - 阶段 3 已完成（类目/品牌/商家/上传）：类目树 CRUD、品牌 CRUD + 图片上传、运营端商家/店铺只读、商家端店铺资料自维护、图片本地存储（StorageAdapter）均已就绪。
-- 下一个阶段是阶段 4：商品/版本/审核。
-- 后续阶段：5 i18n/开源化/CI。
+- 阶段 4 已完成（商品/版本/审核）：商品 CRUD 与版本化（已审核版本不可变）、类目属性校验、商家端商品列表/表单/提交/发布/下线、运营端商品只读列表与详情、审核列表与通过/驳回、演示商品种子与 7 个 `product:*` 权限码均已就绪。
+- 下一个阶段是阶段 5：i18n/开源化/CI。
 
 ## 必读文档
 
@@ -27,6 +27,7 @@
 - 阶段 1 计划：`docs/superpowers/plans/2026-11-03-open-commerce-admin-phase1-foundation.md`
 - 阶段 2 计划：`docs/superpowers/plans/2026-11-03-open-commerce-admin-phase2-auth.md`
 - 阶段 3 计划：`docs/superpowers/plans/2026-11-04-open-commerce-admin-phase3-catalog-merchant-upload.md`
+- 阶段 4 计划：`docs/superpowers/plans/2026-11-04-open-commerce-admin-phase4-products.md`
 - 后续阶段计划：待创建（`docs/superpowers/plans/`）
 
 ## 已定技术决策
@@ -94,6 +95,6 @@ bun run build
 
 1. 读本文件、设计文档和当前阶段的实现计划。
 2. 设计已获批准；按计划执行，不要跳过阶段边界。
-3. 阶段 1、2、3 已完成，计划见 `docs/superpowers/plans/` 下对应的 `phase1-foundation`、`phase2-auth`、`phase3-catalog-merchant-upload` 文件。
-4. 下一步：编写并执行阶段 4（商品/版本/审核）的计划。
+3. 阶段 1、2、3、4 已完成，计划见 `docs/superpowers/plans/` 下对应的 `phase1-foundation`、`phase2-auth`、`phase3-catalog-merchant-upload`、`phase4-products` 文件。
+4. 下一步：编写并执行阶段 5（i18n/开源化/CI）的计划。
 5. 完成一个阶段后再编写下一阶段的计划。
