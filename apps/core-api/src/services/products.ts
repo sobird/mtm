@@ -481,19 +481,26 @@ export async function publishProduct(auth: ServiceTokenClaims, id: string): Prom
   }
 
   const now = new Date();
+  const previousPublishedVersionId = product.publishedVersionId;
 
   await prisma.$transaction(async tx => {
-    if (product.publishedVersionId && product.publishedVersionId !== current.id) {
+    // 条件写关闭并发发布：只有一个事务能把该版本从 APPROVED 改为 PUBLISHED。
+    const updated = await tx.productVersion.updateMany({
+      where: { id: current.id, status: 'APPROVED' },
+      data: { status: 'PUBLISHED', publishedAt: now },
+    });
+
+    if (updated.count === 0) {
+      throw new HttpError('PRODUCT_NOT_APPROVED', 409, '商品未通过审核，无法发布');
+    }
+
+    if (previousPublishedVersionId && previousPublishedVersionId !== current.id) {
       await tx.productVersion.updateMany({
-        where: { id: product.publishedVersionId },
+        where: { id: previousPublishedVersionId },
         data: { status: 'SUPERSEDED' },
       });
     }
 
-    await tx.productVersion.update({
-      where: { id: current.id },
-      data: { status: 'PUBLISHED', publishedAt: now },
-    });
     await tx.product.update({ where: { id }, data: { publishedVersionId: current.id } });
   });
 
@@ -502,36 +509,95 @@ export async function publishProduct(auth: ServiceTokenClaims, id: string): Prom
 
 export async function offlineProduct(auth: ServiceTokenClaims, id: string): Promise<ProductDetailDTO> {
   const product = await getOwnedProductForWrite(auth, id);
+  const publishedVersionId = product.publishedVersionId;
 
-  if (!product.publishedVersionId) {
+  if (!publishedVersionId) {
     throw new HttpError('PRODUCT_NOT_PUBLISHED', 409, '商品未发布，无法下线');
   }
 
-  const publishedVersionId = product.publishedVersionId;
-
   await prisma.$transaction(async tx => {
-    await tx.productVersion.updateMany({
-      where: { id: publishedVersionId },
+    // 只有仍处于 PUBLISHED 的版本才能下线；与发布交错时 0 行即冲突。
+    const versionUpdated = await tx.productVersion.updateMany({
+      where: { id: publishedVersionId, status: 'PUBLISHED' },
       data: { status: 'OFFLINE' },
     });
-    await tx.product.update({ where: { id }, data: { publishedVersionId: null } });
+
+    if (versionUpdated.count === 0) {
+      throw new HttpError('PRODUCT_NOT_PUBLISHED', 409, '商品未发布，无法下线');
+    }
+
+    // 仅当产品指针仍指向预期的线上版本时清空，避免覆盖并发发布。
+    const productUpdated = await tx.product.updateMany({
+      where: { id, publishedVersionId },
+      data: { publishedVersionId: null },
+    });
+
+    if (productUpdated.count === 0) {
+      throw new HttpError('PRODUCT_NOT_PUBLISHED', 409, '商品未发布，无法下线');
+    }
   });
 
   return getProduct(auth, id);
 }
 
 export async function deleteProduct(auth: ServiceTokenClaims, id: string): Promise<void> {
-  const product = await getOwnedProductForWrite(auth, id);
-
-  if (product.currentVersion.status === 'SUBMITTED') {
-    throw new HttpError('PRODUCT_IN_REVIEW', 409, '商品审核中，无法删除');
+  if (auth.portal !== 'merchant' || !auth.merchantId) {
+    throw new HttpError('FORBIDDEN', 403, '无权访问');
   }
 
-  if (product.publishedVersionId !== null) {
-    throw new HttpError('PRODUCT_PUBLISHED', 409, '商品已发布，无法删除');
-  }
+  const merchantId = auth.merchantId;
 
-  await prisma.product.update({ where: { id }, data: { deletedAt: new Date() } });
+  await prisma.$transaction(async tx => {
+    const product = await tx.product.findFirst({
+      where: { id, deletedAt: null },
+      include: { currentVersion: true },
+    });
+
+    if (!product || product.merchantId !== merchantId || !product.currentVersion) {
+      throw productNotFound();
+    }
+
+    if (product.currentVersion.status === 'SUBMITTED') {
+      throw new HttpError('PRODUCT_IN_REVIEW', 409, '商品审核中，无法删除');
+    }
+
+    if (product.publishedVersionId !== null) {
+      throw new HttpError('PRODUCT_PUBLISHED', 409, '商品已发布，无法删除');
+    }
+
+    // 条件软删除：在读取与写入之间若有人提交/发布，count 为 0，随后按既有顺序复检错误码。
+    const deleted = await tx.product.updateMany({
+      where: {
+        id,
+        merchantId,
+        deletedAt: null,
+        publishedVersionId: null,
+        currentVersion: { is: { status: { not: 'SUBMITTED' } } },
+      },
+      data: { deletedAt: new Date() },
+    });
+
+    if (deleted.count === 0) {
+      const latest = await tx.product.findFirst({
+        where: { id, deletedAt: null },
+        include: { currentVersion: true },
+      });
+
+      if (!latest) {
+        throw productNotFound();
+      }
+
+      if (latest.currentVersion?.status === 'SUBMITTED') {
+        throw new HttpError('PRODUCT_IN_REVIEW', 409, '商品审核中，无法删除');
+      }
+
+      if (latest.publishedVersionId !== null) {
+        throw new HttpError('PRODUCT_PUBLISHED', 409, '商品已发布，无法删除');
+      }
+
+      throw productNotFound();
+    }
+  });
 }
 
 function allowedOpsStatuses(status?: ProductVersionStatus): ProductVersionStatus[] {

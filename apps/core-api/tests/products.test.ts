@@ -235,7 +235,12 @@ test('提交草稿进入 SUBMITTED 并生成待审核记录', async () => {
 
   const res = await request(`/api/v1/products/${detail.id}/submit`, 'POST', undefined, token);
   expect(res.status).toBe(200);
-  expect((await res.json()).data.status).toBe('SUBMITTED');
+  const submitted = (await res.json()).data;
+  expect(submitted.status).toBe('SUBMITTED');
+  expect(submitted.currentVersion.submittedAt).not.toBeNull();
+
+  const version = await prisma.productVersion.findUniqueOrThrow({ where: { id: detail.currentVersionId } });
+  expect(version.submittedAt).not.toBeNull();
 
   const audit = await prisma.auditRecord.findFirstOrThrow({ where: { productVersionId: detail.currentVersionId } });
   expect(audit.status).toBe('PENDING');
@@ -286,9 +291,51 @@ test('发布已通过版本并把旧线上版本置为 SUPERSEDED', async () => 
   const published = (await res.json()).data;
   expect(published.status).toBe('PUBLISHED');
   expect(published.publishedVersionId).toBe(v2.id);
+  expect(published.currentVersionId).toBe(v2.id);
+  expect(published.currentVersion.publishedAt).not.toBeNull();
 
   const old = await prisma.productVersion.findUniqueOrThrow({ where: { id: detail.currentVersionId } });
   expect(old.status).toBe('SUPERSEDED');
+});
+
+test('并发发布同一版本仅一次成功，另一次返回 409', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, [
+    'product:create',
+    'product:update',
+    'product:submit',
+    'product:publish',
+    'product:view',
+  ]);
+  const detail = await createDraft(token, 'TEST-PUBC');
+
+  const v2 = await prisma.productVersion.create({
+    data: {
+      productId: detail.id,
+      version: 2,
+      status: 'APPROVED',
+      title: '并发发布版',
+      mainImageUrl: detail.currentVersion.mainImageUrl,
+      images: [],
+      description: '描述',
+      attributes: {},
+      createdBy: 'merchant-test',
+    },
+  });
+  await prisma.product.update({ where: { id: detail.id }, data: { currentVersionId: v2.id } });
+
+  const [first, second] = await Promise.all([
+    request(`/api/v1/products/${detail.id}/publish`, 'POST', undefined, token),
+    request(`/api/v1/products/${detail.id}/publish`, 'POST', undefined, token),
+  ]);
+
+  expect([first.status, second.status].sort()).toEqual([200, 409]);
+  const conflict = first.status === 409 ? first : second;
+  expect(await conflict.json()).toMatchObject({ error: { code: 'PRODUCT_NOT_APPROVED' } });
+
+  const product = await prisma.product.findUniqueOrThrow({ where: { id: detail.id } });
+  expect(product.publishedVersionId).toBe(v2.id);
+  const published = await prisma.productVersion.findUniqueOrThrow({ where: { id: v2.id } });
+  expect(published.status).toBe('PUBLISHED');
 });
 
 test('未通过审核发布返回 409', async () => {
@@ -312,6 +359,46 @@ test('下线已发布商品后清空线上版本', async () => {
 
   const version = await prisma.productVersion.findUniqueOrThrow({ where: { id: detail.currentVersionId } });
   expect(version.status).toBe('OFFLINE');
+});
+
+test('未发布商品下线返回 409', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:publish', 'product:view']);
+  const detail = await createDraft(token, 'TEST-OFF2');
+
+  const res = await request(`/api/v1/products/${detail.id}/offline`, 'POST', undefined, token);
+  expect(res.status).toBe(409);
+  expect(await res.json()).toMatchObject({ error: { code: 'PRODUCT_NOT_PUBLISHED' } });
+});
+
+test('软删除后列表隐藏且详情、编辑、提交均 404', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, [
+    'product:create',
+    'product:update',
+    'product:submit',
+    'product:delete',
+    'product:view',
+  ]);
+  const detail = await createDraft(token, 'TEST-DEL');
+
+  expect((await request(`/api/v1/products/${detail.id}`, 'DELETE', undefined, token)).status).toBe(200);
+
+  const list = await get('/api/v1/products', token);
+  const body = await list.json();
+  expect(body.data.some((row: { id: string }) => row.id === detail.id)).toBe(false);
+  expect(body.meta.total).toBe(0);
+
+  const responses = [
+    await get(`/api/v1/products/${detail.id}`, token),
+    await request(`/api/v1/products/${detail.id}`, 'PATCH', { ...CREATE_BODY, title: '删除后改名' }, token),
+    await request(`/api/v1/products/${detail.id}/submit`, 'POST', undefined, token),
+  ];
+
+  const results = await Promise.all(responses.map(async res => ({ status: res.status, body: await res.json() })));
+
+  for (const result of results) {
+    expect(result.status).toBe(404);
+    expect(result.body).toMatchObject({ error: { code: 'PRODUCT_NOT_FOUND' } });
+  }
 });
 
 test('已提交或已发布商品不可删除，下线后可删除', async () => {
