@@ -56,8 +56,9 @@ jobs:
       - run: bun run test
       - run: bun run build
 
-      # Phase 5: re-enable the image build and SSH deploy once the Dockerfile
-      # is ported to the monorepo + Prisma layout.
+      # The multi-target Dockerfile now builds for the monorepo + Prisma layout.
+      # Enabling these steps still requires a human decision (registry access,
+      # deploy host and secrets); they remain disabled and unchanged here.
       - if: false
         uses: docker/setup-buildx-action@v3
 

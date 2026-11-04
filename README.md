@@ -145,13 +145,15 @@ bun run dev
 bun run docker:up
 ```
 
+首次运行会生成 `.env.docker`（包含随机生成的 `AUTH_SECRET`、`OPS_AUTH_SECRET`、`CORE_API_JWT_SECRET`，已加入 `.gitignore`，权限为 `0600`），随后启动 PostgreSQL 并完成迁移与种子数据，再启动核心服务、商家后台与运营端。首次构建镜像建议预留约 10 GB 可用磁盘空间。
+
 启动后：
 
 - 商家后台：http://localhost:3000
 - 运营端：http://localhost:3001
 - 核心服务：http://localhost:4000（健康检查 `/health`）
 
-`SEED_DEMO_DATA=true` 仅用于 Docker 自托管时写入演示数据，生产环境应保持关闭。
+`SEED_DEMO_DATA` 控制是否写入演示数据，仅在本地或演示环境开启，生产环境应保持关闭。HTTP 自托管时 `.env.docker` 默认写入 `AUTH_COOKIE_SECURE=false`；未显式设置时该值跟随 `NODE_ENV`，生产环境默认启用 Secure Cookie。
 
 生产部署要求：
 
