@@ -12,6 +12,8 @@ test('OpenAPI 文档包含上传图片接口', async () => {
   };
 
   expect(doc.paths['/api/v1/me']).toBeTruthy();
+  expect(doc.paths['/api/v1/products']).toBeTruthy();
+  expect(doc.paths['/api/v1/products/{id}']).toBeTruthy();
   expect(doc.paths['/api/v1/uploads/images']?.post).toMatchObject({
     tags: ['upload'],
     security: [{ bearerAuth: [] }],

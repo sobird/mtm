@@ -131,6 +131,28 @@ test('跨租户读取返回 404，运营范围外返回 403', async () => {
   );
 });
 
+test('详情可见性：运营不可见 DRAFT，提交后可见；商家可见自己的 DRAFT', async () => {
+  const merchantTokenValue = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:view']);
+  const created = await request('/api/v1/products', 'POST', CREATE_BODY, merchantTokenValue);
+  const detail = (await created.json()).data;
+  const productId = detail.id;
+
+  const draftAsMerchant = await get(`/api/v1/products/${productId}`, merchantTokenValue);
+  expect(draftAsMerchant.status).toBe(200);
+  expect((await draftAsMerchant.json()).data.id).toBe(productId);
+
+  expect((await get(`/api/v1/products/${productId}`, opsToken(['product:view']))).status).toBe(404);
+
+  await prisma.productVersion.update({
+    where: { id: detail.currentVersionId },
+    data: { status: 'SUBMITTED' },
+  });
+
+  const submittedAsOps = await get(`/api/v1/products/${productId}`, opsToken(['product:view']));
+  expect(submittedAsOps.status).toBe(200);
+  expect((await submittedAsOps.json()).data.id).toBe(productId);
+});
+
 test('运营状态过滤作用于当前版本且分页 meta 正确', async () => {
   const merchantTokenValue = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:view']);
 
