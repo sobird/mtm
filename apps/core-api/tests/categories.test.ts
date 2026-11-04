@@ -38,6 +38,12 @@ test('运营端按 category:view 读取扁平类目树', async () => {
   expect(body.data.some((node: { level: number }) => node.level === 3)).toBe(true);
 });
 
+test('仅拥有 product:audit 的审核角色也可读取类目树', async () => {
+  const res = await get('/api/v1/categories/tree', opsToken(['product:audit']));
+  expect(res.status).toBe(200);
+  expect((await res.json()).data.length).toBeGreaterThan(0);
+});
+
 test('商家拥有商品权限时可只读类目，但没有管理权限', async () => {
   expect((await get('/api/v1/categories/tree', merchantToken(DEMO_MERCHANT_ID, ['product:view']))).status).toBe(200);
   expect(

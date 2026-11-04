@@ -40,6 +40,7 @@ const treeRoute = createRoute({
     PERMISSIONS.PRODUCT_VIEW,
     PERMISSIONS.PRODUCT_CREATE,
     PERMISSIONS.PRODUCT_UPDATE,
+    PERMISSIONS.PRODUCT_AUDIT,
   ]),
   responses: {
     200: {
