@@ -8,6 +8,7 @@ services:
       POSTGRES_DB: postgres
     volumes:
       - mtm-postgres:/var/lib/postgresql/data
+      - ./deploy/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U mtm -d postgres']
       interval: 2s
@@ -15,5 +16,86 @@ services:
       retries: 30
     restart: unless-stopped
 
+  migrate:
+    build:
+      context: .
+      target: migrate
+    env_file: .env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >-
+      sh -c "cd apps/merchant-admin && bunx prisma migrate deploy &&
+      cd ../core-api && bunx prisma migrate deploy &&
+      cd ../ops-admin && bunx prisma migrate deploy &&
+      if [ \"$$SEED_DEMO_DATA\" = \"true\" ]; then
+      cd ../merchant-admin && bun prisma/seed.ts &&
+      cd ../core-api && bun prisma/seed.ts &&
+      cd ../ops-admin && bun prisma/seed.ts; fi"
+    restart: 'no'
+
+  core-api:
+    build:
+      context: .
+      target: core-api
+    env_file: .env.docker
+    ports: ['4000:4000']
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - mtm-uploads:/data/uploads
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'bun -e "fetch(''http://127.0.0.1:4000/health'').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  merchant:
+    build:
+      context: .
+      target: merchant
+    env_file: .env.docker
+    ports: ['3000:3000']
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'node -e "fetch(''http://127.0.0.1:3000/api/health'').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  ops:
+    build:
+      context: .
+      target: ops
+    env_file: .env.docker
+    ports: ['3001:3001']
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'node -e "fetch(''http://127.0.0.1:3001/api/health'').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
 volumes:
   mtm-postgres:
+  mtm-uploads:

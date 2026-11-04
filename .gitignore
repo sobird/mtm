@@ -17,6 +17,7 @@ dist-ssr
 *.local
 *.sqlite*
 .env
+.env.docker
 apps/*/lib/generated/
 apps/*/src/generated/
 yarn.lock

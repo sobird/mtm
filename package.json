@@ -16,6 +16,7 @@
     "db:reset": "bun scripts/dev-bootstrap.mjs && turbo run db:reset",
     "db:seed": "turbo run db:seed",
     "dev": "bun scripts/dev-bootstrap.mjs && turbo run dev",
+    "docker:up": "bun scripts/docker-up.mjs",
     "e2e:bootstrap": "bun scripts/e2e-bootstrap.mjs",
     "fmt": "oxfmt --config packages/config/oxfmt.jsonc scripts && turbo run format:fix",
     "fmt:check": "oxfmt --check --config packages/config/oxfmt.jsonc scripts && turbo run format",

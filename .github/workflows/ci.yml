@@ -107,3 +107,14 @@ jobs:
           name: playwright-artifacts
           path: e2e/test-results
           retention-days: 7
+  docker:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - run: docker build --target merchant -t mtm/merchant:ci .
+      - run: docker build --target ops -t mtm/ops:ci .
+      - run: docker build --target core-api -t mtm/core-api:ci .
