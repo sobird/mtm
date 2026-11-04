@@ -6,6 +6,8 @@ import { auth } from './auth';
 import { requireAccount } from './auth-guard';
 import { AppError } from './errors';
 import { assertSameOrigin } from './handler';
+import { resolveProductLogEntry } from './operation-log-mapping';
+import { writeOperationLog, type WriteOperationLogInput } from './services/operation-log';
 import { getAccountPermissions } from './services/permission';
 
 const DEFAULT_CORE_API_URL = 'http://localhost:4000';
@@ -148,7 +150,7 @@ export async function callCoreApiEnvelope<T>(
 export async function proxyToCoreApi(request: Request, segments: string[]): Promise<Response> {
   try {
     assertSameOrigin(request);
-    await requireAccount();
+    const account = await requireAccount();
 
     const joined = segments.join('/');
 
@@ -182,6 +184,22 @@ export async function proxyToCoreApi(request: Request, segments: string[]): Prom
 
     const search = new URL(request.url).searchParams.toString();
     const { data, meta } = await callCoreApiEnvelope<unknown>(`/${joined}`, { method, body, formData, search });
+
+    // Portal logs are fail-open: a logging failure must not fail a successful
+    // business action, and a failed core call never reaches this point.
+    const entry = resolveProductLogEntry(method, segments, data);
+
+    if (entry) {
+      try {
+        await writeOperationLog({
+          accountId: account.accountId,
+          ...entry,
+          detail: entry.detail as WriteOperationLogInput['detail'],
+        });
+      } catch (error) {
+        console.error('[operation-log]', error);
+      }
+    }
 
     return meta ? okPage(data, meta) : ok(data);
   } catch (error) {

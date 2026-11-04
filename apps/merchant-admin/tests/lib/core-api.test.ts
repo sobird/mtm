@@ -2,14 +2,16 @@
 import { verifyServiceToken } from '@mtm/auth/service-token';
 import { beforeEach, expect, test, vi } from 'vitest';
 
-const { authMock, getAccountPermissionsMock, fetchMock } = vi.hoisted(() => ({
+const { authMock, getAccountPermissionsMock, fetchMock, writeOperationLogMock } = vi.hoisted(() => ({
   authMock: vi.fn(),
   getAccountPermissionsMock: vi.fn(),
   fetchMock: vi.fn(),
+  writeOperationLogMock: vi.fn(),
 }));
 
 vi.mock('@/lib/auth', () => ({ auth: authMock }));
 vi.mock('@/lib/services/permission', () => ({ getAccountPermissions: getAccountPermissionsMock }));
+vi.mock('@/lib/services/operation-log', () => ({ writeOperationLog: writeOperationLogMock }));
 
 import { callCoreApi, proxyToCoreApi } from '@/lib/core-api';
 import { AppError } from '@/lib/errors';
@@ -50,6 +52,8 @@ beforeEach(() => {
     set: new Set(['product:view', 'product:create']),
     isOwner: true,
   });
+  writeOperationLogMock.mockReset();
+  writeOperationLogMock.mockResolvedValue(undefined);
 });
 
 test('calls core-api with a signed merchant service token and returns data', async () => {
@@ -226,4 +230,58 @@ test('proxyToCoreApi 透传分页 meta', async () => {
     data: [{ id: 'p1' }],
     meta: { page: 2, pageSize: 10, total: 11 },
   });
+});
+
+test('writes a portal log after a successful product action', async () => {
+  fetchMock.mockResolvedValue(jsonResponse(200, { data: { id: 'p1', currentVersionId: 'v1' } }));
+
+  await proxyToCoreApi(
+    new Request('http://localhost/api/bff/products', {
+      method: 'POST',
+      headers: { 'sec-fetch-site': 'same-origin' },
+      body: '{}',
+    }),
+    ['products']
+  );
+
+  expect(writeOperationLogMock).toHaveBeenCalledWith(
+    expect.objectContaining({
+      accountId: 'merchant-account-1',
+      action: 'product.create',
+      resource: 'product',
+      resourceId: 'p1',
+      detail: { versionId: 'v1' },
+    })
+  );
+});
+
+test('does not write a portal log for read-only requests', async () => {
+  fetchMock.mockResolvedValue(jsonResponse(200, { data: [{ id: 'p1' }] }));
+
+  await proxyToCoreApi(new Request('http://localhost/api/bff/products'), ['products']);
+
+  expect(writeOperationLogMock).not.toHaveBeenCalled();
+});
+
+test('still succeeds when the portal log write fails', async () => {
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+  writeOperationLogMock.mockRejectedValue(new Error('log down'));
+  fetchMock.mockResolvedValue(jsonResponse(200, { data: { id: 'p1', currentVersionId: 'v1' } }));
+
+  try {
+    const response = await proxyToCoreApi(
+      new Request('http://localhost/api/bff/products', {
+        method: 'POST',
+        headers: { 'sec-fetch-site': 'same-origin' },
+        body: '{}',
+      }),
+      ['products']
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ code: 0, message: 'ok', data: { id: 'p1', currentVersionId: 'v1' } });
+    expect(consoleError).toHaveBeenCalled();
+  } finally {
+    consoleError.mockRestore();
+  }
 });

@@ -2,14 +2,16 @@
 import { verifyServiceToken } from '@mtm/auth/service-token';
 import { beforeEach, expect, test, vi } from 'vitest';
 
-const { authMock, getAccountPermissionsMock, fetchMock } = vi.hoisted(() => ({
+const { authMock, getAccountPermissionsMock, fetchMock, writeOperationLogMock } = vi.hoisted(() => ({
   authMock: vi.fn(),
   getAccountPermissionsMock: vi.fn(),
   fetchMock: vi.fn(),
+  writeOperationLogMock: vi.fn(),
 }));
 
 vi.mock('@/lib/auth', () => ({ auth: authMock }));
 vi.mock('@/lib/services/permission', () => ({ getAccountPermissions: getAccountPermissionsMock }));
+vi.mock('@/lib/services/operation-log', () => ({ writeOperationLog: writeOperationLogMock }));
 
 import { callCoreApi, proxyToCoreApi } from '@/lib/core-api';
 import { AppError } from '@/lib/errors';
@@ -43,6 +45,8 @@ beforeEach(() => {
     isCrossTenant: false,
     merchantScope: ['m1'],
   });
+  writeOperationLogMock.mockReset();
+  writeOperationLogMock.mockResolvedValue(undefined);
 });
 
 test('calls core-api with a signed ops service token and returns data', async () => {
@@ -236,4 +240,57 @@ test('proxyToCoreApi rejects path traversal', async () => {
   expect(response.status).toBe(400);
   expect(await response.json()).toEqual({ code: 'INVALID_PATH', message: '路径不合法', data: null });
   expect(fetchMock).not.toHaveBeenCalled();
+});
+
+test('writes a portal log after a successful audit action', async () => {
+  fetchMock.mockResolvedValue(jsonResponse(200, { data: { id: 'a1', status: 'APPROVED' } }));
+
+  await proxyToCoreApi(
+    new Request('http://localhost/api/bff/audits/a1/approve', {
+      method: 'POST',
+      headers: { 'sec-fetch-site': 'same-origin' },
+      body: '{}',
+    }),
+    ['audits', 'a1', 'approve']
+  );
+
+  expect(writeOperationLogMock).toHaveBeenCalledWith(
+    expect.objectContaining({
+      accountId: 'ops-1',
+      action: 'audit.approve',
+      resource: 'audit',
+      resourceId: 'a1',
+    })
+  );
+});
+
+test('does not write a portal log for read-only requests', async () => {
+  fetchMock.mockResolvedValue(jsonResponse(200, { data: [{ id: 'a1' }] }));
+
+  await proxyToCoreApi(new Request('http://localhost/api/bff/audits'), ['audits']);
+
+  expect(writeOperationLogMock).not.toHaveBeenCalled();
+});
+
+test('still succeeds when the portal log write fails', async () => {
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+  writeOperationLogMock.mockRejectedValue(new Error('log down'));
+  fetchMock.mockResolvedValue(jsonResponse(200, { data: { id: 'a1', status: 'APPROVED' } }));
+
+  try {
+    const response = await proxyToCoreApi(
+      new Request('http://localhost/api/bff/audits/a1/approve', {
+        method: 'POST',
+        headers: { 'sec-fetch-site': 'same-origin' },
+        body: '{}',
+      }),
+      ['audits', 'a1', 'approve']
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ code: 0, message: 'ok', data: { id: 'a1', status: 'APPROVED' } });
+    expect(consoleError).toHaveBeenCalled();
+  } finally {
+    consoleError.mockRestore();
+  }
 });
