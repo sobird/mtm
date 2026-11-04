@@ -1,6 +1,7 @@
 import { signServiceToken } from '@mtm/auth/service-token';
+import type { PageMeta } from '@mtm/contracts';
 
-import { fail, ok } from './api-response';
+import { fail, ok, okPage } from './api-response';
 import { auth } from './auth';
 import { requireAccount } from './auth-guard';
 import { AppError } from './errors';
@@ -55,6 +56,7 @@ export interface CoreApiInit {
 
 interface CoreApiPayload<T> {
   data?: T;
+  meta?: PageMeta;
   error?: { code?: string; message?: string };
 }
 
@@ -86,8 +88,8 @@ export async function buildServiceToken(): Promise<string> {
   );
 }
 
-/** Calls core-api with the current account's service token and unwraps `data`. */
-export async function callCoreApi<T>(path: string, init: CoreApiInit = {}): Promise<T> {
+/** Performs the signed core-api request and returns the raw envelope (data + meta). */
+async function requestCoreApi<T>(path: string, init: CoreApiInit = {}): Promise<CoreApiPayload<T>> {
   const token = await buildServiceToken();
   const base = process.env.CORE_API_URL ?? DEFAULT_CORE_API_URL;
   const url = `${base}/api/v1${path}${init.search ? `?${init.search}` : ''}`;
@@ -122,7 +124,24 @@ export async function callCoreApi<T>(path: string, init: CoreApiInit = {}): Prom
     throw new AppError(code, response.status, payload?.error?.message ?? '核心服务调用失败');
   }
 
-  return payload?.data as T;
+  return payload ?? {};
+}
+
+/** Calls core-api with the current account's service token and unwraps `data`. */
+export async function callCoreApi<T>(path: string, init: CoreApiInit = {}): Promise<T> {
+  const payload = await requestCoreApi<T>(path, init);
+
+  return payload.data as T;
+}
+
+/** Calls core-api and preserves the pagination `meta` alongside `data`. */
+export async function callCoreApiEnvelope<T>(
+  path: string,
+  init: CoreApiInit = {}
+): Promise<{ data: T; meta: PageMeta | undefined }> {
+  const payload = await requestCoreApi<T>(path, init);
+
+  return { data: payload.data as T, meta: payload.meta };
 }
 
 /** Same-origin proxy: authenticates the browser session then forwards to core-api. */
@@ -162,9 +181,9 @@ export async function proxyToCoreApi(request: Request, segments: string[]): Prom
     }
 
     const search = new URL(request.url).searchParams.toString();
-    const data = await callCoreApi<unknown>(`/${joined}`, { method, body, formData, search });
+    const { data, meta } = await callCoreApiEnvelope<unknown>(`/${joined}`, { method, body, formData, search });
 
-    return ok(data);
+    return meta ? okPage(data, meta) : ok(data);
   } catch (error) {
     return fail(error);
   }

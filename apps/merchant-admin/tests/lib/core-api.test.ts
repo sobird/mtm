@@ -213,3 +213,17 @@ test('proxyToCoreApi rejects path traversal', async () => {
   expect(await response.json()).toEqual({ code: 'INVALID_PATH', message: '路径不合法', data: null });
   expect(fetchMock).not.toHaveBeenCalled();
 });
+
+test('proxyToCoreApi 透传分页 meta', async () => {
+  fetchMock.mockResolvedValue(jsonResponse(200, { data: [{ id: 'p1' }], meta: { page: 2, pageSize: 10, total: 11 } }));
+
+  const response = await proxyToCoreApi(new Request('http://localhost/api/bff/products?page=2'), ['products']);
+
+  expect(response.status).toBe(200);
+  expect(await response.json()).toEqual({
+    code: 0,
+    message: 'ok',
+    data: [{ id: 'p1' }],
+    meta: { page: 2, pageSize: 10, total: 11 },
+  });
+});
