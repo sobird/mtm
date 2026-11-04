@@ -15,10 +15,15 @@ test('exports the sensitive pattern catalog', () => {
 test('flags the old Chinese and English brand in arbitrary files', () => {
   expect(scanText('美团', 'docs/example.md').length).toBeGreaterThan(0);
   expect(scanText('Meituan', 'docs/example.md').length).toBeGreaterThan(0);
+  // The English brand pattern is case-insensitive, so all-caps must still hit.
+  expect(scanText('MEITUAN', 'docs/example.md').length).toBeGreaterThan(0);
 });
 
 test('flags the old abbreviation only on word boundaries', () => {
   expect(scanText('thh', 'docs/example.md').length).toBeGreaterThan(0);
+  // Case-insensitive: uppercase and mixed-case spellings are caught too.
+  expect(scanText('THH', 'docs/example.md').length).toBeGreaterThan(0);
+  expect(scanText('Thh', 'docs/example.md').length).toBeGreaterThan(0);
   expect(scanText('thhx', 'docs/example.md')).toEqual([]);
 });
 
@@ -53,13 +58,15 @@ test('allows the registered public author info only in its own files', () => {
 
 test('allows demo emails and flags non-demo addresses', () => {
   expect(scanText('merchant@example.com', 'docs/example.md')).toEqual([]);
+  expect(scanText('staff@example.org', 'docs/example.md')).toEqual([]);
   expect(scanText('someone@corp-mail.test', 'docs/example.md').length).toBeGreaterThan(0);
+  // An internal-domain email is a non-demo address and must be flagged.
+  expect(scanText('someone@dianping.com', 'docs/example.md').map(hit => hit.pattern)).toContain('internal-host');
 });
 
 test('reports 1-based line numbers and pattern names', () => {
   expect(scanText('ok\n美团\nok', 'docs/example.md')).toEqual([{ line: 2, pattern: 'old-chinese-brand' }]);
 });
-
 test('reports every matching pattern on the same line', () => {
   const names = scanText('美团 Meituan', 'docs/example.md').map(hit => hit.pattern);
 

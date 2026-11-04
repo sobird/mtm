@@ -6,6 +6,11 @@
 // narrow: a match is only ignored for an exact `file + pattern` pair, never for
 // a whole directory. Public author information is therefore allowed in
 // `LICENSE` and `deploy/nginx/mtm.conf` only, and still fails everywhere else.
+//
+// Note on git history: this scanner only inspects the current working tree. Real
+// personal documents and an expired storage token remain in past commits, and
+// history is intentionally not rewritten (user decision). Final delivery must
+// flag this residual exposure.
 import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -21,7 +26,7 @@ const PUBLIC_HOSTS = ['registry.npmmirror.com', 'registry.npmjs.org'];
 export const SENSITIVE_PATTERNS = [
   {
     name: 'old-chinese-brand',
-    pattern: /美团/g,
+    pattern: /美团/gi,
   },
   {
     name: 'old-english-brand',
@@ -81,19 +86,10 @@ const FILE_ALLOWLIST = new Map([
   // Public author information is allowed only in the license and deploy config.
   ['LICENSE', ['author-personal-reference']],
   ['deploy/nginx/mtm.conf', ['author-personal-reference']],
-  // Lockfile and manifest point at the public mirror; keep the exemption
-  // explicit so a future stricter host rule cannot regress it.
-  ['bun.lock', ['internal-host']],
-  ['package.json', ['internal-host']],
-  ['apps/merchant-admin/package.json', ['internal-host']],
-  ['apps/ops-admin/package.json', ['internal-host']],
-  ['apps/core-api/package.json', ['internal-host']],
-  ['packages/auth/package.json', ['internal-host']],
-  ['packages/config/package.json', ['internal-host']],
-  ['packages/contracts/package.json', ['internal-host']],
-  ['packages/i18n/package.json', ['internal-host']],
-  ['packages/ui/package.json', ['internal-host']],
 ]);
+// Public dependency mirrors are handled by `PUBLIC_HOSTS` at match time, so the
+// lockfile and package manifests need no file-level exemption. Keeping the list
+// file+pattern precise avoids masking a genuine private host in a manifest.
 
 const BINARY_EXTENSIONS = new Set([
   '.png',
