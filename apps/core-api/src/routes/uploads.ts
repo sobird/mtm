@@ -12,7 +12,11 @@ import type { UploadConfig } from '../services/uploads';
 const uploadEnvelopeSchema = z.object({ data: uploadResultSchema });
 
 const OPS_UPLOAD_PERMISSIONS = [PERMISSIONS.BRAND_MANAGE, PERMISSIONS.CATEGORY_MANAGE] as const;
-const MERCHANT_UPLOAD_PERMISSIONS = [PERMISSIONS.PRODUCT_UPDATE, PERMISSIONS.SHOP_UPDATE] as const;
+const MERCHANT_UPLOAD_PERMISSIONS = [
+  PERMISSIONS.PRODUCT_CREATE,
+  PERMISSIONS.PRODUCT_UPDATE,
+  PERMISSIONS.SHOP_UPDATE,
+] as const;
 
 /** Uploads are portal-aware: each portal has its own set of accepted codes. */
 function permissionsFor(auth: ServiceTokenClaims): readonly string[] {

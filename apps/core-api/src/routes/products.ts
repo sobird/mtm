@@ -1,0 +1,95 @@
+import { createRoute, z } from '@hono/zod-openapi';
+import type { OpenAPIHono } from '@hono/zod-openapi';
+import {
+  PERMISSIONS,
+  apiErrorSchema,
+  idSchema,
+  pageSchema,
+  productCreateSchema,
+  productDetailSchema,
+  productListRowSchema,
+  productQuerySchema,
+} from '@mtm/contracts';
+
+import { requireAnyPermission, requireMerchantPermission } from '../auth';
+import type { AppEnv } from '../http';
+import { sendData, sendPage } from '../http';
+import { createProduct, getProduct, listProducts } from '../services/products';
+
+const productIdParamsSchema = z.object({ id: idSchema });
+
+const productDetailEnvelopeSchema = z.object({ data: productDetailSchema });
+const productPageEnvelopeSchema = pageSchema(productListRowSchema);
+
+function errorResponse(description: string) {
+  return { description, content: { 'application/json': { schema: apiErrorSchema } } };
+}
+
+const sharedErrors = {
+  400: errorResponse('请求参数不合法'),
+  401: errorResponse('未授权'),
+  403: errorResponse('无权访问'),
+};
+
+const listProductsRoute = createRoute({
+  method: 'get',
+  path: '/api/v1/products',
+  tags: ['product'],
+  security: [{ bearerAuth: [] }],
+  middleware: requireAnyPermission([PERMISSIONS.PRODUCT_VIEW, PERMISSIONS.PRODUCT_AUDIT]),
+  request: { query: productQuerySchema },
+  responses: {
+    200: {
+      description: '商品分页列表',
+      content: { 'application/json': { schema: productPageEnvelopeSchema } },
+    },
+    ...sharedErrors,
+  },
+});
+
+const createProductRoute = createRoute({
+  method: 'post',
+  path: '/api/v1/products',
+  tags: ['product'],
+  security: [{ bearerAuth: [] }],
+  middleware: requireMerchantPermission(PERMISSIONS.PRODUCT_CREATE),
+  request: { body: { required: true, content: { 'application/json': { schema: productCreateSchema } } } },
+  responses: {
+    200: {
+      description: '创建后的商品详情',
+      content: { 'application/json': { schema: productDetailEnvelopeSchema } },
+    },
+    ...sharedErrors,
+    409: errorResponse('商品编码已存在'),
+  },
+});
+
+const productDetailRoute = createRoute({
+  method: 'get',
+  path: '/api/v1/products/{id}',
+  tags: ['product'],
+  security: [{ bearerAuth: [] }],
+  middleware: requireAnyPermission([PERMISSIONS.PRODUCT_VIEW, PERMISSIONS.PRODUCT_AUDIT]),
+  request: { params: productIdParamsSchema },
+  responses: {
+    200: {
+      description: '商品详情',
+      content: { 'application/json': { schema: productDetailEnvelopeSchema } },
+    },
+    ...sharedErrors,
+    404: errorResponse('商品不存在'),
+  },
+});
+
+export function registerProductRoutes(app: OpenAPIHono<AppEnv>): void {
+  app.openapi(listProductsRoute, async c => {
+    const { items, meta } = await listProducts(c.get('auth'), c.req.valid('query'));
+    return sendPage(c, items, meta);
+  });
+
+  app.openapi(createProductRoute, async c => sendData(c, await createProduct(c.get('auth'), c.req.valid('json')), 200));
+
+  app.openapi(productDetailRoute, async c =>
+    sendData(c, await getProduct(c.get('auth'), c.req.valid('param').id), 200)
+  );
+}

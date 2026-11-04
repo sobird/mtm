@@ -9,6 +9,7 @@ import type { AppEnv } from './http';
 import { registerBrandRoutes } from './routes/brands';
 import { registerCategoryRoutes } from './routes/categories';
 import { registerMerchantRoutes } from './routes/merchants';
+import { registerProductRoutes } from './routes/products';
 import { registerUploadRoutes } from './routes/uploads';
 import { resolveUploadConfig } from './services/uploads';
 
@@ -80,6 +81,7 @@ export function createApp(): OpenAPIHono<AppEnv> {
   registerCategoryRoutes(app);
   registerBrandRoutes(app);
   registerMerchantRoutes(app);
+  registerProductRoutes(app);
   registerUploadRoutes(app, uploadConfig);
 
   app.onError((error, c) => {

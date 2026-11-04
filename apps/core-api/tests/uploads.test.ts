@@ -86,6 +86,18 @@ test('商家上传记录自己的 merchantId', async () => {
   expect((await prisma.mediaAsset.findUniqueOrThrow({ where: { id: data.id } })).merchantId).toBe(DEMO_MERCHANT_ID);
 });
 
+test('拥有商品创建权限的商家可上传', async () => {
+  const form = fileForm('create.png', 'image/png', 3);
+
+  const res = await createApp().request('/api/v1/uploads/images', {
+    method: 'POST',
+    headers: { authorization: `Bearer ${await merchantToken(DEMO_MERCHANT_ID, ['product:create'])}` },
+    body: form,
+  });
+
+  expect(res.status).toBe(200);
+});
+
 test('缺少文件、非法类型、超限与路径穿越被拒绝', async () => {
   expect((await upload(new FormData(), ['brand:manage'])).status).toBe(400);
   expect((await upload(fileForm('a.txt', 'text/plain', 3), ['brand:manage'])).status).toBe(400);
