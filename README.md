@@ -158,7 +158,7 @@ bun run docker:up
 生产部署要求：
 
 - 在反向代理或负载均衡层启用 TLS，只暴露必要的 HTTP 端口。
-- 删除 `.env` 中的 `AUTH_COOKIE_SECURE=false`，恢复其默认值（跟随 `NODE_ENV`，生产环境自动启用 Secure Cookie）。
+- Docker 自托管时删除 `.env.docker` 中的 `AUTH_COOKIE_SECURE=false`；源码直接运行时删除 `.env` 中的同名设置，恢复其默认值（跟随 `NODE_ENV`，生产环境自动启用 Secure Cookie）。
 - 将 `AUTH_SECRET`、`OPS_AUTH_SECRET`、`CORE_API_JWT_SECRET` 全部替换为高强度随机值。
 - 更换所有演示账号密码，关闭演示验证码或接入短信服务。
 - 不要将 PostgreSQL 端口暴露到公网；持久化数据库与上传目录并纳入备份。
