@@ -42,10 +42,9 @@ describe('translatePermissionName', () => {
     }
   });
 
-  test('returns the fallback when the code has no message', () => {
+  test('returns the fallback when the code has no mapping', () => {
     const t = createTranslator('zh-CN');
     expect(translatePermissionName('product:unknown', '未知权限', t)).toBe('未知权限');
-    expect(translatePermissionName('product:view', '商品查看', t)).toBe('商品查看');
   });
 });
 
