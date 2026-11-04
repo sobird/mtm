@@ -64,10 +64,18 @@ function formatDateTime(value: string | null): string {
   )}`;
 }
 
-function formatSpecs(specs: Record<string, string>, separator: string): string {
+function formatSpecs(specs: Record<string, string>, separator: string, specLabel: string): string {
   const entries = Object.entries(specs);
 
-  return entries.length ? entries.map(([key, value]) => `${key}${separator}${value}`).join(' / ') : '-';
+  return entries.length
+    ? entries
+        .map(([key, value]) => {
+          const label = key === 'spec' || key === '规格' ? specLabel : key;
+
+          return `${label}${separator}${value}`;
+        })
+        .join(' / ')
+    : '-';
 }
 
 function StatusTag({ status }: { status: ProductVersionStatus }) {
@@ -96,7 +104,7 @@ function VersionContent({
     {
       key: 'specs',
       title: t('skuColumns.specs'),
-      render: (_, sku) => formatSpecs(sku.specs, t('specSeparator')),
+      render: (_, sku) => formatSpecs(sku.specs, t('specSeparator'), t('skuColumns.specs')),
     },
     {
       dataIndex: 'price',

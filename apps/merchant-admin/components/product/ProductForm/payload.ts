@@ -12,13 +12,13 @@ export interface ProductFormState {
   skus: Array<{ skuCode: string; specsText: string; price: string; stock: string; status: 'ACTIVE' | 'DISABLED' }>;
 }
 
-/** SKU 表单行转契约输入；空规格文本映射为空对象。 */
+/** SKU 表单行转契约输入；规格文本以稳定 ASCII key `spec` 持久化，空文本映射为空对象。 */
 function toSkuInput(sku: ProductFormState['skus'][number]) {
   const specsText = sku.specsText.trim();
 
   return {
     skuCode: sku.skuCode.trim(),
-    specs: specsText === '' ? {} : { 规格: specsText },
+    specs: specsText === '' ? {} : { spec: specsText },
     price: Number(sku.price),
     stock: Number(sku.stock),
     status: sku.status,

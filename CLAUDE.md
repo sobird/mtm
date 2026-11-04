@@ -101,8 +101,8 @@ bun run build
 ## 操作日志约定
 
 - 核心日志：`core-api` 的 `recordCoreOperationLog(tx, auth, input)` 必须在业务事务内写 `CoreOperationLog`；写入失败则整个事务回滚（fail-closed）。
-- 门户日志：两个门户 BFF 在 `core-api` 调用成功后再写 `OpsOperationLog`；写入失败只 `console.error` 并继续返回成功（fail-open），因为核心状态变更已完成、无法回滚。
-- 日志账号 ID 取自会话，不信任前端传值；`detail` 只记录 ID 与状态，不复制业务内容。
+- 门户日志：两个门户 BFF 在 `core-api` 调用成功后再分别写 `MerchantOperationLog`（商家端）与 `OpsOperationLog`（运营端）；写入失败只 `console.error` 并继续返回成功（fail-open），因为核心状态变更已完成、无法回滚。
+- 日志账号 ID 取自会话，不信任前端传值；`detail` 仅记录 ID、状态流转与审核原因，不复制其他业务内容或 PII。
 
 ## 新会话怎么继续
 

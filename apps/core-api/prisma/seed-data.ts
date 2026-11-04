@@ -207,8 +207,8 @@ const PRODUCTS: ProductSeed[] = [
     title: '北欧三人位布艺沙发',
     attributes: { 'attr-demo-home-sofa-material': '棉麻', 'attr-demo-home-sofa-size': '三人位 200cm' },
     skus: [
-      { id: 'sku-demo-1a', skuCode: 'P1001-A', specs: { 规格: '三人位' }, price: '2599.00', stock: 12 },
-      { id: 'sku-demo-1b', skuCode: 'P1001-B', specs: { 规格: '双人位' }, price: '1999.00', stock: 8 },
+      { id: 'sku-demo-1a', skuCode: 'P1001-A', specs: { spec: '三人位' }, price: '2599.00', stock: 12 },
+      { id: 'sku-demo-1b', skuCode: 'P1001-B', specs: { spec: '双人位' }, price: '1999.00', stock: 8 },
     ],
   },
   {
@@ -221,7 +221,7 @@ const PRODUCTS: ProductSeed[] = [
     status: 'SUBMITTED',
     title: '星河 5G 智能手机',
     attributes: { 'attr-demo-digital-smartphone-screen': '6.7', 'attr-demo-digital-smartphone-color': '曜石黑' },
-    skus: [{ id: 'sku-demo-2a', skuCode: 'P1002-A', specs: { 规格: '8GB+256GB' }, price: '3999.00', stock: 30 }],
+    skus: [{ id: 'sku-demo-2a', skuCode: 'P1002-A', specs: { spec: '8GB+256GB' }, price: '3999.00', stock: 30 }],
   },
   {
     id: 'product-demo-3',
@@ -233,7 +233,7 @@ const PRODUCTS: ProductSeed[] = [
     status: 'REJECTED',
     title: '云岭手冲咖啡豆',
     attributes: {},
-    skus: [{ id: 'sku-demo-3a', skuCode: 'P1003-A', specs: { 规格: '250g' }, price: '89.00', stock: 50 }],
+    skus: [{ id: 'sku-demo-3a', skuCode: 'P1003-A', specs: { spec: '250g' }, price: '89.00', stock: 50 }],
   },
   {
     id: 'product-demo-4',
@@ -245,7 +245,7 @@ const PRODUCTS: ProductSeed[] = [
     status: 'DRAFT',
     title: '夏季碎花连衣裙',
     attributes: {},
-    skus: [{ id: 'sku-demo-4a', skuCode: 'P1004-A', specs: { 规格: 'M' }, price: '299.00', stock: 20 }],
+    skus: [{ id: 'sku-demo-4a', skuCode: 'P1004-A', specs: { spec: 'M' }, price: '299.00', stock: 20 }],
   },
 ];
 

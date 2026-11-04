@@ -42,7 +42,7 @@ bun run dev
 | `bun run build`           | 构建全部应用                       |
 | `bun run check:i18n`      | 检查 i18n key 一致性与硬编码文案   |
 | `bun run check:sensitive` | 扫描敏感信息                       |
-| `bun run e2e:bootstrap`   | 准备 E2E 数据库与构建产物          |
+| `bun run e2e:bootstrap`   | 准备 E2E 数据库                    |
 | `bun run test:e2e`        | 运行 Playwright E2E 测试           |
 | `bun run docker:up`       | 启动 Docker Compose 自托管栈       |
 
@@ -63,7 +63,7 @@ bun run dev
 
 - 新增业务逻辑、权限判断、i18n 或数据库行为时，请补充 Vitest 测试。
 - 运行全量测试：`bun run test`。
-- E2E 使用 Playwright。首次运行前执行 `bun run e2e:bootstrap` 准备数据库与构建产物，然后运行 `bun run test:e2e`。
+- E2E 使用 Playwright。`bun run e2e:bootstrap` 只准备 E2E 数据库，不会构建；首次运行按 `bun run e2e:bootstrap && bun run build && bun run test:e2e` 的顺序执行，Playwright 会使用 `next start` 启动生产服务器。
 - 涉及数据库的测试使用 `*_test` 数据库；不要将测试指向开发库或共享库。
 - 提交 PR 前确保 CI 中的 lint、typecheck、test、build 全部通过。
 

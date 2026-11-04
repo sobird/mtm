@@ -22,7 +22,7 @@ test('表单状态转换为版本输入', () => {
     images: ['data:image/svg+xml;utf8,<svg/>'],
     description: '描述',
     attributes: { 'attr-demo-home-sofa-material': '棉麻' },
-    skus: [{ skuCode: 'P1', specs: { 规格: '三人位' }, price: 2599, stock: 10, status: 'ACTIVE' }],
+    skus: [{ skuCode: 'P1', specs: { spec: '三人位' }, price: 2599, stock: 10, status: 'ACTIVE' }],
   });
 });
 

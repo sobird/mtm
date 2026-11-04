@@ -133,9 +133,11 @@ bun run dev
 | `bun run build`           | 构建所有应用                                  |
 | `bun run check:i18n`      | 检查 i18n key 一致性与硬编码文案              |
 | `bun run check:sensitive` | 扫描敏感信息                                  |
-| `bun run e2e:bootstrap`   | 准备 E2E 所需的数据库与构建产物               |
+| `bun run e2e:bootstrap`   | 准备 E2E 数据库                               |
 | `bun run test:e2e`        | 运行 Playwright E2E 测试                      |
 | `bun run docker:up`       | 启动 Docker Compose 自托管栈                  |
+
+E2E 首次运行需要依次准备数据库、构建并运行测试：`bun run e2e:bootstrap && bun run build && bun run test:e2e`；Playwright 使用 `next start` 启动生产服务器。
 
 ## Docker 自托管
 
