@@ -158,12 +158,26 @@ test('草稿就地更新，版本号不变', async () => {
   const created = await request('/api/v1/products', 'POST', CREATE_BODY, token);
   const detail = (await created.json()).data;
 
-  const res = await request(`/api/v1/products/${detail.id}`, 'PATCH', { ...CREATE_BODY, title: '改名沙发' }, token);
+  // 创建时使用 SKU A，PATCH 时提交不同的 SKU B，验证草稿原地更新会全量替换 SKU
+  const res = await request(
+    `/api/v1/products/${detail.id}`,
+    'PATCH',
+    {
+      ...CREATE_BODY,
+      title: '改名沙发',
+      skus: [{ skuCode: 'TEST-P1-B', specs: { 规格: '四人位' }, price: 3599, stock: 5 }],
+    },
+    token
+  );
   expect(res.status).toBe(200);
   const updated = (await res.json()).data;
   expect(updated.currentVersionId).toBe(detail.currentVersionId);
   expect(updated.version).toBe(1);
   expect(updated.title).toBe('改名沙发');
+
+  const skuCodes = updated.currentVersion.skus.map((sku: { skuCode: string }) => sku.skuCode);
+  expect(skuCodes).toEqual(['TEST-P1-B']);
+  expect(skuCodes).not.toContain('TEST-P1-1');
 });
 
 test('已提交商品编辑返回 409', async () => {
@@ -207,6 +221,7 @@ test('跨租户编辑返回 404', async () => {
     merchantToken('merchant-demo-2', ['product:update'])
   );
   expect(res.status).toBe(404);
+  expect(await res.json()).toMatchObject({ error: { code: 'PRODUCT_NOT_FOUND' } });
 });
 
 test('运营状态过滤作用于当前版本且分页 meta 正确', async () => {
