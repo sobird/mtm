@@ -220,7 +220,7 @@ export function AuditManager() {
 
     const candidates = [detail.currentVersion, detail.publishedVersion];
 
-    return candidates.find(candidate => candidate?.id === selected?.productVersionId) ?? detail.currentVersion ?? null;
+    return candidates.find(candidate => candidate?.id === selected?.productVersionId) ?? null;
   }, [detailQuery.data, selected?.productVersionId]);
 
   const closeDialog = () => {
@@ -234,6 +234,11 @@ export function AuditManager() {
 
   const invalidateAudits = () => queryClient.invalidateQueries({ queryKey: ['ops', 'audits'] });
 
+  const onMutationError = async (error: unknown) => {
+    onRequestError(error);
+    await invalidateAudits();
+  };
+
   const approveMutation = useMutation({
     mutationFn: ({ audit, note }: { audit: AuditRecordDTO; note: string }) =>
       apiFetch<AuditRecordDTO>(`/api/bff/audits/${audit.id}/approve`, {
@@ -245,7 +250,7 @@ export function AuditManager() {
       closeDialog();
       await invalidateAudits();
     },
-    onError: onRequestError,
+    onError: onMutationError,
   });
 
   const rejectMutation = useMutation({
@@ -259,7 +264,7 @@ export function AuditManager() {
       closeDialog();
       await invalidateAudits();
     },
-    onError: onRequestError,
+    onError: onMutationError,
   });
 
   const applyFilters = () => {
@@ -409,6 +414,10 @@ export function AuditManager() {
       <Dialog
         open={selected !== null}
         onOpenChange={open => {
+          if (isPendingDecision) {
+            return;
+          }
+
           if (!open) closeDialog();
         }}
         title='审核详情'
@@ -420,10 +429,15 @@ export function AuditManager() {
               <Button variant='secondary' onClick={closeDialog} disabled={isPendingDecision}>
                 取消
               </Button>
-              <Button variant='danger' loading={rejectMutation.isPending} onClick={handleReject}>
+              <Button
+                variant='danger'
+                loading={rejectMutation.isPending}
+                disabled={isPendingDecision}
+                onClick={handleReject}
+              >
                 驳回
               </Button>
-              <Button loading={approveMutation.isPending} onClick={handleApprove}>
+              <Button loading={approveMutation.isPending} disabled={isPendingDecision} onClick={handleApprove}>
                 通过
               </Button>
             </div>
@@ -451,12 +465,11 @@ export function AuditManager() {
             <section className={styles.section}>
               <h3 className={styles.sectionTitle}>提交版本内容</h3>
               {detailQuery.isPending ? <Skeleton rows={4} /> : null}
-              {detailQuery.isError ? <Empty description='加载失败' /> : null}
-              {!detailQuery.isPending && !detailQuery.isError && submittedVersion ? (
+              {!detailQuery.isPending && submittedVersion ? (
                 <VersionContent version={submittedVersion} attributeNames={attributeNames} />
               ) : null}
-              {!detailQuery.isPending && !detailQuery.isError && !submittedVersion ? (
-                <p className={styles.muted}>暂无版本详情</p>
+              {!detailQuery.isPending && !submittedVersion ? (
+                <p className={styles.muted}>该审核版本的快照不可用</p>
               ) : null}
             </section>
 

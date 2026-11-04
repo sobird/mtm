@@ -1,11 +1,27 @@
 import { PERMISSIONS } from '@mtm/contracts';
+import type { AuditRecordDTO } from '@mtm/contracts';
 import { PermissionProvider, ToastProvider } from '@mtm/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
-const mocks = vi.hoisted(() => ({ apiFetchWithMeta: vi.fn(), apiFetch: vi.fn() }));
+const mocks = vi.hoisted(() => {
+  class MockApiError extends Error {
+    readonly code: string;
+
+    readonly status: number;
+
+    constructor(code: string, status: number, message = code) {
+      super(message);
+      this.name = 'ApiError';
+      this.code = code;
+      this.status = status;
+    }
+  }
+
+  return { apiFetchWithMeta: vi.fn(), apiFetch: vi.fn(), MockApiError };
+});
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
@@ -15,15 +31,12 @@ vi.mock('next/navigation', () => ({
 vi.mock('@/lib/api-client', () => ({
   apiFetch: mocks.apiFetch,
   apiFetchWithMeta: mocks.apiFetchWithMeta,
-  ApiError: class ApiError extends Error {
-    readonly code = 'ERROR';
-    readonly status = 500;
-  },
+  ApiError: mocks.MockApiError,
 }));
 
 import { AuditManager } from '@/components/catalog/AuditManager';
 
-const AUDIT = {
+const AUDIT: AuditRecordDTO = {
   id: 'a1',
   productVersionId: 'v1',
   status: 'PENDING' as const,
@@ -58,12 +71,26 @@ function renderManager() {
   );
 }
 
+function mockList(record: AuditRecordDTO) {
+  mocks.apiFetchWithMeta.mockResolvedValue({ data: [record], meta: { page: 1, pageSize: 10, total: 1 } });
+}
+
 afterEach(cleanup);
 
 beforeEach(() => {
   vi.clearAllMocks();
-  mocks.apiFetchWithMeta.mockResolvedValue({ data: [AUDIT], meta: { page: 1, pageSize: 10, total: 1 } });
+  mockList(AUDIT);
   mocks.apiFetch.mockResolvedValue({});
+});
+
+test('默认按 status=PENDING 请求审核列表', async () => {
+  renderManager();
+
+  await screen.findByText('星河手机');
+
+  expect(mocks.apiFetchWithMeta).toHaveBeenCalledWith('/api/bff/audits', {
+    query: { page: 1, pageSize: 10, status: 'PENDING', keyword: undefined },
+  });
 });
 
 test('审核通过调用 approve 端点', async () => {
@@ -89,4 +116,101 @@ test('驳回必须填写原因', async () => {
 
   expect(mocks.apiFetch).not.toHaveBeenCalledWith('/api/bff/audits/a1/reject', expect.anything());
   expect(await screen.findByText('请填写驳回原因')).toBeInTheDocument();
+});
+
+test('纯空白的驳回原因同样提示必填', async () => {
+  renderManager();
+
+  await userEvent.click(await screen.findByRole('button', { name: '审核' }));
+  await userEvent.type(screen.getByLabelText('审核备注'), '   ');
+  await userEvent.click(screen.getByRole('button', { name: '驳回' }));
+
+  expect(mocks.apiFetch).not.toHaveBeenCalledWith('/api/bff/audits/a1/reject', expect.anything());
+  expect(await screen.findByText('请填写驳回原因')).toBeInTheDocument();
+});
+
+test('有效驳回发送 trim 后的原因并在成功后关闭、刷新', async () => {
+  renderManager();
+
+  await userEvent.click(await screen.findByRole('button', { name: '审核' }));
+  await userEvent.type(screen.getByLabelText('审核备注'), '  描述与实物不符  ');
+  await userEvent.click(screen.getByRole('button', { name: '驳回' }));
+
+  await waitFor(() =>
+    expect(mocks.apiFetch).toHaveBeenCalledWith('/api/bff/audits/a1/reject', {
+      method: 'POST',
+      body: { comment: '描述与实物不符' },
+    })
+  );
+
+  expect(await screen.findByText('商品已驳回')).toBeInTheDocument();
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  await waitFor(() => expect(mocks.apiFetchWithMeta).toHaveBeenCalledTimes(2));
+});
+
+test('决策 409 时展示服务端 message 并刷新列表', async () => {
+  mocks.apiFetch.mockImplementation((path: string) => {
+    if (path === '/api/bff/audits/a1/reject') {
+      return Promise.reject(new mocks.MockApiError('AUDIT_ALREADY_REVIEWED', 409, '该审核已被其他审核员处理'));
+    }
+
+    return Promise.resolve({});
+  });
+
+  renderManager();
+
+  await userEvent.click(await screen.findByRole('button', { name: '审核' }));
+  await userEvent.type(screen.getByLabelText('审核备注'), '描述不符');
+  await userEvent.click(screen.getByRole('button', { name: '驳回' }));
+
+  expect(await screen.findByText('该审核已被其他审核员处理')).toBeInTheDocument();
+  await waitFor(() => expect(mocks.apiFetchWithMeta).toHaveBeenCalledTimes(2));
+});
+
+test('决策请求未结束时锁定两个按钮且禁止关闭对话框', async () => {
+  mocks.apiFetch.mockImplementation((path: string) => {
+    if (path === '/api/bff/audits/a1/approve') {
+      return new Promise(() => {});
+    }
+
+    return Promise.resolve({});
+  });
+
+  renderManager();
+
+  await userEvent.click(await screen.findByRole('button', { name: '审核' }));
+  await userEvent.click(screen.getByRole('button', { name: '通过' }));
+
+  await waitFor(() => expect(screen.getByRole('button', { name: '通过' })).toBeDisabled());
+  expect(screen.getByRole('button', { name: '驳回' })).toBeDisabled();
+
+  await userEvent.click(screen.getByRole('button', { name: '关闭' }));
+  expect(screen.getByRole('dialog')).toBeInTheDocument();
+});
+
+test('非 PENDING 记录不显示通过/驳回按钮', async () => {
+  mockList({ ...AUDIT, status: 'REJECTED' });
+
+  renderManager();
+
+  await userEvent.click(await screen.findByRole('button', { name: '查看' }));
+
+  expect(screen.queryByRole('button', { name: '通过' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: '驳回' })).not.toBeInTheDocument();
+});
+
+test('版本快照无法匹配时提示不可用且不回退其他版本', async () => {
+  mocks.apiFetch.mockImplementation((path: string) => {
+    if (path === '/api/bff/products/p1') {
+      return Promise.resolve({ currentVersion: { id: 'v2' }, publishedVersion: null });
+    }
+
+    return Promise.resolve([]);
+  });
+
+  renderManager();
+
+  await userEvent.click(await screen.findByRole('button', { name: '审核' }));
+
+  expect(await screen.findByText('该审核版本的快照不可用')).toBeInTheDocument();
 });
