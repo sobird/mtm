@@ -6,6 +6,7 @@ import { requireServiceToken } from './auth';
 import { prisma } from './db';
 import { HttpError, errorBody } from './http';
 import type { AppEnv } from './http';
+import { registerAuditRoutes } from './routes/audits';
 import { registerBrandRoutes } from './routes/brands';
 import { registerCategoryRoutes } from './routes/categories';
 import { registerMerchantRoutes } from './routes/merchants';
@@ -82,6 +83,7 @@ export function createApp(): OpenAPIHono<AppEnv> {
   registerBrandRoutes(app);
   registerMerchantRoutes(app);
   registerProductRoutes(app);
+  registerAuditRoutes(app);
   registerUploadRoutes(app, uploadConfig);
 
   app.onError((error, c) => {
