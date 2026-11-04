@@ -10,6 +10,7 @@
   "scripts": {
     "build": "turbo run build",
     "check:i18n": "bun scripts/check-i18n.mjs",
+    "check:sensitive": "bun scripts/check-sensitive.mjs",
     "db:migrate": "bun scripts/dev-bootstrap.mjs && turbo run db:migrate",
     "db:reset": "bun scripts/dev-bootstrap.mjs && turbo run db:reset",
     "db:seed": "turbo run db:seed",
