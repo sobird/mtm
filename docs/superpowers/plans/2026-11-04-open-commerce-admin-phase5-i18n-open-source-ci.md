@@ -80,6 +80,7 @@
   - `normalizeLocale(value: string | null | undefined): Locale`
   - `getMessages(locale: Locale): Messages`
   - `createTranslator(locale: Locale): Translator`
+  - `handleIntlError(error: IntlError): void`（`MISSING_MESSAGE` 抛出，其余交给 next-intl 默认日志）
   - `translateError(code: string | null | undefined, t: Translator): string`
   - `translateUiKey(value: string, t: Translator): string`（以 `menu.` / `menu.badge.` 开头才翻译，否则原样返回）
   - `translatePermissionName(code: string, fallback: string, t: Translator): string`
@@ -170,6 +171,11 @@ describe('messages', () => {
     expect(translateUiKey('青禾家居旗舰店', t)).toBe('青禾家居旗舰店');
     expect(translateUiKey('menu.not.seeded', t)).toBe('menu.not.seeded');
   });
+
+  test('throws when a key is missing', () => {
+    const t = createTranslator('en-US');
+    expect(() => t('no.such.key')).toThrow(/MISSING_MESSAGE/);
+  });
 });
 ```
 
@@ -193,7 +199,9 @@ export function normalizeLocale(value: string | null | undefined): Locale {
 }
 ```
 
-`src/messages.ts`：从 `../messages/zh-CN.json`、`../messages/en-US.json` 静态导入，`getMessages(locale)` 返回对应对象；以别名导入 next-intl 的 `createTranslator as createNextIntlTranslator`（避免与本包导出的同名函数递归），调用 `createNextIntlTranslator({ locale, messages })` 并转换为导出的 `Translator` 类型。
+`src/messages.ts`：从 `../messages/zh-CN.json`、`../messages/en-US.json` 静态导入，`getMessages(locale)` 返回对应对象；以别名导入 next-intl 的 `createTranslator as createNextIntlTranslator`（避免与本包导出的同名函数递归），调用 `createNextIntlTranslator({ locale, messages, onError: handleIntlError })` 并转换为导出的 `Translator` 类型。
+
+`handleIntlError` 从 `next-intl` 导入 `IntlError` / `IntlErrorCode`，仅当 `error.code === IntlErrorCode.MISSING_MESSAGE` 时 `throw error`，其他错误码保持 next-intl 默认日志。注意：next-intl 的默认 `onError` 只是 `console.error` 并回退渲染 key，并不会抛错，所以必须显式设置。
 
 初始两个 JSON 至少包含：
 
@@ -201,9 +209,7 @@ export function normalizeLocale(value: string | null | undefined): Locale {
 {
   "common": {
     "logout": "退出登录",
-    "language": "语言",
-    "language.zh-CN": "中文",
-    "language.en-US": "English"
+    "language": "语言"
   },
   "menu": { "product": { "list": "商品列表" } },
   "errors": {
@@ -213,7 +219,7 @@ export function normalizeLocale(value: string | null | undefined): Locale {
 }
 ```
 
-英文对应值：`Sign out` / `Language` / `中文`（语言名保持自身语言）/ `English` / `Products` / `Something went wrong. Please try again later.` / `Product not found`。
+英文对应值：`Sign out` / `Language` / `Products` / `Something went wrong. Please try again later.` / `Product not found`。语言名（`中文` / `English`）不放进语言包，由 LocaleSwitcher 用静态标签映射（语言名保持自身语言，且 next-intl 无法解析含字面点号的扁平 key）。
 
 `src/errors.ts`：
 
@@ -251,7 +257,7 @@ Expected: PASS（先 `bun install` 建立新工作区链接并安装 `next-intl`
 - [ ] **Step 5: 提交**
 
 ```bash
-git add packages/i18n
+git add packages/i18n bun.lock
 git commit -m "feat(i18n): add shared locale and message package"
 ```
 
@@ -314,13 +320,13 @@ Expected: FAIL（`persistLocale` 未实现或 header 无翻译）。
 2. `apps/{portal}/i18n/request.ts`：
 
 ```ts
-import { getMessages, normalizeLocale, LOCALE_COOKIE } from '@mtm/i18n';
+import { getMessages, handleIntlError, normalizeLocale, LOCALE_COOKIE } from '@mtm/i18n';
 import { getRequestConfig } from 'next-intl/server';
 import { cookies } from 'next/headers';
 
 export default getRequestConfig(async () => {
   const locale = normalizeLocale((await cookies()).get(LOCALE_COOKIE)?.value);
-  return { locale, messages: getMessages(locale) };
+  return { locale, messages: getMessages(locale), onError: handleIntlError };
 });
 ```
 
@@ -333,21 +339,21 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 export default withNextIntl(nextConfig);
 ```
 
-4. 根布局改为异步，读取 `getLocale()` / `getMessages()`，`<html lang={locale}>`，用 `<NextIntlClientProvider locale={locale} messages={messages}>` 包裹 `<Providers locale={locale}>`；`generateMetadata` 用 `getTranslations()` 返回 `common.appTitle`（两门户分别 `merchant` / `ops`）。
+4. 根布局改为异步，读取 `getLocale()` / `getMessages()`，`<html lang={locale}>`，用 `<NextIntlClientProvider locale={locale} messages={messages} onError={handleIntlError}>` 包裹 `<Providers locale={locale}>`；`generateMetadata` 用 `getTranslations()` 返回 `common.appTitle`（两门户分别 `merchant` / `ops`）。
 5. `Providers` 接收 `locale`：`ConfigProvider locale={locale === 'zh-CN' ? zhCN : enUS}`，并 `dayjs.locale(locale === 'zh-CN' ? 'zh-cn' : 'en')`；两个门户都要 import `antd/locale/en_US` 与 `dayjs/locale/en`。
-6. `packages/ui/src/layout/LocaleSwitcher.tsx`（`'use client'`）：原生 `<select data-testid='locale-switcher' aria-label={t('common.language')}>`，选项来自 `SUPPORTED_LOCALES`，`onChange` 调从 `@mtm/i18n/browser` 导入的 `persistLocale`。加入 `Header` 右侧、退出按钮之前，并从 `packages/ui/src/index.ts` 导出。
+6. `packages/ui/src/layout/LocaleSwitcher.tsx`（`'use client'`）：原生 `<select data-testid='locale-switcher' aria-label={t('common.language')}>`，选项来自 `SUPPORTED_LOCALES`，标签用静态映射（`zh-CN` → `中文`、`en-US` → `English`；语言名保持自身语言，不放进语言包），`onChange` 调从 `@mtm/i18n/browser` 导入的 `persistLocale`。加入 `Header` 右侧、退出按钮之前，并从 `packages/ui/src/index.ts` 导出。
 7. 商家端 Header 复制同样的小控件（放在 `components/layout/Header/index.tsx` 内或同目录 `LocaleSwitcher`），文案改走 `useTranslations`：`common.toggleSidebar`、`common.accountMenu`、`common.logout`、`common.language`。`packages/ui` 的 Header 同步把 `退出登录` 换成 `t('common.logout')`。
 8. 新增测试助手 `apps/{portal}/tests/i18n/render.tsx`：
 
 ```tsx
-import { getMessages, type Locale } from '@mtm/i18n';
+import { getMessages, handleIntlError, type Locale } from '@mtm/i18n';
 import { render } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import type { ReactElement } from 'react';
 
 export function renderWithIntl(ui: ReactElement, locale: Locale = 'zh-CN') {
   return render(
-    <NextIntlClientProvider locale={locale} messages={getMessages(locale)}>
+    <NextIntlClientProvider locale={locale} messages={getMessages(locale)} onError={handleIntlError}>
       {ui}
     </NextIntlClientProvider>
   );
@@ -607,7 +613,7 @@ function collectCodes(): Set<string> {
   ];
   for (const file of sources) {
     const text = readFileSync(file, 'utf8');
-    for (const match of text.matchAll(/new (?:HttpError|AppError)\('([A-Z][A-Z0-9_]+)'/g)) codes.add(match[1]);
+    for (const match of text.matchAll(/new (?:HttpError|AppError|ApiError)\('([A-Z][A-Z0-9_]+)'/g)) codes.add(match[1]);
     for (const match of text.matchAll(/code: '([A-Z][A-Z0-9_]+)'/g)) codes.add(match[1]);
   }
   return codes;

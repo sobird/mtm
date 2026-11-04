@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- 零美团元素；所有种子商家、店铺、类目、品牌、商品、图片均为虚构数据。
+- 零旧系统元素；所有种子商家、店铺、类目、品牌、商品、图片均为虚构数据。
 - `commerce_core` 记录使用 cuid；种子允许固定可读 ID（如 `merchant-demo-1`），但不得使用自增整数作为业务主键。
 - 跨库只通过 ID 引用，不做跨库外键。商家端所有读写只使用会话/JWT 中的 `merchantId`，不信任请求体或查询参数。
 - `core-api` 响应统一为 `{ "data": ... }`、`{ "data": [...], "meta": { "page", "pageSize", "total" } }` 或 `{ "error": { "code", "message", "details" } }`。

@@ -151,15 +151,15 @@
 - `CONTRIBUTING.md`：环境要求、常用命令、代码风格（oxlint/oxfmt）、测试要求、提交信息约定（Conventional Commits）、PR 流程。
 - `CODE_OF_CONDUCT.md`：Contributor Covenant 2.1 中文/英文版本。
 - `SECURITY.md`：支持的版本、漏洞报告方式（不鼓励公开 issue 报安全漏洞）、演示密钥不可用于生产。
-- 删除旧 `README.asciidoc`；保留 `LICENSE`（MIT，`Copyright (c) 2021 sobird`）。
+- 删除旧 `README.asciidoc`；保留 `LICENSE`（MIT，版权人信息以 `LICENSE` 为准）。
 
 ### 5.2 脱敏
 
-- 清理文档与 `CLAUDE.md` 中对旧系统品牌、内部仓库绝对路径的引用（如 `/Users/sobird/Meituan/...`），改写为中性描述；迁移背景保留，但不出现内部标识。已批准的阶段 1–4 设计与计划文档一并中性化改写（技术内容不变）。
+- 清理文档与 `CLAUDE.md` 中对旧系统品牌、内部仓库绝对路径的引用，改写为中性描述（“旧系统”“参考实现”“内部路径”）；迁移背景保留，但不出现内部标识。已批准的阶段 1–4 设计与计划文档一并中性化改写（技术内容不变）。
 - 新增 `scripts/check-sensitive.mjs` 并接入 CI：
   - 只扫描受版本控制的**文本文件**（按扩展名与 UTF-8 校验跳过二进制）。
-  - 命中以下模式即失败（大小写不敏感、`thh` 使用词边界）：`美团`、`Meituan`、`thh`、`@mtfe`、`@wmfe`、`@roo`、旧品牌资源名（`mt_entry`、`mtm_logo`、`thh_*`）、内部域名/IP、非演示邮箱。
-  - 允许清单：检查脚本自身、LICENSE 与 `deploy/nginx/mtm.conf` 中的作者公开信息（`sobird`、`sobird.me`）、公开镜像 `registry.npmmirror.com`、演示邮箱 `*@example.com`。允许清单按“文件 + 模式”精确匹配，不使用整目录豁免。
+  - 敏感模式统一维护在 `scripts/check-sensitive.mjs` 中，该脚本是唯一事实来源；本文不重复列举。
+  - 允许清单：检查脚本自身、`LICENSE` 与 `deploy/nginx/mtm.conf` 中的公开作者信息、公开依赖镜像、演示邮箱；按“文件 + 模式”精确匹配，不使用整目录豁免。
   - 发现真实商家名或员工信息时，先改种子/文档再重新扫描；不允许用允许清单掩盖。
 - 人工检查 `apps/merchant-admin/public` 与 `apps/ops-admin/public` 下所有图片/HTML，确认没有品牌标识；没有用途的旧资源删除。
 - 依赖检查：确认没有私有 registry 包；`.npmrc` 使用公开镜像 `registry.npmmirror.com`，在 README 中说明可替换为官方源。

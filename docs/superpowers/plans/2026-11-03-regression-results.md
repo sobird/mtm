@@ -25,7 +25,7 @@
 ```text
 $ bun scripts/smoke.ts
 Smoke target: http://localhost:3000
-Smoke database: /Users/sobird/mtm/data/smoke.sqlite
+Smoke database: <repo>/data/smoke.sqlite
 
 PASS  GET /api/health  —  200, db=true
 PASS  GET /login (anonymous)  —  status 200
@@ -138,7 +138,7 @@ bun run lint && bun run typecheck && bun run test && bun run build
 ## 本次顺带修复
 
 - `lib/auth.config.ts`：新增 `redirect` 回调，回调地址保持相对路径。standalone 服务把请求 URL 的 origin 解析为绑定地址（`0.0.0.0`），此前退出登录会被重定向到 `http://0.0.0.0:3000/login`；现返回 `/login`，由浏览器按当前 origin 解析。同时拒绝 `//host`、`/\\host` 与外部绝对地址，避免开放重定向。`tests/lib/auth-config.test.ts` 覆盖上述分支。
-- `docker-compose.yml` / `README.asciidoc`：镜像名与 `deploy.yml` 由 `GITHUB_REPOSITORY` 推导出的 `ghcr.io/sobird/mtm` 对齐（仓库现名 `sobird/mtm`，旧地址仅作重定向）。
+- `docker-compose.yml` / `README.asciidoc`：镜像名与 `deploy.yml` 由 `GITHUB_REPOSITORY` 推导出的 `ghcr.io/<owner>/mtm` 对齐（仓库地址以远端配置为准，旧地址仅作重定向）。
 - `lib/db/connection.ts`：把创建 SQLite 目录的 `mkdirSync` 从模块导入期移到 `beforeConnect` 钩子。`next build` 在 “Collecting page data” 阶段导入 DB 模块时，不再尝试创建 `.env.production` 中的 `/data`。
 - `app/(entry)/layout.tsx`：标记 `dynamic = 'force-dynamic'`。该 layout 会 `initDatabase()`，构建时不应被预渲染（此前 `/settleinjx/company` 预渲染触发 `/data` 创建失败）。
 - `vitest.config.ts`：移除无效的 `css.postcss` 兼容配置。

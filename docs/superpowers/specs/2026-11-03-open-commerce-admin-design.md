@@ -3,7 +3,7 @@
 > 状态：待评审（基线仓库适配版）
 > 日期：2026-11-03
 > 工作名：open-commerce-admin（最终名称待定）
-> 基线仓库：`/Users/sobird/mtm`
+> 基线仓库：既有 `mtm` 仓库（迁移基线，内部路径不公开）
 > 前置文档：`docs/superpowers/specs/2026-11-03-nextjs-migration-design.md`（已完成的 Next.js 迁移）
 > 说明：以 mtm 为底座原地演进为 monorepo，替代此前「新建空仓库」的方案。
 
@@ -11,7 +11,7 @@
 
 ### 1.1 基线仓库现状
 
-`/Users/sobird/mtm` 是一个已经可运行的商家后台：
+既有 `mtm` 仓库是一个已经可运行的商家后台：
 
 - 单体 Next.js 15 + React 19，App Router，Bun + oxlint/oxfmt。
 - Sequelize + SQLite，`sync + seed`，单商家（`merchantId = 1`），没有迁移文件。
@@ -19,7 +19,7 @@
 - 已有页面：登录/注册、入驻、店铺资料、设置、营销中心、优惠券。
 - 商品只有 `selling` 列表的 JSON payload，没有商品 CRUD / SKU / 类目管理 / 审核。
 - UI：antd 6 只允许出现在 `components/ui` 封装层内，页面使用 Base UI + CSS Modules。
-- 仍包含美团品牌资源与内部文案，尚未脱敏。
+- 仍包含旧系统品牌资源与内部文案，尚未脱敏。
 
 ### 1.2 参考系统
 
@@ -92,11 +92,11 @@
 - 只有假接口、没有真实领域模型的演示壳子。
 - 1:1 复刻旧代码，把技术债（4 套 HTTP 封装、`indexOf` 权限匹配、硬编码微应用）一起带过来。
 - 为了「通用」提前抽象出大量没人用的框架层。
-- 任何页面泄露美团品牌、内部域名、员工信息、真实业务数据或密钥。
+- 任何页面泄露旧系统品牌、内部域名、员工信息、真实业务数据或密钥。
 
 ## 3. 约束
 
-- **零美团元素**：名称、Logo、图片、域名、接口地址、埋点、员工姓名/工号、Token、真实商家/商品数据全部替换。
+- **零旧系统元素**：名称、Logo、图片、域名、接口地址、埋点、员工姓名/工号、Token、真实商家/商品数据全部替换。
 - **以 mtm 为基线原地演进**：保留现有页面、交互与业务能力，重构工程形态、数据层与权限模型。
 - **不把旧系统代码直接搬入**：`fe-shop-admin` / `fe-merchant-admin` / `mall-admin` 只作为业务流程和接口清单的参考。
 - **Git 历史**：保留 mtm 现有历史；合并/开源前必须审计历史中是否有密钥、内部域名或真实数据，必要时重写历史或重新初始化。
@@ -865,26 +865,26 @@ apps/ops-admin/                   # 新应用
 
 ### 14.1 必须替换
 
-| 旧系统                                                                                                                | 新系统                                |
-| --------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| 美团品牌、Logo、文案                                                                                                  | 新品牌与中性文案                      |
-| 仓库名 `mtm`、包名、`package.json` 描述                                                                               | 新项目名与中性描述                    |
-| `public/assets/mt_entry.png`、`mtm_logo.png`、`thh_*`、`thh_feo_market.html`、`public/index.html`、`public/jump.html` | 替换为自制占位图或删除                |
-| 内部 SSO / UAC / Epassport                                                                                            | Auth.js + 本地 RBAC                   |
-| Roo 组件库                                                                                                            | 现有 `components/ui` + antd 6 封装    |
-| qiankun 微前端                                                                                                        | 两个独立 Next.js 应用                 |
-| 内部接口域名 / 网关                                                                                                   | 本地 `core-api`                       |
-| 内部图片 CDN / S3                                                                                                     | 本地文件存储（可替换为 MinIO/S3）     |
-| Owl / Logan / LX 埋点                                                                                                 | 默认无埋点；预留可选适配器接口        |
-| Talos / 内部 CI                                                                                                       | GitHub Actions + Docker               |
-| 真实商家、商品、类目、员工数据                                                                                        | 全虚构种子数据                        |
-| 旧 `.env`、Token、签名密钥、`./data/*.sqlite`                                                                         | `.env.example` 占位；数据库文件不入库 |
-| IE 兼容代码                                                                                                           | 移除                                  |
+| 旧系统                                                                                  | 新系统                                |
+| --------------------------------------------------------------------------------------- | ------------------------------------- |
+| 旧系统品牌、Logo、文案                                                                  | 新品牌与中性文案                      |
+| 仓库名 `mtm`、包名、`package.json` 描述                                                 | 新项目名与中性描述                    |
+| 旧品牌图片、静态入口页（如 `public/assets/*`、`public/index.html`、`public/jump.html`） | 替换为自制占位图或删除                |
+| 内部 SSO / UAC / Epassport                                                              | Auth.js + 本地 RBAC                   |
+| Roo 组件库                                                                              | 现有 `components/ui` + antd 6 封装    |
+| qiankun 微前端                                                                          | 两个独立 Next.js 应用                 |
+| 内部接口域名 / 网关                                                                     | 本地 `core-api`                       |
+| 内部图片 CDN / S3                                                                       | 本地文件存储（可替换为 MinIO/S3）     |
+| Owl / Logan / LX 埋点                                                                   | 默认无埋点；预留可选适配器接口        |
+| Talos / 内部 CI                                                                         | GitHub Actions + Docker               |
+| 真实商家、商品、类目、员工数据                                                          | 全虚构种子数据                        |
+| 旧 `.env`、Token、签名密钥、`./data/*.sqlite`                                           | `.env.example` 占位；数据库文件不入库 |
+| IE 兼容代码                                                                             | 移除                                  |
 
 ### 14.2 检查项
 
-- 全仓库搜索「美团」「mtm」「thh」、内部包名（`@mtfe`、`@wmfe`、`@roo`、`@thh`）、员工邮箱、真实商家名。
-- 检查 `public/` 下所有品牌图片、`thh_*.html`、`index.html`、`jump.html`。
+- 全仓库搜索旧系统品牌名、内部包作用域、员工邮箱、真实商家名。
+- 检查 `public/` 下所有品牌图片与静态入口页。
 - 图片资源不得来自内部 CDN；使用自制占位图或开源图标。
 - 审计 mtm 的 Git 历史：确认没有密钥、内部域名、真实数据；否则重写历史或重新初始化后再开源。
 - 依赖中不得出现私有 registry 包。
@@ -973,7 +973,7 @@ CI（GitHub Actions）：
 
 | 决策           | 结论                                                    |
 | -------------- | ------------------------------------------------------- |
-| 基线仓库       | `/Users/sobird/mtm`，原地演进                           |
+| 基线仓库       | 既有 `mtm` 仓库，原地演进                               |
 | 是否单仓库     | 是，Bun workspaces + Turborepo                          |
 | 包管理         | Bun（替代 pnpm）                                        |
 | Lint / Format  | oxlint + oxfmt（替代 ESLint / Prettier）                |

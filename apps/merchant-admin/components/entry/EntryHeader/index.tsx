@@ -25,7 +25,7 @@ export function EntryHeader() {
           <Dropdown
             trigger={
               <button type='button' className={styles.username}>
-                sobird
+                demo
               </button>
             }
             items={[

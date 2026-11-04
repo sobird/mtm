@@ -705,7 +705,7 @@ test('connects to the migrated commerce_ops database', async () => {
 
 `next.config.ts`：`output: 'standalone'`、`reactStrictMode: true`、`transpilePackages: ['@mtm/ui', '@mtm/auth', '@mtm/contracts']`。
 
-`app/layout.tsx` 使用 `AntdRegistry`；`app/providers.tsx` 使用 `ConfigProvider`（`colorPrimary: '#1677ff'`）、`AntdApp`、`QueryClientProvider`、`ToastProvider`（来自 `@mtm/ui`）；标题使用“开源电商运营后台”，不得出现美团品牌。`app/page.tsx` 先放一个使用 `PageContainer` + `Empty` 的首页，证明 `@mtm/ui` 可用。
+`app/layout.tsx` 使用 `AntdRegistry`；`app/providers.tsx` 使用 `ConfigProvider`（`colorPrimary: '#1677ff'`）、`AntdApp`、`QueryClientProvider`、`ToastProvider`（来自 `@mtm/ui`）；标题使用“开源电商运营后台”，不得出现旧系统品牌。`app/page.tsx` 先放一个使用 `PageContainer` + `Empty` 的首页，证明 `@mtm/ui` 可用。
 
 - [ ] **Step 3: 写 `commerce_ops` schema**
 

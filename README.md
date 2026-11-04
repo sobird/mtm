@@ -190,4 +190,4 @@ bun run docker:up
 
 ## 许可协议
 
-本项目使用 MIT 许可证，版权人 `sobird`。完整文本见 [LICENSE](LICENSE)。
+本项目使用 MIT 许可证，版权人见 [LICENSE](LICENSE)。

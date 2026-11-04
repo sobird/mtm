@@ -304,7 +304,7 @@ Route Handler 清单：
 | `/api/analysis/operation`          | GET              | AnalysisService.operation    |
 | `/api/health`                      | GET              | 健康检查（DB ping）          |
 
-`/api/api/thh/task/gold/merchant` 这条历史嵌套路径并入 `/api/merchant/gold`，不保留。
+`/api/api/legacy/task/gold/merchant` 这条历史嵌套路径并入 `/api/merchant/gold`，不保留。
 
 分页/筛选统一参数：`pn`（页码，从 1 开始）、`ps`（每页条数，默认 10），返回 `{ total, items }`。
 
@@ -472,7 +472,7 @@ volumes:
 6. 图表库：`recharts`；图标库：`lucide-react`。
 7. 仅亮色主题。
 8. 删除 `/mdx`、`/component` 演示页；不引入 `@next/mdx`。
-9. 合并 `/api/api/thh/task/gold/merchant` 到 `/api/merchant/gold`。
+9. 合并 `/api/api/legacy/task/gold/merchant` 到 `/api/merchant/gold`。
 10. 宿主机 nginx 反向代理容器，不额外加 nginx 容器。
 11. CI 使用 GHCR + SSH `docker compose pull`。
 12. 保留 `lodash` 仅在确有使用时；能用原生实现的按需移除。

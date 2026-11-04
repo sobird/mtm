@@ -19,14 +19,14 @@
     "company": {
       "companyType": 1,
       "distChannel": [1],
-      "certificateBankopen": "/assets/certificate_bank.jpeg",
+      "certificateBankopen": "/assets/id_demo_2.png",
       "certificateTaxpayer": "",
       "officeAddress": "北京市朝阳区示例路 1 号",
       "officePhoto": [],
       "companyDesc": "公司简介",
-      "companyFile": ["/assets/identity_card_1.jpeg", "/assets/identity_card_2.jpeg"],
+      "companyFile": ["/assets/idcard_1.png", "/assets/idcard_2.png"],
       "businessLicense": {
-        "url": "/assets/business_license.png",
+        "url": "/assets/id_demo_1.png",
         "socialCreditCode": "91110000MA00DEMO01",
         "name": "示例托育服务有限公司",
         "address": "北京市朝阳区示例路 1 号",
@@ -47,7 +47,7 @@
         "idNum": "110101199001011234",
         "idType": 1001,
         "mobile": 13800000000,
-        "idPhotos": ["/assets/identity_card_1.jpeg", "/assets/identity_card_2.jpeg"],
+        "idPhotos": ["/assets/idcard_1.png", "/assets/idcard_2.png"],
         "name": "张三",
         "term": [1, "2028-08-29"]
       },
@@ -56,7 +56,7 @@
         "idNum": "110101199001011234",
         "idType": 1001,
         "mobile": 13800000000,
-        "idPhotos": ["/assets/identity_card_1.jpeg", "/assets/identity_card_2.jpeg"],
+        "idPhotos": ["/assets/idcard_1.png", "/assets/idcard_2.png"],
         "name": "张三",
         "term": [1, "2028-08-29"]
       },

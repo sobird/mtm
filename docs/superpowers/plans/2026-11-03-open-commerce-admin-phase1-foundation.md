@@ -26,7 +26,7 @@
 - Every merchant-scoped query takes `merchantId` from the session, never from a request parameter.
 - Pages and feature components import UI only from `@/components/ui`; `antd` appears only inside `components/ui`, `app/layout.tsx`, `app/providers.tsx`.
 - Lint `oxlint`, format `oxfmt`, types `tsc --noEmit`; unit/integration tests Vitest.
-- Project name `mtm`; scoped packages `@mtm/*`; MIT copyright holder `sobird`.
+- Project name `mtm`; scoped packages `@mtm/*`; MIT license (copyright holder in `LICENSE`).
 - No brand assets, internal domains, employee data, or private registries may enter new code.
 - Node 22 for Next.js; keep `strict: false` and current TypeScript strictness during this phase.
 
