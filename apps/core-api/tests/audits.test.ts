@@ -68,6 +68,10 @@ test('运营审核通过把版本置为 APPROVED', async () => {
 
   const version = await prisma.productVersion.findUniqueOrThrow({ where: { id: audit.productVersionId } });
   expect(version.status).toBe('APPROVED');
+
+  const log = await prisma.coreOperationLog.findFirstOrThrow({ where: { action: 'audit.approve' } });
+  expect(log).toMatchObject({ portal: 'ops', actorId: 'ops-test', resource: 'audit', resourceId: auditId });
+  expect(log.detail).toMatchObject({ productVersionId: audit.productVersionId, productId: audit.product.id });
 });
 
 test('重复审核返回 409 且状态只变更一次', async () => {
@@ -94,9 +98,20 @@ test('驳回必须填写原因，填写后版本变为 REJECTED', async () => {
   expect(res.status).toBe(200);
   expect((await res.json()).data.status).toBe('REJECTED');
 
-  const audit = await prisma.auditRecord.findUniqueOrThrow({ where: { id: auditId } });
+  const audit = await prisma.auditRecord.findUniqueOrThrow({
+    where: { id: auditId },
+    include: { productVersion: { include: { product: true } } },
+  });
   const version = await prisma.productVersion.findUniqueOrThrow({ where: { id: audit.productVersionId } });
   expect(version.status).toBe('REJECTED');
+
+  const log = await prisma.coreOperationLog.findFirstOrThrow({ where: { action: 'audit.reject' } });
+  expect(log).toMatchObject({ portal: 'ops', actorId: 'ops-test', resource: 'audit', resourceId: auditId });
+  expect(log.detail).toMatchObject({
+    productVersionId: audit.productVersionId,
+    productId: audit.productVersion.product.id,
+    comment: '图片不清晰',
+  });
 });
 
 test('审核列表按状态过滤并返回商品信息，meta.total 不随分页变化', async () => {

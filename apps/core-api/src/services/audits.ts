@@ -4,6 +4,7 @@ import { PERMISSIONS, type AuditQuery, type AuditRecordDTO, type PageMeta } from
 import { prisma } from '../db';
 import { Prisma } from '../generated/prisma';
 import { HttpError, assertMerchantVisible, normalizePage } from '../http';
+import { recordCoreOperationLog } from './operation-log';
 
 type AuditRow = Prisma.AuditRecordGetPayload<{
   include: { productVersion: { include: { product: true } } };
@@ -186,6 +187,17 @@ async function decide(
     if (versionUpdated.count === 0) {
       throw new HttpError('AUDIT_VERSION_CONFLICT', 409, '商品版本状态已变化，无法审核');
     }
+
+    await recordCoreOperationLog(tx, auth, {
+      action: next === 'APPROVED' ? 'audit.approve' : 'audit.reject',
+      resource: 'audit',
+      resourceId: id,
+      detail: {
+        productId: existing.productVersion.product.id,
+        productVersionId: existing.productVersionId,
+        comment: normalizeComment(comment),
+      },
+    });
   });
 
   return getAudit(auth, id);
