@@ -454,3 +454,50 @@ test('运营状态过滤作用于当前版本且分页 meta 正确', async () =>
   expect(body.data).toHaveLength(1);
   expect(body.meta).toEqual({ page: 1, pageSize: 1, total: 2 });
 });
+
+test('驳回后商品详情返回最近一条审核意见，未审核时为 null', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:submit', 'product:view']);
+  const created = await request('/api/v1/products', 'POST', { ...CREATE_BODY, code: 'TEST-REJ' }, token);
+  const detail = (await created.json()).data;
+  expect(detail.latestAudit).toBeNull();
+
+  await request(`/api/v1/products/${detail.id}/submit`, 'POST', undefined, token);
+  const audit = await prisma.auditRecord.findFirstOrThrow({ where: { productVersionId: detail.currentVersionId } });
+  const rejected = await request(
+    `/api/v1/audits/${audit.id}/reject`,
+    'POST',
+    { comment: '图片不清晰' },
+    opsToken(['product:audit'])
+  );
+  expect(rejected.status).toBe(200);
+
+  const res = await get(`/api/v1/products/${detail.id}`, token);
+  expect(res.status).toBe(200);
+  const body = (await res.json()).data;
+  // 只暴露审核状态、意见与时间，不泄露审核人等内部字段。
+  expect(body.latestAudit).toEqual({
+    status: 'REJECTED',
+    comment: '图片不清晰',
+    reviewedAt: expect.any(String),
+  });
+  expect(Object.keys(body.latestAudit).sort()).toEqual(['comment', 'reviewedAt', 'status']);
+});
+
+test('可选属性为空字符串时不写入 attributes JSON', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, ['product:create']);
+  const res = await request(
+    '/api/v1/products',
+    'POST',
+    {
+      ...CREATE_BODY,
+      code: 'TEST-ATTR',
+      attributes: { 'attr-demo-home-sofa-material': '棉麻', 'attr-demo-home-sofa-size': '   ' },
+    },
+    token
+  );
+
+  expect(res.status).toBe(200);
+  const body = (await res.json()).data;
+  expect(body.currentVersion.attributes).toEqual({ 'attr-demo-home-sofa-material': '棉麻' });
+  expect(body.currentVersion.attributes).not.toHaveProperty('attr-demo-home-sofa-size');
+});

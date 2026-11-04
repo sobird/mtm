@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { PageContainer } from '@/components/layout/PageContainer';
-import { Button, DataTable, Empty, Field, Input, SearchForm, Select, Tag, useToast } from '@/components/ui';
+import { Button, DataTable, Dialog, Empty, Field, Input, SearchForm, Select, Tag, useToast } from '@/components/ui';
 import type { DataTableColumns, SelectOptionValue, TagTone } from '@/components/ui';
 import { ApiError } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
@@ -69,6 +69,7 @@ export function ProductManager() {
   const [status, setStatus] = useState<SelectOptionValue>('');
   const [draftKeyword, setDraftKeyword] = useState('');
   const [draftStatus, setDraftStatus] = useState<SelectOptionValue>('');
+  const [pendingDelete, setPendingDelete] = useState<ProductListRowDTO | null>(null);
 
   const params: ProductListParams = {
     page,
@@ -118,11 +119,18 @@ export function ProductManager() {
   const deleteMutation = useMutation({
     mutationFn: deleteProduct,
     onSuccess: async () => {
+      setPendingDelete(null);
       toast.success('商品已删除');
       await invalidateProducts();
     },
     onError: onRequestError,
   });
+
+  const confirmDelete = () => {
+    if (pendingDelete) {
+      deleteMutation.mutate(pendingDelete.id);
+    }
+  };
 
   const applyFilters = () => {
     setPage(1);
@@ -174,7 +182,7 @@ export function ProductManager() {
             </Button>
           </Can>
           <Can permission={PERMISSIONS.PRODUCT_DELETE}>
-            <Button variant='ghost' size='sm' onClick={() => deleteMutation.mutate(row.id)}>
+            <Button variant='ghost' size='sm' onClick={() => setPendingDelete(row)}>
               删除
             </Button>
           </Can>
@@ -276,6 +284,31 @@ export function ProductManager() {
           emptyText='暂无商品'
         />
       )}
+
+      <Dialog
+        open={pendingDelete !== null}
+        onOpenChange={open => {
+          if (!open) {
+            setPendingDelete(null);
+          }
+        }}
+        title='删除商品'
+        description={
+          pendingDelete
+            ? `确定删除「${pendingDelete.title}」（编码 ${pendingDelete.code}）吗？删除后不可恢复。`
+            : undefined
+        }
+        footer={
+          <>
+            <Button variant='ghost' onClick={() => setPendingDelete(null)}>
+              取消
+            </Button>
+            <Button variant='danger' loading={deleteMutation.isPending} onClick={confirmDelete}>
+              确认删除
+            </Button>
+          </>
+        }
+      />
     </PageContainer>
   );
 }

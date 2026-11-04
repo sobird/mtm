@@ -104,3 +104,27 @@ test('无编辑权限时提供查看入口并跳转只读详情页', async () =>
   await userEvent.click(screen.getByRole('button', { name: '查看' }));
   expect(mocks.push).toHaveBeenCalledWith('/products/p1');
 });
+
+test('删除前弹出确认对话框，取消不调用删除接口', async () => {
+  renderManager();
+  await screen.findByText('测试沙发');
+
+  await userEvent.click(screen.getByRole('button', { name: '删除' }));
+  expect(await screen.findByText('删除商品')).toBeInTheDocument();
+  expect(screen.getByText(/确定删除「测试沙发」（编码 P1001）/)).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: '取消' }));
+
+  await waitFor(() => expect(screen.queryByText('删除商品')).not.toBeInTheDocument());
+  expect(mocks.apiFetch).not.toHaveBeenCalledWith('/api/bff/products/p1', { method: 'DELETE' });
+});
+
+test('确认删除对话框后调用删除接口', async () => {
+  renderManager();
+  await screen.findByText('测试沙发');
+
+  await userEvent.click(screen.getByRole('button', { name: '删除' }));
+  await userEvent.click(await screen.findByRole('button', { name: '确认删除' }));
+
+  await waitFor(() => expect(mocks.apiFetch).toHaveBeenCalledWith('/api/bff/products/p1', { method: 'DELETE' }));
+});

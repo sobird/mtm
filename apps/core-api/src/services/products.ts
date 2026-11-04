@@ -27,7 +27,16 @@ type SkuRow = Prisma.SkuGetPayload<Record<string, never>>;
 
 type ProductDetailRow = Prisma.ProductGetPayload<{
   include: {
-    currentVersion: { include: { skus: true } };
+    currentVersion: {
+      include: {
+        skus: true;
+        audits: {
+          orderBy: { submittedAt: 'desc' };
+          take: number;
+          select: { status: true; comment: true; reviewedAt: true };
+        };
+      };
+    };
     publishedVersion: { include: { skus: true } };
     versions: true;
   };
@@ -189,12 +198,26 @@ function toProductDetail(product: ProductDetailRow, names: NameMaps): ProductDet
     throw productNotFound();
   }
 
+  const latestAudit = product.currentVersion.audits[0];
+
   return {
     ...toProductRow(product, product.currentVersion, names),
     currentVersion: toVersion(product.currentVersion),
     publishedVersion: product.publishedVersion ? toVersion(product.publishedVersion) : null,
     versions: product.versions.map(toVersionSummary),
+    latestAudit: latestAudit
+      ? {
+          status: latestAudit.status,
+          comment: latestAudit.comment,
+          reviewedAt: latestAudit.reviewedAt?.toISOString() ?? null,
+        }
+      : null,
   };
+}
+
+/** 丢弃 trim 后为空的可选属性值，避免空字符串写入 attributes JSON。 */
+function normalizeAttributes(attributes: Record<string, string>): Record<string, string> {
+  return Object.fromEntries(Object.entries(attributes).filter(([, value]) => value.trim() !== ''));
 }
 
 /**
@@ -331,7 +354,7 @@ export async function createProduct(auth: ServiceTokenClaims, input: ProductCrea
           mainImageUrl: input.images[0],
           images: input.images,
           description: input.description,
-          attributes: input.attributes,
+          attributes: normalizeAttributes(input.attributes),
           createdBy: auth.userId,
           skus: {
             create: input.skus.map(sku => ({
@@ -379,7 +402,7 @@ export async function updateProduct(
     mainImageUrl: input.images[0],
     images: input.images,
     description: input.description,
-    attributes: input.attributes,
+    attributes: normalizeAttributes(input.attributes),
   };
 
   const skus = input.skus.map(sku => ({
@@ -667,7 +690,16 @@ export async function getProduct(auth: ServiceTokenClaims, id: string): Promise<
   const product = await prisma.product.findFirst({
     where: { id, deletedAt: null },
     include: {
-      currentVersion: { include: { skus: true } },
+      currentVersion: {
+        include: {
+          skus: true,
+          audits: {
+            orderBy: { submittedAt: 'desc' },
+            take: 1,
+            select: { status: true, comment: true, reviewedAt: true },
+          },
+        },
+      },
       publishedVersion: { include: { skus: true } },
       versions: { orderBy: { version: 'desc' }, take: 20 },
     },

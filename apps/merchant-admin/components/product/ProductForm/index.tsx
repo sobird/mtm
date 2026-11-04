@@ -11,7 +11,7 @@ import { PERMISSIONS } from '@mtm/contracts';
 import { usePermissions } from '@mtm/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { MutableRefObject } from 'react';
 import { Controller, useFormContext, useFormState, useWatch } from 'react-hook-form';
 
@@ -104,6 +104,32 @@ function toFormState(values: ProductFormValues): ProductFormState {
     attributes: values.attributes,
     skus: values.skus,
   };
+}
+
+type FormReset = (values: ProductFormValues) => void;
+
+interface ProductFormBridgeProps {
+  onDirtyChange: (dirty: boolean) => void;
+  resetRef: MutableRefObject<FormReset | null>;
+}
+
+/**
+ * 按钮渲染在 `FormProvider` 之外，用桥接组件把表单的 `isDirty` 与 `reset`
+ * 暴露给页面级操作栏：有未保存修改时禁止提交审核，保存成功后清除脏状态。
+ */
+function ProductFormBridge({ onDirtyChange, resetRef }: ProductFormBridgeProps) {
+  const { reset } = useFormContext<ProductFormValues>();
+  const { isDirty } = useFormState<ProductFormValues>();
+
+  useEffect(() => {
+    resetRef.current = values => reset(values);
+  }, [reset, resetRef]);
+
+  useEffect(() => {
+    onDirtyChange(isDirty);
+  }, [isDirty, onDirtyChange]);
+
+  return null;
 }
 
 interface ProductFormFieldsProps {
@@ -257,6 +283,9 @@ export function ProductForm(props: ProductFormProps) {
   const productId = props.mode === 'edit' ? props.productId : '';
   const isEdit = props.mode === 'edit';
   const attributesRef = useRef<CategoryNodeDTO['attributes']>([]);
+  const [dirty, setDirty] = useState(false);
+  const formResetRef = useRef<FormReset | null>(null);
+  const submittedValuesRef = useRef<ProductFormValues | null>(null);
 
   const categoriesQuery = useQuery({
     queryKey: queryKeys.productCategories,
@@ -314,14 +343,26 @@ export function ProductForm(props: ProductFormProps) {
     router.push('/products');
   };
 
+  const resetDirtyState = () => {
+    if (submittedValuesRef.current) {
+      formResetRef.current?.(submittedValuesRef.current);
+    }
+  };
+
   const createMutation = useMutation({
     mutationFn: createProduct,
-    onSuccess: () => onSuccess('商品已创建'),
+    onSuccess: () => {
+      resetDirtyState();
+      return onSuccess('商品已创建');
+    },
     onError,
   });
   const updateMutation = useMutation({
     mutationFn: (input: ProductVersionInput) => updateProduct(productId, input),
-    onSuccess: () => onSuccess('商品已保存'),
+    onSuccess: () => {
+      resetDirtyState();
+      return onSuccess('商品已保存');
+    },
     onError,
   });
   const submitMutation = useMutation({
@@ -346,6 +387,7 @@ export function ProductForm(props: ProductFormProps) {
     }
 
     const state = toFormState(values);
+    submittedValuesRef.current = values;
 
     if (mode === 'create') {
       createMutation.mutate(buildCreateInput(state, values.shopId, values.code));
@@ -391,7 +433,12 @@ export function ProductForm(props: ProductFormProps) {
             </Button>
           ) : null}
           {showSubmit ? (
-            <Button variant='secondary' loading={submitMutation.isPending} onClick={() => submitMutation.mutate()}>
+            <Button
+              variant='secondary'
+              loading={submitMutation.isPending}
+              disabled={dirty}
+              onClick={() => submitMutation.mutate()}
+            >
               提交审核
             </Button>
           ) : null}
@@ -411,6 +458,12 @@ export function ProductForm(props: ProductFormProps) {
         </div>
       }
     >
+      {status === 'REJECTED' && product?.latestAudit?.comment ? (
+        <p role='alert' className={styles.reject}>
+          驳回原因：{product.latestAudit.comment}
+        </p>
+      ) : null}
+      {showSubmit && dirty ? <p className={styles.notice}>请先保存修改，再提交审核。</p> : null}
       {submitted ? <p className={styles.notice}>审核中不可编辑</p> : null}
       {isEdit && !canUpdate && !submitted ? <p className={styles.notice}>当前账号无商品编辑权限，仅可查看。</p> : null}
       {isEdit && status ? (
@@ -427,6 +480,7 @@ export function ProductForm(props: ProductFormProps) {
         onSubmit={handleSave}
         className={styles.form}
       >
+        <ProductFormBridge onDirtyChange={setDirty} resetRef={formResetRef} />
         <ProductFormFields
           mode={mode}
           readOnly={readOnly}

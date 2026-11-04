@@ -107,10 +107,18 @@ export const productVersionSchema = productVersionSummarySchema.extend({
   skus: z.array(skuSchema),
 });
 
+/** 当前版本最近一条审核摘要，供商家端展示驳回原因等。 */
+export const productAuditSummarySchema = z.object({
+  status: productAuditStatusSchema,
+  comment: z.string().nullable(),
+  reviewedAt: isoDateTimeSchema.nullable(),
+});
+
 export const productDetailSchema = productListRowSchema.extend({
   currentVersion: productVersionSchema,
   publishedVersion: productVersionSchema.nullable(),
   versions: z.array(productVersionSummarySchema),
+  latestAudit: productAuditSummarySchema.nullable(),
 });
 
 export const auditQuerySchema = paginationQuerySchema.extend({
@@ -162,6 +170,7 @@ export type ProductListRowDTO = z.infer<typeof productListRowSchema>;
 export type SkuDTO = z.infer<typeof skuSchema>;
 export type ProductVersionSummaryDTO = z.infer<typeof productVersionSummarySchema>;
 export type ProductVersionDTO = z.infer<typeof productVersionSchema>;
+export type ProductAuditSummaryDTO = z.infer<typeof productAuditSummarySchema>;
 export type ProductDetailDTO = z.infer<typeof productDetailSchema>;
 export type AuditQuery = z.infer<typeof auditQuerySchema>;
 export type AuditRecordDTO = z.infer<typeof auditRecordSchema>;

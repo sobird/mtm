@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import {
   auditRejectSchema,
+  productAuditSummarySchema,
   productCreateSchema,
   productDetailSchema,
   productQuerySchema,
@@ -107,6 +108,7 @@ describe('product', () => {
         ],
       },
       publishedVersion: null,
+      latestAudit: null,
       versions: [
         {
           id: 'pv-1',
@@ -122,6 +124,23 @@ describe('product', () => {
     };
     expect(productDetailSchema.safeParse(detail).success).toBe(true);
     expect(productDetailSchema.safeParse({ ...detail, currentVersion: null }).success).toBe(false);
+
+    const rejected = {
+      ...detail,
+      latestAudit: { status: 'REJECTED', comment: '图片不清晰', reviewedAt: '2026-11-04T01:00:00.000Z' },
+    };
+    expect(productDetailSchema.safeParse(rejected).success).toBe(true);
+  });
+
+  test('审核摘要只接受已知审核状态与可空意见', () => {
+    expect(productAuditSummarySchema.parse({ status: 'PENDING', comment: null, reviewedAt: null })).toEqual({
+      status: 'PENDING',
+      comment: null,
+      reviewedAt: null,
+    });
+    expect(productAuditSummarySchema.safeParse({ status: 'DRAFT', comment: null, reviewedAt: null }).success).toBe(
+      false
+    );
   });
 });
 
