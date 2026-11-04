@@ -1,9 +1,7 @@
 {
   "common": {
     "logout": "Sign out",
-    "language": "Language",
-    "language.zh-CN": "中文",
-    "language.en-US": "English"
+    "language": "Language"
   },
   "menu": {
     "product": {
