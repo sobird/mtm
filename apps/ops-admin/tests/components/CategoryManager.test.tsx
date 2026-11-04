@@ -1,9 +1,12 @@
 import { PERMISSIONS } from '@mtm/contracts';
+import type { Locale } from '@mtm/i18n';
 import { PermissionProvider, ToastProvider } from '@mtm/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+
+import { renderWithIntl } from '../i18n/render';
 
 const mocks = vi.hoisted(() => ({ apiFetch: vi.fn() }));
 
@@ -63,17 +66,18 @@ const TREE = [
   },
 ];
 
-function renderManager(permissions: string[] = [PERMISSIONS.CATEGORY_MANAGE]) {
+function renderManager(permissions: string[] = [PERMISSIONS.CATEGORY_MANAGE], locale: Locale = 'zh-CN') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
-  return render(
+  return renderWithIntl(
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <PermissionProvider permissions={permissions}>
           <CategoryManager />
         </PermissionProvider>
       </ToastProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
+    locale
   );
 }
 
@@ -250,4 +254,12 @@ test('没有管理权限时不显示操作入口', async () => {
   expect(screen.queryByRole('button', { name: '新建一级类目' })).not.toBeInTheDocument();
   expect(screen.queryByRole('button', { name: '编辑' })).not.toBeInTheDocument();
   expect(screen.queryByRole('button', { name: '删除' })).not.toBeInTheDocument();
+});
+
+test('renders the empty category state in English', async () => {
+  mocks.apiFetch.mockResolvedValue([]);
+  renderManager([PERMISSIONS.CATEGORY_MANAGE], 'en-US');
+
+  expect(await screen.findByText('No categories')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'New top-level category' })).toBeInTheDocument();
 });

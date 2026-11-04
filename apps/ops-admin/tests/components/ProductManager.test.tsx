@@ -1,9 +1,12 @@
 import { PERMISSIONS } from '@mtm/contracts';
+import type { Locale } from '@mtm/i18n';
 import { PermissionProvider, ToastProvider } from '@mtm/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+
+import { renderWithIntl } from '../i18n/render';
 
 const mocks = vi.hoisted(() => ({ apiFetchWithMeta: vi.fn(), apiFetch: vi.fn() }));
 
@@ -92,16 +95,17 @@ const DETAIL = {
   ],
 };
 
-function renderManager() {
+function renderManager(locale: Locale = 'zh-CN') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  return render(
+  return renderWithIntl(
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <PermissionProvider permissions={Object.values(PERMISSIONS)}>
           <ProductManager />
         </PermissionProvider>
       </ToastProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
+    locale
   );
 }
 
@@ -196,4 +200,12 @@ test('列表为空显示空态', async () => {
   renderManager();
 
   expect(await screen.findByText('暂无商品')).toBeInTheDocument();
+});
+
+test('renders the product list in English', async () => {
+  renderManager('en-US');
+
+  expect(await screen.findByText('Product management')).toBeInTheDocument();
+  expect(await screen.findByText('Published')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'View' })).toBeInTheDocument();
 });

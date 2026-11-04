@@ -1,9 +1,12 @@
 import { PERMISSIONS } from '@mtm/contracts';
+import type { Locale } from '@mtm/i18n';
 import { PermissionProvider, ToastProvider } from '@mtm/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+
+import { renderWithIntl } from '../i18n/render';
 
 const mocks = vi.hoisted(() => ({ apiFetch: vi.fn(), apiFetchWithMeta: vi.fn() }));
 
@@ -33,17 +36,18 @@ import { BrandManager } from '@/components/catalog/BrandManager';
 
 const BRAND = { id: 'brand-demo-1', name: '青禾', logoUrl: null, status: 'ACTIVE' as const };
 
-function renderManager() {
+function renderManager(locale: Locale = 'zh-CN') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
-  return render(
+  return renderWithIntl(
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <PermissionProvider permissions={[PERMISSIONS.BRAND_MANAGE]}>
           <BrandManager />
         </PermissionProvider>
       </ToastProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
+    locale
   );
 }
 
@@ -96,4 +100,12 @@ test('停用品牌走 PATCH', async () => {
       body: { status: 'DISABLED' },
     })
   );
+});
+
+test('renders the brand list in English', async () => {
+  renderManager('en-US');
+
+  expect(await screen.findByText('Brand management')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'New brand' })).toBeInTheDocument();
+  expect(await screen.findByRole('button', { name: 'Disable' })).toBeInTheDocument();
 });

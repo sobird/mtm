@@ -19,20 +19,14 @@ import {
 } from '@mtm/ui';
 import type { DataTableColumns } from '@mtm/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
+import { translateApiError } from '@/lib/translate-api-error';
 
 import styles from './index.module.css';
-
-const categorySchema = z.object({
-  name: z.string().trim().min(1, '类目名称不能为空').max(50, '类目名称不得超过 50 个字符'),
-  sort: z.coerce.number().int('排序必须为整数').min(0, '排序不能为负数'),
-  status: z.enum(['ACTIVE', 'DISABLED']),
-});
-
-type CategoryFormValues = z.output<typeof categorySchema>;
 
 type AttributeType = CategoryAttributeInput['type'];
 
@@ -53,22 +47,6 @@ function nextAttributeKey(): string {
 }
 
 type DialogState = { type: 'create'; parentId: string | null } | { type: 'edit'; category: CategoryNodeDTO } | null;
-
-const STATUS_LABELS: Record<CategoryNodeDTO['status'], string> = {
-  ACTIVE: '启用',
-  DISABLED: '停用',
-};
-
-const ATTRIBUTE_TYPE_OPTIONS: { value: AttributeType; label: string }[] = [
-  { value: 'TEXT', label: '文本' },
-  { value: 'NUMBER', label: '数字' },
-  { value: 'SELECT', label: '选项' },
-];
-
-const STATUS_OPTIONS = [
-  { value: 'ACTIVE', label: '启用' },
-  { value: 'DISABLED', label: '停用' },
-];
 
 function createEmptyAttribute(): AttributeDraft {
   return { key: nextAttributeKey(), name: '', type: 'TEXT', required: false, options: '' };
@@ -118,49 +96,56 @@ function AttributeEditor({
   drafts: AttributeDraft[];
   onChange: (drafts: AttributeDraft[]) => void;
 }) {
+  const t = useTranslations('catalog.categories');
+  const attributeTypeOptions: { value: AttributeType; label: string }[] = [
+    { value: 'TEXT', label: t('attribute.typeOptions.TEXT') },
+    { value: 'NUMBER', label: t('attribute.typeOptions.NUMBER') },
+    { value: 'SELECT', label: t('attribute.typeOptions.SELECT') },
+  ];
+
   const updateDraft = (index: number, patch: Partial<AttributeDraft>) => {
     onChange(drafts.map((draft, current) => (current === index ? { ...draft, ...patch } : draft)));
   };
 
   return (
     <div className={styles.attributes}>
-      {drafts.length === 0 ? <p className={styles.attributeEmpty}>暂无属性</p> : null}
+      {drafts.length === 0 ? <p className={styles.attributeEmpty}>{t('attribute.empty')}</p> : null}
 
       {drafts.map((draft, index) => (
         <div key={draft.key} className={styles.attributeRow}>
           <Input
-            aria-label={`属性名称 ${index + 1}`}
-            placeholder='属性名称'
+            aria-label={t('attribute.nameAria', { index: index + 1 })}
+            placeholder={t('attribute.namePlaceholder')}
             value={draft.name}
             onChange={event => updateDraft(index, { name: event.target.value })}
           />
           <Select
-            aria-label={`属性类型 ${index + 1}`}
-            options={ATTRIBUTE_TYPE_OPTIONS}
+            aria-label={t('attribute.typeAria', { index: index + 1 })}
+            options={attributeTypeOptions}
             value={draft.type}
             onChange={value => updateDraft(index, { type: value as AttributeType })}
           />
           <Checkbox
-            aria-label={`属性必填 ${index + 1}`}
-            label='必填'
+            aria-label={t('attribute.requiredAria', { index: index + 1 })}
+            label={t('attribute.required')}
             checked={draft.required}
             onChange={event => updateDraft(index, { required: event.target.checked })}
           />
           <Input
-            aria-label={`属性选项 ${index + 1}`}
-            placeholder='选项，用逗号分隔'
+            aria-label={t('attribute.optionsAria', { index: index + 1 })}
+            placeholder={t('attribute.optionsPlaceholder')}
             value={draft.options}
             disabled={draft.type !== 'SELECT'}
             onChange={event => updateDraft(index, { options: event.target.value })}
           />
           <Button variant='ghost' size='sm' onClick={() => onChange(drafts.filter((_, current) => current !== index))}>
-            移除
+            {t('attribute.remove')}
           </Button>
         </div>
       ))}
 
       <Button variant='secondary' size='sm' onClick={() => onChange([...drafts, createEmptyAttribute()])}>
-        添加属性
+        {t('attribute.add')}
       </Button>
     </div>
   );
@@ -169,6 +154,31 @@ function AttributeEditor({
 export function CategoryManager() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const t = useTranslations('catalog.categories');
+  const tCommon = useTranslations('common');
+  const tStatus = useTranslations('opsCommon.status');
+  const tRoot = useTranslations();
+
+  const categorySchema = useMemo(
+    () =>
+      z.object({
+        name: z
+          .string()
+          .trim()
+          .min(1, tRoot('validation.categoryNameRequired'))
+          .max(50, tRoot('validation.categoryNameMax')),
+        sort: z.coerce.number().int(tRoot('validation.sortInteger')).min(0, tRoot('validation.sortNonNegative')),
+        status: z.enum(['ACTIVE', 'DISABLED']),
+      }),
+    [tRoot]
+  );
+
+  const statusOptions = [
+    { value: 'ACTIVE', label: tStatus('active') },
+    { value: 'DISABLED', label: tStatus('disabled') },
+  ];
+
+  type CategoryFormValues = z.output<typeof categorySchema>;
 
   const [dialog, setDialog] = useState<DialogState>(null);
   const [attributeDrafts, setAttributeDrafts] = useState<AttributeDraft[]>([]);
@@ -180,7 +190,7 @@ export function CategoryManager() {
   });
 
   const onRequestError = (error: unknown) => {
-    toast.error(error instanceof ApiError ? error.message : '操作失败，请稍后重试');
+    toast.error(translateApiError(error, tRoot, 'common.actionFailed'));
   };
 
   const invalidateTree = () => queryClient.invalidateQueries({ queryKey: ['ops', 'categories', 'tree'] });
@@ -205,7 +215,7 @@ export function CategoryManager() {
       return apiFetch<CategoryNodeDTO>('/api/bff/categories', { method: 'POST', body });
     },
     onSuccess: async () => {
-      toast.success('类目已创建');
+      toast.success(t('toast.created'));
       setDialog(null);
       await invalidateTree();
     },
@@ -224,7 +234,7 @@ export function CategoryManager() {
       return apiFetch<CategoryNodeDTO>(`/api/bff/categories/${id}`, { method: 'PATCH', body });
     },
     onSuccess: async () => {
-      toast.success('类目已更新');
+      toast.success(t('toast.updated'));
       setDialog(null);
       await invalidateTree();
     },
@@ -234,7 +244,7 @@ export function CategoryManager() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => apiFetch<null>(`/api/bff/categories/${id}`, { method: 'DELETE' }),
     onSuccess: async () => {
-      toast.success('类目已删除');
+      toast.success(t('toast.deleted'));
       setDeleteTarget(null);
       await invalidateTree();
     },
@@ -258,7 +268,7 @@ export function CategoryManager() {
   const columns: DataTableColumns<CategoryNodeDTO> = [
     {
       key: 'name',
-      title: '类目名称',
+      title: t('columns.name'),
       render: (_, row) => (
         <span className={styles.name} style={{ paddingLeft: (row.level - 1) * 20 }}>
           {row.name}
@@ -267,45 +277,49 @@ export function CategoryManager() {
     },
     {
       key: 'level',
-      title: '层级',
+      title: t('columns.level'),
       width: 80,
       render: (_, row) => row.level,
     },
     {
       key: 'sort',
-      title: '排序',
+      title: t('columns.sort'),
       width: 80,
       render: (_, row) => row.sort,
     },
     {
       key: 'status',
-      title: '状态',
+      title: t('columns.status'),
       width: 100,
-      render: (_, row) => <Tag tone={row.status === 'ACTIVE' ? 'success' : 'neutral'}>{STATUS_LABELS[row.status]}</Tag>,
+      render: (_, row) => (
+        <Tag tone={row.status === 'ACTIVE' ? 'success' : 'neutral'}>
+          {tStatus(row.status === 'ACTIVE' ? 'active' : 'disabled')}
+        </Tag>
+      ),
     },
     {
       key: 'attributeCount',
-      title: '属性数',
+      title: t('columns.attributeCount'),
       width: 90,
       render: (_, row) => row.attributes.length,
     },
     {
       key: 'actions',
-      title: '操作',
+      title: t('columns.actions'),
       width: 220,
       render: (_, row) => (
         <Can permission={PERMISSIONS.CATEGORY_MANAGE}>
           <div className={styles.actions}>
             {row.level < 3 ? (
               <Button variant='ghost' size='sm' onClick={() => openCreate(row.id)}>
-                添加子类
+                {t('addChild')}
               </Button>
             ) : null}
             <Button variant='ghost' size='sm' onClick={() => openEdit(row)}>
-              编辑
+              {tCommon('edit')}
             </Button>
             <Button variant='ghost' size='sm' onClick={() => setDeleteTarget(row)}>
-              删除
+              {tCommon('delete')}
             </Button>
           </div>
         </Can>
@@ -322,7 +336,7 @@ export function CategoryManager() {
       const { category } = dialog;
       const parentName = category.parentId
         ? (nodes.find(node => node.id === category.parentId)?.name ?? category.parentId)
-        : '一级类目';
+        : t('rootLevel');
 
       return (
         <Dialog
@@ -330,7 +344,7 @@ export function CategoryManager() {
           onOpenChange={open => {
             if (!open) closeDialog();
           }}
-          title='编辑类目'
+          title={t('dialog.editTitle')}
           description={category.path}
         >
           <Form
@@ -342,27 +356,27 @@ export function CategoryManager() {
             }}
             onSubmit={values => updateMutation.mutate({ id: category.id, values })}
           >
-            <Field label='所属父类目'>
+            <Field label={t('fields.parent')}>
               <span className={styles.readonly}>{parentName}</span>
             </Field>
-            <Field label='类目名称' required>
-              <Input name='name' aria-label='类目名称' placeholder='请输入类目名称' />
+            <Field label={t('fields.name')} required>
+              <Input name='name' aria-label={t('fields.name')} placeholder={t('fields.namePlaceholder')} />
             </Field>
-            <Field label='排序' required>
-              <Input name='sort' type='number' min={0} aria-label='排序' />
+            <Field label={t('fields.sort')} required>
+              <Input name='sort' type='number' min={0} aria-label={t('fields.sort')} />
             </Field>
-            <Field label='状态' required>
-              <Select name='status' aria-label='状态' options={STATUS_OPTIONS} />
+            <Field label={t('fields.status')} required>
+              <Select name='status' aria-label={t('fields.status')} options={statusOptions} />
             </Field>
-            <Field label='属性'>
+            <Field label={t('fields.attributes')}>
               <AttributeEditor drafts={attributeDrafts} onChange={setAttributeDrafts} />
             </Field>
             <div className={styles.formActions}>
               <Button type='button' variant='secondary' onClick={closeDialog}>
-                取消
+                {tCommon('cancel')}
               </Button>
               <Button type='submit' loading={updateMutation.isPending}>
-                保存
+                {tCommon('save')}
               </Button>
             </div>
           </Form>
@@ -380,8 +394,8 @@ export function CategoryManager() {
         onOpenChange={open => {
           if (!open) closeDialog();
         }}
-        title={dialog.parentId ? '新建子类目' : '新建一级类目'}
-        description={parentName ? `所属父类目：${parentName}` : undefined}
+        title={dialog.parentId ? t('dialog.createChildTitle') : t('dialog.createRootTitle')}
+        description={parentName ? t('fields.parentDescription', { name: parentName }) : undefined}
       >
         <Form
           schema={categorySchema}
@@ -389,28 +403,28 @@ export function CategoryManager() {
           onSubmit={values => createMutation.mutate({ parentId: dialog.parentId, values })}
         >
           {parentName ? (
-            <Field label='所属父类目'>
+            <Field label={t('fields.parent')}>
               <span className={styles.readonly}>{parentName}</span>
             </Field>
           ) : null}
-          <Field label='类目名称' required>
-            <Input name='name' aria-label='类目名称' placeholder='请输入类目名称' />
+          <Field label={t('fields.name')} required>
+            <Input name='name' aria-label={t('fields.name')} placeholder={t('fields.namePlaceholder')} />
           </Field>
-          <Field label='排序' required>
-            <Input name='sort' type='number' min={0} aria-label='排序' />
+          <Field label={t('fields.sort')} required>
+            <Input name='sort' type='number' min={0} aria-label={t('fields.sort')} />
           </Field>
-          <Field label='状态' required>
-            <Select name='status' aria-label='状态' options={STATUS_OPTIONS} />
+          <Field label={t('fields.status')} required>
+            <Select name='status' aria-label={t('fields.status')} options={statusOptions} />
           </Field>
-          <Field label='属性'>
+          <Field label={t('fields.attributes')}>
             <AttributeEditor drafts={attributeDrafts} onChange={setAttributeDrafts} />
           </Field>
           <div className={styles.formActions}>
             <Button type='button' variant='secondary' onClick={closeDialog}>
-              取消
+              {tCommon('cancel')}
             </Button>
             <Button type='submit' loading={createMutation.isPending}>
-              保存
+              {tCommon('save')}
             </Button>
           </div>
         </Form>
@@ -420,16 +434,16 @@ export function CategoryManager() {
 
   return (
     <PageContainer
-      title='类目管理'
-      description='维护类目层级、状态与属性定义。'
+      title={t('title')}
+      description={t('description')}
       actions={
         <Can permission={PERMISSIONS.CATEGORY_MANAGE}>
-          <Button onClick={() => openCreate(null)}>新建一级类目</Button>
+          <Button onClick={() => openCreate(null)}>{t('create')}</Button>
         </Can>
       }
     >
       {treeQuery.isError ? (
-        <Empty description='加载失败' />
+        <Empty description={tCommon('loadFailed')} />
       ) : (
         <DataTable
           columns={columns}
@@ -440,7 +454,7 @@ export function CategoryManager() {
           onPageChange={() => {}}
           rowKey='id'
           loading={treeQuery.isPending}
-          emptyText='暂无类目'
+          emptyText={t('empty')}
         />
       )}
 
@@ -451,13 +465,13 @@ export function CategoryManager() {
         onOpenChange={open => {
           if (!open) setDeleteTarget(null);
         }}
-        title='删除类目'
-        description={deleteTarget ? `确认删除类目「${deleteTarget.name}」？` : undefined}
+        title={t('dialog.deleteTitle')}
+        description={deleteTarget ? t('dialog.deleteConfirm', { name: deleteTarget.name }) : undefined}
       >
-        <p className={styles.deleteHint}>删除后不可恢复，请确认该类目下没有子类目或商品。</p>
+        <p className={styles.deleteHint}>{t('dialog.deleteHint')}</p>
         <div className={styles.formActions}>
           <Button type='button' variant='secondary' onClick={() => setDeleteTarget(null)}>
-            取消
+            {tCommon('cancel')}
           </Button>
           <Button
             variant='danger'
@@ -466,7 +480,7 @@ export function CategoryManager() {
               if (deleteTarget) deleteMutation.mutate(deleteTarget.id);
             }}
           >
-            确认删除
+            {t('dialog.confirmDelete')}
           </Button>
         </div>
       </Dialog>

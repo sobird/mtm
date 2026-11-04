@@ -1,9 +1,18 @@
+import { DEFAULT_LOCALE, createTranslator, type Translate } from '@mtm/i18n';
 import { z } from 'zod';
 
-export const loginSchema = z.object({
-  username: z.string().min(1, '用户名不能为空'),
-  password: z.string().min(1, '密码不能为空'),
-});
+export function createLoginSchema(t: Translate) {
+  return z.object({
+    username: z.string().min(1, t('validation.usernameRequired')),
+    password: z.string().min(1, t('validation.passwordRequired')),
+  });
+}
+
+// The credentials `authorize` callback does not render validation text, so it
+// uses the default-locale schema. Forms build one from the active locale.
+const defaultTranslate = createTranslator(DEFAULT_LOCALE);
+
+export const loginSchema = createLoginSchema(defaultTranslate);
 
 export type LoginValues = z.output<typeof loginSchema>;
 

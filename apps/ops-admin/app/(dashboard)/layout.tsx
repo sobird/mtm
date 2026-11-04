@@ -1,4 +1,5 @@
 import { AdminShell, PermissionProvider } from '@mtm/ui';
+import { getTranslations } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 
@@ -19,15 +20,15 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     redirect('/login');
   }
 
-  const [{ menuItems }, snapshot] = await Promise.all([getMenu(user.accountId), getAccountPermissions(user.accountId)]);
+  const [{ menuItems }, snapshot, t] = await Promise.all([
+    getMenu(user.accountId),
+    getAccountPermissions(user.accountId),
+    getTranslations('common.appTitle'),
+  ]);
 
   return (
     <PermissionProvider permissions={snapshot.codes}>
-      <AdminShell
-        title='开源电商运营后台'
-        menu={menuItems}
-        account={{ name: user.name ?? '', username: user.username }}
-      >
+      <AdminShell title={t('ops')} menu={menuItems} account={{ name: user.name ?? '', username: user.username }}>
         {children}
       </AdminShell>
     </PermissionProvider>

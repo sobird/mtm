@@ -1,8 +1,11 @@
+import type { Locale } from '@mtm/i18n';
 import { PermissionProvider, ToastProvider } from '@mtm/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+
+import { renderWithIntl } from '../i18n/render';
 
 const mocks = vi.hoisted(() => ({ apiFetch: vi.fn() }));
 
@@ -50,17 +53,18 @@ const ROLES = [
   },
 ];
 
-function renderManager() {
+function renderManager(locale: Locale = 'zh-CN') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
-  return render(
+  return renderWithIntl(
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <PermissionProvider permissions={[]}>
           <AccountManager currentAccountId='ops-account-demo' />
         </PermissionProvider>
       </ToastProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
+    locale
   );
 }
 
@@ -112,4 +116,12 @@ test('renders the account list and creates an account', async () => {
       },
     })
   );
+});
+
+test('renders the account list in English', async () => {
+  renderManager('en-US');
+
+  expect(await screen.findByText('Account management')).toBeInTheDocument();
+  expect(await screen.findByText('Current account')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'New account' })).toBeInTheDocument();
 });

@@ -97,6 +97,16 @@
       "successSubtitle": "You have successfully registered as an Open Commerce merchant. Please comply with local laws and regulations.",
       "goToLogin": "Sign in",
       "back": "Back"
+    },
+    "opsLogin": {
+      "title": "Ops admin sign in",
+      "submit": "Sign in",
+      "username": "Username",
+      "usernamePlaceholder": "Enter username",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password",
+      "invalidCredentials": "Incorrect username or password.",
+      "failed": "Sign-in failed. Please try again later."
     }
   },
   "validation": {
@@ -171,7 +181,14 @@
     "couponNameMax": "Coupon name must be at most 10 characters.",
     "couponDisplayNameRequired": "Coupon copy is required.",
     "couponStockInvalid": "Stock must be greater than 0.",
-    "couponLimitInvalid": "Limit per user must be greater than 0."
+    "couponLimitInvalid": "Limit per user must be greater than 0.",
+    "usernameRequired": "Username is required.",
+    "categoryNameRequired": "Category name is required.",
+    "categoryNameMax": "Category name must be at most 50 characters.",
+    "sortInteger": "Sort must be an integer.",
+    "sortNonNegative": "Sort cannot be negative.",
+    "brandNameRequired": "Brand name is required.",
+    "brandNameMax": "Brand name must be at most 50 characters."
   },
   "product": {
     "list": {
@@ -1011,6 +1028,84 @@
         "namePlaceholder": "Enter role name",
         "permissions": "Permissions"
       }
+    },
+    "opsAccounts": {
+      "title": "Account management",
+      "description": "Manage ops accounts and their role assignments.",
+      "create": "New account",
+      "current": "Current account",
+      "columns": {
+        "username": "Username",
+        "name": "Name",
+        "roles": "Roles",
+        "status": "Status",
+        "lastLogin": "Last login",
+        "actions": "Actions"
+      },
+      "empty": "No accounts",
+      "neverLoggedIn": "Never signed in",
+      "rolesLoading": "Loading roles…",
+      "noRoles": "No roles available",
+      "fields": {
+        "keyword": "Keyword",
+        "keywordPlaceholder": "Username or name",
+        "status": "Status",
+        "statusFilter": "Account status filter"
+      },
+      "toast": {
+        "created": "Account created",
+        "updated": "Account updated",
+        "passwordReset": "Password reset"
+      },
+      "dialog": {
+        "createTitle": "New account",
+        "createDescription": "After creation you can assign roles and reset the password.",
+        "editTitle": "Edit account",
+        "passwordTitle": "Reset password",
+        "passwordDescription": "Set a new password for account {username}",
+        "username": "Username",
+        "usernamePlaceholder": "Enter username",
+        "name": "Name",
+        "namePlaceholder": "Enter name",
+        "password": "Password",
+        "passwordPlaceholder": "At least 8 characters",
+        "newPassword": "New password",
+        "status": "Status",
+        "roles": "Roles"
+      }
+    },
+    "opsRoles": {
+      "title": "Role management",
+      "description": "Maintain role permissions and merchant scope.",
+      "create": "New role",
+      "columns": {
+        "role": "Role",
+        "permissionCount": "Permissions",
+        "accountCount": "Accounts",
+        "merchantScope": "Merchant scope",
+        "actions": "Actions"
+      },
+      "empty": "No roles",
+      "allMerchants": "All merchants",
+      "merchantScopeSeparator": ", ",
+      "toast": {
+        "created": "Role created",
+        "updated": "Role updated"
+      },
+      "dialog": {
+        "createTitle": "New role",
+        "createDescription": "The role code cannot be changed after creation.",
+        "editTitle": "Edit role",
+        "editDescription": "Role code: {code}",
+        "code": "Role code",
+        "codePlaceholder": "Enter role code",
+        "name": "Role name",
+        "namePlaceholder": "Enter role name",
+        "permissions": "Permissions",
+        "merchantScope": "Merchant scope",
+        "merchantScopeHint": "One merchant ID per line; ignored when the role has cross-merchant access.",
+        "merchantScopePlaceholder": "One merchant ID per line"
+      }
     }
   },
   "marketing": {
@@ -1248,5 +1343,294 @@
       "lineReview": "Reviews",
       "lineServiceReplyRate": "3-minute reply rate"
     }
+  },
+  "opsCommon": {
+    "all": "All",
+    "status": {
+      "active": "Active",
+      "disabled": "Disabled"
+    },
+    "enable": "Enable",
+    "disable": "Disable"
+  },
+  "opsDashboard": {
+    "title": "Ops console",
+    "description": "Open Commerce Ops Admin",
+    "connected": "Core service connected",
+    "disconnected": "Core service is not connected"
+  },
+  "catalog": {
+    "categories": {
+      "title": "Category management",
+      "description": "Maintain category hierarchy, statuses, and attribute definitions.",
+      "create": "New top-level category",
+      "columns": {
+        "name": "Category name",
+        "level": "Level",
+        "sort": "Sort",
+        "status": "Status",
+        "attributeCount": "Attributes",
+        "actions": "Actions"
+      },
+      "addChild": "Add subcategory",
+      "empty": "No categories",
+      "rootLevel": "Top level",
+      "fields": {
+        "parent": "Parent category",
+        "parentDescription": "Parent category: {name}",
+        "name": "Category name",
+        "namePlaceholder": "Enter category name",
+        "sort": "Sort",
+        "status": "Status",
+        "attributes": "Attributes"
+      },
+      "dialog": {
+        "createRootTitle": "New top-level category",
+        "createChildTitle": "New subcategory",
+        "editTitle": "Edit category",
+        "deleteTitle": "Delete category",
+        "deleteConfirm": "Delete category \"{name}\"?",
+        "deleteHint": "This action cannot be undone. Make sure the category has no subcategories or products.",
+        "confirmDelete": "Delete"
+      },
+      "attribute": {
+        "empty": "No attributes",
+        "name": "Attribute name",
+        "namePlaceholder": "Attribute name",
+        "nameAria": "Attribute name {index}",
+        "type": "Attribute type",
+        "typeAria": "Attribute type {index}",
+        "required": "Required",
+        "requiredAria": "Attribute required {index}",
+        "optionsPlaceholder": "Options, comma separated",
+        "optionsAria": "Attribute options {index}",
+        "remove": "Remove",
+        "add": "Add attribute",
+        "typeOptions": {
+          "TEXT": "Text",
+          "NUMBER": "Number",
+          "SELECT": "Select"
+        }
+      },
+      "toast": {
+        "created": "Category created",
+        "updated": "Category updated",
+        "deleted": "Category deleted"
+      }
+    },
+    "brands": {
+      "title": "Brand management",
+      "description": "Maintain brand names, logos, and status.",
+      "create": "New brand",
+      "columns": {
+        "logo": "Logo",
+        "name": "Brand name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "empty": "No brands",
+      "logoNone": "None",
+      "fields": {
+        "keyword": "Keyword",
+        "keywordPlaceholder": "Brand name",
+        "status": "Status",
+        "statusFilter": "Brand status filter",
+        "name": "Brand name",
+        "namePlaceholder": "Enter brand name",
+        "logo": "Logo",
+        "logoHint": "PNG, JPEG, or WebP, up to 10MB"
+      },
+      "dialog": {
+        "createTitle": "New brand",
+        "createDescription": "After creation, edit or toggle it from the list.",
+        "editTitle": "Edit brand",
+        "editDescription": "Brand: {name}"
+      },
+      "uploadFailed": "Image upload failed. Please try again later.",
+      "toast": {
+        "created": "Brand created",
+        "updated": "Brand updated",
+        "statusUpdated": "Brand status updated"
+      }
+    },
+    "merchants": {
+      "title": "Merchant management",
+      "description": "View merchant profiles and shop information.",
+      "columns": {
+        "code": "Code",
+        "name": "Name",
+        "contactName": "Contact",
+        "contactPhone": "Phone",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "empty": "No merchants",
+      "fields": {
+        "keyword": "Keyword",
+        "keywordPlaceholder": "Merchant code or name",
+        "status": "Status",
+        "statusFilter": "Merchant status filter"
+      },
+      "detail": {
+        "title": "Merchant details",
+        "description": "Merchant: {name}",
+        "code": "Code: {value}",
+        "name": "Name: {value}",
+        "status": "Status: ",
+        "contactName": "Contact: {value}",
+        "contactPhone": "Phone: {value}",
+        "shops": "Shops",
+        "emptyShops": "No shops"
+      },
+      "shopColumns": {
+        "name": "Shop name",
+        "address": "Address",
+        "status": "Status",
+        "contactPhone": "Phone"
+      }
+    },
+    "products": {
+      "title": "Product management",
+      "description": "View product details, versions, and SKU information (read-only).",
+      "columns": {
+        "product": "Product",
+        "code": "Code",
+        "merchant": "Merchant",
+        "shop": "Shop",
+        "category": "Category",
+        "status": "Status",
+        "version": "Version",
+        "updatedAt": "Updated",
+        "actions": "Actions"
+      },
+      "empty": "No products",
+      "fields": {
+        "keyword": "Keyword",
+        "keywordPlaceholder": "Product title or code",
+        "status": "Status",
+        "statusFilter": "Product status filter",
+        "code": "Product code",
+        "merchant": "Merchant",
+        "shop": "Shop",
+        "category": "Category",
+        "brand": "Brand",
+        "currentVersion": "Current version",
+        "updatedAt": "Updated"
+      },
+      "detail": {
+        "title": "Product details",
+        "description": "Product: {name}",
+        "attributes": "Attributes",
+        "noDescription": "No description",
+        "noAttributes": "No attributes",
+        "sku": "SKU",
+        "noSku": "No SKUs",
+        "currentVersion": "Current version",
+        "onlineVersion": "Online version",
+        "noOnlineVersion": "No online version",
+        "versionHistory": "Version history",
+        "noVersions": "No version history"
+      },
+      "versionColumns": {
+        "version": "Version",
+        "status": "Status",
+        "title": "Title",
+        "createdAt": "Created",
+        "submittedAt": "Submitted",
+        "reviewedAt": "Reviewed",
+        "publishedAt": "Published"
+      },
+      "skuColumns": {
+        "code": "SKU code",
+        "specs": "Specs",
+        "price": "Price",
+        "stock": "Stock",
+        "status": "Status"
+      },
+      "status": {
+        "DRAFT": "Draft",
+        "SUBMITTED": "In review",
+        "APPROVED": "Approved",
+        "REJECTED": "Rejected",
+        "PUBLISHED": "Published",
+        "SUPERSEDED": "Superseded",
+        "OFFLINE": "Offline"
+      },
+      "specSeparator": ": "
+    }
+  },
+  "audit": {
+    "title": "Product review",
+    "description": "Review product versions submitted by merchants, approving or rejecting them with comments.",
+    "columns": {
+      "product": "Product",
+      "code": "Code",
+      "merchant": "Merchant",
+      "shop": "Shop",
+      "category": "Category",
+      "version": "Version",
+      "submittedAt": "Submitted",
+      "status": "Audit status",
+      "actions": "Actions"
+    },
+    "actionReview": "Review",
+    "actionView": "View",
+    "status": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected"
+    },
+    "fields": {
+      "keyword": "Keyword",
+      "keywordPlaceholder": "Product title or code",
+      "status": "Audit status",
+      "statusFilter": "Audit status filter",
+      "comment": "Review note",
+      "commentHint": "Optional when approving, required when rejecting (max 500 characters)"
+    },
+    "empty": "No audit records",
+    "dialog": {
+      "title": "Audit details",
+      "description": "Product: {name}"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "reject": "Reject",
+      "approve": "Approve"
+    },
+    "info": {
+      "productCode": "Product code",
+      "merchant": "Merchant",
+      "shop": "Shop",
+      "category": "Category",
+      "submittedVersion": "Submitted version",
+      "submittedAt": "Submitted",
+      "status": "Audit status",
+      "reviewedAt": "Reviewed",
+      "comment": "Audit comment"
+    },
+    "section": {
+      "submittedVersion": "Submitted version content"
+    },
+    "snapshotUnavailable": "The snapshot for this audit version is unavailable.",
+    "commentRequired": "Please provide a rejection reason.",
+    "toast": {
+      "approved": "Audit approved",
+      "rejected": "Product rejected"
+    },
+    "skuColumns": {
+      "code": "SKU code",
+      "specs": "Specs",
+      "price": "Price",
+      "stock": "Stock",
+      "status": "Status"
+    },
+    "version": {
+      "attributes": "Attributes",
+      "noDescription": "No description",
+      "noAttributes": "No attributes",
+      "noSku": "No SKUs"
+    },
+    "specSeparator": ": "
   }
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { PERMISSIONS } from '@mtm/contracts';
-import { translatePermissionName } from '@mtm/i18n';
+import { translatePermissionName, type Translate } from '@mtm/i18n';
 import {
   Button,
   Checkbox,
@@ -19,41 +19,39 @@ import {
 import type { DataTableColumns } from '@mtm/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
 import type { OpsPermissionDTO, OpsRoleDTO } from '@/lib/services/role-admin';
+import { translateApiError } from '@/lib/translate-api-error';
 
 import styles from './index.module.css';
 
 const PERMISSION_TYPE_ORDER = ['MENU', 'BUTTON', 'API'] as const;
 
-const PERMISSION_TYPE_LABELS: Record<string, string> = {
-  MENU: '菜单权限',
-  BUTTON: '按钮权限',
-  API: '接口权限',
-};
+type CreateValues = z.output<ReturnType<typeof buildRoleCreateSchema>>;
+type EditValues = z.output<ReturnType<typeof buildRoleEditSchema>>;
 
-const roleCreateSchema = z.object({
-  code: z.string().regex(/^[a-zA-Z0-9._@-]{3,64}$/, '角色编码格式不合法'),
-  name: z.string().min(1, '名称不能为空').max(50, '名称不得超过 50 个字符'),
-  permissionCodes: z.array(z.string()),
-  merchantScopeText: z.string(),
-});
+function buildRoleCreateSchema(t: Translate) {
+  return z.object({
+    code: z.string().regex(/^[a-zA-Z0-9._@-]{3,64}$/, t('validation.roleCodeInvalid')),
+    name: z.string().min(1, t('validation.nameRequired')).max(50, t('validation.nameMax')),
+    permissionCodes: z.array(z.string()),
+    merchantScopeText: z.string(),
+  });
+}
 
-const roleEditSchema = z.object({
-  name: z.string().min(1, '名称不能为空').max(50, '名称不得超过 50 个字符'),
-  permissionCodes: z.array(z.string()),
-  merchantScopeText: z.string(),
-});
-
-type CreateValues = z.output<typeof roleCreateSchema>;
-type EditValues = z.output<typeof roleEditSchema>;
+function buildRoleEditSchema(t: Translate) {
+  return z.object({
+    name: z.string().min(1, t('validation.nameRequired')).max(50, t('validation.nameMax')),
+    permissionCodes: z.array(z.string()),
+    merchantScopeText: z.string(),
+  });
+}
 
 interface PermissionGroup {
-  type: string;
-  label: string;
+  type: (typeof PERMISSION_TYPE_ORDER)[number];
   items: OpsPermissionDTO[];
 }
 
@@ -73,20 +71,20 @@ function parseMerchantScope(value: string): string[] {
 function groupPermissions(permissions: OpsPermissionDTO[]): PermissionGroup[] {
   return PERMISSION_TYPE_ORDER.map(type => ({
     type,
-    label: PERMISSION_TYPE_LABELS[type] ?? type,
     items: permissions.filter(permission => permission.type === type),
   })).filter(group => group.items.length > 0);
 }
 
 function PermissionCheckboxes({ groups }: { groups: PermissionGroup[] }) {
   const t = useTranslations();
+  const tType = useTranslations('system.permissionType');
   const firstCode = groups[0]?.items[0]?.code;
 
   return (
     <div className={styles.permissionGroups}>
       {groups.map(group => (
         <div key={group.type} className={styles.permissionGroup}>
-          <span className={styles.groupTitle}>{group.label}</span>
+          <span className={styles.groupTitle}>{tType(group.type)}</span>
           <div className={styles.checkboxGroup}>
             {group.items.map(permission => (
               <Checkbox
@@ -104,21 +102,15 @@ function PermissionCheckboxes({ groups }: { groups: PermissionGroup[] }) {
   );
 }
 
-function renderMerchantScope(role: OpsRoleDTO) {
-  if (role.permissions.includes(PERMISSIONS.PLATFORM_CROSS_TENANT)) {
-    return <Tag tone='info'>全部商家</Tag>;
-  }
-
-  if (role.merchantScope.length === 0) {
-    return <span className={styles.muted}>--</span>;
-  }
-
-  return <span className={styles.scope}>{role.merchantScope.join('、')}</span>;
-}
-
 export function RoleManager() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const t = useTranslations('system.opsRoles');
+  const tCommon = useTranslations('common');
+  const tRoot = useTranslations();
+
+  const roleCreateSchema = useMemo(() => buildRoleCreateSchema(tRoot), [tRoot]);
+  const roleEditSchema = useMemo(() => buildRoleEditSchema(tRoot), [tRoot]);
 
   const [dialog, setDialog] = useState<DialogState>(null);
 
@@ -133,7 +125,7 @@ export function RoleManager() {
   });
 
   const onRequestError = (error: unknown) => {
-    toast.error(error instanceof ApiError ? error.message : '操作失败，请稍后重试');
+    toast.error(translateApiError(error, tRoot, 'common.actionFailed'));
   };
 
   const invalidateRoles = () => queryClient.invalidateQueries({ queryKey: ['ops', 'roles'] });
@@ -150,7 +142,7 @@ export function RoleManager() {
         },
       }),
     onSuccess: async () => {
-      toast.success('角色已创建');
+      toast.success(t('toast.created'));
       setDialog(null);
       await invalidateRoles();
     },
@@ -168,7 +160,7 @@ export function RoleManager() {
         },
       }),
     onSuccess: async () => {
-      toast.success('角色已更新');
+      toast.success(t('toast.updated'));
       setDialog(null);
       await invalidateRoles();
     },
@@ -180,10 +172,22 @@ export function RoleManager() {
   const groups = groupPermissions(permissionsQuery.data ?? []);
   const roles = rolesQuery.data ?? [];
 
+  const renderMerchantScope = (role: OpsRoleDTO) => {
+    if (role.permissions.includes(PERMISSIONS.PLATFORM_CROSS_TENANT)) {
+      return <Tag tone='info'>{t('allMerchants')}</Tag>;
+    }
+
+    if (role.merchantScope.length === 0) {
+      return <span className={styles.muted}>--</span>;
+    }
+
+    return <span className={styles.scope}>{role.merchantScope.join(t('merchantScopeSeparator'))}</span>;
+  };
+
   const columns: DataTableColumns<OpsRoleDTO> = [
     {
       dataIndex: 'name',
-      title: '角色',
+      title: t('columns.role'),
       render: (_, row) => (
         <span className={styles.roleName}>
           {row.name}
@@ -193,24 +197,24 @@ export function RoleManager() {
     },
     {
       key: 'permissionCount',
-      title: '权限数',
+      title: t('columns.permissionCount'),
       render: (_, row) => row.permissions.length,
     },
     {
       dataIndex: 'accountCount',
-      title: '账号数',
+      title: t('columns.accountCount'),
     },
     {
       key: 'merchantScope',
-      title: '商家范围',
+      title: t('columns.merchantScope'),
       render: (_, row) => renderMerchantScope(row),
     },
     {
       key: 'actions',
-      title: '操作',
+      title: t('columns.actions'),
       render: (_, row) => (
         <Button variant='ghost' size='sm' onClick={() => setDialog({ type: 'edit', role: row })}>
-          编辑
+          {tCommon('edit')}
         </Button>
       ),
     },
@@ -228,8 +232,8 @@ export function RoleManager() {
           onOpenChange={open => {
             if (!open) closeDialog();
           }}
-          title='编辑角色'
-          description={`角色编码：${dialog.role.code}`}
+          title={t('dialog.editTitle')}
+          description={t('dialog.editDescription', { code: dialog.role.code })}
         >
           <Form
             schema={roleEditSchema}
@@ -240,21 +244,26 @@ export function RoleManager() {
             }}
             onSubmit={values => updateMutation.mutate({ id: dialog.role.id, values })}
           >
-            <Field label='角色名称' required>
-              <Input name='name' aria-label='角色名称' placeholder='请输入角色名称' />
+            <Field label={t('dialog.name')} required>
+              <Input name='name' aria-label={t('dialog.name')} placeholder={t('dialog.namePlaceholder')} />
             </Field>
-            <Field label='权限'>
+            <Field label={t('dialog.permissions')}>
               <PermissionCheckboxes groups={groups} />
             </Field>
-            <Field label='商家范围' hint='每行一个商家 ID；拥有跨商家权限时忽略'>
-              <Textarea name='merchantScopeText' aria-label='商家范围' placeholder='每行一个商家 ID' rows={3} />
+            <Field label={t('dialog.merchantScope')} hint={t('dialog.merchantScopeHint')}>
+              <Textarea
+                name='merchantScopeText'
+                aria-label={t('dialog.merchantScope')}
+                placeholder={t('dialog.merchantScopePlaceholder')}
+                rows={3}
+              />
             </Field>
             <div className={styles.formActions}>
               <Button type='button' variant='secondary' onClick={closeDialog}>
-                取消
+                {tCommon('cancel')}
               </Button>
               <Button type='submit' loading={updateMutation.isPending}>
-                保存
+                {tCommon('save')}
               </Button>
             </div>
           </Form>
@@ -268,32 +277,42 @@ export function RoleManager() {
         onOpenChange={open => {
           if (!open) closeDialog();
         }}
-        title='新建角色'
-        description='角色编码创建后不可修改。'
+        title={t('dialog.createTitle')}
+        description={t('dialog.createDescription')}
       >
         <Form
           schema={roleCreateSchema}
           defaultValues={{ code: '', name: '', permissionCodes: [], merchantScopeText: '' }}
           onSubmit={values => createMutation.mutate(values)}
         >
-          <Field label='角色编码' required>
-            <Input name='code' aria-label='角色编码' placeholder='请输入角色编码' autoComplete='off' />
+          <Field label={t('dialog.code')} required>
+            <Input
+              name='code'
+              aria-label={t('dialog.code')}
+              placeholder={t('dialog.codePlaceholder')}
+              autoComplete='off'
+            />
           </Field>
-          <Field label='角色名称' required>
-            <Input name='name' aria-label='角色名称' placeholder='请输入角色名称' />
+          <Field label={t('dialog.name')} required>
+            <Input name='name' aria-label={t('dialog.name')} placeholder={t('dialog.namePlaceholder')} />
           </Field>
-          <Field label='权限'>
+          <Field label={t('dialog.permissions')}>
             <PermissionCheckboxes groups={groups} />
           </Field>
-          <Field label='商家范围' hint='每行一个商家 ID；拥有跨商家权限时忽略'>
-            <Textarea name='merchantScopeText' aria-label='商家范围' placeholder='每行一个商家 ID' rows={3} />
+          <Field label={t('dialog.merchantScope')} hint={t('dialog.merchantScopeHint')}>
+            <Textarea
+              name='merchantScopeText'
+              aria-label={t('dialog.merchantScope')}
+              placeholder={t('dialog.merchantScopePlaceholder')}
+              rows={3}
+            />
           </Field>
           <div className={styles.formActions}>
             <Button type='button' variant='secondary' onClick={closeDialog}>
-              取消
+              {tCommon('cancel')}
             </Button>
             <Button type='submit' loading={createMutation.isPending}>
-              保存
+              {tCommon('save')}
             </Button>
           </div>
         </Form>
@@ -303,12 +322,12 @@ export function RoleManager() {
 
   return (
     <PageContainer
-      title='角色管理'
-      description='维护角色权限与商家范围。'
-      actions={<Button onClick={() => setDialog({ type: 'create' })}>新建角色</Button>}
+      title={t('title')}
+      description={t('description')}
+      actions={<Button onClick={() => setDialog({ type: 'create' })}>{t('create')}</Button>}
     >
       {rolesQuery.isError ? (
-        <Empty description='加载失败' />
+        <Empty description={tCommon('loadFailed')} />
       ) : (
         <DataTable
           columns={columns}
@@ -319,7 +338,7 @@ export function RoleManager() {
           onPageChange={() => {}}
           rowKey='id'
           loading={rolesQuery.isPending}
-          emptyText='暂无角色'
+          emptyText={t('empty')}
         />
       )}
 

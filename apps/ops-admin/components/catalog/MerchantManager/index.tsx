@@ -16,6 +16,7 @@ import {
 } from '@mtm/ui';
 import type { DataTableColumns } from '@mtm/ui';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { apiFetch, apiFetchWithMeta } from '@/lib/api-client';
@@ -24,62 +25,35 @@ import styles from './index.module.css';
 
 const PAGE_SIZE = 10;
 
-const STATUS_LABELS: Record<MerchantDTO['status'], string> = {
-  ACTIVE: '启用',
-  DISABLED: '停用',
-};
-
-const STATUS_FILTER_OPTIONS = [
-  { value: '', label: '全部' },
-  { value: 'ACTIVE', label: '启用' },
-  { value: 'DISABLED', label: '停用' },
-];
-
 function formatValue(value: string | null): string {
   return value && value.trim() ? value : '-';
 }
 
 function MerchantInfo({ merchant }: { merchant: MerchantDetailDTO }) {
+  const t = useTranslations('catalog.merchants');
+  const tStatus = useTranslations('opsCommon.status');
+
   return (
     <div className={styles.info}>
-      <p className={styles.infoRow}>编码：{merchant.code}</p>
-      <p className={styles.infoRow}>名称：{merchant.name}</p>
+      <p className={styles.infoRow}>{t('detail.code', { value: merchant.code })}</p>
+      <p className={styles.infoRow}>{t('detail.name', { value: merchant.name })}</p>
       <p className={styles.infoRow}>
-        状态：
-        <Tag tone={merchant.status === 'ACTIVE' ? 'success' : 'neutral'}>{STATUS_LABELS[merchant.status]}</Tag>
+        {t('detail.status')}
+        <Tag tone={merchant.status === 'ACTIVE' ? 'success' : 'neutral'}>
+          {tStatus(merchant.status === 'ACTIVE' ? 'active' : 'disabled')}
+        </Tag>
       </p>
-      <p className={styles.infoRow}>联系人：{formatValue(merchant.contactName)}</p>
-      <p className={styles.infoRow}>联系电话：{formatValue(merchant.contactPhone)}</p>
+      <p className={styles.infoRow}>{t('detail.contactName', { value: formatValue(merchant.contactName) })}</p>
+      <p className={styles.infoRow}>{t('detail.contactPhone', { value: formatValue(merchant.contactPhone) })}</p>
     </div>
   );
 }
 
-const SHOP_COLUMNS: DataTableColumns<ShopDTO> = [
-  {
-    dataIndex: 'name',
-    title: '店铺名称',
-  },
-  {
-    key: 'address',
-    title: '地址',
-    render: (_, shop) => formatValue(shop.address),
-  },
-  {
-    key: 'status',
-    title: '状态',
-    width: 100,
-    render: (_, shop) => (
-      <Tag tone={shop.status === 'ACTIVE' ? 'success' : 'neutral'}>{STATUS_LABELS[shop.status]}</Tag>
-    ),
-  },
-  {
-    key: 'contactPhone',
-    title: '联系电话',
-    render: (_, shop) => formatValue(shop.contactPhone),
-  },
-];
-
 function MerchantDetailDialog({ merchantId, onClose }: { merchantId: string | null; onClose: () => void }) {
+  const t = useTranslations('catalog.merchants');
+  const tCommon = useTranslations('common');
+  const tStatus = useTranslations('opsCommon.status');
+
   const detailQuery = useQuery({
     queryKey: ['ops', 'merchants', merchantId],
     queryFn: () => apiFetch<MerchantDetailDTO>(`/api/bff/merchants/${merchantId}`),
@@ -89,32 +63,59 @@ function MerchantDetailDialog({ merchantId, onClose }: { merchantId: string | nu
   const merchant = detailQuery.data;
   const shops = merchant?.shops ?? [];
 
+  const shopColumns: DataTableColumns<ShopDTO> = [
+    {
+      dataIndex: 'name',
+      title: t('shopColumns.name'),
+    },
+    {
+      key: 'address',
+      title: t('shopColumns.address'),
+      render: (_, shop) => formatValue(shop.address),
+    },
+    {
+      key: 'status',
+      title: t('shopColumns.status'),
+      width: 100,
+      render: (_, shop) => (
+        <Tag tone={shop.status === 'ACTIVE' ? 'success' : 'neutral'}>
+          {tStatus(shop.status === 'ACTIVE' ? 'active' : 'disabled')}
+        </Tag>
+      ),
+    },
+    {
+      key: 'contactPhone',
+      title: t('shopColumns.contactPhone'),
+      render: (_, shop) => formatValue(shop.contactPhone),
+    },
+  ];
+
   return (
     <Dialog
       open={merchantId !== null}
       onOpenChange={open => {
         if (!open) onClose();
       }}
-      title='商家详情'
-      description={merchant ? `商家：${merchant.name}` : undefined}
+      title={t('detail.title')}
+      description={merchant ? t('detail.description', { name: merchant.name }) : undefined}
     >
       {detailQuery.isPending ? <Skeleton rows={4} /> : null}
 
-      {detailQuery.isError ? <Empty description='加载失败' /> : null}
+      {detailQuery.isError ? <Empty description={tCommon('loadFailed')} /> : null}
 
       {merchant ? (
         <>
           <MerchantInfo merchant={merchant} />
-          <h3 className={styles.shopTitle}>店铺</h3>
+          <h3 className={styles.shopTitle}>{t('detail.shops')}</h3>
           <DataTable
-            columns={SHOP_COLUMNS}
+            columns={shopColumns}
             data={shops}
             total={shops.length}
             page={1}
             pageSize={Math.max(shops.length, 10)}
             onPageChange={() => {}}
             rowKey='id'
-            emptyText='暂无店铺'
+            emptyText={t('detail.emptyShops')}
           />
         </>
       ) : null}
@@ -123,6 +124,17 @@ function MerchantDetailDialog({ merchantId, onClose }: { merchantId: string | nu
 }
 
 export function MerchantManager() {
+  const t = useTranslations('catalog.merchants');
+  const tCommon = useTranslations('common');
+  const tOps = useTranslations('opsCommon');
+  const tStatus = useTranslations('opsCommon.status');
+
+  const statusFilterOptions = [
+    { value: '', label: tOps('all') },
+    { value: 'ACTIVE', label: tStatus('active') },
+    { value: 'DISABLED', label: tStatus('disabled') },
+  ];
+
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
   const [status, setStatus] = useState('');
@@ -162,37 +174,41 @@ export function MerchantManager() {
   const columns: DataTableColumns<MerchantDTO> = [
     {
       dataIndex: 'code',
-      title: '编码',
+      title: t('columns.code'),
       width: 120,
     },
     {
       dataIndex: 'name',
-      title: '名称',
+      title: t('columns.name'),
     },
     {
       key: 'contactName',
-      title: '联系人',
+      title: t('columns.contactName'),
       render: (_, row) => formatValue(row.contactName),
     },
     {
       key: 'contactPhone',
-      title: '联系电话',
+      title: t('columns.contactPhone'),
       render: (_, row) => formatValue(row.contactPhone),
     },
     {
       key: 'status',
-      title: '状态',
+      title: t('columns.status'),
       width: 100,
-      render: (_, row) => <Tag tone={row.status === 'ACTIVE' ? 'success' : 'neutral'}>{STATUS_LABELS[row.status]}</Tag>,
+      render: (_, row) => (
+        <Tag tone={row.status === 'ACTIVE' ? 'success' : 'neutral'}>
+          {tStatus(row.status === 'ACTIVE' ? 'active' : 'disabled')}
+        </Tag>
+      ),
     },
     {
       key: 'actions',
-      title: '操作',
+      title: t('columns.actions'),
       width: 100,
       render: (_, row) => (
         <div className={styles.actions}>
           <Button variant='ghost' size='sm' onClick={() => setDetailId(row.id)}>
-            查看
+            {tCommon('view')}
           </Button>
         </div>
       ),
@@ -200,21 +216,21 @@ export function MerchantManager() {
   ];
 
   return (
-    <PageContainer title='商家管理' description='查看商家资料与店铺信息。'>
+    <PageContainer title={t('title')} description={t('description')}>
       <div className={styles.toolbar}>
         <SearchForm onSubmit={applyFilters} onReset={resetFilters}>
-          <Field label='关键字'>
+          <Field label={t('fields.keyword')}>
             <Input
-              aria-label='关键字'
-              placeholder='商家编码/名称'
+              aria-label={t('fields.keyword')}
+              placeholder={t('fields.keywordPlaceholder')}
               value={draftKeyword}
               onChange={event => setDraftKeyword(event.target.value)}
             />
           </Field>
-          <Field label='状态'>
+          <Field label={t('fields.status')}>
             <Select
-              aria-label='商家状态筛选'
-              options={STATUS_FILTER_OPTIONS}
+              aria-label={t('fields.statusFilter')}
+              options={statusFilterOptions}
               value={draftStatus}
               onChange={value => setDraftStatus(String(value))}
             />
@@ -223,7 +239,7 @@ export function MerchantManager() {
       </div>
 
       {merchantsQuery.isError ? (
-        <Empty description='加载失败' />
+        <Empty description={tCommon('loadFailed')} />
       ) : (
         <DataTable
           columns={columns}
@@ -234,7 +250,7 @@ export function MerchantManager() {
           onPageChange={setPage}
           rowKey='id'
           loading={merchantsQuery.isPending}
-          emptyText='暂无商家'
+          emptyText={t('empty')}
         />
       )}
 

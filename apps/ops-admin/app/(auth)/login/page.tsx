@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
 import { LoginForm } from '@/components/auth/LoginForm';
 
-export const metadata: Metadata = {
-  title: '登录 - 开源电商运营后台',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const [t, app] = await Promise.all([getTranslations('auth.opsLogin'), getTranslations('common.appTitle')]);
+
+  return { title: `${t('title')} - ${app('ops')}` };
+}
 
 export default async function LoginPage({
   searchParams,

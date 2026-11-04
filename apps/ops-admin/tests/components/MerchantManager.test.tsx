@@ -1,9 +1,12 @@
 import { PERMISSIONS } from '@mtm/contracts';
+import type { Locale } from '@mtm/i18n';
 import { PermissionProvider, ToastProvider } from '@mtm/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+
+import { renderWithIntl } from '../i18n/render';
 
 const mocks = vi.hoisted(() => ({ apiFetch: vi.fn(), apiFetchWithMeta: vi.fn() }));
 
@@ -74,17 +77,18 @@ const MERCHANT_DETAIL = {
   ],
 };
 
-function renderManager() {
+function renderManager(locale: Locale = 'zh-CN') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
-  return render(
+  return renderWithIntl(
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <PermissionProvider permissions={[PERMISSIONS.MERCHANT_VIEW]}>
           <MerchantManager />
         </PermissionProvider>
       </ToastProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
+    locale
   );
 }
 
@@ -117,4 +121,15 @@ test('渲染商家列表并打开只读详情', async () => {
   expect(screen.getByText('编码：M1001')).toBeInTheDocument();
   expect(screen.getByText('青禾生活馆')).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: '新建商家' })).not.toBeInTheDocument();
+});
+
+test('renders the merchant detail in English', async () => {
+  renderManager('en-US');
+
+  expect(await screen.findByText('Merchant management')).toBeInTheDocument();
+
+  await userEvent.click(await screen.findByRole('button', { name: 'View' }));
+
+  expect(await screen.findByText('Code: M1001')).toBeInTheDocument();
+  expect(screen.getByText('青禾家居旗舰店')).toBeInTheDocument();
 });

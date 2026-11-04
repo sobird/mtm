@@ -1,10 +1,13 @@
 import { PERMISSIONS } from '@mtm/contracts';
 import type { AuditRecordDTO } from '@mtm/contracts';
+import type { Locale } from '@mtm/i18n';
 import { PermissionProvider, ToastProvider } from '@mtm/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+
+import { renderWithIntl } from '../i18n/render';
 
 const mocks = vi.hoisted(() => {
   class MockApiError extends Error {
@@ -58,16 +61,17 @@ const AUDIT: AuditRecordDTO = {
   },
 };
 
-function renderManager() {
+function renderManager(locale: Locale = 'zh-CN') {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  return render(
+  return renderWithIntl(
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <PermissionProvider permissions={Object.values(PERMISSIONS)}>
           <AuditManager />
         </PermissionProvider>
       </ToastProvider>
-    </QueryClientProvider>
+    </QueryClientProvider>,
+    locale
   );
 }
 
@@ -148,7 +152,7 @@ test('有效驳回发送 trim 后的原因并在成功后关闭、刷新', async
   await waitFor(() => expect(mocks.apiFetchWithMeta).toHaveBeenCalledTimes(2));
 });
 
-test('决策 409 时展示服务端 message 并刷新列表', async () => {
+test('决策 409 时展示翻译后的错误并刷新列表', async () => {
   mocks.apiFetch.mockImplementation((path: string) => {
     if (path === '/api/bff/audits/a1/reject') {
       return Promise.reject(new mocks.MockApiError('AUDIT_ALREADY_REVIEWED', 409, '该审核已被其他审核员处理'));
@@ -163,7 +167,7 @@ test('决策 409 时展示服务端 message 并刷新列表', async () => {
   await userEvent.type(screen.getByLabelText('审核备注'), '描述不符');
   await userEvent.click(screen.getByRole('button', { name: '驳回' }));
 
-  expect(await screen.findByText('该审核已被其他审核员处理')).toBeInTheDocument();
+  expect(await screen.findByText('该审核已处理')).toBeInTheDocument();
   await waitFor(() => expect(mocks.apiFetchWithMeta).toHaveBeenCalledTimes(2));
 });
 
@@ -213,4 +217,18 @@ test('版本快照无法匹配时提示不可用且不回退其他版本', async
   await userEvent.click(await screen.findByRole('button', { name: '审核' }));
 
   expect(await screen.findByText('该审核版本的快照不可用')).toBeInTheDocument();
+});
+
+test('renders the review dialog in English', async () => {
+  renderManager('en-US');
+
+  expect(await screen.findByText('Product review')).toBeInTheDocument();
+  await userEvent.click(await screen.findByRole('button', { name: 'Review' }));
+
+  expect(screen.getByTestId('audit-comment')).toBeInTheDocument();
+  expect(screen.getByTestId('audit-approve')).toHaveTextContent('Approve');
+  expect(screen.getByTestId('audit-reject')).toHaveTextContent('Reject');
+
+  await userEvent.click(screen.getByTestId('audit-reject'));
+  expect(await screen.findByText('Please provide a rejection reason.')).toBeInTheDocument();
 });

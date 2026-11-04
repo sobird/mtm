@@ -27,30 +27,20 @@ import {
 } from '@mtm/ui';
 import type { DataTableColumns, TagTone } from '@mtm/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 
-import { ApiError, apiFetch, apiFetchWithMeta } from '@/lib/api-client';
+import { apiFetch, apiFetchWithMeta } from '@/lib/api-client';
+import { translateApiError } from '@/lib/translate-api-error';
 
 import styles from './index.module.css';
 
 const PAGE_SIZE = 10;
 
-const STATUS_META: Record<ProductAuditStatus, { label: string; tone: TagTone }> = {
-  PENDING: { label: '待审核', tone: 'warning' },
-  APPROVED: { label: '已通过', tone: 'success' },
-  REJECTED: { label: '已驳回', tone: 'danger' },
-};
-
-const STATUS_FILTER_OPTIONS = [
-  { value: '', label: '全部' },
-  { value: 'PENDING', label: '待审核' },
-  { value: 'APPROVED', label: '已通过' },
-  { value: 'REJECTED', label: '已驳回' },
-];
-
-const SKU_STATUS_LABELS: Record<SkuDTO['status'], string> = {
-  ACTIVE: '启用',
-  DISABLED: '停用',
+const STATUS_TONES: Record<ProductAuditStatus, TagTone> = {
+  PENDING: 'warning',
+  APPROVED: 'success',
+  REJECTED: 'danger',
 };
 
 function pad(value: number): string {
@@ -73,47 +63,18 @@ function formatDateTime(value: string | null): string {
   )}`;
 }
 
-function formatSpecs(specs: Record<string, string>): string {
+function formatSpecs(specs: Record<string, string>, separator: string): string {
   const entries = Object.entries(specs ?? {});
 
-  return entries.length ? entries.map(([key, value]) => `${key}：${value}`).join(' / ') : '-';
+  return entries.length ? entries.map(([key, value]) => `${key}${separator}${value}`).join(' / ') : '-';
 }
 
 function StatusTag({ status }: { status: ProductAuditStatus }) {
-  const meta = STATUS_META[status];
+  const t = useTranslations('audit.status');
+  const tone = STATUS_TONES[status];
 
-  return meta ? <Tag tone={meta.tone}>{meta.label}</Tag> : <span className={styles.muted}>--</span>;
+  return tone ? <Tag tone={tone}>{t(status)}</Tag> : <span className={styles.muted}>--</span>;
 }
-
-const SKU_COLUMNS: DataTableColumns<SkuDTO> = [
-  {
-    dataIndex: 'skuCode',
-    title: 'SKU 编码',
-  },
-  {
-    key: 'specs',
-    title: '规格',
-    render: (_, sku) => formatSpecs(sku.specs),
-  },
-  {
-    dataIndex: 'price',
-    title: '价格',
-    width: 120,
-  },
-  {
-    dataIndex: 'stock',
-    title: '库存',
-    width: 100,
-  },
-  {
-    key: 'status',
-    title: '状态',
-    width: 100,
-    render: (_, sku) => (
-      <Tag tone={sku.status === 'ACTIVE' ? 'success' : 'neutral'}>{SKU_STATUS_LABELS[sku.status]}</Tag>
-    ),
-  },
-];
 
 function VersionContent({
   version,
@@ -122,7 +83,41 @@ function VersionContent({
   version: ProductVersionDTO;
   attributeNames: Record<string, string>;
 }) {
+  const t = useTranslations('audit');
+  const tStatus = useTranslations('opsCommon.status');
   const attributeEntries = Object.entries(version.attributes ?? {});
+
+  const skuColumns: DataTableColumns<SkuDTO> = [
+    {
+      dataIndex: 'skuCode',
+      title: t('skuColumns.code'),
+    },
+    {
+      key: 'specs',
+      title: t('skuColumns.specs'),
+      render: (_, sku) => formatSpecs(sku.specs, t('specSeparator')),
+    },
+    {
+      dataIndex: 'price',
+      title: t('skuColumns.price'),
+      width: 120,
+    },
+    {
+      dataIndex: 'stock',
+      title: t('skuColumns.stock'),
+      width: 100,
+    },
+    {
+      key: 'status',
+      title: t('skuColumns.status'),
+      width: 100,
+      render: (_, sku) => (
+        <Tag tone={sku.status === 'ACTIVE' ? 'success' : 'neutral'}>
+          {tStatus(sku.status === 'ACTIVE' ? 'active' : 'disabled')}
+        </Tag>
+      ),
+    },
+  ];
 
   return (
     <div className={styles.version}>
@@ -130,9 +125,9 @@ function VersionContent({
         <img className={styles.image} src={version.mainImageUrl} alt={version.title} />
       </div>
 
-      <p className={styles.description}>{version.description || '暂无描述'}</p>
+      <p className={styles.description}>{version.description || t('version.noDescription')}</p>
 
-      <h4 className={styles.subTitle}>属性</h4>
+      <h4 className={styles.subTitle}>{t('version.attributes')}</h4>
       {attributeEntries.length ? (
         <div className={styles.attributes}>
           {attributeEntries.map(([key, value]) => (
@@ -142,19 +137,19 @@ function VersionContent({
           ))}
         </div>
       ) : (
-        <p className={styles.muted}>暂无属性</p>
+        <p className={styles.muted}>{t('version.noAttributes')}</p>
       )}
 
-      <h4 className={styles.subTitle}>SKU</h4>
+      <h4 className={styles.subTitle}>{t('version.sku')}</h4>
       <DataTable
-        columns={SKU_COLUMNS}
+        columns={skuColumns}
         data={version.skus ?? []}
         total={version.skus?.length ?? 0}
         page={1}
         pageSize={Math.max(version.skus?.length ?? 0, 10)}
         onPageChange={() => {}}
         rowKey='id'
-        emptyText='暂无 SKU'
+        emptyText={t('version.noSku')}
       />
     </div>
   );
@@ -163,6 +158,18 @@ function VersionContent({
 export function AuditManager() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const t = useTranslations('audit');
+  const tCommon = useTranslations('common');
+  const tOps = useTranslations('opsCommon');
+  const tStatus = useTranslations('audit.status');
+  const tRoot = useTranslations();
+
+  const statusFilterOptions = [
+    { value: '', label: tOps('all') },
+    { value: 'PENDING', label: tStatus('PENDING') },
+    { value: 'APPROVED', label: tStatus('APPROVED') },
+    { value: 'REJECTED', label: tStatus('REJECTED') },
+  ];
 
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
@@ -229,7 +236,7 @@ export function AuditManager() {
   };
 
   const onRequestError = (error: unknown) => {
-    toast.error(error instanceof ApiError ? error.message : '操作失败，请稍后重试');
+    toast.error(translateApiError(error, tRoot, 'common.actionFailed'));
   };
 
   const invalidateAudits = () => queryClient.invalidateQueries({ queryKey: ['ops', 'audits'] });
@@ -246,7 +253,7 @@ export function AuditManager() {
         body: { comment: note.trim() || undefined },
       }),
     onSuccess: async () => {
-      toast.success('审核已通过');
+      toast.success(t('toast.approved'));
       closeDialog();
       await invalidateAudits();
     },
@@ -260,7 +267,7 @@ export function AuditManager() {
         body: { comment: note },
       }),
     onSuccess: async () => {
-      toast.success('商品已驳回');
+      toast.success(t('toast.rejected'));
       closeDialog();
       await invalidateAudits();
     },
@@ -297,7 +304,7 @@ export function AuditManager() {
     const note = comment.trim();
 
     if (!note) {
-      toast.error('请填写驳回原因');
+      toast.error(t('commentRequired'));
       return;
     }
 
@@ -311,7 +318,7 @@ export function AuditManager() {
   const columns: DataTableColumns<AuditRecordDTO> = [
     {
       key: 'product',
-      title: '商品',
+      title: t('columns.product'),
       render: (_, row) => (
         <div className={styles.product}>
           <img className={styles.thumbnail} src={row.product.mainImageUrl} alt={row.product.title} />
@@ -321,49 +328,49 @@ export function AuditManager() {
     },
     {
       key: 'code',
-      title: '编码',
+      title: t('columns.code'),
       render: (_, row) => row.product.code,
     },
     {
       key: 'merchantName',
-      title: '商家',
+      title: t('columns.merchant'),
       render: (_, row) => row.product.merchantName,
     },
     {
       key: 'shopName',
-      title: '店铺',
+      title: t('columns.shop'),
       render: (_, row) => row.product.shopName,
     },
     {
       key: 'categoryName',
-      title: '类目',
+      title: t('columns.category'),
       render: (_, row) => row.product.categoryName,
     },
     {
       key: 'version',
-      title: '版本',
+      title: t('columns.version'),
       width: 80,
       render: (_, row) => `V${row.product.version}`,
     },
     {
       key: 'submittedAt',
-      title: '提交时间',
+      title: t('columns.submittedAt'),
       render: (_, row) => formatDateTime(row.submittedAt),
     },
     {
       key: 'status',
-      title: '审核状态',
+      title: t('columns.status'),
       width: 100,
       render: (_, row) => <StatusTag status={row.status} />,
     },
     {
       key: 'actions',
-      title: '操作',
+      title: t('columns.actions'),
       width: 100,
       render: (_, row) => (
         <div className={styles.actions}>
           <Button variant='ghost' size='sm' onClick={() => setSelected(row)}>
-            {row.status === 'PENDING' ? '审核' : '查看'}
+            {row.status === 'PENDING' ? t('actionReview') : t('actionView')}
           </Button>
         </div>
       ),
@@ -373,21 +380,21 @@ export function AuditManager() {
   const canReview = selected?.status === 'PENDING';
 
   return (
-    <PageContainer title='商品审核' description='审核商家提交的商品版本，通过或驳回并记录意见。'>
+    <PageContainer title={t('title')} description={t('description')}>
       <div className={styles.toolbar}>
         <SearchForm onSubmit={applyFilters} onReset={resetFilters}>
-          <Field label='关键字'>
+          <Field label={t('fields.keyword')}>
             <Input
-              aria-label='关键字'
-              placeholder='商品标题或编码'
+              aria-label={t('fields.keyword')}
+              placeholder={t('fields.keywordPlaceholder')}
               value={draftKeyword}
               onChange={event => setDraftKeyword(event.target.value)}
             />
           </Field>
-          <Field label='审核状态'>
+          <Field label={t('fields.status')}>
             <Select
-              aria-label='审核状态筛选'
-              options={STATUS_FILTER_OPTIONS}
+              aria-label={t('fields.statusFilter')}
+              options={statusFilterOptions}
               value={draftStatus}
               onChange={value => setDraftStatus(String(value))}
             />
@@ -396,7 +403,7 @@ export function AuditManager() {
       </div>
 
       {auditsQuery.isError ? (
-        <Empty description='加载失败' />
+        <Empty description={tCommon('loadFailed')} />
       ) : (
         <DataTable
           columns={columns}
@@ -407,7 +414,7 @@ export function AuditManager() {
           onPageChange={setPage}
           rowKey='id'
           loading={auditsQuery.isPending}
-          emptyText='暂无审核记录'
+          emptyText={t('empty')}
         />
       )}
 
@@ -420,25 +427,31 @@ export function AuditManager() {
 
           if (!open) closeDialog();
         }}
-        title='审核详情'
-        description={selected ? `商品：${selected.product.title}` : undefined}
+        title={t('dialog.title')}
+        description={selected ? t('dialog.description', { name: selected.product.title }) : undefined}
         className={styles.wideDialog}
         footer={
           canReview ? (
             <div className={styles.footer}>
               <Button variant='secondary' onClick={closeDialog} disabled={isPendingDecision}>
-                取消
+                {t('buttons.cancel')}
               </Button>
               <Button
                 variant='danger'
                 loading={rejectMutation.isPending}
                 disabled={isPendingDecision}
                 onClick={handleReject}
+                data-testid='audit-reject'
               >
-                驳回
+                {t('buttons.reject')}
               </Button>
-              <Button loading={approveMutation.isPending} disabled={isPendingDecision} onClick={handleApprove}>
-                通过
+              <Button
+                loading={approveMutation.isPending}
+                disabled={isPendingDecision}
+                onClick={handleApprove}
+                data-testid='audit-approve'
+              >
+                {t('buttons.approve')}
               </Button>
             </div>
           ) : undefined
@@ -447,36 +460,37 @@ export function AuditManager() {
         {selected ? (
           <div className={styles.detail}>
             <div className={styles.infoGrid}>
-              <LabelValue label='商品编码'>{selected.product.code}</LabelValue>
-              <LabelValue label='商家'>{selected.product.merchantName}</LabelValue>
-              <LabelValue label='店铺'>{selected.product.shopName}</LabelValue>
-              <LabelValue label='类目'>{selected.product.categoryName}</LabelValue>
-              <LabelValue label='提交版本'>V{selected.product.version}</LabelValue>
-              <LabelValue label='提交时间'>{formatDateTime(selected.submittedAt)}</LabelValue>
-              <LabelValue label='审核状态'>
+              <LabelValue label={t('info.productCode')}>{selected.product.code}</LabelValue>
+              <LabelValue label={t('info.merchant')}>{selected.product.merchantName}</LabelValue>
+              <LabelValue label={t('info.shop')}>{selected.product.shopName}</LabelValue>
+              <LabelValue label={t('info.category')}>{selected.product.categoryName}</LabelValue>
+              <LabelValue label={t('info.submittedVersion')}>V{selected.product.version}</LabelValue>
+              <LabelValue label={t('info.submittedAt')}>{formatDateTime(selected.submittedAt)}</LabelValue>
+              <LabelValue label={t('info.status')}>
                 <StatusTag status={selected.status} />
               </LabelValue>
               {selected.reviewedAt ? (
-                <LabelValue label='审核时间'>{formatDateTime(selected.reviewedAt)}</LabelValue>
+                <LabelValue label={t('info.reviewedAt')}>{formatDateTime(selected.reviewedAt)}</LabelValue>
               ) : null}
-              {!canReview ? <LabelValue label='审核意见'>{selected.comment || '-'}</LabelValue> : null}
+              {!canReview ? <LabelValue label={t('info.comment')}>{selected.comment || '-'}</LabelValue> : null}
             </div>
 
             <section className={styles.section}>
-              <h3 className={styles.sectionTitle}>提交版本内容</h3>
+              <h3 className={styles.sectionTitle}>{t('section.submittedVersion')}</h3>
               {detailQuery.isPending ? <Skeleton rows={4} /> : null}
               {!detailQuery.isPending && submittedVersion ? (
                 <VersionContent version={submittedVersion} attributeNames={attributeNames} />
               ) : null}
               {!detailQuery.isPending && !submittedVersion ? (
-                <p className={styles.muted}>该审核版本的快照不可用</p>
+                <p className={styles.muted}>{t('snapshotUnavailable')}</p>
               ) : null}
             </section>
 
             {canReview ? (
-              <Field label='审核备注' hint='通过时可选，驳回时必填（最多 500 字）'>
+              <Field label={t('fields.comment')} hint={t('fields.commentHint')}>
                 <Textarea
-                  aria-label='审核备注'
+                  aria-label={t('fields.comment')}
+                  data-testid='audit-comment'
                   rows={3}
                   maxLength={500}
                   value={comment}

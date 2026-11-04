@@ -124,12 +124,13 @@ test('renders every permission checkbox and creates a role with the selected cod
   );
 });
 
-test('renders permission names from the message pack under en-US', async () => {
+test('renders role chrome and permission names from the message pack under en-US', async () => {
   renderManager('en-US');
 
+  expect(await screen.findByText('Role management')).toBeInTheDocument();
   expect(await screen.findByText('超级管理员')).toBeInTheDocument();
 
-  await userEvent.click(screen.getByRole('button', { name: '新建角色' }));
+  await userEvent.click(screen.getByRole('button', { name: 'New role' }));
 
   expect(await screen.findByLabelText('Product view')).toBeInTheDocument();
   expect(screen.getByLabelText('Product audit')).toBeInTheDocument();

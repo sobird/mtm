@@ -2,9 +2,11 @@
 
 import type { UploadResult } from '@mtm/contracts';
 import { Upload, useToast } from '@mtm/ui';
+import { useTranslations } from 'next-intl';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
+import { translateApiError } from '@/lib/translate-api-error';
 
 const ACCEPT = 'image/png,image/jpeg,image/webp';
 
@@ -14,6 +16,7 @@ const ACCEPT = 'image/png,image/jpeg,image/webp';
  */
 export function BrandLogoField() {
   const toast = useToast();
+  const tRoot = useTranslations();
   const { control } = useFormContext();
 
   return (
@@ -40,7 +43,7 @@ export function BrandLogoField() {
               });
               field.onChange(result.url);
             } catch (error) {
-              toast.error(error instanceof ApiError ? error.message : '图片上传失败，请稍后重试');
+              toast.error(translateApiError(error, tRoot, 'catalog.brands.uploadFailed'));
             }
           }}
           maxCount={1}

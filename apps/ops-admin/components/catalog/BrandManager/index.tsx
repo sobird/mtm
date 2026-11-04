@@ -19,40 +19,18 @@ import {
 } from '@mtm/ui';
 import type { DataTableColumns } from '@mtm/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
-import { ApiError, apiFetch, apiFetchWithMeta } from '@/lib/api-client';
+import { apiFetch, apiFetchWithMeta } from '@/lib/api-client';
+import { translateApiError } from '@/lib/translate-api-error';
 
 import { BrandLogoField } from '../BrandLogoField';
 
 import styles from './index.module.css';
 
 const PAGE_SIZE = 10;
-
-const STATUS_LABELS: Record<BrandDTO['status'], string> = {
-  ACTIVE: '启用',
-  DISABLED: '停用',
-};
-
-const STATUS_FILTER_OPTIONS = [
-  { value: '', label: '全部' },
-  { value: 'ACTIVE', label: '启用' },
-  { value: 'DISABLED', label: '停用' },
-];
-
-const STATUS_FORM_OPTIONS = [
-  { value: 'ACTIVE', label: '启用' },
-  { value: 'DISABLED', label: '停用' },
-];
-
-const brandSchema = z.object({
-  name: z.string().trim().min(1).max(50),
-  status: z.enum(['ACTIVE', 'DISABLED']),
-  logoUrl: z.string().nullable(),
-});
-
-type BrandFormValues = z.output<typeof brandSchema>;
 
 type DialogState = { type: 'create' } | { type: 'edit'; brand: BrandDTO } | null;
 
@@ -63,6 +41,34 @@ function normalizeLogoUrl(logoUrl: string | null): string | null {
 export function BrandManager() {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const t = useTranslations('catalog.brands');
+  const tCommon = useTranslations('common');
+  const tOps = useTranslations('opsCommon');
+  const tStatus = useTranslations('opsCommon.status');
+  const tRoot = useTranslations();
+
+  const brandSchema = useMemo(
+    () =>
+      z.object({
+        name: z.string().trim().min(1, tRoot('validation.brandNameRequired')).max(50, tRoot('validation.brandNameMax')),
+        status: z.enum(['ACTIVE', 'DISABLED']),
+        logoUrl: z.string().nullable(),
+      }),
+    [tRoot]
+  );
+
+  type BrandFormValues = z.output<typeof brandSchema>;
+
+  const statusFilterOptions = [
+    { value: '', label: tOps('all') },
+    { value: 'ACTIVE', label: tStatus('active') },
+    { value: 'DISABLED', label: tStatus('disabled') },
+  ];
+
+  const statusFormOptions = [
+    { value: 'ACTIVE', label: tStatus('active') },
+    { value: 'DISABLED', label: tStatus('disabled') },
+  ];
 
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
@@ -84,7 +90,7 @@ export function BrandManager() {
   });
 
   const onRequestError = (error: unknown) => {
-    toast.error(error instanceof ApiError ? error.message : '操作失败，请稍后重试');
+    toast.error(translateApiError(error, tRoot, 'common.actionFailed'));
   };
 
   const invalidateBrands = () => queryClient.invalidateQueries({ queryKey: ['ops', 'brands'] });
@@ -100,7 +106,7 @@ export function BrandManager() {
         },
       }),
     onSuccess: async () => {
-      toast.success('品牌已创建');
+      toast.success(t('toast.created'));
       setDialog(null);
       await invalidateBrands();
     },
@@ -118,7 +124,7 @@ export function BrandManager() {
         },
       }),
     onSuccess: async () => {
-      toast.success('品牌已更新');
+      toast.success(t('toast.updated'));
       setDialog(null);
       await invalidateBrands();
     },
@@ -132,7 +138,7 @@ export function BrandManager() {
         body: { status: nextStatus },
       }),
     onSuccess: async () => {
-      toast.success('品牌状态已更新');
+      toast.success(t('toast.statusUpdated'));
       await invalidateBrands();
     },
     onError: onRequestError,
@@ -160,34 +166,38 @@ export function BrandManager() {
   const columns: DataTableColumns<BrandDTO> = [
     {
       key: 'logoUrl',
-      title: 'Logo',
+      title: t('columns.logo'),
       width: 90,
       render: (_, row) =>
         row.logoUrl ? (
           <img className={styles.logo} src={row.logoUrl} alt={row.name} />
         ) : (
-          <span className={styles.logoPlaceholder}>无</span>
+          <span className={styles.logoPlaceholder}>{t('logoNone')}</span>
         ),
     },
     {
       dataIndex: 'name',
-      title: '品牌名称',
+      title: t('columns.name'),
     },
     {
       key: 'status',
-      title: '状态',
+      title: t('columns.status'),
       width: 100,
-      render: (_, row) => <Tag tone={row.status === 'ACTIVE' ? 'success' : 'neutral'}>{STATUS_LABELS[row.status]}</Tag>,
+      render: (_, row) => (
+        <Tag tone={row.status === 'ACTIVE' ? 'success' : 'neutral'}>
+          {tStatus(row.status === 'ACTIVE' ? 'active' : 'disabled')}
+        </Tag>
+      ),
     },
     {
       key: 'actions',
-      title: '操作',
+      title: t('columns.actions'),
       width: 160,
       render: (_, row) => (
         <Can permission={PERMISSIONS.BRAND_MANAGE}>
           <div className={styles.actions}>
             <Button variant='ghost' size='sm' onClick={() => setDialog({ type: 'edit', brand: row })}>
-              编辑
+              {tCommon('edit')}
             </Button>
             <Button
               variant='ghost'
@@ -200,7 +210,7 @@ export function BrandManager() {
                 })
               }
             >
-              {row.status === 'ACTIVE' ? '停用' : '启用'}
+              {row.status === 'ACTIVE' ? tOps('disable') : tOps('enable')}
             </Button>
           </div>
         </Can>
@@ -220,8 +230,8 @@ export function BrandManager() {
           onOpenChange={open => {
             if (!open) closeDialog();
           }}
-          title='编辑品牌'
-          description={`品牌：${dialog.brand.name}`}
+          title={t('dialog.editTitle')}
+          description={t('dialog.editDescription', { name: dialog.brand.name })}
         >
           <Form
             schema={brandSchema}
@@ -232,21 +242,21 @@ export function BrandManager() {
             }}
             onSubmit={values => updateMutation.mutate({ id: dialog.brand.id, values })}
           >
-            <Field label='品牌名称' required>
-              <Input name='name' aria-label='品牌名称' placeholder='请输入品牌名称' />
+            <Field label={t('fields.name')} required>
+              <Input name='name' aria-label={t('fields.name')} placeholder={t('fields.namePlaceholder')} />
             </Field>
-            <Field label='状态' required>
-              <Select name='status' aria-label='品牌状态' options={STATUS_FORM_OPTIONS} />
+            <Field label={t('fields.status')} required>
+              <Select name='status' aria-label={t('fields.statusFilter')} options={statusFormOptions} />
             </Field>
-            <Field label='Logo' hint='支持 PNG、JPEG、WebP，最大 10MB'>
+            <Field label={t('fields.logo')} hint={t('fields.logoHint')}>
               <BrandLogoField />
             </Field>
             <div className={styles.formActions}>
               <Button type='button' variant='secondary' onClick={closeDialog}>
-                取消
+                {tCommon('cancel')}
               </Button>
               <Button type='submit' loading={updateMutation.isPending}>
-                保存
+                {tCommon('save')}
               </Button>
             </div>
           </Form>
@@ -260,29 +270,29 @@ export function BrandManager() {
         onOpenChange={open => {
           if (!open) closeDialog();
         }}
-        title='新建品牌'
-        description='创建后可在列表中编辑或启用停用。'
+        title={t('dialog.createTitle')}
+        description={t('dialog.createDescription')}
       >
         <Form
           schema={brandSchema}
           defaultValues={{ name: '', status: 'ACTIVE', logoUrl: null }}
           onSubmit={values => createMutation.mutate(values)}
         >
-          <Field label='品牌名称' required>
-            <Input name='name' aria-label='品牌名称' placeholder='请输入品牌名称' />
+          <Field label={t('fields.name')} required>
+            <Input name='name' aria-label={t('fields.name')} placeholder={t('fields.namePlaceholder')} />
           </Field>
-          <Field label='状态' required>
-            <Select name='status' aria-label='品牌状态' options={STATUS_FORM_OPTIONS} />
+          <Field label={t('fields.status')} required>
+            <Select name='status' aria-label={t('fields.statusFilter')} options={statusFormOptions} />
           </Field>
-          <Field label='Logo' hint='支持 PNG、JPEG、WebP，最大 10MB'>
+          <Field label={t('fields.logo')} hint={t('fields.logoHint')}>
             <BrandLogoField />
           </Field>
           <div className={styles.formActions}>
             <Button type='button' variant='secondary' onClick={closeDialog}>
-              取消
+              {tCommon('cancel')}
             </Button>
             <Button type='submit' loading={createMutation.isPending}>
-              保存
+              {tCommon('save')}
             </Button>
           </div>
         </Form>
@@ -292,28 +302,28 @@ export function BrandManager() {
 
   return (
     <PageContainer
-      title='品牌管理'
-      description='维护品牌名称、Logo 与启用状态。'
+      title={t('title')}
+      description={t('description')}
       actions={
         <Can permission={PERMISSIONS.BRAND_MANAGE}>
-          <Button onClick={() => setDialog({ type: 'create' })}>新建品牌</Button>
+          <Button onClick={() => setDialog({ type: 'create' })}>{t('create')}</Button>
         </Can>
       }
     >
       <div className={styles.toolbar}>
         <SearchForm onSubmit={applyFilters} onReset={resetFilters}>
-          <Field label='关键字'>
+          <Field label={t('fields.keyword')}>
             <Input
-              aria-label='关键字'
-              placeholder='品牌名称'
+              aria-label={t('fields.keyword')}
+              placeholder={t('fields.keywordPlaceholder')}
               value={draftKeyword}
               onChange={event => setDraftKeyword(event.target.value)}
             />
           </Field>
-          <Field label='状态'>
+          <Field label={t('fields.status')}>
             <Select
-              aria-label='品牌状态筛选'
-              options={STATUS_FILTER_OPTIONS}
+              aria-label={t('fields.statusFilter')}
+              options={statusFilterOptions}
               value={draftStatus}
               onChange={value => setDraftStatus(String(value))}
             />
@@ -322,7 +332,7 @@ export function BrandManager() {
       </div>
 
       {brandsQuery.isError ? (
-        <Empty description='加载失败' />
+        <Empty description={tCommon('loadFailed')} />
       ) : (
         <DataTable
           columns={columns}
@@ -333,7 +343,7 @@ export function BrandManager() {
           onPageChange={setPage}
           rowKey='id'
           loading={brandsQuery.isPending}
-          emptyText='暂无品牌'
+          emptyText={t('empty')}
         />
       )}
 
