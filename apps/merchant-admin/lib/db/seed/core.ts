@@ -30,7 +30,7 @@ import {
   transformMerchantList,
 } from './transformers';
 
-export const CORE_SEED_VERSION = '2026-11-03-core';
+export const CORE_SEED_VERSION = '2026-11-04-core-i18n';
 
 function record(value: unknown): Record<string, unknown> {
   return typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : {};
@@ -60,12 +60,47 @@ export async function seedCore(): Promise<void> {
     row.templateUrl = templateUrl ?? row.templateUrl;
   }
 
+  // Menu rows are upserted rather than insert-only so that a seed version bump
+  // refreshes already-seeded databases (for example when titles switch to
+  // i18n keys) instead of leaving stale Chinese labels behind.
+  const menuItemWrites = items.map(row =>
+    prisma.menuItem.upsert({
+      where: { id: row.id },
+      create: row,
+      update: {
+        parentId: row.parentId,
+        title: row.title,
+        icon: row.icon,
+        url: row.url,
+        code: row.code,
+        auth: row.auth,
+        index: row.index,
+        level: row.level,
+        sortId: row.sortId,
+        toolMenu: row.toolMenu,
+        permissionCode: row.permissionCode,
+      },
+    })
+  );
+
+  const menuBadgeWrites = badges.map(row =>
+    prisma.menuBadge.upsert({
+      where: { menuId: row.menuId },
+      create: row,
+      update: {
+        actionType: row.actionType,
+        noticeStyle: row.noticeStyle,
+        noticeContent: row.noticeContent,
+      },
+    })
+  );
+
   await prisma.$transaction([
     prisma.merchantCategory.createMany({ data: categories, skipDuplicates: true }),
     prisma.merchant.createMany({ data: [detail, ...list], skipDuplicates: true }),
     prisma.merchantAccount.createMany({ data: [account], skipDuplicates: true }),
-    prisma.menuItem.createMany({ data: items, skipDuplicates: true }),
-    prisma.menuBadge.createMany({ data: badges, skipDuplicates: true }),
+    ...menuItemWrites,
+    ...menuBadgeWrites,
     prisma.menuFavorite.createMany({ data: menuFavorites, skipDuplicates: true }),
     prisma.merchantLicense.createMany({ data: licenses, skipDuplicates: true }),
     prisma.merchantEntry.createMany({ data: [entry], skipDuplicates: true }),

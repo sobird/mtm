@@ -8,7 +8,7 @@ export const SEED_PRODUCT_ID = 'seed-product-1';
 export const SEED_MERCHANT_TASK_ID = '1';
 export const SEED_VIOLATION_ID = '1';
 
-export const MERCHANT_AUTH_SEED_VERSION = '2026-11-04-merchant-auth-phase4';
+export const MERCHANT_AUTH_SEED_VERSION = '2026-11-04-merchant-auth-i18n';
 
 export const SEED_OWNER_ROLE_ID = 'merchant-role-owner';
 export const SEED_STAFF_ROLE_ID = 'merchant-role-staff';
