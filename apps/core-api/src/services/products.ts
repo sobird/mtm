@@ -17,6 +17,7 @@ import {
 import { prisma } from '../db';
 import { Prisma } from '../generated/prisma';
 import { HttpError, assertMerchantVisible, normalizePage } from '../http';
+import { recordCoreOperationLog } from './operation-log';
 
 const OPS_VISIBLE_STATUSES = ['SUBMITTED', 'APPROVED', 'PUBLISHED'] as const;
 const OPS_VISIBLE_SET = new Set<string>(OPS_VISIBLE_STATUSES);
@@ -370,6 +371,13 @@ export async function createProduct(auth: ServiceTokenClaims, input: ProductCrea
 
       await tx.product.update({ where: { id: product.id }, data: { currentVersionId: version.id } });
 
+      await recordCoreOperationLog(tx, auth, {
+        action: 'product.create',
+        resource: 'product',
+        resourceId: product.id,
+        detail: { versionId: version.id, version: 1 },
+      });
+
       return product.id;
     });
   } catch (error) {
@@ -435,6 +443,17 @@ export async function updateProduct(
           where: { id },
           data: { categoryId: input.categoryId, brandId: input.brandId },
         });
+
+        await recordCoreOperationLog(tx, auth, {
+          action: 'product.update',
+          resource: 'product',
+          resourceId: id,
+          detail: {
+            versionId: product.currentVersion.id,
+            version: product.currentVersion.version,
+            newVersion: false,
+          },
+        });
       });
     } else {
       // 已审核/已发布等版本不可变，编辑产生新的 DRAFT 版本并切换当前指针。
@@ -458,6 +477,13 @@ export async function updateProduct(
         await tx.product.update({
           where: { id },
           data: { categoryId: input.categoryId, brandId: input.brandId, currentVersionId: created.id },
+        });
+
+        await recordCoreOperationLog(tx, auth, {
+          action: 'product.update',
+          resource: 'product',
+          resourceId: id,
+          detail: { versionId: created.id, version: created.version, newVersion: true },
         });
       });
     }
@@ -487,8 +513,15 @@ export async function submitProduct(auth: ServiceTokenClaims, id: string): Promi
       throw new HttpError('PRODUCT_NOT_DRAFT', 409, '只有草稿可以提交审核');
     }
 
-    await tx.auditRecord.create({
+    const auditRecord = await tx.auditRecord.create({
       data: { productVersionId: versionId, status: 'PENDING', submitterId: auth.userId, submittedAt: now },
+    });
+
+    await recordCoreOperationLog(tx, auth, {
+      action: 'product.submit',
+      resource: 'product',
+      resourceId: id,
+      detail: { versionId, auditId: auditRecord.id },
     });
   });
 
@@ -525,6 +558,13 @@ export async function publishProduct(auth: ServiceTokenClaims, id: string): Prom
     }
 
     await tx.product.update({ where: { id }, data: { publishedVersionId: current.id } });
+
+    await recordCoreOperationLog(tx, auth, {
+      action: 'product.publish',
+      resource: 'product',
+      resourceId: id,
+      detail: { versionId: current.id },
+    });
   });
 
   return getProduct(auth, id);
@@ -558,6 +598,13 @@ export async function offlineProduct(auth: ServiceTokenClaims, id: string): Prom
     if (productUpdated.count === 0) {
       throw new HttpError('PRODUCT_NOT_PUBLISHED', 409, '商品未发布，无法下线');
     }
+
+    await recordCoreOperationLog(tx, auth, {
+      action: 'product.offline',
+      resource: 'product',
+      resourceId: id,
+      detail: { versionId: publishedVersionId },
+    });
   });
 
   return getProduct(auth, id);
@@ -587,6 +634,8 @@ export async function deleteProduct(auth: ServiceTokenClaims, id: string): Promi
     if (product.publishedVersionId !== null) {
       throw new HttpError('PRODUCT_PUBLISHED', 409, '商品已发布，无法删除');
     }
+
+    const versionId = product.currentVersion.id;
 
     // 条件软删除：在读取与写入之间若有人提交/发布，count 为 0，随后按既有顺序复检错误码。
     const deleted = await tx.product.updateMany({
@@ -620,6 +669,13 @@ export async function deleteProduct(auth: ServiceTokenClaims, id: string): Promi
 
       throw productNotFound();
     }
+
+    await recordCoreOperationLog(tx, auth, {
+      action: 'product.delete',
+      resource: 'product',
+      resourceId: id,
+      detail: { versionId },
+    });
   });
 }
 

@@ -39,4 +39,5 @@ export async function resetCoreFixtures(): Promise<void> {
   await prisma.merchant.deleteMany();
   await prisma.brand.deleteMany();
   await prisma.mediaAsset.deleteMany();
+  await prisma.coreOperationLog.deleteMany();
 }

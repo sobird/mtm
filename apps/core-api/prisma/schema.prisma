@@ -208,3 +208,19 @@ model SeedMeta {
   version   String   @id
   appliedAt DateTime @default(now())
 }
+
+model CoreOperationLog {
+  id              String   @id @default(cuid())
+  portal          String
+  actorId         String
+  actorMerchantId String?
+  action          String
+  resource        String
+  resourceId      String?
+  detail          Json?
+  createdAt       DateTime @default(now())
+
+  @@index([resource, resourceId, createdAt])
+  @@index([actorId, createdAt])
+  @@index([createdAt])
+}
