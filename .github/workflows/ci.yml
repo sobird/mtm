@@ -2,6 +2,8 @@ name: CI
 
 on:
   pull_request:
+  push:
+    branches: [master]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -10,16 +12,49 @@ concurrency:
 jobs:
   checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: mtm
+          POSTGRES_PASSWORD: mtm
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U mtm -d postgres"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 30
+    env:
+      MERCHANT_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_merchant?schema=public
+      CORE_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_core?schema=public
+      OPS_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_ops?schema=public
+      MERCHANT_TEST_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_merchant_test?schema=public
+      CORE_TEST_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_core_test?schema=public
+      OPS_TEST_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_ops_test?schema=public
+      AUTH_SECRET: ci-secret
+      OPS_AUTH_SECRET: ci-ops-secret
+      CORE_API_JWT_SECRET: ci-core-secret
+      CORE_API_URL: http://localhost:4000
+      PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION: 我同意重置本地开发和测试数据库
     steps:
       - uses: actions/checkout@v4
-
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version-file: .bun-version
-
+      - uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: turbo-${{ runner.os }}-
+      - run: bun scripts/ci-databases.mjs
       - run: bun install --frozen-lockfile
       - run: bun run lint
+      - run: bun run fmt:check
+      - run: bun run check:i18n
+      - run: bun run check:sensitive
+      - run: bun test scripts
       - run: bun run typecheck
       - run: bun run test
       - run: bun run build
