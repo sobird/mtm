@@ -6,6 +6,8 @@ import { Upload, useToast } from '@/components/ui';
 import { ApiError } from '@/lib/api-client';
 import { uploadProductImage } from '@/lib/services/products';
 
+import { MAX_IMAGES } from '../ProductForm/schema';
+
 const MAX_BYTES = 10 * 1024 * 1024;
 const ALLOWED_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp']);
 
@@ -41,26 +43,33 @@ export function ProductImageField({ value, onChange, disabled = false }: Product
       return;
     }
 
+    const remaining = MAX_IMAGES - value.length;
+
+    if (remaining <= 0) {
+      toast.error(`最多上传 ${MAX_IMAGES} 张图片`);
+      return;
+    }
+
+    if (validFiles.length > remaining) {
+      toast.error(`最多上传 ${MAX_IMAGES} 张图片，已忽略多余图片`);
+    }
+
+    // 按 brief 要求逐个串行上传；本地 `current` 保证连续追加时不会丢失前一张。
+    let current = value;
+
     setUploading(true);
 
     try {
-      const results = await Promise.all(
-        validFiles.map(async file => {
-          try {
-            const asset = await uploadProductImage(file);
+      for (const file of validFiles.slice(0, remaining)) {
+        try {
+          // eslint-disable-next-line no-await-in-loop -- 按 brief 要求逐个串行上传
+          const asset = await uploadProductImage(file);
 
-            return asset.url;
-          } catch (error) {
-            toast.error(error instanceof ApiError ? error.message : `${file.name} 上传失败`);
-
-            return null;
-          }
-        })
-      );
-      const urls = results.filter((url): url is string => url !== null);
-
-      if (urls.length > 0) {
-        onChange([...value, ...urls]);
+          current = [...current, asset.url].slice(0, MAX_IMAGES);
+          onChange(current);
+        } catch (error) {
+          toast.error(error instanceof ApiError ? error.message : `${file.name} 上传失败`);
+        }
       }
     } finally {
       setUploading(false);
@@ -73,7 +82,7 @@ export function ProductImageField({ value, onChange, disabled = false }: Product
         value={value}
         onChange={onChange}
         onFilesSelected={handleFilesSelected}
-        maxCount={5}
+        maxCount={MAX_IMAGES}
         accept='image/png,image/jpeg,image/webp'
         disabled={disabled || uploading}
         itemOverlay={(_url, index) =>

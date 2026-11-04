@@ -2,7 +2,7 @@
 
 import type { ProductListRowDTO, ProductVersionStatus } from '@mtm/contracts';
 import { PERMISSIONS } from '@mtm/contracts';
-import { Can, PermissionButton } from '@mtm/ui';
+import { Can, PermissionButton, usePermissions } from '@mtm/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -61,6 +61,8 @@ export function ProductManager() {
   const router = useRouter();
   const toast = useToast();
   const queryClient = useQueryClient();
+  const permissions = usePermissions();
+  const canUpdate = permissions.has(PERMISSIONS.PRODUCT_UPDATE);
 
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
@@ -138,19 +140,15 @@ export function ProductManager() {
 
   const renderActions = (row: ProductListRowDTO) => (
     <div className={styles.actions}>
-      {EDITABLE_STATUSES.has(row.status) ? (
-        <Can permission={PERMISSIONS.PRODUCT_UPDATE}>
-          <Button variant='ghost' size='sm' onClick={() => router.push(`/products/${row.id}`)}>
-            编辑
-          </Button>
-        </Can>
-      ) : null}
-
-      {row.status === 'SUBMITTED' ? (
-        <Button variant='ghost' size='sm' disabled>
-          审核中
+      {EDITABLE_STATUSES.has(row.status) && canUpdate ? (
+        <Button variant='ghost' size='sm' onClick={() => router.push(`/products/${row.id}`)}>
+          编辑
         </Button>
-      ) : null}
+      ) : (
+        <Button variant='ghost' size='sm' onClick={() => router.push(`/products/${row.id}`)}>
+          查看
+        </Button>
+      )}
 
       {row.status === 'APPROVED' ? (
         <Can permission={PERMISSIONS.PRODUCT_PUBLISH}>

@@ -1,16 +1,23 @@
 'use client';
 
-import type { ProductDetailDTO, ProductVersionInput, ProductVersionStatus } from '@mtm/contracts';
+import type {
+  BrandDTO,
+  CategoryNodeDTO,
+  ProductDetailDTO,
+  ProductVersionInput,
+  ProductVersionStatus,
+} from '@mtm/contracts';
 import { PERMISSIONS } from '@mtm/contracts';
 import { usePermissions } from '@mtm/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { z } from 'zod';
+import { useEffect, useMemo, useRef } from 'react';
+import type { MutableRefObject } from 'react';
+import { Controller, useFormContext, useFormState, useWatch } from 'react-hook-form';
 
 import { PageContainer } from '@/components/layout/PageContainer';
-import { Button, Empty, Field, Input, Select, Skeleton, Tag, Textarea, useToast } from '@/components/ui';
-import type { SelectOption, SelectOptionValue, TagTone } from '@/components/ui';
+import { Button, Empty, Field, Form, Input, Select, Skeleton, Tag, Textarea, useToast } from '@/components/ui';
+import type { SelectOption, TagTone } from '@/components/ui';
 import { ApiError } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import {
@@ -30,6 +37,8 @@ import ProductImageField from '../ProductImageField';
 import { createEmptySku, SkuEditor } from '../SkuEditor';
 import { buildCreateInput, buildVersionInput } from './payload';
 import type { ProductFormState } from './payload';
+import { createProductFormSchema, MAX_IMAGES } from './schema';
+import type { ProductFormMode, ProductFormValues } from './schema';
 
 import styles from './index.module.css';
 
@@ -45,27 +54,10 @@ const STATUS_META: Record<ProductVersionStatus, { label: string; tone: TagTone }
   OFFLINE: { label: '已下线', tone: 'danger' },
 };
 
-const formSchema = z.object({
-  categoryId: z.string().trim().min(1, '请选择类目'),
-  brandId: z.string().nullable(),
-  title: z.string().trim().min(1, '请填写商品标题').max(100, '商品标题最多 100 个字符'),
-  subtitle: z.string().trim().max(100, '副标题最多 100 个字符'),
-  images: z.array(z.string().min(1)).min(1, '请至少上传一张图片').max(5, '最多上传 5 张图片'),
-  description: z.string().trim().min(1, '请填写商品描述').max(5000, '商品描述最多 5000 个字符'),
-  attributes: z.record(z.string(), z.string()),
-  skus: z.array(
-    z.object({
-      skuCode: z.string(),
-      specsText: z.string(),
-      price: z.string(),
-      stock: z.string(),
-      status: z.enum(['ACTIVE', 'DISABLED']),
-    })
-  ),
-});
-
-function emptyState(): ProductFormState {
+function emptyValues(shopId: string): ProductFormValues {
   return {
+    shopId,
+    code: '',
     categoryId: '',
     brandId: '',
     title: '',
@@ -77,11 +69,13 @@ function emptyState(): ProductFormState {
   };
 }
 
-/** 商品详情回填为表单状态；规格取第一个值。 */
-function toFormState(product: ProductDetailDTO): ProductFormState {
+/** 商品详情回填为表单值；规格取第一个值。 */
+function toFormValues(product: ProductDetailDTO): ProductFormValues {
   const version = product.currentVersion;
 
   return {
+    shopId: product.shopId,
+    code: product.code,
     categoryId: product.categoryId,
     brandId: product.brandId ?? '',
     title: version.title,
@@ -99,77 +93,159 @@ function toFormState(product: ProductDetailDTO): ProductFormState {
   };
 }
 
-interface ValidationContext {
-  mode: 'create' | 'edit';
-  shopId: string;
-  code: string;
-  requiredAttributeIds: string[];
+function toFormState(values: ProductFormValues): ProductFormState {
+  return {
+    categoryId: values.categoryId,
+    brandId: values.brandId,
+    title: values.title,
+    subtitle: values.subtitle,
+    images: values.images,
+    description: values.description,
+    attributes: values.attributes,
+    skus: values.skus,
+  };
 }
 
-function validateForm(state: ProductFormState, context: ValidationContext): Record<string, string> {
-  const errors: Record<string, string> = {};
-  const parsed = formSchema.safeParse(state);
+interface ProductFormFieldsProps {
+  mode: ProductFormMode;
+  readOnly: boolean;
+  categories: CategoryNodeDTO[];
+  brands: BrandDTO[];
+  shops: Array<{ id: string; name: string }>;
+  attributesRef: MutableRefObject<CategoryNodeDTO['attributes']>;
+}
 
-  if (!parsed.success) {
-    for (const issue of parsed.error.issues) {
-      const key = issue.path.join('.');
-      errors[key] ??= issue.message;
-    }
-  }
+function ProductFormFields({ mode, readOnly, categories, brands, shops, attributesRef }: ProductFormFieldsProps) {
+  const { control, setValue } = useFormContext<ProductFormValues>();
+  const { errors, isSubmitted } = useFormState<ProductFormValues>();
+  const categoryId = useWatch({ control, name: 'categoryId' }) as string | undefined;
+  const categoryAttributes = useMemo(
+    () => categories.find(category => category.id === categoryId)?.attributes ?? [],
+    [categories, categoryId]
+  );
+  const initialCategory = useRef(categoryId);
 
-  if (context.mode === 'create') {
-    if (!context.shopId.trim()) {
-      errors.shopId = '请选择店铺';
-    }
+  useEffect(() => {
+    attributesRef.current = categoryAttributes;
+  }, [attributesRef, categoryAttributes]);
 
-    if (!context.code.trim()) {
-      errors.code = '请填写商品编码';
-    } else if (context.code.trim().length > 50) {
-      errors.code = '商品编码最多 50 个字符';
-    }
-  }
-
-  const filledSkus = state.skus.filter(sku => sku.skuCode.trim() !== '');
-
-  if (filledSkus.length === 0) {
-    errors.skus = '至少填写一个 SKU';
-  }
-
-  const skuCodes = new Set<string>();
-
-  state.skus.forEach((sku, index) => {
-    if (sku.skuCode.trim() === '') {
+  useEffect(() => {
+    if (categoryId === initialCategory.current) {
       return;
     }
 
-    if (sku.skuCode.trim().length > 50) {
-      errors[`skus.${index}.skuCode`] ??= 'SKU 编码最多 50 个字符';
-    }
+    initialCategory.current = categoryId;
+    setValue('attributes', {}, { shouldDirty: true });
+  }, [categoryId, setValue]);
 
-    const normalized = sku.skuCode.trim().toLowerCase();
+  const categoryOptions: SelectOption[] =
+    categories.map(category => ({
+      value: category.id,
+      label: `${'　'.repeat(Math.max(category.level - 1, 0))}${category.name}`,
+    })) ?? [];
 
-    if (skuCodes.has(normalized)) {
-      errors[`skus.${index}.skuCode`] ??= 'SKU 编码重复';
-    }
+  const brandOptions: SelectOption[] = [
+    { value: '', label: '不选择品牌' },
+    ...brands.map(brand => ({ value: brand.id, label: brand.name })),
+  ];
 
-    skuCodes.add(normalized);
+  const shopOptions: SelectOption[] = shops.map(shop => ({ value: shop.id, label: shop.name }));
 
-    if (sku.price.trim() === '' || !Number.isFinite(Number(sku.price)) || Number(sku.price) < 0) {
-      errors[`skus.${index}.price`] ??= '请填写有效价格';
-    }
+  return (
+    <>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>基本信息</h2>
 
-    if (sku.stock.trim() === '' || !Number.isInteger(Number(sku.stock)) || Number(sku.stock) < 0) {
-      errors[`skus.${index}.stock`] ??= '请填写有效库存';
-    }
-  });
+        {mode === 'create' ? (
+          <div className={styles.grid}>
+            <Field label='店铺' required>
+              <Select
+                name='shopId'
+                aria-label='店铺'
+                placeholder='请选择店铺'
+                options={shopOptions}
+                disabled={readOnly}
+              />
+            </Field>
 
-  for (const attributeId of context.requiredAttributeIds) {
-    if (!state.attributes[attributeId]?.trim()) {
-      errors[`attributes.${attributeId}`] ??= '请填写该属性';
-    }
-  }
+            <Field label='商品编码' required>
+              <Input name='code' aria-label='商品编码' maxLength={50} placeholder='例如 P1001' disabled={readOnly} />
+            </Field>
+          </div>
+        ) : null}
 
-  return errors;
+        <div className={styles.grid}>
+          <Field label='类目' required>
+            <Select
+              name='categoryId'
+              aria-label='商品类目'
+              placeholder='请选择类目'
+              options={categoryOptions}
+              disabled={readOnly}
+            />
+          </Field>
+
+          <Field label='品牌'>
+            <Select name='brandId' aria-label='商品品牌' options={brandOptions} disabled={readOnly} />
+          </Field>
+        </div>
+
+        <Field label='商品标题' required>
+          <Input name='title' aria-label='商品标题' maxLength={100} disabled={readOnly} />
+        </Field>
+
+        <Field label='副标题'>
+          <Input name='subtitle' aria-label='副标题' maxLength={100} disabled={readOnly} />
+        </Field>
+
+        <Field label='商品描述' required>
+          <Textarea name='description' aria-label='商品描述' rows={5} maxLength={5000} disabled={readOnly} />
+        </Field>
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>商品图片</h2>
+        <Controller
+          control={control}
+          name='images'
+          render={({ field, fieldState }) => (
+            <Field
+              label={`图片（最多 ${MAX_IMAGES} 张，第一张为主图）`}
+              required
+              error={fieldState.error?.message as string | undefined}
+            >
+              <ProductImageField value={field.value ?? []} onChange={field.onChange} disabled={readOnly} />
+            </Field>
+          )}
+        />
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>商品属性</h2>
+        {categoryId ? (
+          <AttributeFields attributes={categoryAttributes} disabled={readOnly} />
+        ) : (
+          <p className={styles.muted}>请先选择类目。</p>
+        )}
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>SKU</h2>
+        <SkuEditor disabled={readOnly} />
+        {errors.skus?.message ? (
+          <p role='alert' className={styles.error}>
+            {errors.skus.message as string}
+          </p>
+        ) : null}
+      </section>
+
+      {isSubmitted && Object.keys(errors).length > 0 ? (
+        <p role='alert' className={styles.error}>
+          请检查表单填写后再保存。
+        </p>
+      ) : null}
+    </>
+  );
 }
 
 export function ProductForm(props: ProductFormProps) {
@@ -177,15 +253,10 @@ export function ProductForm(props: ProductFormProps) {
   const toast = useToast();
   const queryClient = useQueryClient();
   const permissions = usePermissions();
-  const mode = props.mode;
+  const mode: ProductFormMode = props.mode;
   const productId = props.mode === 'edit' ? props.productId : '';
   const isEdit = props.mode === 'edit';
-
-  const [state, setState] = useState<ProductFormState>(emptyState);
-  const [shopId, setShopId] = useState('');
-  const [code, setCode] = useState('');
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const hydratedVersion = useRef<string | null>(null);
+  const attributesRef = useRef<CategoryNodeDTO['attributes']>([]);
 
   const categoriesQuery = useQuery({
     queryKey: queryKeys.productCategories,
@@ -209,38 +280,6 @@ export function ProductForm(props: ProductFormProps) {
   const product = isEdit ? productQuery.data : undefined;
   const shops = merchantQuery.data?.shops ?? [];
 
-  useEffect(() => {
-    if (!isEdit || !product) {
-      return;
-    }
-
-    if (hydratedVersion.current === product.currentVersion.id) {
-      return;
-    }
-
-    hydratedVersion.current = product.currentVersion.id;
-    setState(toFormState(product));
-    setCode(product.code);
-  }, [isEdit, product]);
-
-  useEffect(() => {
-    if (mode !== 'create' || shopId !== '') {
-      return;
-    }
-
-    const firstShop = merchantQuery.data?.shops[0];
-
-    if (firstShop) {
-      setShopId(firstShop.id);
-    }
-  }, [mode, shopId, merchantQuery.data]);
-
-  const selectedCategory = useMemo(
-    () => categoriesQuery.data?.find(category => category.id === state.categoryId),
-    [categoriesQuery.data, state.categoryId]
-  );
-  const categoryAttributes = selectedCategory?.attributes ?? [];
-
   const status = product?.status;
   const submitted = isEdit && status === 'SUBMITTED';
   const canCreate = permissions.has(PERMISSIONS.PRODUCT_CREATE);
@@ -252,6 +291,10 @@ export function ProductForm(props: ProductFormProps) {
   const showSubmit = isEdit && status === 'DRAFT' && canSubmit;
   const showPublish = isEdit && status === 'APPROVED' && canPublish;
   const showOffline = isEdit && status === 'PUBLISHED' && canPublish;
+
+  // 校验时才读取最新类目属性；重建表单会丢失输入，因此 schema 在挂载时创建一次。
+  // eslint-disable-next-line react/refs -- 仅在表单校验时读取 ref，不参与渲染
+  const schema = useMemo(() => createProductFormSchema(mode, () => attributesRef.current), [mode]);
 
   const invalidateProducts = async () => {
     await queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -297,50 +340,19 @@ export function ProductForm(props: ProductFormProps) {
     onError,
   });
 
-  const hasError = Object.keys(errors).length > 0;
-
-  const handleSave = () => {
+  const handleSave = (values: ProductFormValues) => {
     if (readOnly || !canSave) {
       return;
     }
 
-    const nextErrors = validateForm(state, {
-      mode,
-      shopId,
-      code,
-      requiredAttributeIds: categoryAttributes.filter(attribute => attribute.required).map(attribute => attribute.id),
-    });
-
-    setErrors(nextErrors);
-
-    if (Object.keys(nextErrors).length > 0) {
-      toast.error('请检查表单填写');
-      return;
-    }
+    const state = toFormState(values);
 
     if (mode === 'create') {
-      createMutation.mutate(buildCreateInput(state, shopId, code));
+      createMutation.mutate(buildCreateInput(state, values.shopId, values.code));
     } else {
       updateMutation.mutate(buildVersionInput(state));
     }
   };
-
-  const updateState = (patch: Partial<ProductFormState>) => {
-    setState(previous => ({ ...previous, ...patch }));
-  };
-
-  const categoryOptions: SelectOption[] =
-    categoriesQuery.data?.map(category => ({
-      value: category.id,
-      label: `${'　'.repeat(Math.max(category.level - 1, 0))}${category.name}`,
-    })) ?? [];
-
-  const brandOptions: SelectOption[] = [
-    { value: '', label: '不选择品牌' },
-    ...(brandsQuery.data?.map(brand => ({ value: brand.id, label: brand.name })) ?? []),
-  ];
-
-  const shopOptions: SelectOption[] = shops.map(shop => ({ value: shop.id, label: shop.name }));
 
   const loading =
     categoriesQuery.isPending || brandsQuery.isPending || (isEdit ? productQuery.isPending : merchantQuery.isPending);
@@ -364,6 +376,7 @@ export function ProductForm(props: ProductFormProps) {
     );
   }
 
+  const defaultValues = isEdit && product ? toFormValues(product) : emptyValues(shops[0]?.id ?? '');
   const saving = createMutation.isPending || updateMutation.isPending;
 
   return (
@@ -407,143 +420,22 @@ export function ProductForm(props: ProductFormProps) {
         </p>
       ) : null}
 
-      <form
+      <Form
         id='product-form'
+        schema={schema}
+        defaultValues={defaultValues}
+        onSubmit={handleSave}
         className={styles.form}
-        onSubmit={event => {
-          event.preventDefault();
-          handleSave();
-        }}
       >
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>基本信息</h2>
-
-          {mode === 'create' ? (
-            <div className={styles.grid}>
-              <Field label='店铺' required>
-                <Select
-                  aria-label='店铺'
-                  placeholder='请选择店铺'
-                  options={shopOptions}
-                  value={shopId}
-                  onChange={(value: SelectOptionValue) => setShopId(String(value))}
-                  disabled={readOnly}
-                  error={errors.shopId}
-                />
-              </Field>
-
-              <Field label='商品编码' required>
-                <Input
-                  aria-label='商品编码'
-                  value={code}
-                  maxLength={50}
-                  placeholder='例如 P1001'
-                  onChange={event => setCode(event.target.value)}
-                  disabled={readOnly}
-                  error={errors.code}
-                />
-              </Field>
-            </div>
-          ) : null}
-
-          <div className={styles.grid}>
-            <Field label='类目' required>
-              <Select
-                aria-label='商品类目'
-                placeholder='请选择类目'
-                options={categoryOptions}
-                value={state.categoryId}
-                onChange={(value: SelectOptionValue) => updateState({ categoryId: String(value), attributes: {} })}
-                disabled={readOnly}
-                error={errors.categoryId}
-              />
-            </Field>
-
-            <Field label='品牌'>
-              <Select
-                aria-label='商品品牌'
-                options={brandOptions}
-                value={state.brandId ?? ''}
-                onChange={(value: SelectOptionValue) => updateState({ brandId: String(value) })}
-                disabled={readOnly}
-                error={errors.brandId}
-              />
-            </Field>
-          </div>
-
-          <Field label='商品标题' required>
-            <Input
-              aria-label='商品标题'
-              value={state.title}
-              maxLength={100}
-              onChange={event => updateState({ title: event.target.value })}
-              disabled={readOnly}
-              error={errors.title}
-            />
-          </Field>
-
-          <Field label='副标题'>
-            <Input
-              aria-label='副标题'
-              value={state.subtitle}
-              maxLength={100}
-              onChange={event => updateState({ subtitle: event.target.value })}
-              disabled={readOnly}
-              error={errors.subtitle}
-            />
-          </Field>
-
-          <Field label='商品描述' required>
-            <Textarea
-              aria-label='商品描述'
-              value={state.description}
-              rows={5}
-              maxLength={5000}
-              onChange={event => updateState({ description: event.target.value })}
-              disabled={readOnly}
-              error={errors.description}
-            />
-          </Field>
-        </section>
-
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>商品图片</h2>
-          <Field label='图片（最多 5 张，第一张为主图）' required error={errors.images}>
-            <ProductImageField value={state.images} onChange={images => updateState({ images })} disabled={readOnly} />
-          </Field>
-        </section>
-
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>商品属性</h2>
-          {selectedCategory ? (
-            <AttributeFields
-              attributes={categoryAttributes}
-              values={state.attributes}
-              onChange={attributes => updateState({ attributes })}
-              disabled={readOnly}
-              errors={errors}
-            />
-          ) : (
-            <p className={styles.muted}>请先选择类目。</p>
-          )}
-        </section>
-
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>SKU</h2>
-          <SkuEditor value={state.skus} onChange={skus => updateState({ skus })} disabled={readOnly} errors={errors} />
-          {errors.skus ? (
-            <p role='alert' className={styles.error}>
-              {errors.skus}
-            </p>
-          ) : null}
-        </section>
-
-        {hasError ? (
-          <p role='alert' className={styles.error}>
-            请检查表单填写后再保存。
-          </p>
-        ) : null}
-      </form>
+        <ProductFormFields
+          mode={mode}
+          readOnly={readOnly}
+          categories={categoriesQuery.data ?? []}
+          brands={brandsQuery.data ?? []}
+          shops={shops}
+          attributesRef={attributesRef}
+        />
+      </Form>
     </PageContainer>
   );
 }

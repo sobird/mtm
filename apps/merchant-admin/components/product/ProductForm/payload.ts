@@ -29,12 +29,11 @@ function toSkuInput(sku: ProductFormState['skus'][number]) {
  * 把表单状态转换为版本输入。
  *
  * - 空 `brandId` / `subtitle` 转为 `null`；
- * - 过滤 `skuCode` 为空的 SKU 行，全部为空时至少保留第一行；
+ * - 过滤 `skuCode` 为空的 SKU 行；全部为空时返回空数组，交由表单校验拦截；
  * - 主图由服务端取 `images[0]`，这里保留顺序。
  */
 export function buildVersionInput(state: ProductFormState): ProductVersionInput {
-  const nonEmptySkus = state.skus.filter(sku => sku.skuCode.trim() !== '');
-  const skus = nonEmptySkus.length > 0 ? nonEmptySkus : state.skus.slice(0, 1);
+  const skus = state.skus.filter(sku => sku.skuCode.trim() !== '').map(toSkuInput);
 
   return {
     categoryId: state.categoryId.trim(),
@@ -44,7 +43,7 @@ export function buildVersionInput(state: ProductFormState): ProductVersionInput 
     images: [...state.images],
     description: state.description.trim(),
     attributes: { ...state.attributes },
-    skus: skus.map(toSkuInput),
+    skus,
   };
 }
 

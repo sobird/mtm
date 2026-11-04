@@ -35,3 +35,12 @@ test('创建输入附加 shopId 与 code，并过滤空 SKU 行', () => {
     )
   ).toMatchObject({ shopId: 'shop-demo-1', code: 'P1001', skus: [{ skuCode: 'P1' }] });
 });
+
+test('全部 SKU 行为空时返回空数组，交给表单校验拦截', () => {
+  const result = buildVersionInput({
+    ...STATE,
+    skus: [{ skuCode: '', specsText: '', price: '', stock: '', status: 'ACTIVE' }],
+  });
+
+  expect(result.skus).toEqual([]);
+});

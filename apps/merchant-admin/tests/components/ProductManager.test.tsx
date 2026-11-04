@@ -43,12 +43,12 @@ const DRAFT_ROW = {
   updatedAt: '2026-11-04T00:00:00.000Z',
 };
 
-function renderManager() {
+function renderManager(permissions: string[] = Object.values(PERMISSIONS)) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
-        <PermissionProvider permissions={Object.values(PERMISSIONS)}>
+        <PermissionProvider permissions={permissions}>
           <ProductManager />
         </PermissionProvider>
       </ToastProvider>
@@ -92,5 +92,15 @@ test('编辑商品跳转到详情编辑页', async () => {
   await screen.findByText('测试沙发');
 
   await userEvent.click(screen.getByRole('button', { name: '编辑' }));
+  expect(mocks.push).toHaveBeenCalledWith('/products/p1');
+});
+
+test('无编辑权限时提供查看入口并跳转只读详情页', async () => {
+  renderManager(Object.values(PERMISSIONS).filter(permission => permission !== PERMISSIONS.PRODUCT_UPDATE));
+  await screen.findByText('测试沙发');
+
+  expect(screen.queryByRole('button', { name: '编辑' })).not.toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: '查看' }));
   expect(mocks.push).toHaveBeenCalledWith('/products/p1');
 });
