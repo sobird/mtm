@@ -267,6 +267,32 @@ function isUniqueConstraintError(error: unknown): boolean {
   return error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002';
 }
 
+type ProductForWrite = Prisma.ProductGetPayload<{ include: { currentVersion: true } }>;
+type OwnedProductForWrite = Omit<ProductForWrite, 'currentVersion'> & {
+  currentVersion: NonNullable<ProductForWrite['currentVersion']>;
+};
+
+/**
+ * Loads a merchant-owned product for write operations. Cross-tenant or
+ * missing/deleted products are reported as 404 so tenants cannot probe ids.
+ */
+async function getOwnedProductForWrite(auth: ServiceTokenClaims, id: string): Promise<OwnedProductForWrite> {
+  if (auth.portal !== 'merchant' || !auth.merchantId) {
+    throw new HttpError('FORBIDDEN', 403, '无权访问');
+  }
+
+  const product = await prisma.product.findFirst({
+    where: { id, deletedAt: null },
+    include: { currentVersion: true },
+  });
+
+  if (!product || product.merchantId !== auth.merchantId || !product.currentVersion) {
+    throw productNotFound();
+  }
+
+  return product as OwnedProductForWrite;
+}
+
 export async function createProduct(auth: ServiceTokenClaims, input: ProductCreateInput): Promise<ProductDetailDTO> {
   if (auth.portal !== 'merchant' || !auth.merchantId) {
     throw new HttpError('FORBIDDEN', 403, '无权访问');
@@ -339,18 +365,7 @@ export async function updateProduct(
   id: string,
   input: ProductUpdateInput
 ): Promise<ProductDetailDTO> {
-  if (auth.portal !== 'merchant' || !auth.merchantId) {
-    throw new HttpError('FORBIDDEN', 403, '无权访问');
-  }
-
-  const product = await prisma.product.findFirst({
-    where: { id, deletedAt: null },
-    include: { currentVersion: true },
-  });
-
-  if (!product || product.merchantId !== auth.merchantId || !product.currentVersion) {
-    throw productNotFound();
-  }
+  const product = await getOwnedProductForWrite(auth, id);
 
   if (product.currentVersion.status === 'SUBMITTED') {
     throw new HttpError('PRODUCT_IN_REVIEW', 409, '商品审核中，无法编辑');
@@ -378,19 +393,26 @@ export async function updateProduct(
   try {
     if (product.currentVersion.status === 'DRAFT') {
       // 草稿原地更新：版本号与版本 ID 保持不变，SKU 全量替换。
-      await prisma.$transaction([
-        prisma.productVersion.update({
-          where: { id: product.currentVersion.id },
-          data: {
-            ...versionData,
-            skus: { deleteMany: {}, create: skus },
-          },
-        }),
-        prisma.product.update({
+      // 条件写 `status: 'DRAFT'` 关闭「编辑与提交并发」时仍改写 SUBMITTED 版本的竞态。
+      await prisma.$transaction(async tx => {
+        const updated = await tx.productVersion.updateMany({
+          where: { id: product.currentVersion.id, status: 'DRAFT' },
+          data: versionData,
+        });
+
+        if (updated.count === 0) {
+          throw new HttpError('PRODUCT_IN_REVIEW', 409, '商品审核中，无法编辑');
+        }
+
+        await tx.sku.deleteMany({ where: { productVersionId: product.currentVersion.id } });
+        await tx.sku.createMany({
+          data: skus.map(sku => ({ ...sku, productVersionId: product.currentVersion.id })),
+        });
+        await tx.product.update({
           where: { id },
           data: { categoryId: input.categoryId, brandId: input.brandId },
-        }),
-      ]);
+        });
+      });
     } else {
       // 已审核/已发布等版本不可变，编辑产生新的 DRAFT 版本并切换当前指针。
       await prisma.$transaction(async tx => {
@@ -425,6 +447,91 @@ export async function updateProduct(
   }
 
   return getProduct(auth, id);
+}
+
+export async function submitProduct(auth: ServiceTokenClaims, id: string): Promise<ProductDetailDTO> {
+  const product = await getOwnedProductForWrite(auth, id);
+  const versionId = product.currentVersion.id;
+  const now = new Date();
+
+  await prisma.$transaction(async tx => {
+    const updated = await tx.productVersion.updateMany({
+      where: { id: versionId, status: 'DRAFT' },
+      data: { status: 'SUBMITTED', submittedAt: now },
+    });
+
+    if (updated.count === 0) {
+      throw new HttpError('PRODUCT_NOT_DRAFT', 409, '只有草稿可以提交审核');
+    }
+
+    await tx.auditRecord.create({
+      data: { productVersionId: versionId, status: 'PENDING', submitterId: auth.userId, submittedAt: now },
+    });
+  });
+
+  return getProduct(auth, id);
+}
+
+export async function publishProduct(auth: ServiceTokenClaims, id: string): Promise<ProductDetailDTO> {
+  const product = await getOwnedProductForWrite(auth, id);
+  const current = product.currentVersion;
+
+  if (current.status !== 'APPROVED') {
+    throw new HttpError('PRODUCT_NOT_APPROVED', 409, '商品未通过审核，无法发布');
+  }
+
+  const now = new Date();
+
+  await prisma.$transaction(async tx => {
+    if (product.publishedVersionId && product.publishedVersionId !== current.id) {
+      await tx.productVersion.updateMany({
+        where: { id: product.publishedVersionId },
+        data: { status: 'SUPERSEDED' },
+      });
+    }
+
+    await tx.productVersion.update({
+      where: { id: current.id },
+      data: { status: 'PUBLISHED', publishedAt: now },
+    });
+    await tx.product.update({ where: { id }, data: { publishedVersionId: current.id } });
+  });
+
+  return getProduct(auth, id);
+}
+
+export async function offlineProduct(auth: ServiceTokenClaims, id: string): Promise<ProductDetailDTO> {
+  const product = await getOwnedProductForWrite(auth, id);
+
+  if (!product.publishedVersionId) {
+    throw new HttpError('PRODUCT_NOT_PUBLISHED', 409, '商品未发布，无法下线');
+  }
+
+  const publishedVersionId = product.publishedVersionId;
+
+  await prisma.$transaction(async tx => {
+    await tx.productVersion.updateMany({
+      where: { id: publishedVersionId },
+      data: { status: 'OFFLINE' },
+    });
+    await tx.product.update({ where: { id }, data: { publishedVersionId: null } });
+  });
+
+  return getProduct(auth, id);
+}
+
+export async function deleteProduct(auth: ServiceTokenClaims, id: string): Promise<void> {
+  const product = await getOwnedProductForWrite(auth, id);
+
+  if (product.currentVersion.status === 'SUBMITTED') {
+    throw new HttpError('PRODUCT_IN_REVIEW', 409, '商品审核中，无法删除');
+  }
+
+  if (product.publishedVersionId !== null) {
+    throw new HttpError('PRODUCT_PUBLISHED', 409, '商品已发布，无法删除');
+  }
+
+  await prisma.product.update({ where: { id }, data: { deletedAt: new Date() } });
 }
 
 function allowedOpsStatuses(status?: ProductVersionStatus): ProductVersionStatus[] {

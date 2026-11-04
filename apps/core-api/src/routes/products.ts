@@ -15,7 +15,16 @@ import {
 import { requireAnyPermission, requireMerchantPermission } from '../auth';
 import type { AppEnv } from '../http';
 import { sendData, sendPage } from '../http';
-import { createProduct, getProduct, listProducts, updateProduct } from '../services/products';
+import {
+  createProduct,
+  deleteProduct,
+  getProduct,
+  listProducts,
+  offlineProduct,
+  publishProduct,
+  submitProduct,
+  updateProduct,
+} from '../services/products';
 
 const productIdParamsSchema = z.object({ id: idSchema });
 
@@ -103,6 +112,78 @@ const updateProductRoute = createRoute({
   },
 });
 
+const submitProductRoute = createRoute({
+  method: 'post',
+  path: '/api/v1/products/{id}/submit',
+  tags: ['product'],
+  security: [{ bearerAuth: [] }],
+  middleware: requireMerchantPermission(PERMISSIONS.PRODUCT_SUBMIT),
+  request: { params: productIdParamsSchema },
+  responses: {
+    200: {
+      description: '提交审核后的商品详情',
+      content: { 'application/json': { schema: productDetailEnvelopeSchema } },
+    },
+    ...sharedErrors,
+    404: errorResponse('商品不存在'),
+    409: errorResponse('商品不是草稿状态'),
+  },
+});
+
+const publishProductRoute = createRoute({
+  method: 'post',
+  path: '/api/v1/products/{id}/publish',
+  tags: ['product'],
+  security: [{ bearerAuth: [] }],
+  middleware: requireMerchantPermission(PERMISSIONS.PRODUCT_PUBLISH),
+  request: { params: productIdParamsSchema },
+  responses: {
+    200: {
+      description: '发布后的商品详情',
+      content: { 'application/json': { schema: productDetailEnvelopeSchema } },
+    },
+    ...sharedErrors,
+    404: errorResponse('商品不存在'),
+    409: errorResponse('商品未通过审核'),
+  },
+});
+
+const offlineProductRoute = createRoute({
+  method: 'post',
+  path: '/api/v1/products/{id}/offline',
+  tags: ['product'],
+  security: [{ bearerAuth: [] }],
+  middleware: requireMerchantPermission(PERMISSIONS.PRODUCT_PUBLISH),
+  request: { params: productIdParamsSchema },
+  responses: {
+    200: {
+      description: '下线后的商品详情',
+      content: { 'application/json': { schema: productDetailEnvelopeSchema } },
+    },
+    ...sharedErrors,
+    404: errorResponse('商品不存在'),
+    409: errorResponse('商品未发布'),
+  },
+});
+
+const deleteProductRoute = createRoute({
+  method: 'delete',
+  path: '/api/v1/products/{id}',
+  tags: ['product'],
+  security: [{ bearerAuth: [] }],
+  middleware: requireMerchantPermission(PERMISSIONS.PRODUCT_DELETE),
+  request: { params: productIdParamsSchema },
+  responses: {
+    200: {
+      description: '商品已删除',
+      content: { 'application/json': { schema: z.object({ data: z.null() }) } },
+    },
+    ...sharedErrors,
+    404: errorResponse('商品不存在'),
+    409: errorResponse('商品审核中或已发布'),
+  },
+});
+
 export function registerProductRoutes(app: OpenAPIHono<AppEnv>): void {
   app.openapi(listProductsRoute, async c => {
     const { items, meta } = await listProducts(c.get('auth'), c.req.valid('query'));
@@ -118,4 +199,21 @@ export function registerProductRoutes(app: OpenAPIHono<AppEnv>): void {
   app.openapi(updateProductRoute, async c =>
     sendData(c, await updateProduct(c.get('auth'), c.req.valid('param').id, c.req.valid('json')), 200)
   );
+
+  app.openapi(submitProductRoute, async c =>
+    sendData(c, await submitProduct(c.get('auth'), c.req.valid('param').id), 200)
+  );
+
+  app.openapi(publishProductRoute, async c =>
+    sendData(c, await publishProduct(c.get('auth'), c.req.valid('param').id), 200)
+  );
+
+  app.openapi(offlineProductRoute, async c =>
+    sendData(c, await offlineProduct(c.get('auth'), c.req.valid('param').id), 200)
+  );
+
+  app.openapi(deleteProductRoute, async c => {
+    await deleteProduct(c.get('auth'), c.req.valid('param').id);
+    return sendData(c, null, 200);
+  });
 }

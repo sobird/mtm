@@ -224,6 +224,124 @@ test('跨租户编辑返回 404', async () => {
   expect(await res.json()).toMatchObject({ error: { code: 'PRODUCT_NOT_FOUND' } });
 });
 
+async function createDraft(token: Promise<string>, code: string) {
+  const res = await request('/api/v1/products', 'POST', { ...CREATE_BODY, code }, token);
+  return (await res.json()).data;
+}
+
+test('提交草稿进入 SUBMITTED 并生成待审核记录', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:submit', 'product:view']);
+  const detail = await createDraft(token, 'TEST-S1');
+
+  const res = await request(`/api/v1/products/${detail.id}/submit`, 'POST', undefined, token);
+  expect(res.status).toBe(200);
+  expect((await res.json()).data.status).toBe('SUBMITTED');
+
+  const audit = await prisma.auditRecord.findFirstOrThrow({ where: { productVersionId: detail.currentVersionId } });
+  expect(audit.status).toBe('PENDING');
+  expect(audit.submitterId).toBe('merchant-test');
+});
+
+test('非草稿再次提交返回 409', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:submit', 'product:view']);
+  const detail = await createDraft(token, 'TEST-S2');
+  expect((await request(`/api/v1/products/${detail.id}/submit`, 'POST', undefined, token)).status).toBe(200);
+
+  const again = await request(`/api/v1/products/${detail.id}/submit`, 'POST', undefined, token);
+  expect(again.status).toBe(409);
+  expect(await again.json()).toMatchObject({ error: { code: 'PRODUCT_NOT_DRAFT' } });
+});
+
+test('发布已通过版本并把旧线上版本置为 SUPERSEDED', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, [
+    'product:create',
+    'product:update',
+    'product:submit',
+    'product:publish',
+    'product:view',
+  ]);
+  const detail = await createDraft(token, 'TEST-PUB');
+
+  // 直接模拟“v1 已发布、v2 已审核通过”。
+  const v2 = await prisma.productVersion.create({
+    data: {
+      productId: detail.id,
+      version: 2,
+      status: 'APPROVED',
+      title: '第二版',
+      mainImageUrl: detail.currentVersion.mainImageUrl,
+      images: [],
+      description: '描述',
+      attributes: {},
+      createdBy: 'merchant-test',
+    },
+  });
+  await prisma.product.update({
+    where: { id: detail.id },
+    data: { publishedVersionId: detail.currentVersionId, currentVersionId: v2.id },
+  });
+
+  const res = await request(`/api/v1/products/${detail.id}/publish`, 'POST', undefined, token);
+  expect(res.status).toBe(200);
+  const published = (await res.json()).data;
+  expect(published.status).toBe('PUBLISHED');
+  expect(published.publishedVersionId).toBe(v2.id);
+
+  const old = await prisma.productVersion.findUniqueOrThrow({ where: { id: detail.currentVersionId } });
+  expect(old.status).toBe('SUPERSEDED');
+});
+
+test('未通过审核发布返回 409', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:publish', 'product:view']);
+  const detail = await createDraft(token, 'TEST-PUB2');
+
+  const res = await request(`/api/v1/products/${detail.id}/publish`, 'POST', undefined, token);
+  expect(res.status).toBe(409);
+  expect(await res.json()).toMatchObject({ error: { code: 'PRODUCT_NOT_APPROVED' } });
+});
+
+test('下线已发布商品后清空线上版本', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:publish', 'product:view']);
+  const detail = await createDraft(token, 'TEST-OFF');
+  await prisma.productVersion.update({ where: { id: detail.currentVersionId }, data: { status: 'PUBLISHED' } });
+  await prisma.product.update({ where: { id: detail.id }, data: { publishedVersionId: detail.currentVersionId } });
+
+  const res = await request(`/api/v1/products/${detail.id}/offline`, 'POST', undefined, token);
+  expect(res.status).toBe(200);
+  expect((await res.json()).data.publishedVersionId).toBeNull();
+
+  const version = await prisma.productVersion.findUniqueOrThrow({ where: { id: detail.currentVersionId } });
+  expect(version.status).toBe('OFFLINE');
+});
+
+test('已提交或已发布商品不可删除，下线后可删除', async () => {
+  const token = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:delete', 'product:view']);
+  const submitted = await createDraft(token, 'TEST-D1');
+  await prisma.productVersion.update({ where: { id: submitted.currentVersionId }, data: { status: 'SUBMITTED' } });
+  const blocked = await request(`/api/v1/products/${submitted.id}`, 'DELETE', undefined, token);
+  expect(blocked.status).toBe(409);
+  expect(await blocked.json()).toMatchObject({ error: { code: 'PRODUCT_IN_REVIEW' } });
+
+  const published = await createDraft(token, 'TEST-D2');
+  await prisma.productVersion.update({
+    where: { id: published.currentVersionId },
+    data: { status: 'PUBLISHED' },
+  });
+  await prisma.product.update({
+    where: { id: published.id },
+    data: { publishedVersionId: published.currentVersionId },
+  });
+  const publishedBlocked = await request(`/api/v1/products/${published.id}`, 'DELETE', undefined, token);
+  expect(publishedBlocked.status).toBe(409);
+  expect(await publishedBlocked.json()).toMatchObject({ error: { code: 'PRODUCT_PUBLISHED' } });
+
+  const draft = await createDraft(token, 'TEST-D3');
+  expect((await request(`/api/v1/products/${draft.id}`, 'DELETE', undefined, token)).status).toBe(200);
+  expect(await prisma.product.findUniqueOrThrow({ where: { id: draft.id } })).toMatchObject({
+    deletedAt: expect.any(Date),
+  });
+});
+
 test('运营状态过滤作用于当前版本且分页 meta 正确', async () => {
   const merchantTokenValue = merchantToken(DEMO_MERCHANT_ID, ['product:create', 'product:view']);
 
