@@ -103,7 +103,8 @@ test('审核列表按状态过滤并返回商品信息，meta.total 不随分页
   const auditId = await createSubmittedProduct('AUD-5');
   const token = opsToken(['product:audit']);
 
-  const pending = await get('/api/v1/audits?status=PENDING', token);
+  // keyword 限定到本用例创建的商品，避免种子待审记录计入精确计数。
+  const pending = await get('/api/v1/audits?status=PENDING&keyword=AUD-5', token);
   expect(pending.status).toBe(200);
   const pendingBody = await pending.json();
   expect(pendingBody.meta.total).toBe(1);
@@ -120,13 +121,13 @@ test('审核列表按状态过滤并返回商品信息，meta.total 不随分页
 
   expect((await request(`/api/v1/audits/${auditId}/approve`, 'POST', { comment: '通过' }, token)).status).toBe(200);
 
-  const approved = await get('/api/v1/audits?status=APPROVED', token);
+  const approved = await get('/api/v1/audits?status=APPROVED&keyword=AUD-5', token);
   expect((await approved.json()).meta.total).toBe(1);
 
-  const stillPending = await get('/api/v1/audits?status=PENDING', token);
+  const stillPending = await get('/api/v1/audits?status=PENDING&keyword=AUD-5', token);
   expect((await stillPending.json()).meta.total).toBe(0);
 
-  const paged = await get('/api/v1/audits?status=APPROVED&page=1&pageSize=1', token);
+  const paged = await get('/api/v1/audits?status=APPROVED&keyword=AUD-5&page=1&pageSize=1', token);
   expect((await paged.json()).meta).toMatchObject({ page: 1, pageSize: 1, total: 1 });
 });
 

@@ -32,3 +32,30 @@ test('类目最多三级且路径由 ID 组成', async () => {
   const leaf = await prisma.category.findFirstOrThrow({ where: { level: 3 } });
   expect(leaf.path.startsWith('/')).toBe(true);
 });
+
+test('演示商品可重复写入且状态稳定', async () => {
+  await seedCoreData(prisma);
+  await seedCoreData(prisma);
+
+  expect(await prisma.product.count()).toBe(4);
+  expect(await prisma.productVersion.count()).toBe(4);
+  expect(await prisma.sku.count()).toBe(5);
+  expect(await prisma.auditRecord.count()).toBe(2);
+
+  const statuses = await prisma.productVersion.findMany({ select: { status: true } });
+  expect(statuses.map((item: { status: string }) => item.status).sort()).toEqual([
+    'DRAFT',
+    'PUBLISHED',
+    'REJECTED',
+    'SUBMITTED',
+  ]);
+
+  const published = await prisma.product.findUniqueOrThrow({
+    where: { id: 'product-demo-1' },
+    include: { publishedVersion: true },
+  });
+  expect(published.publishedVersion?.status).toBe('PUBLISHED');
+
+  const pending = await prisma.auditRecord.findFirstOrThrow({ where: { status: 'PENDING' } });
+  expect(pending.productVersionId).toBe('pv-demo-2');
+});

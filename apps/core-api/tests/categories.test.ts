@@ -82,7 +82,8 @@ test('删除有子类目的类目返回 409，删除叶子成功', async () => {
   expect(blocked.status).toBe(409);
   expect(await blocked.json()).toMatchObject({ error: { code: 'CATEGORY_HAS_CHILDREN' } });
 
-  const leaf = await prisma.category.findFirstOrThrow({ where: { level: 3, children: { none: {} } } });
+  // 使用未被演示商品引用的固定叶子类目，避免 CATEGORY_IN_USE 影响删除成功断言。
+  const leaf = await prisma.category.findFirstOrThrow({ where: { id: 'category-demo-fashion-shirt' } });
   expect(
     (await request(`/api/v1/categories/${leaf.id}`, 'DELETE', undefined, opsToken(['category:manage']))).status
   ).toBe(200);

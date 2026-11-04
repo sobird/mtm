@@ -94,13 +94,14 @@ test('商家列表只返回本商家商品，运营只看到已提交/已通过/
   const createdDetail = (await created.json()).data;
   const productId = createdDetail.id;
 
-  const merchantList = await get('/api/v1/products', merchantTokenValue);
+  // 种子演示商品也在本商家下，用商品编码关键字限定断言范围，保持精确计数。
+  const merchantList = await get('/api/v1/products?keyword=TEST-P1', merchantTokenValue);
   expect(merchantList.status).toBe(200);
   const merchantBody = await merchantList.json();
   expect(merchantBody.meta.total).toBe(1);
   expect(merchantBody.data[0].id).toBe(productId);
 
-  const opsList = await get('/api/v1/products', opsToken(['product:view']));
+  const opsList = await get('/api/v1/products?keyword=TEST-P1', opsToken(['product:view']));
   const opsBody = await opsList.json();
   expect(opsBody.data.some((row: { id: string }) => row.id === productId)).toBe(false);
 
@@ -108,7 +109,7 @@ test('商家列表只返回本商家商品，运营只看到已提交/已通过/
     where: { id: createdDetail.currentVersionId },
     data: { status: 'SUBMITTED' },
   });
-  const visible = await get('/api/v1/products', opsToken(['product:view']));
+  const visible = await get('/api/v1/products?keyword=TEST-P1', opsToken(['product:view']));
   expect((await visible.json()).data.some((row: { id: string }) => row.id === productId)).toBe(true);
 });
 
@@ -382,7 +383,7 @@ test('软删除后列表隐藏且详情、编辑、提交均 404', async () => {
 
   expect((await request(`/api/v1/products/${detail.id}`, 'DELETE', undefined, token)).status).toBe(200);
 
-  const list = await get('/api/v1/products', token);
+  const list = await get('/api/v1/products?keyword=TEST-DEL', token);
   const body = await list.json();
   expect(body.data.some((row: { id: string }) => row.id === detail.id)).toBe(false);
   expect(body.meta.total).toBe(0);
@@ -444,7 +445,11 @@ test('运营状态过滤作用于当前版本且分页 meta 正确', async () =>
     data: { status: 'SUBMITTED' },
   });
 
-  const res = await get('/api/v1/products?status=SUBMITTED&page=1&pageSize=1', opsToken(['product:view']));
+  // keyword 限定到本用例创建的两条商品，避免种子 SUBMITTED 商品计入 total。
+  const res = await get(
+    '/api/v1/products?status=SUBMITTED&keyword=TEST-F&page=1&pageSize=1',
+    opsToken(['product:view'])
+  );
   const body = await res.json();
   expect(body.data).toHaveLength(1);
   expect(body.meta).toEqual({ page: 1, pageSize: 1, total: 2 });

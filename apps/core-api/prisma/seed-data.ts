@@ -4,11 +4,11 @@ import type { PrismaClient } from '../src/generated/prisma';
 import { Prisma } from '../src/generated/prisma';
 
 /**
- * Version marker for the catalog demo seed. The version is contractual: tests
- * assert exactly one `SeedMeta` row for it and the seed may run repeatedly
- * without changing row counts.
+ * Version marker for the catalog + product demo seed. The version is
+ * contractual: tests assert exactly one `SeedMeta` row for it and the seed may
+ * run repeatedly without changing row counts.
  */
-export const CORE_DATA_SEED_VERSION = '2026-11-04-core-catalog';
+export const CORE_DATA_SEED_VERSION = '2026-11-04-core-products';
 
 type MerchantSeed = {
   id: string;
@@ -179,10 +179,110 @@ const CATEGORY_ATTRIBUTES: CategoryAttributeSeed[] = [
   },
 ];
 
+const DEMO_IMAGE =
+  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" fill="%23e8eefc"/></svg>';
+
+type ProductSeed = {
+  id: string;
+  shopId: string;
+  categoryId: string;
+  brandId: string;
+  code: string;
+  versionId: string;
+  status: 'DRAFT' | 'SUBMITTED' | 'REJECTED' | 'PUBLISHED';
+  title: string;
+  attributes: Record<string, string>;
+  skus: Array<{ id: string; skuCode: string; specs: Record<string, string>; price: string; stock: number }>;
+};
+
+const PRODUCTS: ProductSeed[] = [
+  {
+    id: 'product-demo-1',
+    shopId: 'shop-demo-1',
+    categoryId: 'category-demo-home-sofa',
+    brandId: 'brand-demo-1',
+    code: 'P1001',
+    versionId: 'pv-demo-1',
+    status: 'PUBLISHED',
+    title: '北欧三人位布艺沙发',
+    attributes: { 'attr-demo-home-sofa-material': '棉麻', 'attr-demo-home-sofa-size': '三人位 200cm' },
+    skus: [
+      { id: 'sku-demo-1a', skuCode: 'P1001-A', specs: { 规格: '三人位' }, price: '2599.00', stock: 12 },
+      { id: 'sku-demo-1b', skuCode: 'P1001-B', specs: { 规格: '双人位' }, price: '1999.00', stock: 8 },
+    ],
+  },
+  {
+    id: 'product-demo-2',
+    shopId: 'shop-demo-1',
+    categoryId: 'category-demo-digital-smartphone',
+    brandId: 'brand-demo-2',
+    code: 'P1002',
+    versionId: 'pv-demo-2',
+    status: 'SUBMITTED',
+    title: '星河 5G 智能手机',
+    attributes: { 'attr-demo-digital-smartphone-screen': '6.7', 'attr-demo-digital-smartphone-color': '曜石黑' },
+    skus: [{ id: 'sku-demo-2a', skuCode: 'P1002-A', specs: { 规格: '8GB+256GB' }, price: '3999.00', stock: 30 }],
+  },
+  {
+    id: 'product-demo-3',
+    shopId: 'shop-demo-1',
+    categoryId: 'category-demo-food-coffee',
+    brandId: 'brand-demo-3',
+    code: 'P1003',
+    versionId: 'pv-demo-3',
+    status: 'REJECTED',
+    title: '云岭手冲咖啡豆',
+    attributes: {},
+    skus: [{ id: 'sku-demo-3a', skuCode: 'P1003-A', specs: { 规格: '250g' }, price: '89.00', stock: 50 }],
+  },
+  {
+    id: 'product-demo-4',
+    shopId: 'shop-demo-2',
+    categoryId: 'category-demo-fashion-dress',
+    brandId: 'brand-demo-4',
+    code: 'P1004',
+    versionId: 'pv-demo-4',
+    status: 'DRAFT',
+    title: '夏季碎花连衣裙',
+    attributes: {},
+    skus: [{ id: 'sku-demo-4a', skuCode: 'P1004-A', specs: { 规格: 'M' }, price: '299.00', stock: 20 }],
+  },
+];
+
+/** Version timestamps are derived from status so repeated seeds stay stable. */
+function productTimestamps(status: ProductSeed['status']): {
+  submittedAt: Date | null;
+  reviewedAt: Date | null;
+  publishedAt: Date | null;
+} {
+  switch (status) {
+    case 'PUBLISHED':
+      return {
+        submittedAt: new Date('2026-11-04T08:00:00.000Z'),
+        reviewedAt: new Date('2026-11-04T08:30:00.000Z'),
+        publishedAt: new Date('2026-11-04T09:00:00.000Z'),
+      };
+    case 'SUBMITTED':
+      return {
+        submittedAt: new Date('2026-11-04T09:00:00.000Z'),
+        reviewedAt: null,
+        publishedAt: null,
+      };
+    case 'REJECTED':
+      return {
+        submittedAt: new Date('2026-11-04T09:30:00.000Z'),
+        reviewedAt: new Date('2026-11-04T10:00:00.000Z'),
+        publishedAt: null,
+      };
+    case 'DRAFT':
+      return { submittedAt: null, reviewedAt: null, publishedAt: null };
+  }
+}
+
 /**
- * Seeds the catalog master data used by `commerce_core` tests and the local
- * demo. Every write is an upsert keyed by a fixed readable id (or `code` /
- * `name`), so repeated runs keep the exact same row counts.
+ * Seeds the catalog master data and demo products used by `commerce_core`
+ * tests and the local demo. Every write is an upsert keyed by a fixed readable
+ * id (or `code` / `name`), so repeated runs keep the exact same row counts.
  */
 export async function seedCoreData(client: PrismaClient): Promise<void> {
   await Promise.all(
@@ -284,6 +384,129 @@ export async function seedCoreData(client: PrismaClient): Promise<void> {
       })
     )
   );
+
+  // 商品、版本、SKU 与审核记录均按固定 ID upsert；版本在商品之后创建，SKU
+  // 与审核记录在版本之后创建，指针最后回写，保证重复执行不增行。
+  await Promise.all(
+    PRODUCTS.map(async product => {
+      const timestamps = productTimestamps(product.status);
+      const versionData = {
+        productId: product.id,
+        version: 1,
+        status: product.status,
+        title: product.title,
+        subtitle: null,
+        mainImageUrl: DEMO_IMAGE,
+        images: [DEMO_IMAGE],
+        description: '演示商品',
+        attributes: product.attributes,
+        createdBy: 'merchant-account-owner',
+        ...timestamps,
+      };
+
+      await client.product.upsert({
+        where: { id: product.id },
+        update: {
+          merchantId: DEMO_MERCHANT_ID,
+          shopId: product.shopId,
+          categoryId: product.categoryId,
+          brandId: product.brandId,
+          code: product.code,
+        },
+        create: {
+          id: product.id,
+          merchantId: DEMO_MERCHANT_ID,
+          shopId: product.shopId,
+          categoryId: product.categoryId,
+          brandId: product.brandId,
+          code: product.code,
+        },
+      });
+
+      await client.productVersion.upsert({
+        where: { id: product.versionId },
+        update: versionData,
+        create: { id: product.versionId, ...versionData },
+      });
+    })
+  );
+
+  await Promise.all(
+    PRODUCTS.flatMap(product =>
+      product.skus.map(sku => {
+        const data = {
+          productVersionId: product.versionId,
+          skuCode: sku.skuCode,
+          specs: sku.specs,
+          price: sku.price,
+          stock: sku.stock,
+          status: 'ACTIVE' as const,
+        };
+
+        return client.sku.upsert({
+          where: { id: sku.id },
+          update: data,
+          create: { id: sku.id, ...data },
+        });
+      })
+    )
+  );
+
+  await Promise.all(
+    PRODUCTS.map(product =>
+      client.product.update({
+        where: { id: product.id },
+        data: {
+          currentVersionId: product.versionId,
+          publishedVersionId: product.status === 'PUBLISHED' ? product.versionId : null,
+        },
+      })
+    )
+  );
+
+  await Promise.all([
+    client.auditRecord.upsert({
+      where: { id: 'audit-demo-2' },
+      update: {
+        productVersionId: 'pv-demo-2',
+        status: 'PENDING',
+        submitterId: 'merchant-account-owner',
+        reviewerId: null,
+        comment: null,
+        submittedAt: new Date('2026-11-04T09:00:00.000Z'),
+        reviewedAt: null,
+      },
+      create: {
+        id: 'audit-demo-2',
+        productVersionId: 'pv-demo-2',
+        status: 'PENDING',
+        submitterId: 'merchant-account-owner',
+        submittedAt: new Date('2026-11-04T09:00:00.000Z'),
+      },
+    }),
+    client.auditRecord.upsert({
+      where: { id: 'audit-demo-3' },
+      update: {
+        productVersionId: 'pv-demo-3',
+        status: 'REJECTED',
+        submitterId: 'merchant-account-owner',
+        reviewerId: 'ops-demo',
+        comment: '商品描述不完整',
+        submittedAt: new Date('2026-11-04T09:30:00.000Z'),
+        reviewedAt: new Date('2026-11-04T10:00:00.000Z'),
+      },
+      create: {
+        id: 'audit-demo-3',
+        productVersionId: 'pv-demo-3',
+        status: 'REJECTED',
+        submitterId: 'merchant-account-owner',
+        reviewerId: 'ops-demo',
+        comment: '商品描述不完整',
+        submittedAt: new Date('2026-11-04T09:30:00.000Z'),
+        reviewedAt: new Date('2026-11-04T10:00:00.000Z'),
+      },
+    }),
+  ]);
 
   await client.seedMeta.upsert({
     where: { version: CORE_DATA_SEED_VERSION },
