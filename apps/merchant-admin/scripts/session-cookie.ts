@@ -1,5 +1,6 @@
 import { pathToFileURL } from 'node:url';
 
+import { useSecureCookies } from '@mtm/auth/cookies';
 import { encode } from 'next-auth/jwt';
 
 /** Session for the seeded demo account (account 1 / merchant 1). */
@@ -24,8 +25,7 @@ export async function createSessionCookie(): Promise<string> {
     throw new Error('AUTH_SECRET is not set');
   }
 
-  const secure = process.env.NODE_ENV === 'production';
-  const cookieName = secure ? '__Secure-merchant.session' : 'merchant.session';
+  const cookieName = useSecureCookies() ? '__Secure-merchant.session' : 'merchant.session';
 
   const token = await encode({
     token: SEED_SESSION,
