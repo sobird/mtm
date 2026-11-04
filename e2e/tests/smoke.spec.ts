@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const MERCHANT_URL = process.env.E2E_MERCHANT_URL ?? 'http://localhost:3000';
-const OPS_URL = process.env.E2E_OPS_URL ?? 'http://localhost:3001';
+import { MERCHANT_URL, OPS_URL } from './helpers';
 
 test.describe('login smoke', () => {
   test('ops admin can sign in with the demo account', async ({ page }) => {

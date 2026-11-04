@@ -369,7 +369,7 @@ export function AuditManager() {
       width: 100,
       render: (_, row) => (
         <div className={styles.actions}>
-          <Button variant='ghost' size='sm' onClick={() => setSelected(row)}>
+          <Button variant='ghost' size='sm' data-testid='audit-open' onClick={() => setSelected(row)}>
             {row.status === 'PENDING' ? t('actionReview') : t('actionView')}
           </Button>
         </div>
@@ -467,7 +467,9 @@ export function AuditManager() {
               <LabelValue label={t('info.submittedVersion')}>V{selected.product.version}</LabelValue>
               <LabelValue label={t('info.submittedAt')}>{formatDateTime(selected.submittedAt)}</LabelValue>
               <LabelValue label={t('info.status')}>
-                <StatusTag status={selected.status} />
+                <span data-testid='audit-status'>
+                  <StatusTag status={selected.status} />
+                </span>
               </LabelValue>
               {selected.reviewedAt ? (
                 <LabelValue label={t('info.reviewedAt')}>{formatDateTime(selected.reviewedAt)}</LabelValue>

@@ -16,6 +16,8 @@ export default defineConfig({
   testDir: './tests',
   timeout: 120_000,
   retries: 1,
+  // The specs share one seeded database, so files must not mutate it in parallel.
+  workers: 1,
   use: {
     browserName: 'chromium',
     trace: 'retain-on-failure',

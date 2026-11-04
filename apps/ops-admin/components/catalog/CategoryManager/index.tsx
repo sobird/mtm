@@ -408,7 +408,12 @@ export function CategoryManager() {
             </Field>
           ) : null}
           <Field label={t('fields.name')} required>
-            <Input name='name' aria-label={t('fields.name')} placeholder={t('fields.namePlaceholder')} />
+            <Input
+              name='name'
+              aria-label={t('fields.name')}
+              placeholder={t('fields.namePlaceholder')}
+              data-testid='category-name'
+            />
           </Field>
           <Field label={t('fields.sort')} required>
             <Input name='sort' type='number' min={0} aria-label={t('fields.sort')} />
@@ -423,7 +428,7 @@ export function CategoryManager() {
             <Button type='button' variant='secondary' onClick={closeDialog}>
               {tCommon('cancel')}
             </Button>
-            <Button type='submit' loading={createMutation.isPending}>
+            <Button type='submit' loading={createMutation.isPending} data-testid='category-save'>
               {tCommon('save')}
             </Button>
           </div>
@@ -438,7 +443,9 @@ export function CategoryManager() {
       description={t('description')}
       actions={
         <Can permission={PERMISSIONS.CATEGORY_MANAGE}>
-          <Button onClick={() => openCreate(null)}>{t('create')}</Button>
+          <Button data-testid='category-create' onClick={() => openCreate(null)}>
+            {t('create')}
+          </Button>
         </Can>
       }
     >
