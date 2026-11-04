@@ -36,6 +36,10 @@ jobs:
       OPS_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_ops?schema=public
       MERCHANT_TEST_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_merchant_test?schema=public
       CORE_TEST_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_core_test?schema=public
+      OPS_TEST_DATABASE_URL: postgresql://mtm:mtm@localhost:5432/commerce_ops_test?schema=public
+      OPS_AUTH_SECRET: ci-ops-secret
+      CORE_API_JWT_SECRET: ci-core-secret
+      CORE_API_URL: http://localhost:4000
     steps:
       - uses: actions/checkout@v4
 
@@ -52,8 +56,9 @@ jobs:
       - run: bun run test
       - run: bun run build
 
-      # Phase 5: re-enable the image build and SSH deploy once the Dockerfile
-      # is ported to the monorepo + Prisma layout.
+      # The multi-target Dockerfile now builds for the monorepo + Prisma layout.
+      # Enabling these steps still requires a human decision (registry access,
+      # deploy host and secrets); they remain disabled and unchanged here.
       - if: false
         uses: docker/setup-buildx-action@v3
 

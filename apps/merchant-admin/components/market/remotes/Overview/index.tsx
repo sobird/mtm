@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import type { CSSProperties } from 'react';
 
 import { Card, Empty, Tooltip } from '@/components/ui';
@@ -17,45 +18,42 @@ export interface OverviewProps {
 }
 
 interface OverviewMetric {
-  title: string;
-  tips?: string;
+  titleKey: string;
+  tipKey?: string;
   key: keyof WorkbenchOverviewDTO;
-  unit: string;
 }
 
 const overviewMetrics: OverviewMetric[] = [
   {
-    title: '待付款',
+    titleKey: 'unpaid',
     key: 'unpaidOrderCount',
-    unit: '单',
   },
   {
-    title: '待发货',
-    tips: '近90天内的所有待发货订单数',
+    titleKey: 'unfilled',
+    tipKey: 'unfilledTip',
     key: 'unfilledOrderCount',
-    unit: '单',
   },
   {
-    title: '退款/售后',
-    tips: '近90天所有处在售后和退款中的订单数',
+    titleKey: 'refund',
+    tipKey: 'refundTip',
     key: 'refundOrderCount',
-    unit: '单',
   },
   {
-    title: '即将延迟发货',
-    tips: '近90天数据即将会延迟发货的订单数',
+    titleKey: 'willDelay',
+    tipKey: 'willDelayTip',
     key: 'willDelayDeliverOrderCount',
-    unit: '单',
   },
   {
-    title: '已延期发货',
-    tips: '近90天已过承诺发货时间的订单数',
+    titleKey: 'delayed',
+    tipKey: 'delayedTip',
     key: 'delayedDeliverOrderCount',
-    unit: '单',
   },
 ];
 
 export function Overview({ className, style, bodyStyle }: OverviewProps) {
+  const t = useTranslations('dashboard.overview');
+  const tDashboard = useTranslations('dashboard');
+  const tCommon = useTranslations('common');
   const { data, isError } = useQuery({
     queryKey: queryKeys.analysis('workbench'),
     queryFn: () => apiFetch<WorkbenchDTO>('/api/analysis/workbench'),
@@ -65,10 +63,10 @@ export function Overview({ className, style, bodyStyle }: OverviewProps) {
 
   return (
     <div style={style}>
-      <Card className={className} title='订单概况'>
+      <Card className={className} title={t('title')}>
         <div className={styles.panel} style={bodyStyle}>
           {isError ? (
-            <Empty description='加载失败' />
+            <Empty description={tCommon('loadFailed')} />
           ) : (
             overviewMetrics.map(metric => {
               const value = overview?.[metric.key];
@@ -76,17 +74,17 @@ export function Overview({ className, style, bodyStyle }: OverviewProps) {
               return (
                 <div className={styles.tile} key={metric.key}>
                   <div className={styles.tileTitle}>
-                    {metric.tips ? (
-                      <Tooltip content={metric.tips}>
-                        <span className={styles.tooltipTitle}>{metric.title}</span>
+                    {metric.tipKey ? (
+                      <Tooltip content={t(metric.tipKey)}>
+                        <span className={styles.tooltipTitle}>{t(metric.titleKey)}</span>
                       </Tooltip>
                     ) : (
-                      <span>{metric.title}</span>
+                      <span>{t(metric.titleKey)}</span>
                     )}
                   </div>
                   <div className={styles.tileValue}>
                     <span className={styles.value}>{value ?? '--'}</span>
-                    <span className={styles.unit}>{metric.unit}</span>
+                    <span className={styles.unit}>{tDashboard('units.order')}</span>
                   </div>
                 </div>
               );

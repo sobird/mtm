@@ -1,9 +1,13 @@
+import { getTranslations } from 'next-intl/server';
+
 import { PageContainer } from '@/components/layout/PageContainer';
 import { MarketHome } from '@/components/market/home/MarketHome';
 
-export default function MarketHomePage() {
+export default async function MarketHomePage() {
+  const [t, common] = await Promise.all([getTranslations('marketing.home'), getTranslations('common')]);
+
   return (
-    <PageContainer title='营销中心' breadcrumbs={[{ label: '首页', href: '/' }, { label: '营销中心' }]}>
+    <PageContainer title={t('title')} breadcrumbs={[{ label: common('home'), href: '/' }, { label: t('title') }]}>
       <MarketHome />
     </PageContainer>
   );

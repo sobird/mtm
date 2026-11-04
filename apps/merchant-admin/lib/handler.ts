@@ -6,12 +6,17 @@ import { requireAccount } from './auth-guard';
 import { initDatabase } from './db';
 import { SEED_ACCOUNT_ID, SEED_MERCHANT_ID } from './db/seed/ids';
 import { AppError } from './errors';
+import { getAccountPermissions, type PermissionSnapshot } from './services/permission';
 
 export interface HandlerContext {
   accountId: string;
   merchantId: string;
   request: Request;
   params: Record<string, string>;
+}
+
+export interface PermissionHandlerContext extends HandlerContext {
+  permissions: PermissionSnapshot;
 }
 
 /**
@@ -26,6 +31,32 @@ async function resolveParams(context?: RouteContext): Promise<Record<string, str
   }
 
   return context.params;
+}
+
+const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
+
+/**
+ * Rejects cross-site state-changing requests.
+ *
+ * `sec-fetch-site` and `origin` are browser-controlled; absent headers are
+ * allowed so non-browser and test callers cannot ride a browser cookie.
+ */
+export function assertSameOrigin(request: Request): void {
+  if (SAFE_METHODS.has(request.method.toUpperCase())) {
+    return;
+  }
+
+  const fetchSite = request.headers.get('sec-fetch-site');
+
+  if (fetchSite !== null && fetchSite !== 'same-origin' && fetchSite !== 'none') {
+    throw new AppError('CSRF_FORBIDDEN', 403, '跨站请求被拒绝');
+  }
+
+  const origin = request.headers.get('origin');
+
+  if (origin !== null && origin !== new URL(request.url).origin) {
+    throw new AppError('CSRF_FORBIDDEN', 403, '跨站请求被拒绝');
+  }
 }
 
 /** Authenticated route wrapper: resolves the session, then normalizes the result envelope. */
@@ -51,6 +82,33 @@ export function withPublic<T>(handler: (ctx: HandlerContext) => Promise<T>) {
       await initDatabase();
       const params = await resolveParams(context);
       const data = await handler({ accountId: SEED_ACCOUNT_ID, merchantId: SEED_MERCHANT_ID, request, params });
+
+      return ok(data);
+    } catch (error) {
+      return fail(error);
+    }
+  };
+}
+
+/**
+ * Authenticated merchant route wrapper that also enforces a single permission
+ * code from the account's resolved snapshot. Owners implicitly hold every
+ * merchant permission via `getAccountPermissions`.
+ */
+export function withPermission<T>(permission: string, handler: (ctx: PermissionHandlerContext) => Promise<T>) {
+  return async (request: Request, context?: RouteContext): Promise<NextResponse> => {
+    try {
+      assertSameOrigin(request);
+      await initDatabase();
+      const { accountId, merchantId } = await requireAccount();
+      const permissions = await getAccountPermissions(accountId);
+
+      if (!permissions.set.has(permission)) {
+        throw new AppError('FORBIDDEN', 403, '无权访问');
+      }
+
+      const params = await resolveParams(context);
+      const data = await handler({ accountId, merchantId, permissions, request, params });
 
       return ok(data);
     } catch (error) {

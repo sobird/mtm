@@ -1,11 +1,13 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
 import type { VenusOcrResult } from '@/lib/services/venus';
+import { translateApiError } from '@/lib/translate-api-error';
 
 import FieldUploadFile from '../FieldUploadFile';
 import type { VenusUploadResponse } from '../FieldUploadFile';
@@ -30,6 +32,8 @@ interface ViewProps extends Omit<OcrUploadProps, 'name' | 'value' | 'onChange'> 
 }
 
 function OcrUploadView({ type = 0, value, onChange, onUploadSuccess, children, disabled, error }: ViewProps) {
+  const t = useTranslations('entry.ocr');
+  const tRoot = useTranslations();
   const [recognizing, setRecognizing] = useState(false);
   const [ocrError, setOcrError] = useState<string>();
 
@@ -45,7 +49,7 @@ function OcrUploadView({ type = 0, value, onChange, onUploadSuccess, children, d
 
       onUploadSuccess?.(result);
     } catch (recognizeError) {
-      setOcrError(recognizeError instanceof ApiError ? recognizeError.message : '图片识别失败');
+      setOcrError(translateApiError(recognizeError, tRoot, 'entry.ocr.failed'));
     } finally {
       setRecognizing(false);
     }
@@ -64,7 +68,7 @@ function OcrUploadView({ type = 0, value, onChange, onUploadSuccess, children, d
       >
         {children}
       </FieldUploadFile>
-      {recognizing ? <p className={styles.hint}>识别中…</p> : null}
+      {recognizing ? <p className={styles.hint}>{t('recognizing')}</p> : null}
       {ocrError ? (
         <p role='alert' className={styles.error}>
           {ocrError}

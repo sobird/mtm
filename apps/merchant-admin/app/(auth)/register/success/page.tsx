@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
 import { Button, Card } from '@/components/ui';
@@ -7,6 +8,7 @@ import { Button, Card } from '@/components/ui';
 import styles from './success.module.css';
 
 export default function RegisterSuccessPage() {
+  const t = useTranslations('auth.register');
   const router = useRouter();
 
   return (
@@ -15,14 +17,14 @@ export default function RegisterSuccessPage() {
         <span className={styles.icon} aria-hidden='true'>
           ✓
         </span>
-        <h1 className={styles.title}>注册成功</h1>
-        <p className={styles.subtitle}>恭喜您已成功注册美团商户，请遵守当地法律法规。</p>
+        <h1 className={styles.title}>{t('successTitle')}</h1>
+        <p className={styles.subtitle}>{t('successSubtitle')}</p>
         <div className={styles.actions}>
           <Button type='button' onClick={() => router.push('/login')}>
-            去登录
+            {t('goToLogin')}
           </Button>
           <Button type='button' variant='secondary' onClick={() => router.push('/register')}>
-            返回
+            {t('back')}
           </Button>
         </div>
       </div>

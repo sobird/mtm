@@ -1,0 +1,57 @@
+'use client';
+
+import type { UploadResult } from '@mtm/contracts';
+import { Upload, useToast } from '@mtm/ui';
+import { useTranslations } from 'next-intl';
+import { Controller, useFormContext } from 'react-hook-form';
+
+import { apiFetch } from '@/lib/api-client';
+import { translateApiError } from '@/lib/translate-api-error';
+
+const ACCEPT = 'image/png,image/jpeg,image/webp';
+
+/**
+ * Binds a single image logo to the surrounding brand form's `logoUrl` field.
+ * Selecting a file uploads it through the BFF and stores the returned URL.
+ */
+export function BrandLogoField() {
+  const toast = useToast();
+  const tRoot = useTranslations();
+  const { control } = useFormContext();
+
+  return (
+    <Controller
+      control={control}
+      name='logoUrl'
+      render={({ field }) => (
+        <Upload
+          value={field.value ? [field.value as string] : []}
+          onChange={value => field.onChange(value[0] ?? null)}
+          onFilesSelected={async files => {
+            const file = files[0];
+
+            if (!file) {
+              return;
+            }
+
+            try {
+              const formData = new FormData();
+              formData.append('file', file);
+              const result = await apiFetch<UploadResult>('/api/bff/uploads/images', {
+                method: 'POST',
+                body: formData,
+              });
+              field.onChange(result.url);
+            } catch (error) {
+              toast.error(translateApiError(error, tRoot, 'catalog.brands.uploadFailed'));
+            }
+          }}
+          maxCount={1}
+          accept={ACCEPT}
+        />
+      )}
+    />
+  );
+}
+
+export default BrandLogoField;

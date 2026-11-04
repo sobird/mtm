@@ -1,0 +1,1637 @@
+{
+  "common": {
+    "logout": "Sign out",
+    "language": "Language",
+    "toggleSidebar": "Toggle sidebar",
+    "accountMenu": "Account menu",
+    "appTitle": {
+      "merchant": "Open Commerce Merchant Admin",
+      "ops": "Open Commerce Ops Admin"
+    },
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "reset": "Reset",
+    "loading": "Loading",
+    "noData": "No data",
+    "noPermission": "Access denied",
+    "actions": "Actions",
+    "close": "Close",
+    "preview": "Preview",
+    "upload": "Click to upload",
+    "removeFile": "Remove file",
+    "image": "Image",
+    "drawer": "Drawer",
+    "breadcrumbs": "Breadcrumbs",
+    "pagination": "Pagination",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "pageInfo": "Page {current} of {pageCount}",
+    "totalItems": "{value} items total",
+    "favorites": "Favorites",
+    "manage": "Manage",
+    "mainMenu": "Main menu",
+    "expandSidebar": "Expand sidebar",
+    "collapseSidebar": "Collapse sidebar",
+    "brandMark": "O",
+    "brandShort": "Merchant Admin",
+    "favoritesHint": "{count}/{max} favorites selected. Click an entry below to add or remove it.",
+    "noFavorites": "No favorites yet. Click \"Manage\" in the top right to add some.",
+    "favoritesSaved": "Favorites saved.",
+    "saveFailed": "Failed to save. Please try again later.",
+    "notFoundTitle": "Page not found",
+    "notFoundDescription": "The page you are looking for may have been removed, or the address is incorrect.",
+    "backHome": "Back to home",
+    "home": "Home",
+    "copy": "Copy",
+    "retry": "Retry",
+    "view": "View",
+    "comingSoon": "This feature is coming soon",
+    "loadFailed": "Failed to load",
+    "actionFailed": "Something went wrong. Please try again later."
+  },
+  "auth": {
+    "interCode": {
+      "cn": "+86 (China)",
+      "sg": "+65 (Singapore)",
+      "hk": "+852 (Hong Kong, China)",
+      "mo": "+853 (Macau, China)"
+    },
+    "login": {
+      "title": "Sign in",
+      "submit": "Sign in",
+      "captchaTab": "Sign in with SMS code",
+      "passwordTab": "Sign in with password",
+      "interCode": "Country code",
+      "mobile": "Mobile number",
+      "mobilePlaceholder": "Enter mobile number",
+      "captcha": "Verification code",
+      "captchaPlaceholder": "Enter verification code",
+      "sendCaptcha": "Get code",
+      "resendIn": "Resend in {seconds}s",
+      "captchaSent": "[Open Commerce] {captcha} is your merchant registration code. Our staff will never ask for it. Do not share it with anyone to avoid account or financial loss.",
+      "invalidMobileFormat": "Invalid mobile number format.",
+      "captchaSendFailed": "Failed to send the verification code. Please try again later.",
+      "identifier": "Username or phone",
+      "identifierPlaceholder": "Username or phone",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign up for free",
+      "invalidCaptcha": "Incorrect mobile number or verification code.",
+      "invalidPassword": "Incorrect username or password.",
+      "failed": "Sign-in failed. Please try again later."
+    },
+    "register": {
+      "title": "Sign up",
+      "submit": "Sign up",
+      "hasAccount": "Already have an account? ",
+      "policyPrefix": "I have read and agree to ",
+      "policyName": "the Open Commerce Privacy Policy",
+      "invalidCaptcha": "Incorrect verification code.",
+      "failed": "Sign-up failed. Please try again later.",
+      "successTitle": "Registration successful",
+      "successSubtitle": "You have successfully registered as an Open Commerce merchant. Please comply with local laws and regulations.",
+      "goToLogin": "Sign in",
+      "back": "Back"
+    },
+    "opsLogin": {
+      "title": "Ops admin sign in",
+      "submit": "Sign in",
+      "username": "Username",
+      "usernamePlaceholder": "Enter username",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password",
+      "invalidCredentials": "Incorrect username or password.",
+      "failed": "Sign-in failed. Please try again later."
+    }
+  },
+  "validation": {
+    "mobileRequired": "Mobile number is required.",
+    "captchaRequired": "Verification code is required.",
+    "mobileFormat": "Invalid mobile number format.",
+    "identifierRequired": "Username or phone is required.",
+    "passwordRequired": "Password is required.",
+    "policyRequired": "Please accept the privacy policy.",
+    "companyLicenseRequired": "Business license is required.",
+    "socialCreditCodeRequired": "Unified social credit code is required.",
+    "companyNameRequired": "Company name is required.",
+    "addressRequired": "Business address is required.",
+    "termRequired": "Please select a valid end date.",
+    "businessTermRequired": "Business term is required.",
+    "capitalRequired": "Registered capital is required.",
+    "legalPersonNameRequired": "Legal representative name is required.",
+    "idNumberRequired": "ID number is required.",
+    "chinaMobileInvalid": "Enter a valid 11-digit mainland China mobile number.",
+    "idPhotosRequired": "Please upload the legal representative's ID photos.",
+    "companyTypeRequired": "Company type is required.",
+    "bankOpenRequired": "Bank account opening certificate is required.",
+    "officeAddressRequired": "Office address is required.",
+    "companyDescRequired": "Company profile is required.",
+    "companyDescMax": "The company profile must not exceed 1000 characters.",
+    "captchaSixDigits": "Enter the 6-digit SMS verification code.",
+    "cooperationPolicyRequired": "Please accept the cooperation agreement.",
+    "productShopRequired": "Please select a shop.",
+    "productCodeRequired": "Product code is required.",
+    "productCodeMax": "Product code must be at most {max} characters.",
+    "productCategoryRequired": "Please select a category.",
+    "productTitleRequired": "Product title is required.",
+    "productTitleMax": "Product title must be at most {max} characters.",
+    "productSubtitleMax": "Subtitle must be at most {max} characters.",
+    "productImagesRequired": "Please upload at least one image.",
+    "productImagesMax": "You can upload at most {max} images.",
+    "productDescriptionRequired": "Product description is required.",
+    "productDescriptionMax": "Product description must be at most {max} characters.",
+    "skuRequired": "Add at least one SKU.",
+    "skuCodeMax": "SKU code must be at most {max} characters.",
+    "skuCodeDuplicate": "Duplicate SKU code.",
+    "skuSpecsMax": "Specs must be at most {max} characters.",
+    "skuPriceInvalid": "Enter a valid price.",
+    "skuStockInvalid": "Enter a valid stock quantity.",
+    "attributeRequired": "This attribute is required.",
+    "attributeNumberInvalid": "Enter a valid number.",
+    "attributeOptionInvalid": "Select a valid option.",
+    "profileDescriptionMax": "Shop description must be at most 200 characters.",
+    "profileExternalLinkMax": "The third-party platform link must be at most 1000 characters.",
+    "profileEmailInvalid": "Invalid email address.",
+    "profileServicePhoneMax": "Customer service phone must be at most 30 characters.",
+    "profileContactNameInvalid": "Enter a valid Chinese name.",
+    "profileCaptchaInvalid": "Incorrect SMS verification code. Please try again.",
+    "profileCompanyNameMax": "Company name must be at most 60 characters.",
+    "profileCompanyIdCardInvalid": "Enter a valid unified social credit code.",
+    "idInvalid": "Invalid ID format.",
+    "usernameInvalid": "Invalid username format.",
+    "nameRequired": "Name is required.",
+    "nameMax": "Name must be at most 50 characters.",
+    "passwordMin": "Password must be at least 8 characters.",
+    "passwordMax": "Password must be at most 128 characters.",
+    "roleCodeInvalid": "Invalid role code format.",
+    "idCardPhotosRequired": "ID photos are required.",
+    "idCardFrontRequired": "Please upload the portrait side of the ID card.",
+    "idCardBackRequired": "Please upload the emblem side of the ID card.",
+    "adminNameRequired": "Administrator name is required.",
+    "adminNameMax": "Name must be at most 30 characters.",
+    "citizenIdInvalid": "Enter a valid ID card number.",
+    "authLetterRequired": "If the administrator is not the legal representative, please upload an authorization letter.",
+    "couponTimeRange": "End time must be later than start time.",
+    "couponNameRequired": "Coupon name is required.",
+    "couponNameMax": "Coupon name must be at most 10 characters.",
+    "couponDisplayNameRequired": "Coupon copy is required.",
+    "couponStockInvalid": "Stock must be greater than 0.",
+    "couponLimitInvalid": "Limit per user must be greater than 0.",
+    "usernameRequired": "Username is required.",
+    "categoryNameRequired": "Category name is required.",
+    "categoryNameMax": "Category name must be at most 50 characters.",
+    "sortInteger": "Sort must be an integer.",
+    "sortNonNegative": "Sort cannot be negative.",
+    "brandNameRequired": "Brand name is required.",
+    "brandNameMax": "Brand name must be at most 50 characters."
+  },
+  "product": {
+    "list": {
+      "title": "Products",
+      "description": "Manage shop products, submit them for review, and publish them.",
+      "create": "Create product",
+      "productColumn": "Product",
+      "code": "Code",
+      "category": "Category",
+      "status": "Status",
+      "version": "Version",
+      "updatedAt": "Updated",
+      "keyword": "Keyword",
+      "keywordPlaceholder": "Product title or code",
+      "statusFilter": "Product status filter",
+      "allStatuses": "All",
+      "loadFailed": "Failed to load",
+      "empty": "No products yet"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "SUBMITTED": "Under review",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected",
+      "PUBLISHED": "Published",
+      "SUPERSEDED": "Superseded",
+      "OFFLINE": "Offline"
+    },
+    "actions": {
+      "view": "View",
+      "publish": "Publish",
+      "offline": "Take offline",
+      "submit": "Submit for review"
+    },
+    "deleteDialog": {
+      "title": "Delete product",
+      "description": "Delete \"{title}\" (code {code})? This cannot be undone.",
+      "confirm": "Confirm delete"
+    },
+    "toast": {
+      "submitted": "Submitted for review.",
+      "published": "Product published.",
+      "offline": "Product taken offline.",
+      "deleted": "Product deleted.",
+      "created": "Product created.",
+      "saved": "Product saved.",
+      "actionFailed": "Something went wrong. Please try again later."
+    },
+    "form": {
+      "createTitle": "Create product",
+      "editTitle": "Edit product",
+      "createDescription": "Enter the product information and save it as a draft.",
+      "editDescription": "Edit the product, or submit it for review, publish it, or take it offline based on its status.",
+      "basicInfo": "Basic information",
+      "imagesSection": "Product images",
+      "attributesSection": "Product attributes",
+      "skuSection": "SKUs",
+      "shop": "Shop",
+      "shopPlaceholder": "Select a shop",
+      "code": "Product code",
+      "codePlaceholder": "e.g. P1001",
+      "category": "Category",
+      "categoryPlaceholder": "Select a category",
+      "brand": "Brand",
+      "noBrand": "No brand",
+      "title": "Product title",
+      "subtitle": "Subtitle",
+      "description": "Product description",
+      "imagesLabel": "Images (up to {max}; the first is the main image)",
+      "chooseCategoryFirst": "Select a category first.",
+      "formInvalid": "Please fix the form errors before saving.",
+      "rejectReason": "Rejection reason: {comment}",
+      "saveBeforeSubmit": "Save your changes before submitting for review.",
+      "underReview": "This product is under review and cannot be edited.",
+      "readOnlyNotice": "Your account does not have permission to edit products, so it is read-only.",
+      "metaCode": "Product code: {code}",
+      "metaStatus": "Status:",
+      "loadFailed": "Failed to load product information",
+      "backToList": "Back to list"
+    },
+    "sku": {
+      "code": "SKU code {index}",
+      "specs": "Specs",
+      "specsLabel": "Specs {index}",
+      "price": "Price",
+      "priceLabel": "Price {index}",
+      "stock": "Stock",
+      "stockLabel": "Stock {index}",
+      "status": "Status",
+      "statusLabel": "SKU status {index}",
+      "statusActive": "Active",
+      "statusDisabled": "Disabled",
+      "deleteLabel": "Delete SKU {index}",
+      "add": "Add SKU"
+    },
+    "image": {
+      "unsupportedType": "{name}: only PNG / JPEG / WEBP images are supported.",
+      "tooLarge": "{name}: the image must not exceed 10 MB.",
+      "max": "You can upload at most {max} images.",
+      "maxIgnored": "You can upload at most {max} images; extra images were ignored.",
+      "uploading": "Uploading image…",
+      "main": "Main"
+    },
+    "attribute": {
+      "empty": "This category has no attributes.",
+      "selectPlaceholder": "Select"
+    }
+  },
+  "menu": {
+    "badge": {
+      "new": "New"
+    },
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "analytics": {
+      "group": "Analytics",
+      "overview": "Business overview",
+      "trade": "Trade analytics",
+      "category": "Category analytics",
+      "product": "Product analytics",
+      "service": "Service analytics"
+    },
+    "marketing": {
+      "group": "Marketing",
+      "coupons": "Coupons",
+      "campaigns": "Marketing campaigns"
+    },
+    "funds": {
+      "group": "Funds",
+      "deposit": "Deposits",
+      "payouts": "Small payouts",
+      "wallet": "My wallet",
+      "account": "Account funds"
+    },
+    "product": {
+      "group": "Product management",
+      "list": "Products",
+      "create": "Create product",
+      "diagnosis": "Product diagnosis"
+    },
+    "finance": {
+      "invoices": "Invoices",
+      "billing": "Billing"
+    },
+    "shipping": {
+      "center": "Shipping center",
+      "list": "Shipping management",
+      "tools": "Logistics tools",
+      "waybill": "E-waybills"
+    },
+    "afterSales": {
+      "group": "After-sales",
+      "workbench": "After-sales workbench",
+      "appeals": "Appeals center",
+      "returnShipping": "Return shipping",
+      "flashRefund": "Instant refund"
+    },
+    "growth": {
+      "overview": "Merchant growth",
+      "rewards": "Rewards center",
+      "tasks": "Growth tasks",
+      "gold": "Gold merchant certification"
+    },
+    "orders": {
+      "list": "Orders",
+      "addressReview": "Address review",
+      "addressApproval": "Order address approval",
+      "autoVerify": "Auto order verification"
+    },
+    "system": {
+      "group": "System",
+      "staff": "Staff accounts",
+      "settings": "System settings",
+      "accounts": "Accounts",
+      "roles": "Roles"
+    },
+    "service": {
+      "platform": "Customer service platform"
+    },
+    "shop": {
+      "group": "Shop management",
+      "info": "Shop info"
+    },
+    "messages": {
+      "center": "Message center",
+      "settings": "Message settings",
+      "autoReply": "Auto reply"
+    },
+    "rules": {
+      "center": "Rules center",
+      "list": "Rule management"
+    },
+    "violations": {
+      "list": "Violations"
+    },
+    "customers": {
+      "group": "Customers",
+      "care": "Customer care",
+      "profile": "Customer profiles",
+      "reviews": "Customer reviews"
+    },
+    "settings": {
+      "privacy": "Privacy"
+    },
+    "category": {
+      "list": "Categories"
+    },
+    "brand": {
+      "list": "Brands"
+    },
+    "audit": {
+      "list": "Product audits"
+    },
+    "merchant": {
+      "list": "Merchants"
+    }
+  },
+  "permissions": {
+    "productView": "Product view",
+    "productCreate": "Product create",
+    "productUpdate": "Product update",
+    "productDelete": "Product delete",
+    "productSubmit": "Product submit",
+    "productPublish": "Product publish",
+    "productAudit": "Product audit",
+    "categoryView": "Category view",
+    "categoryManage": "Category manage",
+    "brandManage": "Brand manage",
+    "merchantView": "Merchant view",
+    "merchantUpdate": "Merchant update",
+    "shopView": "Shop view",
+    "shopUpdate": "Shop update",
+    "accountManage": "Account manage",
+    "roleManage": "Role manage",
+    "platformCrossTenant": "Cross-tenant access"
+  },
+  "errors": {
+    "ACCOUNT_NOT_FOUND": "Account not found.",
+    "AUDIT_ALREADY_REVIEWED": "This audit has already been reviewed.",
+    "AUDIT_NOT_FOUND": "Audit record not found.",
+    "AUDIT_VERSION_CONFLICT": "The product version status has changed and cannot be reviewed.",
+    "BRAND_EXISTS": "Brand name already exists.",
+    "BRAND_NOT_FOUND": "Brand not found.",
+    "CATEGORY_ATTRIBUTE_INVALID": "The attribute does not belong to this category.",
+    "CATEGORY_HAS_CHILDREN": "This category has child categories and cannot be deleted.",
+    "CATEGORY_IN_USE": "This category is used by products and cannot be deleted.",
+    "CATEGORY_LEVEL_LIMIT": "Categories can have at most three levels.",
+    "CATEGORY_NOT_FOUND": "Category not found.",
+    "CONFIGURATION_ERROR": "The service is not configured correctly.",
+    "CORE_API_ERROR": "The core service request failed.",
+    "CORE_API_TIMEOUT": "The core service timed out.",
+    "CSRF_FORBIDDEN": "The cross-site request was rejected.",
+    "FILE_TOO_LARGE": "File size must not exceed 20 MB.",
+    "FORBIDDEN": "You do not have permission to perform this action.",
+    "HTTP_ERROR": "Request failed. Please try again later.",
+    "INTERNAL_ERROR": "Internal server error.",
+    "INVALID_BODY": "Invalid request body.",
+    "INVALID_CAPTCHA": "Invalid verification code.",
+    "INVALID_MOBILE": "Invalid mobile number.",
+    "INVALID_PATH": "Invalid path.",
+    "INVALID_PERMISSION": "Invalid permission code.",
+    "INVALID_QUERY": "Invalid query parameters.",
+    "INVALID_RESPONSE": "Unexpected response format.",
+    "INVALID_ROLE": "Role not found.",
+    "LAST_SUPER_ADMIN": "At least one active super admin must remain.",
+    "MAX_FAVORITES": "You can save at most 10 favorites.",
+    "MERCHANT_NOT_FOUND": "Merchant not found.",
+    "NOT_FOUND": "Resource not found.",
+    "OCR_NOT_FOUND": "No valid information was recognized.",
+    "OWNER_IMMUTABLE": "The owner account cannot be modified.",
+    "PRODUCT_ATTRIBUTE_INVALID": "Invalid product attribute value.",
+    "PRODUCT_ATTRIBUTE_REQUIRED": "Required product attributes are missing.",
+    "PRODUCT_ATTRIBUTE_UNKNOWN": "The product attribute does not belong to this category.",
+    "PRODUCT_BRAND_INVALID": "The product brand is unavailable.",
+    "PRODUCT_CATEGORY_INVALID": "The product category does not exist.",
+    "PRODUCT_CODE_EXISTS": "Product code already exists.",
+    "PRODUCT_IN_REVIEW": "This product is under review and cannot be edited.",
+    "PRODUCT_NOT_APPROVED": "This product has not been approved and cannot be published.",
+    "PRODUCT_NOT_DRAFT": "Only drafts can be submitted for review.",
+    "PRODUCT_NOT_FOUND": "Product not found",
+    "PRODUCT_NOT_PUBLISHED": "This product is not published and cannot be taken offline.",
+    "PRODUCT_PUBLISHED": "This product is published and cannot be deleted.",
+    "PRODUCT_SHOP_INVALID": "The shop does not belong to the current merchant.",
+    "PRODUCT_SKU_DUPLICATE": "Duplicate SKU code.",
+    "PRODUCT_VERSION_CONFLICT": "Product version conflict. Please try again.",
+    "ROLE_CODE_TAKEN": "Role code already exists.",
+    "ROLE_NOT_FOUND": "Role not found.",
+    "SELF_DISABLE_FORBIDDEN": "You cannot disable the current account.",
+    "SHOP_NOT_FOUND": "Shop not found.",
+    "UNAUTHORIZED": "You are not signed in.",
+    "UNKNOWN": "Something went wrong. Please try again later.",
+    "UPLOAD_INVALID_FILE": "Invalid upload file.",
+    "UPLOAD_TOO_LARGE": "The uploaded file is too large.",
+    "UPLOAD_UNSUPPORTED_TYPE": "Unsupported file type.",
+    "USERNAME_TAKEN": "Username already exists."
+  },
+  "entry": {
+    "meta": {
+      "home": "Merchant onboarding",
+      "shop": "Select a store type",
+      "company": "Onboarding information",
+      "settleinpc": "Onboarding notice"
+    },
+    "header": {
+      "brand": "Open Commerce · Business onboarding"
+    },
+    "invitation": {
+      "submit": "Settle in now",
+      "code": "Invitation code",
+      "codePlaceholder": "Optional. Enter a service provider's recruitment code or a referrer's invitation code.",
+      "failed": "Submission failed. Please try again later."
+    },
+    "steps": {
+      "prepare": {
+        "title": "Prepare onboarding documents",
+        "item1": "Prepare store information",
+        "item2": "Prepare business qualifications",
+        "item3": "Prepare the store owner's ID"
+      },
+      "chooseType": {
+        "title": "Choose a store type",
+        "item1": "Understand store types",
+        "item2": "Confirm qualification requirements",
+        "item3": "Confirm the store type"
+      },
+      "apply": {
+        "title": "Submit the onboarding application",
+        "item1": "Company details",
+        "item2": "Qualification documents",
+        "item3": "Business information"
+      },
+      "review": {
+        "title": "Submit and wait for review",
+        "item1": "Preliminary merchant review",
+        "item2": "Document re-review",
+        "item3": "Account opening"
+      },
+      "operate": {
+        "title": "Open the store and start selling online",
+        "item1": "Publish products",
+        "item2": "Set up a payout account",
+        "item3": "Sell online"
+      }
+    },
+    "warning": {
+      "message": "Friendly reminder: Merchants planning to join Open Commerce do not need to pay any recruitment service provider or third party during onboarding. Please be aware.",
+      "description": "Currently, only merchants in the digital appliances/office, pet supplies, maternal and infant toys, apparel and footwear, sports and outdoor, auto parts and motorcycles, and healthcare categories may apply for self-onboarding. Do not submit applications for other invitation-only categories. Onboarding reviews are expected to be completed within 7 business days. Thank you for your support."
+    },
+    "settleinpc": {
+      "notice": "Sorry, the mobile number you are currently signed in with is already registered to a store. Please sign out, then register and sign in again with a new mobile number. We apologize for the inconvenience."
+    },
+    "storeTypeGuide": {
+      "title": "Enterprise store types and qualifications",
+      "confirm": "Got it",
+      "typeColumn": "Store type",
+      "descriptionColumn": "Description",
+      "names": {
+        "flagship": "Enterprise flagship store",
+        "franchise": "Enterprise franchise store",
+        "exclusive": "Enterprise exclusive store",
+        "factory": "Enterprise factory store"
+      },
+      "rows": {
+        "1": "A flagship store selling products of a single brand",
+        "2": "A flagship store selling multiple brands owned by the same actual controller",
+        "3": "A flagship store opened by the trademark owner of a marketplace-type brand (service mark)",
+        "4": "A merchant franchise store selling products of one licensed brand without exclusive authorization from the brand (registered trademark) owner to join the Open Commerce open platform",
+        "5": "A merchant franchise store selling multiple licensed brands owned by the same actual controller",
+        "6": "An exclusive store selling multiple proprietary brands",
+        "7": "An exclusive store selling multiple licensed brands with sales authorization documents issued by the respective registered trademark owners",
+        "8": "An exclusive store selling both proprietary and licensed brand products",
+        "9": "A factory store selling products of one or more brands",
+        "10": "A factory store whose operator is the trademark holder of the products or holds sales authorization documents issued by the respective registered trademark owners",
+        "11": "A factory store whose products are all self-produced"
+      }
+    },
+    "storeTypeSelector": {
+      "enterprisePrefix": "Enterprise ",
+      "confirmTitle": "Change the store type to {name}?",
+      "confirm": "Confirm",
+      "changeTip": "Note: If you change the store type, the store name will be cleared and must be uploaded again."
+    },
+    "company": {
+      "loadFailed": "Failed to load",
+      "previous": "Previous",
+      "next": "Next",
+      "done": "Finish",
+      "steps": {
+        "subject": "Company details",
+        "overview": "Company overview",
+        "qualification": "Qualifications",
+        "shop": "Store details"
+      },
+      "placeholders": {
+        "none": "No content yet",
+        "qualification": "Qualifications",
+        "shop": "Store details"
+      },
+      "subjectCardTitle": "Company details",
+      "legalPersonCardTitle": "Legal representative details",
+      "companyType": "Company type",
+      "distChannel": "Sales channels",
+      "businessLicense": "Business license",
+      "businessLicenseNote1": "Upload a clear, multi-certificate-in-one business license (unified social credit code).",
+      "businessLicenseNote2": "Up to 1 file, no larger than 20 MB.",
+      "businessLicenseNote3": "Supported formats: JPG/JPEG/PNG/GIF/BMP.",
+      "businessLicenseNote4": "The company must meet the Open Commerce platform onboarding requirements.",
+      "taxpayer": "General taxpayer qualification certificate (electronic copy)",
+      "taxpayerNote1": "Upload a clear general taxpayer qualification certificate. Copies must be stamped with the company seal.",
+      "taxpayerNote2": "Up to 1 file, no larger than 20 MB.",
+      "taxpayerNote3": "Supported formats: JPG/JPEG/PNG/GIF/BMP.",
+      "bankOpen": "Bank account opening certificate",
+      "bankOpenNote1": "Upload a clear certificate. Copies must be stamped with the company seal.",
+      "bankOpenNote2": "Up to 1 file, no larger than 20 MB.",
+      "bankOpenNote3": "Supported formats: JPG/JPEG/PNG/GIF/BMP.",
+      "bankOpenNote4": "Upload a scan of the bank account opening permit or basic deposit account information.",
+      "officeAddress": "Office address",
+      "officeAddressPlaceholder": "Enter the actual office address",
+      "companyDesc": "Company profile",
+      "companyDescPlaceholder": "Describe the brand positioning, product lines, market share or annual sales, current layout, and future plans. Up to 1000 characters.",
+      "companyFileNote1": "You may upload company introduction and other related attachments.",
+      "companyFileNote2": "Up to 10 files, each no larger than 20 MB.",
+      "companyFileNote3": "Supported formats: PDF/PPT/DOC/JPG/JPEG/PNG/GIF/BMP.",
+      "idType": "ID type",
+      "idPhotos": "Electronic ID photo",
+      "idPhotosHelp": "Upload photos of you holding both sides of your ID, color scans of both sides, or copies of both sides stamped with the entity's official seal. ",
+      "viewExample": "View examples",
+      "legalPersonMobile": "Legal representative's mobile number",
+      "legalPersonMobilePlaceholder": "Enter the legal representative's mobile number",
+      "licenseVerifyTitle": "Verify the business license information. If it is incorrect, edit it manually.",
+      "socialCreditCode": "Unified social credit code",
+      "socialCreditCodePlaceholder": "Enter the registration number on the business license",
+      "companyName": "Company name",
+      "companyNamePlaceholder": "Enter the company name exactly as shown on the business license",
+      "businessAddress": "Business address",
+      "businessAddressPlaceholder": "Enter the company address exactly as shown on the business license",
+      "businessTerm": "Business term",
+      "registeredCapital": "Registered capital",
+      "registeredCapitalHint": "If the registered capital is not in CNY, convert it using the current exchange rate.",
+      "registeredCapitalPlaceholder": "Enter",
+      "registeredCapitalUnit": "10k CNY",
+      "identityVerifyTitle": "Verify the identity information. If it is incorrect, you can edit it manually.",
+      "legalName": "Name",
+      "legalNamePlaceholder": "Must match the name on the ID document",
+      "idNumber": "ID number",
+      "idNumberPlaceholder": "Must match the number on the ID document",
+      "validUntil": "Valid until",
+      "ocrFailed": "ID recognition failed. Please fill it in manually."
+    },
+    "idTypes": {
+      "mainland": "Mainland China resident ID card",
+      "passport": "Overseas passport",
+      "hkMacau": "Exit-entry permit for Hong Kong and Macau residents",
+      "taiwan": "Exit-entry permit for Taiwan residents"
+    },
+    "idUploadDemo": {
+      "title": "ID upload examples",
+      "confirm": "Got it",
+      "copyNote": "1. Copies of both sides of the ID stamped with the store company's seal:",
+      "alt1": "ID example 1",
+      "alt2": "ID example 2",
+      "holdingNote": "2. Photos of you holding both sides of the ID:",
+      "alt3": "ID example 3",
+      "alt4": "ID example 4",
+      "reminderNote": "Note: Do not blur the identity information and keep all text clearly legible."
+    },
+    "shop": {
+      "loadFailed": "Failed to load",
+      "heading": "Choose your store type and main category",
+      "category": "Main category",
+      "categoryPlaceholder": "The main category determines your store's business scope. Choose carefully.",
+      "type": "Store type",
+      "howToChoose": "How should I choose?",
+      "next": "Next",
+      "categoryRequired": "Please select a main category.",
+      "typeRequired": "Please select a store type.",
+      "saveFailed": "Failed to save. Please try again later."
+    },
+    "ocr": {
+      "recognizing": "Recognizing…",
+      "failed": "Image recognition failed."
+    },
+    "upload": {
+      "tooLarge": "File size must not exceed {max} MB.",
+      "failed": "File upload failed.",
+      "uploading": "Uploading…"
+    },
+    "captcha": {
+      "invalidMobile": "Invalid mobile number format.",
+      "failed": "Failed to send the verification code.",
+      "placeholder": "Enter the verification code",
+      "label": "Verification code",
+      "resendIn": "Resend in {seconds}s",
+      "send": "Get code"
+    },
+    "termPicker": {
+      "start": "Start date",
+      "end": "End date",
+      "to": "to",
+      "longTerm": "Long-term valid"
+    },
+    "signContract": {
+      "policyTip": "The following agreement has the same effect as a paper agreement. Clicking \"Confirm cooperation\" means you agree to and accept the terms of the cooperation agreement. If you have any objections, please contact your business manager.",
+      "submit": "Confirm cooperation",
+      "title": "Sign the cooperation agreement",
+      "expiredNotice": "Your agreement has expired. We will send an SMS to confirm that you will continue cooperating with the platform.",
+      "notice": "We will send an SMS to confirm that you are officially entering into cooperation with the platform.",
+      "captchaSentTo": "The verification code will be sent to ",
+      "changeMobileTip": ". To change the mobile number, please contact your recruitment manager.",
+      "policyPrefix": "I have read and agree to ",
+      "policyName": "the Open Commerce Cooperation Agreement",
+      "policyInfo": "Agreement details",
+      "success": "Congratulations, you have entered into cooperation with the platform.",
+      "failed": "Failed to sign the agreement."
+    },
+    "merchantLogo": {
+      "statusReviewing": "Under review",
+      "statusRejected": "Review rejected",
+      "statusApproved": "Approved",
+      "reviewTip": "You have requested a store logo change and it is under review. Until it is approved, consumers will see the original store logo. Thank you for your patience.",
+      "normalTip": "After the newly uploaded store logo is approved, it will replace the original logo. Click Save in the top right corner to upload.",
+      "tooLarge": "The image must not exceed 10 MB.",
+      "squareRequired": "Please upload a square store logo.",
+      "minSize": "The store logo must be at least 200 × 200 pixels.",
+      "readFailed": "Failed to read the image. Please upload it again.",
+      "changeArrow": "Change to 》",
+      "description1": "The store logo is shown to consumers on the store page, order page, and elsewhere.",
+      "description2": "Upload a square image of at least 200 × 200 pixels.",
+      "description3": "Supported formats: JPG/JPEG/PNG/GIF/BMP."
+    },
+    "idCard": {
+      "portrait": "Portrait side",
+      "emblem": "Emblem side"
+    }
+  },
+  "shop": {
+    "breadcrumb": {
+      "home": "Home",
+      "shop": "Shop",
+      "trademark": "Trademark"
+    },
+    "profile": {
+      "title": "Shop profile",
+      "tabsLabel": "Shop profile navigation",
+      "tabs": {
+        "basic": "Basic info",
+        "principal": "Business entity",
+        "license": "Licenses",
+        "wallet": "Wallet",
+        "settlement": "Settlement"
+      }
+    },
+    "baseInfo": {
+      "title": "Basic info",
+      "id": "Shop ID",
+      "name": "Shop name",
+      "type": "Shop type",
+      "category": "Main category",
+      "logo": "Shop logo",
+      "description": "Shop description",
+      "descriptionHint": "At most 200 characters",
+      "descriptionPlaceholder": "Describe your shop so customers can learn more about it",
+      "externalLink": "Third-party platform shop link",
+      "externalLinkPlaceholder": "Enter the shop link on another platform",
+      "copyId": "Copy shop ID",
+      "adminCard": "Administrator info",
+      "contactCard": "Contact info"
+    },
+    "shopType": {
+      "10": "Individual standard shop",
+      "20": "Enterprise standard shop",
+      "21": "Enterprise franchise shop",
+      "22": "Enterprise exclusive shop",
+      "23": "Enterprise flagship shop",
+      "99": "Other"
+    },
+    "loadFailed": "Failed to load shop info",
+    "notReady": "Shop info is not ready yet. Please try again later.",
+    "toast": {
+      "saved": "Shop basic info updated",
+      "copied": "Shop ID copied",
+      "copyFailed": "Copy failed. Please copy manually."
+    },
+    "contactForm": {
+      "title": "Update contact info",
+      "email": "Contact email",
+      "emailPlaceholder": "Enter email address",
+      "servicePhone": "Customer service phone",
+      "servicePhoneHint": "At most 30 characters",
+      "servicePhonePlaceholder": "Enter the customer service phone",
+      "contactName": "Emergency contact name",
+      "contactNamePlaceholder": "Enter the emergency contact name",
+      "contactPhone": "Emergency contact phone",
+      "contactPhonePlaceholder": "Enter the emergency contact phone",
+      "captcha": "Verification code",
+      "captchaPlaceholder": "Enter the SMS verification code",
+      "saved": "Contact info updated"
+    },
+    "license": {
+      "title": "License list",
+      "add": "Add license",
+      "type": "License type",
+      "file": "License file",
+      "preview": "Preview license",
+      "expireAt": "License expiry date",
+      "expired": "Expired",
+      "status": "Review status",
+      "empty": "No licenses",
+      "deleteLabel": "Delete license",
+      "reviewingDelete": "Under review. Deleting is not available yet.",
+      "approvedDelete": "This license is in use. Deleting is not available yet.",
+      "statuses": {
+        "reviewing": "Under review",
+        "rejected": "Rejected",
+        "approved": "Approved"
+      }
+    },
+    "principal": {
+      "legalTitle": "Legal representative info",
+      "companyTitle": "Company info",
+      "legalName": "Legal representative",
+      "legalPhone": "Legal representative phone",
+      "legalCardType": "ID type",
+      "legalCardTypeId": "ID card",
+      "legalCardNum": "Legal representative ID number",
+      "legalValid": "ID validity",
+      "legalPhotos": "ID photos",
+      "viewPhoto": "View ID photos",
+      "businessLicense": "Business license",
+      "viewBusinessLicense": "View business license",
+      "operatingTime": "License validity",
+      "socialCreditCode": "Unified social credit code",
+      "companyName": "Company name",
+      "companyType": "Company type",
+      "address": "Business address",
+      "registeredCapital": "Registered capital"
+    },
+    "settlement": {
+      "title": "Basic info",
+      "depositThreshold": "Deposit threshold",
+      "depositThresholdValue": "CNY 10,000",
+      "rate": "Settlement rate",
+      "rateValue": "20%"
+    },
+    "wallet": {
+      "types": {
+        "enterprise": "Enterprise wallet",
+        "personal": "Personal wallet"
+      },
+      "bankCardNote": "Bind a bank card to withdraw funds. Go to",
+      "bindBankCard": "Bind bank card",
+      "changeNote": "To withdraw, switch this wallet to active first.",
+      "withdraw": "Withdraw",
+      "switchCurrent": "Switch to active",
+      "status": {
+        "current": "Active",
+        "previous": "Previously used"
+      },
+      "balance": "Wallet balance",
+      "noBalance": "No balance",
+      "name": "Name",
+      "enterpriseName": "Enterprise name",
+      "account": "Wallet account",
+      "phone": "Bound phone",
+      "id": "Wallet ID",
+      "demo": {
+        "account": "Demo Home Flagship Store",
+        "name": "Demo Contact"
+      },
+      "auth": {
+        "title": "Switch to personal wallet",
+        "warning": "Switching wallets does not transfer the existing balance. Withdraw the balance before switching.",
+        "stepAdmin": "Administrator verification",
+        "stepConfirm": "Confirm wallet info",
+        "next": "Next",
+        "previous": "Back",
+        "submitted": "Wallet change request submitted",
+        "companyName": "Enterprise name",
+        "companyNamePlaceholder": "Enter enterprise name",
+        "companyIdCard": "Enterprise certificate number",
+        "companyIdCardPlaceholder": "Enter enterprise certificate number",
+        "phone": "Wallet phone",
+        "phonePlaceholder": "Enter mobile number",
+        "captcha": "Verification code",
+        "captchaPlaceholder": "Enter verification code"
+      }
+    },
+    "admin": {
+      "submit": "Update shop administrator info",
+      "cardType": "ID type",
+      "cardTypeValue": "Mainland China resident ID card",
+      "cardTypeHint": "(Shop administrators can only apply with a mainland China resident ID card)",
+      "idCardPhotos": "ID photos",
+      "name": "Administrator name",
+      "namePlaceholder": "Must match the name on the ID card",
+      "citizenId": "ID card number",
+      "citizenIdPlaceholder": "Must match the ID number on the ID card",
+      "validUntil": "Valid until",
+      "mobile": "Administrator phone",
+      "mobilePlaceholder": "Enter the administrator phone",
+      "captcha": "Verification code",
+      "captchaPlaceholder": "Enter the SMS verification code",
+      "authLetter": "Authorization letter",
+      "note1": "If the shop administrator is not the legal representative, upload an authorization letter",
+      "note2": "Download the template, stamp it with the company seal, then upload it",
+      "note3": "Upload 1 file, no larger than 10MB",
+      "note4": "Supported formats: JPG/JPEG/PNG/GIF/BMP",
+      "ocrFailed": "ID recognition failed. Please fill in the form manually.",
+      "saved": "Shop administrator info saved"
+    },
+    "rejection": {
+      "title": "Rejected. Reasons:",
+      "reason1": "Not approved",
+      "reason2": "The username is incorrect"
+    },
+    "trademark": {
+      "title": "Trademark management",
+      "empty": "No trademark info",
+      "add": "Add trademark",
+      "comingSoon": "Trademark features are not available yet"
+    },
+    "adminPage": {
+      "title": "Shop administrator",
+      "reviewing": "You have requested an administrator change. It is under review and cannot be edited again until the review completes.",
+      "viewApplication": "View application",
+      "rejected": "Rejected. Your administrator change was not approved. Please revise it based on the reason and submit again.",
+      "edit": "Edit"
+    }
+  },
+  "setting": {
+    "title": "Account settings",
+    "navLabel": "Account settings navigation",
+    "nav": {
+      "basic": "Basic info",
+      "password": "Password",
+      "mobile": "Mobile number",
+      "loginSettings": "Login settings",
+      "loginRecords": "Login history"
+    },
+    "basicInfo": "Basic info",
+    "profile": {
+      "shopId": "Shop ID",
+      "account": "Account name",
+      "password": "Password",
+      "mobile": "Bound phone",
+      "mobileVerify": "Mobile verification",
+      "lastLogin": "Last login",
+      "off": "Off"
+    }
+  },
+  "system": {
+    "permissionType": {
+      "MENU": "Menu permission",
+      "BUTTON": "Button permission",
+      "API": "API permission"
+    },
+    "accounts": {
+      "title": "Sub-account management",
+      "description": "Manage merchant sub-accounts and their roles.",
+      "create": "New account",
+      "filterStatus": {
+        "all": "All",
+        "active": "Active",
+        "disabled": "Disabled"
+      },
+      "status": {
+        "active": "Active",
+        "disabled": "Disabled"
+      },
+      "columns": {
+        "username": "Username",
+        "name": "Name",
+        "phone": "Phone",
+        "roles": "Roles",
+        "status": "Status",
+        "lastLogin": "Last login",
+        "actions": "Actions"
+      },
+      "fields": {
+        "keyword": "Keyword",
+        "keywordPlaceholder": "Username or name",
+        "status": "Status",
+        "statusFilter": "Account status filter"
+      },
+      "owner": "Owner",
+      "ownerReadonly": "The owner account cannot be modified",
+      "neverLoggedIn": "Never signed in",
+      "rolesLoading": "Loading roles…",
+      "noRoles": "No roles available",
+      "empty": "No sub-accounts",
+      "toast": {
+        "created": "Sub-account created",
+        "updated": "Sub-account updated",
+        "passwordReset": "Password reset"
+      },
+      "dialog": {
+        "createTitle": "New sub-account",
+        "createDescription": "Sub-accounts get permissions from roles. The owner always has all permissions.",
+        "editTitle": "Edit sub-account",
+        "passwordTitle": "Reset password",
+        "passwordDescription": "Set a new password for sub-account {username}",
+        "username": "Username",
+        "usernamePlaceholder": "Enter username",
+        "name": "Name",
+        "namePlaceholder": "Enter name",
+        "password": "Password",
+        "passwordPlaceholder": "At least 8 characters",
+        "newPassword": "New password",
+        "newPasswordPlaceholder": "At least 8 characters",
+        "status": "Status",
+        "roles": "Roles"
+      }
+    },
+    "roles": {
+      "title": "Role management",
+      "description": "Sub-accounts get permissions from roles. The owner always has all permissions.",
+      "create": "New role",
+      "columns": {
+        "role": "Role",
+        "permissionCount": "Permissions",
+        "accountCount": "Accounts",
+        "actions": "Actions"
+      },
+      "empty": "No roles",
+      "toast": {
+        "created": "Role created",
+        "updated": "Role updated"
+      },
+      "dialog": {
+        "createTitle": "New role",
+        "createDescription": "The role code cannot be changed after creation.",
+        "editTitle": "Edit role",
+        "editDescription": "Role code: {code} (cannot be changed after creation)",
+        "code": "Role code",
+        "codePlaceholder": "Enter role code",
+        "name": "Role name",
+        "namePlaceholder": "Enter role name",
+        "permissions": "Permissions"
+      }
+    },
+    "opsAccounts": {
+      "title": "Account management",
+      "description": "Manage ops accounts and their role assignments.",
+      "create": "New account",
+      "current": "Current account",
+      "columns": {
+        "username": "Username",
+        "name": "Name",
+        "roles": "Roles",
+        "status": "Status",
+        "lastLogin": "Last login",
+        "actions": "Actions"
+      },
+      "empty": "No accounts",
+      "neverLoggedIn": "Never signed in",
+      "rolesLoading": "Loading roles…",
+      "noRoles": "No roles available",
+      "fields": {
+        "keyword": "Keyword",
+        "keywordPlaceholder": "Username or name",
+        "status": "Status",
+        "statusFilter": "Account status filter"
+      },
+      "toast": {
+        "created": "Account created",
+        "updated": "Account updated",
+        "passwordReset": "Password reset"
+      },
+      "dialog": {
+        "createTitle": "New account",
+        "createDescription": "After creation you can assign roles and reset the password.",
+        "editTitle": "Edit account",
+        "passwordTitle": "Reset password",
+        "passwordDescription": "Set a new password for account {username}",
+        "username": "Username",
+        "usernamePlaceholder": "Enter username",
+        "name": "Name",
+        "namePlaceholder": "Enter name",
+        "password": "Password",
+        "passwordPlaceholder": "At least 8 characters",
+        "newPassword": "New password",
+        "status": "Status",
+        "roles": "Roles"
+      }
+    },
+    "opsRoles": {
+      "title": "Role management",
+      "description": "Maintain role permissions and merchant scope.",
+      "create": "New role",
+      "columns": {
+        "role": "Role",
+        "permissionCount": "Permissions",
+        "accountCount": "Accounts",
+        "merchantScope": "Merchant scope",
+        "actions": "Actions"
+      },
+      "empty": "No roles",
+      "allMerchants": "All merchants",
+      "merchantScopeSeparator": ", ",
+      "toast": {
+        "created": "Role created",
+        "updated": "Role updated"
+      },
+      "dialog": {
+        "createTitle": "New role",
+        "createDescription": "The role code cannot be changed after creation.",
+        "editTitle": "Edit role",
+        "editDescription": "Role code: {code}",
+        "code": "Role code",
+        "codePlaceholder": "Enter role code",
+        "name": "Role name",
+        "namePlaceholder": "Enter role name",
+        "permissions": "Permissions",
+        "merchantScope": "Merchant scope",
+        "merchantScopeHint": "One merchant ID per line; ignored when the role has cross-merchant access.",
+        "merchantScopePlaceholder": "One merchant ID per line"
+      }
+    }
+  },
+  "marketing": {
+    "home": {
+      "title": "Marketing Center"
+    },
+    "target": {
+      "product": "Shop product coupon",
+      "universal": "Shop universal coupon",
+      "service": "Shop customer service coupon"
+    },
+    "coupon": {
+      "title": "Coupons",
+      "description": "Advanced forms are typically used to enter and submit large batches of data at once.",
+      "create": "Create coupon",
+      "detailTitle": "Coupon details",
+      "createTitle": "Create coupon",
+      "editTitle": "Edit coupon",
+      "back": "Back",
+      "edit": "Edit",
+      "view": "View",
+      "offline": "Offline",
+      "statusFilterLabel": "Status",
+      "putTimeFilterLabel": "Distribution time",
+      "statusAria": "Coupon status",
+      "putStartPlaceholder": "Distribution start",
+      "putEndPlaceholder": "Distribution end",
+      "empty": "No coupons",
+      "offlineDialogTitle": "Take coupon offline",
+      "offlineDialogDescription": "Are you sure you want to take this coupon offline?",
+      "offlineSuccess": "Coupon taken offline.",
+      "offlineFailed": "Failed to take the coupon offline. Please try again later.",
+      "actionFailed": "Something went wrong. Please try again later.",
+      "status": {
+        "all": "All",
+        "notStarted": "Not started",
+        "ongoing": "Ongoing",
+        "ended": "Ended",
+        "offline": "Offline"
+      },
+      "type": {
+        "fullReduction": "Amount-off coupon",
+        "discount": "Discount coupon"
+      },
+      "column": {
+        "code": "Coupon code",
+        "name": "Coupon name",
+        "type": "Discount type",
+        "target": "Coupon type",
+        "putTerm": "Distribution period",
+        "useTerm": "Valid period",
+        "sendCount": "Issued",
+        "leftCount": "Remaining",
+        "ctime": "Created at",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "useTermRange": "{start} to {end}",
+      "useTermDays": "{days} days after claiming",
+      "dateRange": "{start} to {end}",
+      "entry": {
+        "title": "Select a coupon type",
+        "next": "Next",
+        "productDescription": "Issue product promotion coupons for the shop to improve product conversion and drive sales. Users can claim them on product detail pages, in IM chats and other channels.",
+        "universalDescription": "Issue universal coupons for the shop to improve overall store conversion. Users can claim them on product detail pages and other channels.",
+        "serviceDescription": "Issue coupons for consolation, compensation and rewards to improve service experience and strengthen customer relationships. Users can claim them in IM customer service channels."
+      },
+      "form": {
+        "typeLabel": "Coupon type",
+        "placeholder": "Please select",
+        "nameLabel": "Coupon name",
+        "namePlaceholder": "Enter a coupon name",
+        "displayNameLabel": "Coupon copy",
+        "putTermLabel": "Distribution time",
+        "putStart": "Distribution start time",
+        "putEnd": "Distribution end time",
+        "stockLabel": "Coupon quantity",
+        "stockPlaceholder": "Enter a positive integer from 1 to 1,000,000",
+        "limitLabel": "Limit per user",
+        "limit1": "1",
+        "limit2": "2",
+        "limit3": "3",
+        "unlimited": "Unlimited",
+        "useTermLabel": "Valid period",
+        "claimAfter": "Claimed",
+        "claimDaysAria": "Days after claiming",
+        "daysUnit": "days",
+        "custom": "Custom",
+        "useStart": "Valid start date",
+        "useEnd": "Valid end date",
+        "thresholdLabel": "Threshold and amount",
+        "full": "Spend",
+        "yuan": "CNY",
+        "minus": "Off",
+        "thresholdPlaceholder": "Enter a threshold",
+        "thresholdAria": "Discount threshold",
+        "amountPlaceholder": "Enter an amount",
+        "amountAria": "Discount amount",
+        "submit": "Submit",
+        "createDate": "Created at",
+        "updateSuccess": "Coupon updated.",
+        "createSuccess": "Coupon created."
+      }
+    }
+  },
+  "dashboard": {
+    "home": {
+      "title": "Business overview",
+      "description": "Welcome back to the Open Commerce merchant admin."
+    },
+    "units": {
+      "order": " orders",
+      "person": " people",
+      "times": " times",
+      "yuan": " CNY",
+      "item": " items",
+      "record": " records",
+      "day": " days",
+      "points": " pts"
+    },
+    "latestNews": {
+      "title": "Latest updates",
+      "more": "More",
+      "empty": "No latest updates"
+    },
+    "overview": {
+      "title": "Order overview",
+      "unpaid": "Awaiting payment",
+      "unfilled": "Awaiting shipment",
+      "unfilledTip": "Orders awaiting shipment in the last 90 days",
+      "refund": "Refunds / After-sales",
+      "refundTip": "Orders in refund or after-sales in the last 90 days",
+      "willDelay": "Shipping soon to be delayed",
+      "willDelayTip": "Orders in the last 90 days that will soon be delayed",
+      "delayed": "Shipment delayed",
+      "delayedTip": "Orders in the last 90 days past the promised shipping time"
+    },
+    "realdata": {
+      "title": "Real-time data",
+      "dataCenter": "Data center",
+      "description": "Data calculations may be delayed by about 5-10 minutes",
+      "improveConversion": "How to improve conversion",
+      "paidAmount": "Paid amount",
+      "paidAmountTip": "Total amount paid for orders in this shop, including buyer payments and platform coupon usage, excluding after-sales orders",
+      "paidOrderCount": "Paid orders",
+      "paidOrderCountTip": "Total paid orders in the shop. Each payment has a unique order number; multiple payments by one buyer within the period count as multiple orders",
+      "paidUserCount": "Paying customers",
+      "paidUserCountTip": "Unique paying buyers in this shop. Multiple payments by one buyer count once, excluding after-sales orders",
+      "itemUniqueVisitor": "Product visitors",
+      "itemUniqueVisitorTip": "Unique visitors to all products in the shop during the period",
+      "itemPaveView": "Product views",
+      "itemPaveViewTip": "Total views of all product detail pages in the shop during the period",
+      "conversionRate": "Payment conversion rate",
+      "conversionRateTip": "Paying buyers / visitors during the period, i.e. the share of visitors who became paying buyers"
+    },
+    "growth": {
+      "title": "Merchant growth",
+      "defaultShopName": "Merchant store",
+      "serviceScore": "Service rating",
+      "serviceScoreTip": "A metric that evaluates the merchant's overall service across after-sales, logistics, customer service and disputes. Merchants with a service rating of 4 or above are excellent merchants.",
+      "replyRate": "3-minute reply rate (last 30 days)",
+      "collectRate": "On-time shipping and pickup rate (last 30 days)",
+      "overallScore": "Overall rating",
+      "overallScoreTip": "The average order rating of all proactive reviews in the shop over the last 30 days. Shops with fewer than 20 valid reviews are not scored and receive 0; below 4.0 is abnormal.",
+      "newReviews": "New reviews",
+      "excellent": "Excellent merchant",
+      "notExcellent": "Not an excellent merchant",
+      "notCounted": "Not yet scored",
+      "normal": "Normal",
+      "warning": "Warning",
+      "calculating": "(Calculating...)",
+      "focusHint": "Focus on the following metrics:",
+      "taskPending": "{count} tasks to complete",
+      "taskAward": "{count} rewards to view",
+      "taskSeparator": ", ",
+      "qrcode": "QR code",
+      "qrcodeTitle": "Shop QR code",
+      "qrcodeDesc": "Scan to view shop details"
+    },
+    "violations": {
+      "title": "Violations",
+      "listLink": "Violation list",
+      "issueCount": "Violations (today)",
+      "appealCount": "Pending appeals",
+      "ticketAmount": "Fines (this month)"
+    },
+    "productManage": {
+      "title": "Product management",
+      "selling": "On sale",
+      "create": "Create product"
+    },
+    "fund": {
+      "title": "Fund management",
+      "wallet": "My wallet",
+      "statement": "Statements"
+    },
+    "gold": {
+      "title": "Gold merchant",
+      "logo": "G",
+      "viewDetail": "View details",
+      "online": "Displayed online",
+      "hidden": "Not displayed online",
+      "canceled": "Online display canceled for violations",
+      "cycleRange": "Current assessment period: {range}",
+      "assessing": "Under assessment",
+      "detailTitle": "Current assessment details",
+      "partialHint": "Only some metrics are shown",
+      "moreMetrics": "View more metric details",
+      "columnName": "Metric",
+      "columnStandard": "Standard",
+      "columnStatus": "Current status",
+      "columnQualified": "Qualified",
+      "qualified": "Qualified",
+      "unqualified": "Unqualified"
+    },
+    "activity": {
+      "title": "Marketing campaigns",
+      "more": "View more",
+      "tabOngoing": "Open campaigns",
+      "tabMine": "My campaigns",
+      "emptyOngoing": "No open campaigns",
+      "emptyMine": "You have not joined any campaigns",
+      "signupTime": "Sign-up period: {start} to {end}",
+      "signupNow": "Sign up",
+      "viewDetail": "View details",
+      "actionAria": "{action}: {name}"
+    },
+    "trending": {
+      "title": "Business trends",
+      "noData": "No data",
+      "range7": "Last 7 days",
+      "range30": "Last 30 days",
+      "lineTransaction": "Items sold",
+      "linePaymentAmount": "Paid amount",
+      "lineReview": "Reviews",
+      "lineServiceReplyRate": "3-minute reply rate"
+    }
+  },
+  "opsCommon": {
+    "all": "All",
+    "status": {
+      "active": "Active",
+      "disabled": "Disabled"
+    },
+    "enable": "Enable",
+    "disable": "Disable"
+  },
+  "opsDashboard": {
+    "title": "Ops console",
+    "description": "Open Commerce Ops Admin",
+    "connected": "Core service connected",
+    "disconnected": "Core service is not connected"
+  },
+  "catalog": {
+    "categories": {
+      "title": "Category management",
+      "description": "Maintain category hierarchy, statuses, and attribute definitions.",
+      "create": "New top-level category",
+      "columns": {
+        "name": "Category name",
+        "level": "Level",
+        "sort": "Sort",
+        "status": "Status",
+        "attributeCount": "Attributes",
+        "actions": "Actions"
+      },
+      "addChild": "Add subcategory",
+      "empty": "No categories",
+      "rootLevel": "Top level",
+      "fields": {
+        "parent": "Parent category",
+        "parentDescription": "Parent category: {name}",
+        "name": "Category name",
+        "namePlaceholder": "Enter category name",
+        "sort": "Sort",
+        "status": "Status",
+        "attributes": "Attributes"
+      },
+      "dialog": {
+        "createRootTitle": "New top-level category",
+        "createChildTitle": "New subcategory",
+        "editTitle": "Edit category",
+        "deleteTitle": "Delete category",
+        "deleteConfirm": "Delete category \"{name}\"?",
+        "deleteHint": "This action cannot be undone. Make sure the category has no subcategories or products.",
+        "confirmDelete": "Delete"
+      },
+      "attribute": {
+        "empty": "No attributes",
+        "name": "Attribute name",
+        "namePlaceholder": "Attribute name",
+        "nameAria": "Attribute name {index}",
+        "type": "Attribute type",
+        "typeAria": "Attribute type {index}",
+        "required": "Required",
+        "requiredAria": "Attribute required {index}",
+        "optionsPlaceholder": "Options, comma separated",
+        "optionsAria": "Attribute options {index}",
+        "remove": "Remove",
+        "add": "Add attribute",
+        "typeOptions": {
+          "TEXT": "Text",
+          "NUMBER": "Number",
+          "SELECT": "Select"
+        }
+      },
+      "toast": {
+        "created": "Category created",
+        "updated": "Category updated",
+        "deleted": "Category deleted"
+      }
+    },
+    "brands": {
+      "title": "Brand management",
+      "description": "Maintain brand names, logos, and status.",
+      "create": "New brand",
+      "columns": {
+        "logo": "Logo",
+        "name": "Brand name",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "empty": "No brands",
+      "logoNone": "None",
+      "fields": {
+        "keyword": "Keyword",
+        "keywordPlaceholder": "Brand name",
+        "status": "Status",
+        "statusFilter": "Brand status filter",
+        "name": "Brand name",
+        "namePlaceholder": "Enter brand name",
+        "logo": "Logo",
+        "logoHint": "PNG, JPEG, or WebP, up to 10MB"
+      },
+      "dialog": {
+        "createTitle": "New brand",
+        "createDescription": "After creation, edit or toggle it from the list.",
+        "editTitle": "Edit brand",
+        "editDescription": "Brand: {name}"
+      },
+      "uploadFailed": "Image upload failed. Please try again later.",
+      "toast": {
+        "created": "Brand created",
+        "updated": "Brand updated",
+        "statusUpdated": "Brand status updated"
+      }
+    },
+    "merchants": {
+      "title": "Merchant management",
+      "description": "View merchant profiles and shop information.",
+      "columns": {
+        "code": "Code",
+        "name": "Name",
+        "contactName": "Contact",
+        "contactPhone": "Phone",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "empty": "No merchants",
+      "fields": {
+        "keyword": "Keyword",
+        "keywordPlaceholder": "Merchant code or name",
+        "status": "Status",
+        "statusFilter": "Merchant status filter"
+      },
+      "detail": {
+        "title": "Merchant details",
+        "description": "Merchant: {name}",
+        "code": "Code: {value}",
+        "name": "Name: {value}",
+        "status": "Status: ",
+        "contactName": "Contact: {value}",
+        "contactPhone": "Phone: {value}",
+        "shops": "Shops",
+        "emptyShops": "No shops"
+      },
+      "shopColumns": {
+        "name": "Shop name",
+        "address": "Address",
+        "status": "Status",
+        "contactPhone": "Phone"
+      }
+    },
+    "products": {
+      "title": "Product management",
+      "description": "View product details, versions, and SKU information (read-only).",
+      "columns": {
+        "product": "Product",
+        "code": "Code",
+        "merchant": "Merchant",
+        "shop": "Shop",
+        "category": "Category",
+        "status": "Status",
+        "version": "Version",
+        "updatedAt": "Updated",
+        "actions": "Actions"
+      },
+      "empty": "No products",
+      "fields": {
+        "keyword": "Keyword",
+        "keywordPlaceholder": "Product title or code",
+        "status": "Status",
+        "statusFilter": "Product status filter",
+        "code": "Product code",
+        "merchant": "Merchant",
+        "shop": "Shop",
+        "category": "Category",
+        "brand": "Brand",
+        "currentVersion": "Current version",
+        "updatedAt": "Updated"
+      },
+      "detail": {
+        "title": "Product details",
+        "description": "Product: {name}",
+        "attributes": "Attributes",
+        "noDescription": "No description",
+        "noAttributes": "No attributes",
+        "sku": "SKU",
+        "noSku": "No SKUs",
+        "currentVersion": "Current version",
+        "onlineVersion": "Online version",
+        "noOnlineVersion": "No online version",
+        "versionHistory": "Version history",
+        "noVersions": "No version history"
+      },
+      "versionColumns": {
+        "version": "Version",
+        "status": "Status",
+        "title": "Title",
+        "createdAt": "Created",
+        "submittedAt": "Submitted",
+        "reviewedAt": "Reviewed",
+        "publishedAt": "Published"
+      },
+      "skuColumns": {
+        "code": "SKU code",
+        "specs": "Specs",
+        "price": "Price",
+        "stock": "Stock",
+        "status": "Status"
+      },
+      "status": {
+        "DRAFT": "Draft",
+        "SUBMITTED": "In review",
+        "APPROVED": "Approved",
+        "REJECTED": "Rejected",
+        "PUBLISHED": "Published",
+        "SUPERSEDED": "Superseded",
+        "OFFLINE": "Offline"
+      },
+      "specSeparator": ": "
+    }
+  },
+  "audit": {
+    "title": "Product review",
+    "description": "Review product versions submitted by merchants, approving or rejecting them with comments.",
+    "columns": {
+      "product": "Product",
+      "code": "Code",
+      "merchant": "Merchant",
+      "shop": "Shop",
+      "category": "Category",
+      "version": "Version",
+      "submittedAt": "Submitted",
+      "status": "Audit status",
+      "actions": "Actions"
+    },
+    "actionReview": "Review",
+    "actionView": "View",
+    "status": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected"
+    },
+    "fields": {
+      "keyword": "Keyword",
+      "keywordPlaceholder": "Product title or code",
+      "status": "Audit status",
+      "statusFilter": "Audit status filter",
+      "comment": "Review note",
+      "commentHint": "Optional when approving, required when rejecting (max 500 characters)"
+    },
+    "empty": "No audit records",
+    "dialog": {
+      "title": "Audit details",
+      "description": "Product: {name}"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "reject": "Reject",
+      "approve": "Approve"
+    },
+    "info": {
+      "productCode": "Product code",
+      "merchant": "Merchant",
+      "shop": "Shop",
+      "category": "Category",
+      "submittedVersion": "Submitted version",
+      "submittedAt": "Submitted",
+      "status": "Audit status",
+      "reviewedAt": "Reviewed",
+      "comment": "Audit comment"
+    },
+    "section": {
+      "submittedVersion": "Submitted version content"
+    },
+    "snapshotUnavailable": "The snapshot for this audit version is unavailable.",
+    "commentRequired": "Please provide a rejection reason.",
+    "toast": {
+      "approved": "Audit approved",
+      "rejected": "Product rejected"
+    },
+    "skuColumns": {
+      "code": "SKU code",
+      "specs": "Specs",
+      "price": "Price",
+      "stock": "Stock",
+      "status": "Status"
+    },
+    "version": {
+      "attributes": "Attributes",
+      "noDescription": "No description",
+      "noAttributes": "No attributes",
+      "sku": "SKU",
+      "noSku": "No SKUs"
+    },
+    "specSeparator": ": "
+  }
+}

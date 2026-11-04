@@ -13,7 +13,8 @@
   text-align: center;
 }
 
-.policy a {
+.policy a,
+.policyName {
   color: var(--color-info);
 }
 

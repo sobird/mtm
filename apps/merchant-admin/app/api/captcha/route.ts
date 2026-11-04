@@ -1,3 +1,4 @@
+import { useSecureCookies } from '@mtm/auth/cookies';
 import { cookies } from 'next/headers';
 
 import { fail, ok } from '@/lib/api-response';
@@ -19,7 +20,7 @@ async function issueCaptcha(mobile: string) {
     sameSite: 'lax',
     path: '/',
     maxAge: 300,
-    secure: process.env.NODE_ENV === 'production',
+    secure: useSecureCookies(),
   });
 
   return ok({ mobile: Number(mobile), captcha: display.captcha });

@@ -1,15 +1,18 @@
 'use client';
 
+import type { Translate } from '@mtm/i18n';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 
 import { Button, DateRangePicker, Field, Form, Input, Radio, Select, useToast } from '@/components/ui';
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
 import type { CouponDetailDTO } from '@/lib/services/coupon';
-import { couponFormSchema } from '@/lib/validation/coupon';
+import { translateApiError } from '@/lib/translate-api-error';
+import { createCouponFormSchema } from '@/lib/validation/coupon';
 import type { CouponFormValues } from '@/lib/validation/coupon';
 
 import styles from './CouponForm.module.css';
@@ -24,20 +27,15 @@ export interface CouponFormProps {
   initialValues?: CouponDetailDTO;
 }
 
-const TARGET_LABELS: Record<number, string> = {
-  1: '店铺商品券',
-  2: '店铺通用券',
-  3: '店铺客服体验券',
+const TARGET_LABEL_KEYS: Record<number, string> = {
+  1: 'target.product',
+  2: 'target.universal',
+  3: 'target.service',
 };
 
-const TARGET_OPTIONS = [1, 2, 3].map(value => ({ value, label: TARGET_LABELS[value] }));
-
-const LIMIT_OPTIONS = [
-  { value: 1, label: '1张' },
-  { value: 2, label: '2张' },
-  { value: 3, label: '3张' },
-  { value: 4, label: '不限' },
-];
+function targetLabelKey(value: number): string {
+  return TARGET_LABEL_KEYS[value] ?? TARGET_LABEL_KEYS[1];
+}
 
 type UseTermValue = [number?, [number?, number?]?];
 
@@ -106,14 +104,14 @@ function formatISO(iso: string | null | undefined): string {
   )}:${pad(date.getSeconds())}`;
 }
 
-function formatUseTerm(value: UseTermValue | undefined): string {
+function formatUseTerm(value: UseTermValue | undefined, t: Translate): string {
   const [days, range] = value ?? [];
 
   if (Array.isArray(range) && range[0] !== undefined && range[1] !== undefined) {
-    return `${epochToDateInput(range[0])} 到 ${epochToDateInput(range[1])}`;
+    return t('coupon.useTermRange', { start: epochToDateInput(range[0]), end: epochToDateInput(range[1]) });
   }
 
-  return `领取后 ${days ?? '-'} 天`;
+  return t('coupon.useTermDays', { days: days ?? '-' });
 }
 
 function normalizeUseTerm(value: unknown): UseTermValue {
@@ -143,7 +141,8 @@ function isoToEpoch(iso: string | null | undefined): number | undefined {
 function buildInitialValues(
   mode: CouponFormMode,
   target: number,
-  initialValues?: CouponDetailDTO
+  initialValues: CouponDetailDTO | undefined,
+  t: Translate
 ): Partial<CouponFormValues> {
   if (mode !== 'create' && initialValues) {
     const putTerm = Array.isArray(initialValues.putTerm)
@@ -168,7 +167,7 @@ function buildInitialValues(
 
   return {
     name: '',
-    displayName: `xx ${TARGET_LABELS[target] ?? TARGET_LABELS[1]}`,
+    displayName: `xx ${t(targetLabelKey(target))}`,
     type: 0,
     target,
     rule: [0, 0],
@@ -183,37 +182,43 @@ function buildInitialValues(
 }
 
 function TargetField({ disabled }: { disabled?: boolean }) {
+  const t = useTranslations('marketing');
+  const tf = useTranslations('marketing.coupon.form');
+  const options = [1, 2, 3].map(value => ({ value, label: t(targetLabelKey(value)) }));
+
   return (
-    <Field label='优惠券类型' required>
-      <Select name='target' options={TARGET_OPTIONS} placeholder='请选择' disabled={disabled} />
+    <Field label={tf('typeLabel')} required>
+      <Select name='target' options={options} placeholder={tf('placeholder')} disabled={disabled} />
     </Field>
   );
 }
 
 function SyncDisplayName() {
+  const t = useTranslations('marketing');
   const { setValue } = useFormContext();
   const target = Number(useWatch({ name: 'target' }));
 
   useEffect(() => {
-    setValue('displayName', `xx ${TARGET_LABELS[target] ?? ''}`, { shouldValidate: true });
-  }, [setValue, target]);
+    setValue('displayName', `xx ${t(targetLabelKey(target))}`, { shouldValidate: true });
+  }, [setValue, target, t]);
 
   return null;
 }
 
 function DateTimeRangeField({ disabled }: { disabled?: boolean }) {
+  const tf = useTranslations('marketing.coupon.form');
   const { setValue, getFieldState } = useFormContext();
   const formState = useFormState({ name: 'putTerm' });
   const value = useWatch({ name: 'putTerm' }) as [number?, number?] | undefined;
   const error = getFieldState('putTerm', formState).error?.message as string | undefined;
 
   return (
-    <Field label='发放时间' required error={error}>
+    <Field label={tf('putTermLabel')} required error={error}>
       <DateRangePicker
         showTime
         disabled={disabled}
         className={styles.dateRange}
-        placeholder={['发放开始时间', '发放结束时间']}
+        placeholder={[tf('putStart'), tf('putEnd')]}
         value={[epochToDateTimeInput(value?.[0]), epochToDateTimeInput(value?.[1])]}
         onChange={next =>
           setValue('putTerm', [dateTimeInputToEpoch(next?.[0] ?? ''), dateTimeInputToEpoch(next?.[1] ?? '')], {
@@ -227,6 +232,7 @@ function DateTimeRangeField({ disabled }: { disabled?: boolean }) {
 }
 
 function UseTermField({ disabled }: { disabled?: boolean }) {
+  const tf = useTranslations('marketing.coupon.form');
   const { setValue, getFieldState } = useFormContext();
   const formState = useFormState({ name: 'useTerm' });
   const value = useWatch({ name: 'useTerm' }) as UseTermValue | undefined;
@@ -261,7 +267,7 @@ function UseTermField({ disabled }: { disabled?: boolean }) {
   };
 
   return (
-    <Field label='使用时间' required error={error}>
+    <Field label={tf('useTermLabel')} required error={error}>
       <div className={styles.terms}>
         <div className={styles.termRow}>
           <Radio
@@ -269,19 +275,19 @@ function UseTermField({ disabled }: { disabled?: boolean }) {
             checked={mode === 'days'}
             disabled={disabled}
             onChange={() => selectMode('days')}
-            label='领取后'
+            label={tf('claimAfter')}
           />
           <input
             type='number'
             className={styles.dayInput}
-            aria-label='领取后天数'
+            aria-label={tf('claimDaysAria')}
             min={1}
             max={30}
             value={days ?? ''}
             disabled={disabled || mode !== 'days'}
             onChange={event => setDays(event.target.value === '' ? undefined : Number(event.target.value))}
           />
-          <span className={styles.unit}>天</span>
+          <span className={styles.unit}>{tf('daysUnit')}</span>
         </div>
 
         <div className={styles.termRow}>
@@ -290,12 +296,12 @@ function UseTermField({ disabled }: { disabled?: boolean }) {
             checked={mode === 'range'}
             disabled={disabled}
             onChange={() => selectMode('range')}
-            label='自定义'
+            label={tf('custom')}
           />
           <DateRangePicker
             disabled={disabled || mode !== 'range'}
             className={styles.dateRange}
-            placeholder={['使用开始日期', '使用结束日期']}
+            placeholder={[tf('useStart'), tf('useEnd')]}
             value={[epochToDateInput(range?.[0]), epochToDateInput(range?.[1])]}
             onChange={next => setRange([dateInputToEpoch(next?.[0] ?? ''), dateInputToEpoch(next?.[1] ?? '')])}
           />
@@ -306,43 +312,46 @@ function UseTermField({ disabled }: { disabled?: boolean }) {
 }
 
 function AmountRuleFields({ disabled }: { disabled?: boolean }) {
+  const tf = useTranslations('marketing.coupon.form');
+
   return (
-    <Field label='门槛及面额' required>
+    <Field label={tf('thresholdLabel')} required>
       <div className={styles.rule}>
-        <span className={styles.unit}>满</span>
+        <span className={styles.unit}>{tf('full')}</span>
         <Input
           name='rule.0'
           type='number'
           min={0}
           max={5000}
-          placeholder='请输入门槛'
-          aria-label='满减门槛'
+          placeholder={tf('thresholdPlaceholder')}
+          aria-label={tf('thresholdAria')}
           disabled={disabled}
         />
-        <span className={styles.unit}>元</span>
-        <span className={styles.separator}>减</span>
+        <span className={styles.unit}>{tf('yuan')}</span>
+        <span className={styles.separator}>{tf('minus')}</span>
         <Input
           name='rule.1'
           type='number'
           min={0}
           max={5000}
-          placeholder='请输入面额'
-          aria-label='优惠面额'
+          placeholder={tf('amountPlaceholder')}
+          aria-label={tf('amountAria')}
           disabled={disabled}
         />
-        <span className={styles.unit}>元</span>
+        <span className={styles.unit}>{tf('yuan')}</span>
       </div>
     </Field>
   );
 }
 
 function SubmitButton() {
+  const tf = useTranslations('marketing.coupon.form');
   const { isSubmitting } = useFormState();
 
   return (
     <div className={styles.submit}>
       <Button type='submit' loading={isSubmitting}>
-        提交
+        {tf('submit')}
       </Button>
     </div>
   );
@@ -354,61 +363,73 @@ interface CouponFieldsProps {
 }
 
 function CouponFields({ mode, initialValues }: CouponFieldsProps) {
+  const tf = useTranslations('marketing.coupon.form');
+  const tm = useTranslations('marketing');
   const detail = mode === 'detail';
   const disabled = mode !== 'create';
   const value = useWatch({ name: 'useTerm' }) as UseTermValue | undefined;
+
+  const limitOptions = [
+    { value: 1, label: tf('limit1') },
+    { value: 2, label: tf('limit2') },
+    { value: 3, label: tf('limit3') },
+    { value: 4, label: tf('unlimited') },
+  ];
 
   return (
     <>
       <TargetField disabled={disabled} />
       {detail ? null : <SyncDisplayName />}
 
-      <Field label='优惠券名称' required>
-        <Input name='name' placeholder='请填写优惠券名称' aria-label='优惠券名称' disabled={detail} />
+      <Field label={tf('nameLabel')} required>
+        <Input name='name' placeholder={tf('namePlaceholder')} aria-label={tf('nameLabel')} disabled={detail} />
       </Field>
 
-      <Field label='优惠券文案'>
-        <Input name='displayName' aria-label='优惠券文案' disabled />
+      <Field label={tf('displayNameLabel')}>
+        <Input name='displayName' aria-label={tf('displayNameLabel')} disabled />
       </Field>
 
       {detail ? (
-        <Field label='发放时间'>
+        <Field label={tf('putTermLabel')}>
           <span className={styles.staticValue}>
-            {formatISO(initialValues?.putTerm?.[0])} 至 {formatISO(initialValues?.putTerm?.[1])}
+            {tm('coupon.dateRange', {
+              start: formatISO(initialValues?.putTerm?.[0]),
+              end: formatISO(initialValues?.putTerm?.[1]),
+            })}
           </span>
         </Field>
       ) : (
         <DateTimeRangeField />
       )}
 
-      <Field label='发放张数' required>
+      <Field label={tf('stockLabel')} required>
         <Input
           name='stock'
           type='number'
           min={1}
           max={1000000}
-          placeholder='请输入1-1,000,000的正整数'
-          aria-label='发放张数'
+          placeholder={tf('stockPlaceholder')}
+          aria-label={tf('stockLabel')}
           disabled={detail}
         />
       </Field>
 
       <AmountRuleFields disabled={detail} />
 
-      <Field label='每人限领张数' required>
-        <Select name='limit' options={LIMIT_OPTIONS} placeholder='请选择' disabled={detail} />
+      <Field label={tf('limitLabel')} required>
+        <Select name='limit' options={limitOptions} placeholder={tf('placeholder')} disabled={detail} />
       </Field>
 
       {detail ? (
-        <Field label='使用时间'>
-          <span className={styles.staticValue}>{formatUseTerm(value)}</span>
+        <Field label={tf('useTermLabel')}>
+          <span className={styles.staticValue}>{formatUseTerm(value, tm)}</span>
         </Field>
       ) : (
         <UseTermField disabled={detail} />
       )}
 
       {detail && initialValues?.ctime ? (
-        <Field label='创建日期'>
+        <Field label={tf('createDate')}>
           <span className={styles.staticValue}>{formatISO(initialValues.ctime)}</span>
         </Field>
       ) : null}
@@ -422,14 +443,21 @@ export function CouponForm({ mode, target = 1, couponId, initialValues }: Coupon
   const router = useRouter();
   const toast = useToast();
   const queryClient = useQueryClient();
+  const tForm = useTranslations('marketing.coupon.form');
+  const tm = useTranslations('marketing');
+  const tRoot = useTranslations();
 
-  const defaultValues = useMemo(() => buildInitialValues(mode, target, initialValues), [mode, target, initialValues]);
+  const defaultValues = useMemo(
+    () => buildInitialValues(mode, target, initialValues, tm),
+    [mode, target, initialValues, tm]
+  );
+  const schema = useMemo(() => createCouponFormSchema(tRoot), [tRoot]);
 
   const handleSubmit = async (values: CouponFormValues) => {
     const payload = {
       ...values,
       type: 0,
-      displayName: `xx ${TARGET_LABELS[values.target] ?? ''}`,
+      displayName: `xx ${tm(targetLabelKey(values.target))}`,
       putCrowd: -1,
       useCrowd: -1,
       position: 0,
@@ -438,24 +466,24 @@ export function CouponForm({ mode, target = 1, couponId, initialValues }: Coupon
     try {
       if (mode === 'update' && couponId) {
         await apiFetch(`/api/merchant/coupon/${couponId}`, { method: 'PATCH', body: payload });
-        toast.success('更新优惠券成功');
+        toast.success(tForm('updateSuccess'));
         await queryClient.invalidateQueries({ queryKey: queryKeys.coupon(couponId) });
         await queryClient.invalidateQueries({ queryKey: ['coupons'] });
       } else {
         await apiFetch('/api/merchant/coupon', { method: 'POST', body: payload });
-        toast.success('创建优惠券成功');
+        toast.success(tForm('createSuccess'));
         await queryClient.invalidateQueries({ queryKey: ['coupons'] });
       }
 
       router.push('/market/coupons');
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : '操作失败，请稍后重试');
+      toast.error(translateApiError(error, tRoot, 'marketing.coupon.actionFailed'));
     }
   };
 
   return (
     <Form
-      schema={couponFormSchema}
+      schema={schema}
       defaultValues={defaultValues}
       onSubmit={mode === 'detail' ? () => undefined : handleSubmit}
       className={styles.form}

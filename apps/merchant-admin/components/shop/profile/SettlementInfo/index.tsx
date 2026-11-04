@@ -1,14 +1,18 @@
+import { getTranslations } from 'next-intl/server';
+
 import { Card, LabelValue } from '@/components/ui';
 
 import styles from './SettlementInfo.module.css';
 
-export function SettlementInfo() {
+export async function SettlementInfo() {
+  const t = await getTranslations('shop.settlement');
+
   return (
     <div className={styles.panel}>
-      <Card title='基本信息'>
+      <Card title={t('title')}>
         <div className={styles.list}>
-          <LabelValue label='保证金阈值'>10000元</LabelValue>
-          <LabelValue label='结算费率'>20%</LabelValue>
+          <LabelValue label={t('depositThreshold')}>{t('depositThresholdValue')}</LabelValue>
+          <LabelValue label={t('rate')}>{t('rateValue')}</LabelValue>
         </div>
       </Card>
     </div>

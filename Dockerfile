@@ -1,45 +1,93 @@
 # syntax=docker/dockerfile:1
 
+# Install every workspace dependency once. Only manifests are copied here so a
+# source-only change does not invalidate the dependency layer.
 FROM oven/bun:1.4.4 AS deps
 WORKDIR /app
 # `prepare` runs `husky`, which has no `.git` in the build context.
 ENV HUSKY=0
-# sqlite3's install script fetches its N-API prebuild; use the same mirror as
-# `.npmrc` so the image build does not depend on github.com release assets.
-ENV npm_config_sqlite3_binary_host_mirror=https://registry.npmmirror.com/-/binary/sqlite3
 COPY package.json bun.lock .npmrc ./
+COPY apps/merchant-admin/package.json ./apps/merchant-admin/
+COPY apps/ops-admin/package.json ./apps/ops-admin/
+COPY apps/core-api/package.json ./apps/core-api/
+COPY packages/auth/package.json ./packages/auth/
+COPY packages/config/package.json ./packages/config/
+COPY packages/contracts/package.json ./packages/contracts/
+COPY packages/i18n/package.json ./packages/i18n/
+COPY packages/ui/package.json ./packages/ui/
+COPY e2e/package.json ./e2e/
+# Each workspace runs `prisma generate` from its `postinstall` hook, so the
+# schemas must be present before installing.
+COPY apps/merchant-admin/prisma/schema.prisma ./apps/merchant-admin/prisma/
+COPY apps/ops-admin/prisma/schema.prisma ./apps/ops-admin/prisma/
+COPY apps/core-api/prisma/schema.prisma ./apps/core-api/prisma/
 RUN bun install --frozen-lockfile
 
+# Generate Prisma clients and build both Next.js portals. Placeholder env vars
+# are only used while building; runtime values come from `.env.docker`.
 FROM oven/bun:1.4.4 AS builder
 WORKDIR /app
-ENV NEXT_TELEMETRY_DISABLED=1
-COPY --from=deps /app/node_modules ./node_modules
+ENV NEXT_TELEMETRY_DISABLED=1 \
+    AUTH_SECRET=build-placeholder \
+    OPS_AUTH_SECRET=build-placeholder \
+    CORE_API_JWT_SECRET=build-placeholder \
+    MERCHANT_DATABASE_URL=postgresql://mtm:mtm@postgres:5432/commerce_merchant?schema=public \
+    CORE_DATABASE_URL=postgresql://mtm:mtm@postgres:5432/commerce_core?schema=public \
+    OPS_DATABASE_URL=postgresql://mtm:mtm@postgres:5432/commerce_ops?schema=public \
+    CORE_API_URL=http://core-api:4000 \
+    CORE_PUBLIC_URL=http://localhost:4000
+COPY --from=deps /app ./
 COPY . .
-RUN bun run build
+# Next copies `public` explicitly; keep the directory present for the ops image.
+RUN mkdir -p apps/ops-admin/public
+RUN bun run --cwd=apps/merchant-admin db:generate \
+    && bun run --cwd=apps/ops-admin db:generate \
+    && bun run --cwd=apps/core-api db:generate
+# Build one app at a time: running both Next builds in parallel can exceed the
+# memory available to constrained Docker daemons.
+RUN bun run build -- --concurrency=1
 
-FROM node:22-slim AS runner
+# Merchant portal: Next standalone bundle traced from the monorepo root.
+FROM node:22-slim AS merchant
 WORKDIR /app
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     PORT=3000 \
-    HOSTNAME=0.0.0.0 \
-    DATABASE_PATH=/data/mtm.sqlite
-RUN groupadd --system --gid 1001 nodejs \
-    && useradd --system --uid 1001 --gid nodejs nextjs \
-    && mkdir -p /data \
-    && chown nextjs:nodejs /data
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-# `sqlite3` is listed in next.config.ts `serverExternalPackages`, so standalone
-# tracing omits it and its native binary. Copy it (and its runtime deps from
-# `bindings`) explicitly.
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/sqlite3 ./node_modules/sqlite3
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/bindings ./node_modules/bindings
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/file-uri-to-path ./node_modules/file-uri-to-path
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/node-addon-api ./node_modules/node-addon-api
-USER nextjs
+    HOSTNAME=0.0.0.0
+COPY --from=builder /app/apps/merchant-admin/.next/standalone ./
+COPY --from=builder /app/apps/merchant-admin/.next/static ./apps/merchant-admin/.next/static
+COPY --from=builder /app/apps/merchant-admin/public ./apps/merchant-admin/public
 EXPOSE 3000
-HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-    CMD node -e "fetch('http://127.0.0.1:3000/api/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
-CMD ["node", "server.js"]
+CMD ["node", "apps/merchant-admin/server.js"]
+
+# Ops portal.
+FROM node:22-slim AS ops
+WORKDIR /app
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=3001 \
+    HOSTNAME=0.0.0.0
+COPY --from=builder /app/apps/ops-admin/.next/standalone ./
+COPY --from=builder /app/apps/ops-admin/.next/static ./apps/ops-admin/.next/static
+COPY --from=builder /app/apps/ops-admin/public ./apps/ops-admin/public
+EXPOSE 3001
+CMD ["node", "apps/ops-admin/server.js"]
+
+# core-api runs TypeScript directly on Bun. The generated Prisma client lives
+# inside `apps/core-api/src/generated`, so copying the app tree is enough.
+FROM oven/bun:1.4.4-slim AS core-api
+WORKDIR /app
+ENV NODE_ENV=production \
+    PORT=4000 \
+    HOSTNAME=0.0.0.0
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/apps/core-api ./apps/core-api
+COPY --from=builder /app/packages ./packages
+EXPOSE 4000
+CMD ["bun", "apps/core-api/src/index.ts"]
+
+# One-shot migration/seed image. Compose overrides the default no-op command.
+FROM builder AS migrate
+WORKDIR /app
+CMD ["sh", "-c", "true"]

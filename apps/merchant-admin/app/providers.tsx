@@ -1,16 +1,17 @@
 'use client';
 
+import type { Locale } from '@mtm/i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App as AntdApp, ConfigProvider } from 'antd';
+import enUS from 'antd/locale/en_US';
 import zhCN from 'antd/locale/zh_CN';
-import 'dayjs/locale/zh-cn';
 import dayjs from 'dayjs';
+import 'dayjs/locale/en';
+import 'dayjs/locale/zh-cn';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
 import { ToastProvider } from '@/components/ui/Toast';
-
-dayjs.locale('zh-cn');
 
 /** Mirrors `styles/tokens.css` so antd components share the design tokens. */
 const ANTD_THEME = {
@@ -28,7 +29,9 @@ const ANTD_THEME = {
   },
 };
 
-export default function Providers({ children }: { children: ReactNode }) {
+export default function Providers({ children, locale }: { children: ReactNode; locale: Locale }) {
+  dayjs.locale(locale === 'zh-CN' ? 'zh-cn' : 'en');
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -42,7 +45,7 @@ export default function Providers({ children }: { children: ReactNode }) {
   );
 
   return (
-    <ConfigProvider locale={zhCN} theme={ANTD_THEME}>
+    <ConfigProvider locale={locale === 'zh-CN' ? zhCN : enUS} theme={ANTD_THEME}>
       <AntdApp>
         <QueryClientProvider client={queryClient}>
           <ToastProvider>{children}</ToastProvider>

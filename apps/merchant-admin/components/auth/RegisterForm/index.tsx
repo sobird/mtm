@@ -1,34 +1,42 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 import { useFormState } from 'react-hook-form';
 
 import { Button, Checkbox, Field, Form, Input, Select, useToast } from '@/components/ui';
 import { apiFetch, ApiError } from '@/lib/api-client';
-import { INTER_CODE_OPTIONS, registerSchema } from '@/lib/validation/auth';
+import { translateApiError } from '@/lib/translate-api-error';
+import { createInterCodeOptions, createRegisterSchema } from '@/lib/validation/auth';
 import type { RegisterValues } from '@/lib/validation/auth';
 
 import { CaptchaField } from '../CaptchaField';
 
 import styles from './RegisterForm.module.css';
 
-const POLICY_URL = 'https://page.meituan.net/html/1615180237352_38ceb3/index.html';
-
 /** Reads submit state from the surrounding `FormProvider`. */
 function RegisterSubmitButton() {
+  const t = useTranslations('auth.register');
   const { isSubmitting } = useFormState();
 
   return (
-    <Button type='submit' size='lg' loading={isSubmitting} className={styles.submit}>
-      注册
+    <Button type='submit' size='lg' loading={isSubmitting} className={styles.submit} data-testid='register-submit'>
+      {t('submit')}
     </Button>
   );
 }
 
 export function RegisterForm() {
+  const t = useTranslations('auth.register');
+  const tLogin = useTranslations('auth.login');
+  const tRoot = useTranslations();
   const router = useRouter();
   const toast = useToast();
+
+  const schema = useMemo(() => createRegisterSchema(tRoot), [tRoot]);
+  const interCodeOptions = useMemo(() => createInterCodeOptions(tRoot), [tRoot]);
 
   const handleSubmit = async (values: RegisterValues) => {
     try {
@@ -39,34 +47,35 @@ export function RegisterForm() {
 
       router.push('/register/success');
     } catch (error) {
-      // The backend reports `验证码不正确`; the legacy UI showed `验证码错误`.
+      // The backend reports an invalid captcha with a dedicated error code; the
+      // legacy UI showed a generic "invalid code" message instead.
       if (error instanceof ApiError && error.code === 'INVALID_CAPTCHA') {
-        toast.error('验证码错误');
+        toast.error(t('invalidCaptcha'));
         return;
       }
 
-      toast.error(error instanceof Error ? error.message : '注册失败');
+      toast.error(translateApiError(error, tRoot, 'auth.register.failed'));
     }
   };
 
   return (
     <Form
-      schema={registerSchema}
+      schema={schema}
       defaultValues={{ interCode: '86', mobile: '', captcha: '' }}
       onSubmit={handleSubmit}
       className={styles.form}
     >
-      <h1 className={styles.title}>注册</h1>
+      <h1 className={styles.title}>{t('title')}</h1>
 
-      <Field label='区号' required>
-        <Select name='interCode' options={INTER_CODE_OPTIONS} aria-label='区号' />
+      <Field label={tLogin('interCode')} required>
+        <Select name='interCode' options={interCodeOptions} aria-label={tLogin('interCode')} />
       </Field>
 
-      <Field label='手机号' required>
+      <Field label={tLogin('mobile')} required>
         <Input
           name='mobile'
-          placeholder='请输入手机号'
-          aria-label='手机号'
+          placeholder={tLogin('mobilePlaceholder')}
+          aria-label={tLogin('mobile')}
           autoComplete='tel-national'
           inputMode='numeric'
         />
@@ -79,10 +88,8 @@ export function RegisterForm() {
         className={styles.policy}
         label={
           <>
-            我已阅读并同意
-            <a href={POLICY_URL} target='_blank' rel='noreferrer' onClick={event => event.stopPropagation()}>
-              《团好货商家版隐私政策》
-            </a>
+            {t('policyPrefix')}
+            <span className={styles.policyName}>{t('policyName')}</span>
           </>
         }
       />
@@ -90,7 +97,8 @@ export function RegisterForm() {
       <RegisterSubmitButton />
 
       <p className={styles.footer}>
-        已有账号，<Link href='/login'>去登录</Link>
+        {t('hasAccount')}
+        <Link href='/login'>{t('goToLogin')}</Link>
       </p>
     </Form>
   );

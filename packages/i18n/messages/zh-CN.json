@@ -1,0 +1,1637 @@
+{
+  "common": {
+    "logout": "退出登录",
+    "language": "语言",
+    "toggleSidebar": "切换侧边栏",
+    "accountMenu": "账号菜单",
+    "appTitle": {
+      "merchant": "开源电商商家管理后台",
+      "ops": "开源电商运营后台"
+    },
+    "save": "保存",
+    "cancel": "取消",
+    "confirm": "确定",
+    "delete": "删除",
+    "edit": "编辑",
+    "search": "查询",
+    "reset": "重置",
+    "loading": "加载中",
+    "noData": "暂无数据",
+    "noPermission": "无权访问",
+    "actions": "操作",
+    "close": "关闭",
+    "preview": "预览",
+    "upload": "点击上传",
+    "removeFile": "删除文件",
+    "image": "图片",
+    "drawer": "抽屉",
+    "breadcrumbs": "面包屑",
+    "pagination": "分页",
+    "previousPage": "上一页",
+    "nextPage": "下一页",
+    "pageInfo": "第 {current} / {pageCount} 页",
+    "totalItems": "共 {value} 条",
+    "favorites": "常用功能",
+    "manage": "管理",
+    "mainMenu": "主菜单",
+    "expandSidebar": "展开侧边栏",
+    "collapseSidebar": "收起侧边栏",
+    "brandMark": "开",
+    "brandShort": "商家管理后台",
+    "favoritesHint": "已收藏 {count}/{max}，点击下方功能入口添加或移除",
+    "noFavorites": "暂无收藏，点击右上角“管理”添加",
+    "favoritesSaved": "常用功能已保存",
+    "saveFailed": "保存失败，请稍后重试",
+    "notFoundTitle": "页面不存在",
+    "notFoundDescription": "您访问的页面可能已下线，或地址输入有误。",
+    "backHome": "返回首页",
+    "home": "首页",
+    "copy": "复制",
+    "retry": "重试",
+    "view": "查看",
+    "comingSoon": "功能即将上线",
+    "loadFailed": "加载失败",
+    "actionFailed": "操作失败，请稍后重试"
+  },
+  "auth": {
+    "interCode": {
+      "cn": "+86(中国)",
+      "sg": "+65(新加坡)",
+      "hk": "+852(中国香港)",
+      "mo": "+853(中国澳门)"
+    },
+    "login": {
+      "title": "登录",
+      "submit": "登录",
+      "captchaTab": "手机验证码登录",
+      "passwordTab": "账号密码登录",
+      "interCode": "区号",
+      "mobile": "手机号",
+      "mobilePlaceholder": "请输入手机号",
+      "captcha": "验证码",
+      "captchaPlaceholder": "请输入验证码",
+      "sendCaptcha": "获取验证码",
+      "resendIn": "{seconds} 秒后重新获取",
+      "captchaSent": "【开源电商】{captcha}（商户注册验证码）。工作人员不会向您索要，请勿向任何人泄露，以免造成账户或资金损失。",
+      "invalidMobileFormat": "手机号格式不符合要求",
+      "captchaSendFailed": "获取验证码失败",
+      "identifier": "用户名或手机号",
+      "identifierPlaceholder": "请输入用户名或手机号",
+      "password": "密码",
+      "passwordPlaceholder": "请输入密码",
+      "noAccount": "还没有账号？",
+      "registerLink": "免费注册",
+      "invalidCaptcha": "手机号或验证码错误",
+      "invalidPassword": "用户名或密码错误",
+      "failed": "登录失败，请稍后重试"
+    },
+    "register": {
+      "title": "注册",
+      "submit": "注册",
+      "policyPrefix": "我已阅读并同意",
+      "policyName": "《开源电商隐私政策》",
+      "invalidCaptcha": "验证码错误",
+      "failed": "注册失败",
+      "hasAccount": "已有账号，",
+      "successTitle": "注册成功",
+      "successSubtitle": "恭喜您已成功注册开源电商商户，请遵守当地法律法规。",
+      "goToLogin": "去登录",
+      "back": "返回"
+    },
+    "opsLogin": {
+      "title": "运营后台登录",
+      "submit": "登录",
+      "username": "用户名",
+      "usernamePlaceholder": "请输入用户名",
+      "password": "密码",
+      "passwordPlaceholder": "请输入密码",
+      "invalidCredentials": "用户名或密码错误",
+      "failed": "登录失败，请稍后重试"
+    }
+  },
+  "validation": {
+    "mobileRequired": "手机号不能为空",
+    "captchaRequired": "验证码不能为空",
+    "mobileFormat": "手机号格式不符合要求",
+    "identifierRequired": "请输入用户名或手机号",
+    "passwordRequired": "密码不能为空",
+    "policyRequired": "请勾选隐私协议",
+    "companyLicenseRequired": "营业执照不能为空",
+    "socialCreditCodeRequired": "统一社会信用代码不能为空",
+    "companyNameRequired": "公司名称不能为空",
+    "addressRequired": "经营地址不能为空",
+    "termRequired": "请选择有效截止日期",
+    "businessTermRequired": "营业期限不能为空",
+    "capitalRequired": "注册资金不能为空",
+    "legalPersonNameRequired": "法人姓名不能为空",
+    "idNumberRequired": "证件号码不能为空",
+    "chinaMobileInvalid": "请输入正确的中国大陆11位手机号码",
+    "idPhotosRequired": "请上传法人证件照",
+    "companyTypeRequired": "公司类型不能为空",
+    "bankOpenRequired": "银行开户证明不能为空",
+    "officeAddressRequired": "办公地址不能为空",
+    "companyDescRequired": "公司简介不能为空",
+    "companyDescMax": "公司简介最多1000字",
+    "captchaSixDigits": "请输入6位手机验证码",
+    "cooperationPolicyRequired": "请勾选合作协议",
+    "productShopRequired": "请选择店铺",
+    "productCodeRequired": "请填写商品编码",
+    "productCodeMax": "商品编码最多 {max} 个字符",
+    "productCategoryRequired": "请选择类目",
+    "productTitleRequired": "请填写商品标题",
+    "productTitleMax": "商品标题最多 {max} 个字符",
+    "productSubtitleMax": "副标题最多 {max} 个字符",
+    "productImagesRequired": "请至少上传一张图片",
+    "productImagesMax": "最多上传 {max} 张图片",
+    "productDescriptionRequired": "请填写商品描述",
+    "productDescriptionMax": "商品描述最多 {max} 个字符",
+    "skuRequired": "至少填写一个 SKU",
+    "skuCodeMax": "SKU 编码最多 {max} 个字符",
+    "skuCodeDuplicate": "SKU 编码重复",
+    "skuSpecsMax": "规格最多 {max} 个字符",
+    "skuPriceInvalid": "请填写有效价格",
+    "skuStockInvalid": "请填写有效库存",
+    "attributeRequired": "请填写该属性",
+    "attributeNumberInvalid": "请填写有效数字",
+    "attributeOptionInvalid": "请选择有效选项",
+    "profileDescriptionMax": "店铺简介最多200个字符",
+    "profileExternalLinkMax": "第三方平台链接最多1000个字符",
+    "profileEmailInvalid": "邮箱格式不合法",
+    "profileServicePhoneMax": "客服电话最多30个字符",
+    "profileContactNameInvalid": "请输入正确的中国人名",
+    "profileCaptchaInvalid": "手机验证码不正确，请重新输入",
+    "profileCompanyNameMax": "企业名称最多60个字符",
+    "profileCompanyIdCardInvalid": "请输入正确的企业证件号（统一社会信用代码）",
+    "idInvalid": "ID 格式不合法",
+    "usernameInvalid": "用户名格式不合法",
+    "nameRequired": "名称不能为空",
+    "nameMax": "名称不得超过 50 个字符",
+    "passwordMin": "密码至少 8 位",
+    "passwordMax": "密码不得超过 128 位",
+    "roleCodeInvalid": "角色编码格式不合法",
+    "idCardPhotosRequired": "电子证件照不能为空",
+    "idCardFrontRequired": "请上传身份证人像面",
+    "idCardBackRequired": "请上传身份证国徽面",
+    "adminNameRequired": "管理员姓名不能为空",
+    "adminNameMax": "姓名过长，不得超过30个字",
+    "citizenIdInvalid": "请输入正确的身份证号码",
+    "authLetterRequired": "当管理员与法人不一致的时候，请上传授权书",
+    "couponTimeRange": "结束时间必须晚于开始时间",
+    "couponNameRequired": "请填写优惠券名称",
+    "couponNameMax": "优惠券名称最多填写10个字",
+    "couponDisplayNameRequired": "请填写优惠券文案",
+    "couponStockInvalid": "发放张数必须大于 0",
+    "couponLimitInvalid": "每人限领张数必须大于 0",
+    "usernameRequired": "用户名不能为空",
+    "categoryNameRequired": "类目名称不能为空",
+    "categoryNameMax": "类目名称不得超过 50 个字符",
+    "sortInteger": "排序必须为整数",
+    "sortNonNegative": "排序不能为负数",
+    "brandNameRequired": "品牌名称不能为空",
+    "brandNameMax": "品牌名称不得超过 50 个字符"
+  },
+  "product": {
+    "list": {
+      "title": "商品列表",
+      "description": "管理店铺商品、提交审核与发布。",
+      "create": "新建商品",
+      "productColumn": "商品",
+      "code": "编码",
+      "category": "类目",
+      "status": "状态",
+      "version": "版本",
+      "updatedAt": "更新时间",
+      "keyword": "关键字",
+      "keywordPlaceholder": "商品标题或编码",
+      "statusFilter": "商品状态筛选",
+      "allStatuses": "全部",
+      "loadFailed": "加载失败",
+      "empty": "暂无商品"
+    },
+    "status": {
+      "DRAFT": "草稿",
+      "SUBMITTED": "审核中",
+      "APPROVED": "已通过",
+      "REJECTED": "已驳回",
+      "PUBLISHED": "已发布",
+      "SUPERSEDED": "已被替换",
+      "OFFLINE": "已下线"
+    },
+    "actions": {
+      "view": "查看",
+      "publish": "发布",
+      "offline": "下线",
+      "submit": "提交审核"
+    },
+    "deleteDialog": {
+      "title": "删除商品",
+      "description": "确定删除「{title}」（编码 {code}）吗？删除后不可恢复。",
+      "confirm": "确认删除"
+    },
+    "toast": {
+      "submitted": "已提交审核",
+      "published": "商品已发布",
+      "offline": "商品已下线",
+      "deleted": "商品已删除",
+      "created": "商品已创建",
+      "saved": "商品已保存",
+      "actionFailed": "操作失败，请稍后重试"
+    },
+    "form": {
+      "createTitle": "新建商品",
+      "editTitle": "编辑商品",
+      "createDescription": "填写商品信息并保存为草稿。",
+      "editDescription": "编辑商品信息，或按当前状态提交审核、发布与下线。",
+      "basicInfo": "基本信息",
+      "imagesSection": "商品图片",
+      "attributesSection": "商品属性",
+      "skuSection": "SKU",
+      "shop": "店铺",
+      "shopPlaceholder": "请选择店铺",
+      "code": "商品编码",
+      "codePlaceholder": "例如 P1001",
+      "category": "类目",
+      "categoryPlaceholder": "请选择类目",
+      "brand": "品牌",
+      "noBrand": "不选择品牌",
+      "title": "商品标题",
+      "subtitle": "副标题",
+      "description": "商品描述",
+      "imagesLabel": "图片（最多 {max} 张，第一张为主图）",
+      "chooseCategoryFirst": "请先选择类目。",
+      "formInvalid": "请检查表单填写后再保存。",
+      "rejectReason": "驳回原因：{comment}",
+      "saveBeforeSubmit": "请先保存修改，再提交审核。",
+      "underReview": "审核中不可编辑",
+      "readOnlyNotice": "当前账号无商品编辑权限，仅可查看。",
+      "metaCode": "商品编码：{code}",
+      "metaStatus": "当前状态：",
+      "loadFailed": "商品信息加载失败",
+      "backToList": "返回列表"
+    },
+    "sku": {
+      "code": "SKU 编码 {index}",
+      "specs": "规格",
+      "specsLabel": "规格 {index}",
+      "price": "价格",
+      "priceLabel": "价格 {index}",
+      "stock": "库存",
+      "stockLabel": "库存 {index}",
+      "status": "状态",
+      "statusLabel": "SKU 状态 {index}",
+      "statusActive": "启用",
+      "statusDisabled": "停用",
+      "deleteLabel": "删除 SKU {index}",
+      "add": "新增 SKU"
+    },
+    "image": {
+      "unsupportedType": "{name}：仅支持 PNG / JPEG / WEBP 图片",
+      "tooLarge": "{name}：图片大小不能超过 10MB",
+      "max": "最多上传 {max} 张图片",
+      "maxIgnored": "最多上传 {max} 张图片，已忽略多余图片",
+      "uploading": "图片上传中…",
+      "main": "主图"
+    },
+    "attribute": {
+      "empty": "该商品类目暂无属性。",
+      "selectPlaceholder": "请选择"
+    }
+  },
+  "menu": {
+    "badge": {
+      "new": "新"
+    },
+    "home": "后台首页",
+    "dashboard": "仪表盘",
+    "analytics": {
+      "group": "数据中心",
+      "overview": "经营概览",
+      "trade": "交易分析",
+      "category": "品类分析",
+      "product": "商品分析",
+      "service": "服务分析"
+    },
+    "marketing": {
+      "group": "营销中心",
+      "coupons": "优惠券",
+      "campaigns": "营销活动"
+    },
+    "funds": {
+      "group": "资金管理",
+      "deposit": "保证金管理",
+      "payouts": "小额打款",
+      "wallet": "我的钱包",
+      "account": "账户资金"
+    },
+    "product": {
+      "group": "商品管理",
+      "list": "商品列表",
+      "create": "创建新商品",
+      "diagnosis": "商品诊断"
+    },
+    "finance": {
+      "invoices": "发票管理",
+      "billing": "账单对账"
+    },
+    "shipping": {
+      "center": "发货中心",
+      "list": "发货管理",
+      "tools": "物流工具",
+      "waybill": "电子面单"
+    },
+    "afterSales": {
+      "group": "售后管理",
+      "workbench": "售后工作台",
+      "appeals": "申诉中心",
+      "returnShipping": "退货包运费",
+      "flashRefund": "闪电退款"
+    },
+    "growth": {
+      "overview": "商家成长",
+      "rewards": "奖励中心",
+      "tasks": "成长任务",
+      "gold": "金牌商家认证"
+    },
+    "orders": {
+      "list": "订单列表",
+      "addressReview": "地址审核",
+      "addressApproval": "订单地址审核",
+      "autoVerify": "自动核单"
+    },
+    "system": {
+      "group": "系统管理",
+      "staff": "子账号管理",
+      "settings": "系统设置",
+      "accounts": "账号管理",
+      "roles": "角色管理"
+    },
+    "service": {
+      "platform": "客服平台"
+    },
+    "shop": {
+      "group": "店铺管理",
+      "info": "店铺信息"
+    },
+    "messages": {
+      "center": "消息中心",
+      "settings": "消息设置",
+      "autoReply": "自动回复"
+    },
+    "rules": {
+      "center": "规则中心",
+      "list": "规则管理"
+    },
+    "violations": {
+      "list": "违规列表"
+    },
+    "customers": {
+      "group": "顾客管理",
+      "care": "顾客关怀",
+      "profile": "顾客画像",
+      "reviews": "顾客评价"
+    },
+    "settings": {
+      "privacy": "隐私保护"
+    },
+    "category": {
+      "list": "类目管理"
+    },
+    "brand": {
+      "list": "品牌管理"
+    },
+    "audit": {
+      "list": "商品审核"
+    },
+    "merchant": {
+      "list": "商家管理"
+    }
+  },
+  "permissions": {
+    "productView": "商品查看",
+    "productCreate": "商品创建",
+    "productUpdate": "商品编辑",
+    "productDelete": "商品删除",
+    "productSubmit": "商品提交",
+    "productPublish": "商品发布",
+    "productAudit": "商品审核",
+    "categoryView": "类目查看",
+    "categoryManage": "类目管理",
+    "brandManage": "品牌管理",
+    "merchantView": "商家查看",
+    "merchantUpdate": "商家信息维护",
+    "shopView": "店铺查看",
+    "shopUpdate": "店铺设置",
+    "accountManage": "账号管理",
+    "roleManage": "角色管理",
+    "platformCrossTenant": "跨商家访问"
+  },
+  "errors": {
+    "ACCOUNT_NOT_FOUND": "账号不存在",
+    "AUDIT_ALREADY_REVIEWED": "该审核已处理",
+    "AUDIT_NOT_FOUND": "审核记录不存在",
+    "AUDIT_VERSION_CONFLICT": "商品版本状态已变化，无法审核",
+    "BRAND_EXISTS": "品牌名称已存在",
+    "BRAND_NOT_FOUND": "品牌不存在",
+    "CATEGORY_ATTRIBUTE_INVALID": "属性不属于该类目",
+    "CATEGORY_HAS_CHILDREN": "存在子类目，无法删除",
+    "CATEGORY_IN_USE": "类目已被商品使用，无法删除",
+    "CATEGORY_LEVEL_LIMIT": "类目最多三级",
+    "CATEGORY_NOT_FOUND": "类目不存在",
+    "CONFIGURATION_ERROR": "服务未正确配置",
+    "CORE_API_ERROR": "核心服务调用失败",
+    "CORE_API_TIMEOUT": "核心服务响应超时",
+    "CSRF_FORBIDDEN": "跨站请求被拒绝",
+    "FILE_TOO_LARGE": "文件大小不能超过 20MB",
+    "FORBIDDEN": "无权访问",
+    "HTTP_ERROR": "请求失败，请稍后重试",
+    "INTERNAL_ERROR": "服务器内部错误",
+    "INVALID_BODY": "请求体不合法",
+    "INVALID_CAPTCHA": "验证码不正确",
+    "INVALID_MOBILE": "手机号格式不正确",
+    "INVALID_PATH": "路径不合法",
+    "INVALID_PERMISSION": "权限码不合法",
+    "INVALID_QUERY": "查询参数不合法",
+    "INVALID_RESPONSE": "响应数据格式不正确",
+    "INVALID_ROLE": "角色不存在",
+    "LAST_SUPER_ADMIN": "至少保留一个启用的超级管理员",
+    "MAX_FAVORITES": "收藏数量不能超过 10 个",
+    "MERCHANT_NOT_FOUND": "商家不存在",
+    "NOT_FOUND": "资源不存在",
+    "OCR_NOT_FOUND": "未识别到有效信息",
+    "OWNER_IMMUTABLE": "主账号不可修改",
+    "PRODUCT_ATTRIBUTE_INVALID": "商品属性值不合法",
+    "PRODUCT_ATTRIBUTE_REQUIRED": "缺少必填商品属性",
+    "PRODUCT_ATTRIBUTE_UNKNOWN": "商品属性不属于该类目",
+    "PRODUCT_BRAND_INVALID": "商品品牌不可用",
+    "PRODUCT_CATEGORY_INVALID": "商品类目不存在",
+    "PRODUCT_CODE_EXISTS": "商品编码已存在",
+    "PRODUCT_IN_REVIEW": "商品审核中，无法编辑",
+    "PRODUCT_NOT_APPROVED": "商品未通过审核，无法发布",
+    "PRODUCT_NOT_DRAFT": "只有草稿可以提交审核",
+    "PRODUCT_NOT_FOUND": "商品不存在",
+    "PRODUCT_NOT_PUBLISHED": "商品未发布，无法下线",
+    "PRODUCT_PUBLISHED": "商品已发布，无法删除",
+    "PRODUCT_SHOP_INVALID": "店铺不属于当前商家",
+    "PRODUCT_SKU_DUPLICATE": "SKU 编码重复",
+    "PRODUCT_VERSION_CONFLICT": "商品版本冲突，请重试",
+    "ROLE_CODE_TAKEN": "角色编码已存在",
+    "ROLE_NOT_FOUND": "角色不存在",
+    "SELF_DISABLE_FORBIDDEN": "不能停用当前账号",
+    "SHOP_NOT_FOUND": "店铺不存在",
+    "UNAUTHORIZED": "未登录",
+    "UNKNOWN": "操作失败，请稍后重试",
+    "UPLOAD_INVALID_FILE": "上传文件不合法",
+    "UPLOAD_TOO_LARGE": "上传文件过大",
+    "UPLOAD_UNSUPPORTED_TYPE": "不支持的文件类型",
+    "USERNAME_TAKEN": "用户名已存在"
+  },
+  "entry": {
+    "meta": {
+      "home": "商家入驻",
+      "shop": "选择店铺类型",
+      "company": "填写入驻资料",
+      "settleinpc": "入驻提示"
+    },
+    "header": {
+      "brand": "开源电商 · 商家入驻平台"
+    },
+    "invitation": {
+      "submit": "立即入住",
+      "code": "邀请码",
+      "codePlaceholder": "邀请码非必填，如有请填写服务商招商码或推荐商家邀请码",
+      "failed": "提交失败，请稍后重试"
+    },
+    "steps": {
+      "prepare": {
+        "title": "准备入驻资料",
+        "item1": "准备店铺信息",
+        "item2": "准备经营资质",
+        "item3": "开店铺人证件"
+      },
+      "chooseType": {
+        "title": "选择店铺类型",
+        "item1": "店铺类型了解",
+        "item2": "明确资质要求",
+        "item3": "确认店铺类型"
+      },
+      "apply": {
+        "title": "填写入驻申请",
+        "item1": "主体信息",
+        "item2": "资质证件",
+        "item3": "经营信息"
+      },
+      "review": {
+        "title": "提交等待审核",
+        "item1": "招商初审",
+        "item2": "证件复审",
+        "item3": "账户开户"
+      },
+      "operate": {
+        "title": "开店线上经营",
+        "item1": "发布商品信息",
+        "item2": "设置提现账户",
+        "item3": "线上售卖经营"
+      }
+    },
+    "warning": {
+      "message": "友情提示：拟入驻开源电商的商家您好，入驻时无需支付给任何招商服务商和第三方费用，请您知悉！",
+      "description": "目前平台仅开放数码家电/办公、宠物生活、母婴玩具、服饰鞋包、运动户外、汽配摩托、医药健康类目的商家自入驻，其余类目邀约制入驻请勿提交申请。入驻审核时效预计在7个工作日内，感谢支持。"
+    },
+    "settleinpc": {
+      "notice": "抱歉，您当前登陆的手机号已经注册过店铺，请先点击退出登陆，然后更换一个新的手机号重新注册登陆即可。给您带来不便，还请谅解。"
+    },
+    "storeTypeGuide": {
+      "title": "企业店铺类型和资质说明",
+      "confirm": "我知道了",
+      "typeColumn": "店铺类型",
+      "descriptionColumn": "店铺说明",
+      "names": {
+        "flagship": "企业旗舰店",
+        "franchise": "企业专卖店",
+        "exclusive": "企业专营店",
+        "factory": "企业工厂店"
+      },
+      "rows": {
+        "1": "经营一个品牌商品的旗舰店",
+        "2": "经营多个品牌商品，且各品牌归属于同一实际控制人的旗舰店",
+        "3": "卖场型品牌（服务类商标）商标权利人开设的旗舰店",
+        "4": "经营一个授权品牌的商品，但未获得品牌（注册商标）权利人独占授权入驻开源电商开放平台的商家专卖店",
+        "5": "经营多个授权品牌的商品，且各品牌归同一实际控制人的商家专卖店",
+        "6": "经营多个自有品牌商品的专营店",
+        "7": "经营多个授权品牌商品，持有相应注册商标权利人出具的销售授权文件",
+        "8": "同时经营自有品牌商品和授权品牌商品的专营店",
+        "9": "经营一个或多个品牌商品的工厂店",
+        "10": "经营商品的商标持有人或持有相应注册商标权利人出具的销售授权文件",
+        "11": "经营商品均为自主生产的工厂店"
+      }
+    },
+    "storeTypeSelector": {
+      "enterprisePrefix": "企业",
+      "confirmTitle": "确定更改店铺类型为 {name} ？",
+      "confirm": "确定",
+      "changeTip": "温馨提示：如果更换店铺类型，店铺名称会被清空，需重新上传"
+    },
+    "company": {
+      "loadFailed": "加载失败",
+      "previous": "上一步",
+      "next": "下一步",
+      "done": "完成",
+      "steps": {
+        "subject": "填写主体信息",
+        "overview": "填写公司概况",
+        "qualification": "填写资质信息",
+        "shop": "填写店铺信息"
+      },
+      "placeholders": {
+        "none": "暂无内容",
+        "qualification": "填写资质信息",
+        "shop": "填写店铺信息"
+      },
+      "subjectCardTitle": "企业主体信息",
+      "legalPersonCardTitle": "法人证件信息",
+      "companyType": "公司类型",
+      "distChannel": "销售渠道",
+      "businessLicense": "营业执照",
+      "businessLicenseNote1": "请上传清晰的多证合一营业执照（统一社会信用代码）",
+      "businessLicenseNote2": "文件最多上传1张，大小不得超过20MB",
+      "businessLicenseNote3": "文件格式支持：JPG/JPEG/PNG/GIF/BPM",
+      "businessLicenseNote4": "企业主体需满足开源电商平台入驻标准要求",
+      "taxpayer": "一般纳税人资格证电子版",
+      "taxpayerNote1": "请上传清晰的一般纳税人资格证，复印件需加盖公司印章",
+      "taxpayerNote2": "文件最多上传1张，大小不得超过20MB",
+      "taxpayerNote3": "文件格式支持：JPG/JPEG/PNG/GIF/BPM",
+      "bankOpen": "银行开户证明",
+      "bankOpenNote1": "请上传清晰的证照，如果是复印件需加盖公司印章",
+      "bankOpenNote2": "文件最多上传1张，大小不得超过20MB",
+      "bankOpenNote3": "文件格式支持：JPG/JPEG/PNG/GIF/BPM",
+      "bankOpenNote4": "上传银行开户许可证或基本存款账户信息扫描件",
+      "officeAddress": "办公地址",
+      "officeAddressPlaceholder": "请填写真实的办公地址",
+      "companyDesc": "公司简介",
+      "companyDescPlaceholder": "可以从品牌定位、品牌产品线、市场占有率或年销量、品牌当下布局、品牌未来规划等方面介绍，最多不得超过1000字",
+      "companyFileNote1": "支持上传相关公司介绍等相关资料附件",
+      "companyFileNote2": "文件最多上传10个，单个文件大小不得超过20MB",
+      "companyFileNote3": "文件格式支持：PDF/PPT/DOC/JPG/JPEG/PNG/GIF/BPM",
+      "idType": "证件类型",
+      "idPhotos": "电子证件照",
+      "idPhotosHelp": "请上传手持证件正反面照，或身份证件的正反面彩色扫描照片，或正反面复印件加盖入驻主体鲜章，",
+      "viewExample": "查看示例",
+      "legalPersonMobile": "法人手机号",
+      "legalPersonMobilePlaceholder": "请填写法人手机号",
+      "licenseVerifyTitle": "请核对营业执照信息，若信息不符，请手动修改",
+      "socialCreditCode": "统一社会信用代码",
+      "socialCreditCodePlaceholder": "请填写营业执照上的注册号",
+      "companyName": "公司名称",
+      "companyNamePlaceholder": "请按照营业执照，填写公司名称",
+      "businessAddress": "经营地址",
+      "businessAddressPlaceholder": "请按照营业执照，填写公司地址",
+      "businessTerm": "营业期限",
+      "registeredCapital": "注册资金",
+      "registeredCapitalHint": "若注册资金币种不是人民币，可按照当前汇率换算成人民币后进行填写",
+      "registeredCapitalPlaceholder": "请输入",
+      "registeredCapitalUnit": "万元",
+      "identityVerifyTitle": "请核对身份信息，若信息不符合，可手动修改",
+      "legalName": "姓名",
+      "legalNamePlaceholder": "请保持与身份证件上的姓名一致",
+      "idNumber": "证件号码",
+      "idNumberPlaceholder": "请保持与身份证件上的证件号一致",
+      "validUntil": "有效截止日",
+      "ocrFailed": "证件识别失败，请手动填写"
+    },
+    "idTypes": {
+      "mainland": "中国大陆居民身份证",
+      "passport": "海外护照",
+      "hkMacau": "港澳居民往来内地通行证",
+      "taiwan": "台湾居民往来大陆通行证"
+    },
+    "idUploadDemo": {
+      "title": "身份证件上传示例",
+      "confirm": "我知道了",
+      "copyNote": "1. 身份证件正反面复印件，加盖开店公司印章：",
+      "alt1": "身份证件示例1",
+      "alt2": "身份证件示例2",
+      "holdingNote": "2. 手持身份证件的正反面照片：",
+      "alt3": "身份证件示例3",
+      "alt4": "身份证件示例4",
+      "reminderNote": "注：身份信息请勿打马赛克，请保持所有字迹清晰可见"
+    },
+    "shop": {
+      "loadFailed": "加载失败",
+      "heading": "请选择您的店铺类型及主营类目",
+      "category": "主营类目",
+      "categoryPlaceholder": "主营类目决定您店铺的经营范围，请谨慎选择",
+      "type": "店铺类型",
+      "howToChoose": "该如何选择？",
+      "next": "下一步",
+      "categoryRequired": "请选择主营类目",
+      "typeRequired": "请选择店铺类型",
+      "saveFailed": "保存失败，请稍后重试"
+    },
+    "ocr": {
+      "recognizing": "识别中…",
+      "failed": "图片识别失败"
+    },
+    "upload": {
+      "tooLarge": "文件大小不能超过{max}MB",
+      "failed": "文件上传失败",
+      "uploading": "上传中…"
+    },
+    "captcha": {
+      "invalidMobile": "手机号格式不符合要求",
+      "failed": "获取验证码失败",
+      "placeholder": "请输入验证码",
+      "label": "验证码",
+      "resendIn": "{seconds} 秒后重新获取",
+      "send": "获取验证码"
+    },
+    "termPicker": {
+      "start": "开始日期",
+      "end": "结束日期",
+      "to": "至",
+      "longTerm": "长期有效"
+    },
+    "signContract": {
+      "policyTip": "以下协议与纸质协议拥有同等效力，点击“确认合作”视为您同意并接受合作协议条款。如对合作条款有异议，可联系业务经理。",
+      "submit": "确认合作",
+      "title": "签约合作协议",
+      "expiredNotice": "您的协议已到期，我们将通过短信验证来确认您与平台继续达成合作",
+      "notice": "我们将通过短信验证来确认您与平台正式达成合作",
+      "captchaSentTo": "验证码将发送到",
+      "changeMobileTip": "，如需更换手机号请联系招商经理",
+      "policyPrefix": "我已阅读并同意",
+      "policyName": "《开源电商合作协议》",
+      "policyInfo": "协议说明",
+      "success": "恭喜您与平台达成合作",
+      "failed": "签署合约异常"
+    },
+    "merchantLogo": {
+      "statusReviewing": "审核中",
+      "statusRejected": "审核驳回",
+      "statusApproved": "审核通过",
+      "reviewTip": "您已申请修改店铺标志，当前处于审核中，审核通过前，会向消费者展示原来的店铺标志，感谢您的耐心等待",
+      "normalTip": "新上传的店铺标志通过审核后，会替换掉原有的店铺标志，点击右上角的保存后上传",
+      "tooLarge": "照片大小不能超过10MB",
+      "squareRequired": "请上传正方形的店铺标志图片",
+      "minSize": "店铺标志图片需要大于200*200像素",
+      "readFailed": "图片读取失败，请重新上传",
+      "changeArrow": "修改为 》",
+      "description1": "店铺标志会在店铺页，订单页等地方，展示给消费者；",
+      "description2": "请上传正方形图片，不小于200*200像素；",
+      "description3": "格式支持：JPG/JPEG/PNG/GIF/BMP；"
+    },
+    "idCard": {
+      "portrait": "人像面",
+      "emblem": "国徽面"
+    }
+  },
+  "shop": {
+    "breadcrumb": {
+      "home": "首页",
+      "shop": "店铺",
+      "trademark": "商标"
+    },
+    "profile": {
+      "title": "店铺信息",
+      "tabsLabel": "店铺资料导航",
+      "tabs": {
+        "basic": "基本信息",
+        "principal": "主体信息",
+        "license": "店铺经营许可",
+        "wallet": "钱包信息",
+        "settlement": "结算信息"
+      }
+    },
+    "baseInfo": {
+      "title": "基础信息",
+      "id": "店铺编号",
+      "name": "店铺名称",
+      "type": "店铺类型",
+      "category": "主营类目",
+      "logo": "店铺标志",
+      "description": "店铺简介",
+      "descriptionHint": "最多200个字符",
+      "descriptionPlaceholder": "填写店铺简介，可让消费者更了解您的店铺",
+      "externalLink": "第三方平台店铺链接",
+      "externalLinkPlaceholder": "填写真实的其他平台店铺链接",
+      "copyId": "复制店铺编号",
+      "adminCard": "管理员信息",
+      "contactCard": "联系方式"
+    },
+    "shopType": {
+      "10": "个人普通店铺",
+      "20": "企业普通店铺",
+      "21": "企业专营店铺",
+      "22": "企业专卖店铺",
+      "23": "企业旗舰店铺",
+      "99": "其他"
+    },
+    "loadFailed": "店铺信息加载失败",
+    "notReady": "店铺信息尚未加载完成，请稍后重试",
+    "toast": {
+      "saved": "店铺基本信息已更新",
+      "copied": "店铺编号已复制",
+      "copyFailed": "复制失败，请手动复制"
+    },
+    "contactForm": {
+      "title": "更新联系方式",
+      "email": "联系邮箱",
+      "emailPlaceholder": "请输入邮箱地址",
+      "servicePhone": "客服电话",
+      "servicePhoneHint": "最多30个字符",
+      "servicePhonePlaceholder": "请您及时填写客服电话",
+      "contactName": "紧急联系人姓名",
+      "contactNamePlaceholder": "请输入紧急联系人姓名",
+      "contactPhone": "紧急联系人手机",
+      "contactPhonePlaceholder": "请输入紧急联系人电话",
+      "captcha": "验证码",
+      "captchaPlaceholder": "请查看手机短信，输入验证码",
+      "saved": "联系方式已更新"
+    },
+    "license": {
+      "title": "许可证列表",
+      "add": "添加证照",
+      "type": "证照类型",
+      "file": "许可证照",
+      "preview": "证照预览",
+      "expireAt": "证照有效截止日期",
+      "expired": "已过期",
+      "status": "审核状态",
+      "empty": "暂无许可证",
+      "deleteLabel": "删除证照",
+      "reviewingDelete": "审核中，暂时不支持删除",
+      "approvedDelete": "当前许可证件正在使用中，暂时不支持删除",
+      "statuses": {
+        "reviewing": "审核中",
+        "rejected": "审核驳回",
+        "approved": "审核通过"
+      }
+    },
+    "principal": {
+      "legalTitle": "法人信息",
+      "companyTitle": "企业信息",
+      "legalName": "法人姓名",
+      "legalPhone": "法人电话",
+      "legalCardType": "法人证件类型",
+      "legalCardTypeId": "身份证",
+      "legalCardNum": "法人证件号",
+      "legalValid": "证件有效期",
+      "legalPhotos": "证件照片",
+      "viewPhoto": "查看证件照片",
+      "businessLicense": "营业执照",
+      "viewBusinessLicense": "查看营业执照",
+      "operatingTime": "执照有效期",
+      "socialCreditCode": "统一社会信用代码",
+      "companyName": "公司名称",
+      "companyType": "公司类型",
+      "address": "经营地址",
+      "registeredCapital": "注册资本"
+    },
+    "settlement": {
+      "title": "基本信息",
+      "depositThreshold": "保证金阈值",
+      "depositThresholdValue": "10000元",
+      "rate": "结算费率",
+      "rateValue": "20%"
+    },
+    "wallet": {
+      "types": {
+        "enterprise": "企业钱包",
+        "personal": "个人钱包"
+      },
+      "bankCardNote": "绑定银行卡后可正常使用提现业务，请前往",
+      "bindBankCard": "绑定银行卡",
+      "changeNote": "如需提现，请先变更为当前使用",
+      "withdraw": "去提现",
+      "switchCurrent": "切换为当前使用",
+      "status": {
+        "current": "当前使用中",
+        "previous": "曾经使用过"
+      },
+      "balance": "钱包余额",
+      "noBalance": "暂无余额",
+      "name": "姓名",
+      "enterpriseName": "企业名称",
+      "account": "钱包账号",
+      "phone": "绑定手机",
+      "id": "钱包ID",
+      "demo": {
+        "account": "示例家居旗舰店",
+        "name": "示例联系人"
+      },
+      "auth": {
+        "title": "变更为个人钱包",
+        "warning": "更换钱包，原钱包余额不会自动转入新钱包，建议先提现再更换",
+        "stepAdmin": "管理员认证",
+        "stepConfirm": "确认钱包信息",
+        "next": "下一步",
+        "previous": "上一步",
+        "submitted": "钱包变更申请已提交",
+        "companyName": "企业名称",
+        "companyNamePlaceholder": "请输入企业名称",
+        "companyIdCard": "企业证件号",
+        "companyIdCardPlaceholder": "请输入企业证件号",
+        "phone": "钱包绑定手机",
+        "phonePlaceholder": "请输入手机号",
+        "captcha": "验证码",
+        "captchaPlaceholder": "请输入验证码"
+      }
+    },
+    "admin": {
+      "submit": "更新店铺管理员信息",
+      "cardType": "证件类型",
+      "cardTypeValue": "中国大陆居民身份证",
+      "cardTypeHint": "(店铺管理员仅支持大陆居民身份证申请)",
+      "idCardPhotos": "电子证件照",
+      "name": "管理员姓名",
+      "namePlaceholder": "请保持与身份证件上的姓名一致",
+      "citizenId": "身份证件号",
+      "citizenIdPlaceholder": "请保持与身份证件上的证件号一致",
+      "validUntil": "有效截止日",
+      "mobile": "管理员手机号",
+      "mobilePlaceholder": "请填写管理员手机号",
+      "captcha": "验证码",
+      "captchaPlaceholder": "请查看手机短信，输入验证码",
+      "authLetter": "授权书",
+      "note1": "当店铺管理员与法人不一致时，请上传管理员授权书",
+      "note2": "请使用模板下载后加盖公司印章后上传",
+      "note3": "支持上传1张文件，大小不得超过10MB",
+      "note4": "格式支持JPG/JPEG/PNG/GIF/BPM",
+      "ocrFailed": "证件识别失败，请手动填写",
+      "saved": "店铺管理员信息已保存"
+    },
+    "rejection": {
+      "title": "审核不通过，原因如下：",
+      "reason1": "不通过",
+      "reason2": "用户名填写错误哦"
+    },
+    "trademark": {
+      "title": "商标管理",
+      "empty": "暂无商标信息",
+      "add": "新增商标",
+      "comingSoon": "商标功能暂未开放"
+    },
+    "adminPage": {
+      "title": "店铺管理员",
+      "reviewing": "您已申请修改管理员信息，当前处于审核中，审核期间不可以再次修改信息，感谢您的耐心等待。",
+      "viewApplication": "查看申请信息",
+      "rejected": "审核驳回。您申请修改的管理员信息审核不通过，请针对驳回原因进行修改后再次提交",
+      "edit": "去修改"
+    }
+  },
+  "setting": {
+    "title": "账户设置",
+    "navLabel": "账户设置导航",
+    "nav": {
+      "basic": "基本信息",
+      "password": "登录密码",
+      "mobile": "手机号码",
+      "loginSettings": "登录设置",
+      "loginRecords": "登录记录"
+    },
+    "basicInfo": "基本信息",
+    "profile": {
+      "shopId": "店铺ID",
+      "account": "账号名",
+      "password": "登录密码",
+      "mobile": "绑定手机",
+      "mobileVerify": "手机验证",
+      "lastLogin": "最近登录",
+      "off": "关闭"
+    }
+  },
+  "system": {
+    "permissionType": {
+      "MENU": "菜单权限",
+      "BUTTON": "按钮权限",
+      "API": "接口权限"
+    },
+    "accounts": {
+      "title": "子账号管理",
+      "description": "管理商家子账号及其角色分配。",
+      "create": "新建账号",
+      "filterStatus": {
+        "all": "全部",
+        "active": "启用",
+        "disabled": "停用"
+      },
+      "status": {
+        "active": "启用",
+        "disabled": "停用"
+      },
+      "columns": {
+        "username": "用户名",
+        "name": "姓名",
+        "phone": "手机号",
+        "roles": "角色",
+        "status": "状态",
+        "lastLogin": "最近登录",
+        "actions": "操作"
+      },
+      "fields": {
+        "keyword": "关键字",
+        "keywordPlaceholder": "用户名或姓名",
+        "status": "状态",
+        "statusFilter": "账号状态筛选"
+      },
+      "owner": "主账号",
+      "ownerReadonly": "主账号不可修改",
+      "neverLoggedIn": "从未登录",
+      "rolesLoading": "角色加载中…",
+      "noRoles": "暂无可分配角色",
+      "empty": "暂无子账号",
+      "toast": {
+        "created": "子账号已创建",
+        "updated": "子账号已更新",
+        "passwordReset": "密码已重置"
+      },
+      "dialog": {
+        "createTitle": "新建子账号",
+        "createDescription": "子账号按角色获得权限，主账号始终拥有全部权限。",
+        "editTitle": "编辑子账号",
+        "passwordTitle": "重置密码",
+        "passwordDescription": "为子账号 {username} 设置新密码",
+        "username": "用户名",
+        "usernamePlaceholder": "请输入用户名",
+        "name": "姓名",
+        "namePlaceholder": "请输入姓名",
+        "password": "密码",
+        "passwordPlaceholder": "至少 8 位",
+        "newPassword": "新密码",
+        "newPasswordPlaceholder": "至少 8 位",
+        "status": "状态",
+        "roles": "角色"
+      }
+    },
+    "roles": {
+      "title": "角色管理",
+      "description": "子账号按角色获得权限，主账号始终拥有全部权限",
+      "create": "新建角色",
+      "columns": {
+        "role": "角色",
+        "permissionCount": "权限数",
+        "accountCount": "账号数",
+        "actions": "操作"
+      },
+      "empty": "暂无角色",
+      "toast": {
+        "created": "角色已创建",
+        "updated": "角色已更新"
+      },
+      "dialog": {
+        "createTitle": "新建角色",
+        "createDescription": "角色编码创建后不可修改。",
+        "editTitle": "编辑角色",
+        "editDescription": "角色编码：{code}（创建后不可修改）",
+        "code": "角色编码",
+        "codePlaceholder": "请输入角色编码",
+        "name": "角色名称",
+        "namePlaceholder": "请输入角色名称",
+        "permissions": "权限"
+      }
+    },
+    "opsAccounts": {
+      "title": "账号管理",
+      "description": "管理运营端账号及其角色分配。",
+      "create": "新建账号",
+      "current": "当前账号",
+      "columns": {
+        "username": "用户名",
+        "name": "姓名",
+        "roles": "角色",
+        "status": "状态",
+        "lastLogin": "最近登录",
+        "actions": "操作"
+      },
+      "empty": "暂无账号",
+      "neverLoggedIn": "从未登录",
+      "rolesLoading": "角色加载中…",
+      "noRoles": "暂无可分配角色",
+      "fields": {
+        "keyword": "关键字",
+        "keywordPlaceholder": "用户名或姓名",
+        "status": "状态",
+        "statusFilter": "账号状态筛选"
+      },
+      "toast": {
+        "created": "账号已创建",
+        "updated": "账号已更新",
+        "passwordReset": "密码已重置"
+      },
+      "dialog": {
+        "createTitle": "新建账号",
+        "createDescription": "创建后可继续分配角色与重置密码。",
+        "editTitle": "编辑账号",
+        "passwordTitle": "重置密码",
+        "passwordDescription": "为账号 {username} 设置新密码",
+        "username": "用户名",
+        "usernamePlaceholder": "请输入用户名",
+        "name": "姓名",
+        "namePlaceholder": "请输入姓名",
+        "password": "密码",
+        "passwordPlaceholder": "至少 8 位",
+        "newPassword": "新密码",
+        "status": "状态",
+        "roles": "角色"
+      }
+    },
+    "opsRoles": {
+      "title": "角色管理",
+      "description": "维护角色权限与商家范围。",
+      "create": "新建角色",
+      "columns": {
+        "role": "角色",
+        "permissionCount": "权限数",
+        "accountCount": "账号数",
+        "merchantScope": "商家范围",
+        "actions": "操作"
+      },
+      "empty": "暂无角色",
+      "allMerchants": "全部商家",
+      "merchantScopeSeparator": "、",
+      "toast": {
+        "created": "角色已创建",
+        "updated": "角色已更新"
+      },
+      "dialog": {
+        "createTitle": "新建角色",
+        "createDescription": "角色编码创建后不可修改。",
+        "editTitle": "编辑角色",
+        "editDescription": "角色编码：{code}",
+        "code": "角色编码",
+        "codePlaceholder": "请输入角色编码",
+        "name": "角色名称",
+        "namePlaceholder": "请输入角色名称",
+        "permissions": "权限",
+        "merchantScope": "商家范围",
+        "merchantScopeHint": "每行一个商家 ID；拥有跨商家权限时忽略",
+        "merchantScopePlaceholder": "每行一个商家 ID"
+      }
+    }
+  },
+  "marketing": {
+    "home": {
+      "title": "营销中心"
+    },
+    "target": {
+      "product": "店铺商品券",
+      "universal": "店铺通用券",
+      "service": "店铺客服体验券"
+    },
+    "coupon": {
+      "title": "优惠券",
+      "description": "高级表单常见于一次性输入和提交大批量数据的场景。",
+      "create": "创建优惠券",
+      "detailTitle": "优惠券详情",
+      "createTitle": "创建优惠券",
+      "editTitle": "编辑优惠券",
+      "back": "返回",
+      "edit": "编辑",
+      "view": "查看",
+      "offline": "下线",
+      "statusFilterLabel": "状态",
+      "putTimeFilterLabel": "发放时间",
+      "statusAria": "优惠券状态",
+      "putStartPlaceholder": "发放开始",
+      "putEndPlaceholder": "发放结束",
+      "empty": "暂无优惠券",
+      "offlineDialogTitle": "下线优惠券",
+      "offlineDialogDescription": "您确定要下线该优惠券吗？",
+      "offlineSuccess": "优惠券已下线",
+      "offlineFailed": "下线失败，请稍后重试",
+      "actionFailed": "操作失败，请稍后重试",
+      "status": {
+        "all": "全部",
+        "notStarted": "未开始",
+        "ongoing": "进行中",
+        "ended": "已结束",
+        "offline": "已下线"
+      },
+      "type": {
+        "fullReduction": "满减券",
+        "discount": "折扣券"
+      },
+      "column": {
+        "code": "优惠券编码",
+        "name": "优惠券名称",
+        "type": "优惠类型",
+        "target": "券类型",
+        "putTerm": "发放时段",
+        "useTerm": "使用时间",
+        "sendCount": "发放数量",
+        "leftCount": "当前余量",
+        "ctime": "创建时间",
+        "status": "状态",
+        "actions": "操作"
+      },
+      "useTermRange": "{start} 到 {end}",
+      "useTermDays": "领取后 {days} 天",
+      "dateRange": "{start} 至 {end}",
+      "entry": {
+        "title": "请选择券类型",
+        "next": "下一步",
+        "productDescription": "发放店铺商品促销优惠券，提升商品转化，带动商品销量，用户可在商详页、IM等渠道领券后使用",
+        "universalDescription": "发放店铺通用优惠券，提升店铺整体转化效果，用户可在商详页等渠道领取后使用",
+        "serviceDescription": "发放用户安慰、赔付、奖励优惠券，提升用户服务体验，强化客户关系，用户可在IM客服渠道领券后使用"
+      },
+      "form": {
+        "typeLabel": "优惠券类型",
+        "placeholder": "请选择",
+        "nameLabel": "优惠券名称",
+        "namePlaceholder": "请填写优惠券名称",
+        "displayNameLabel": "优惠券文案",
+        "putTermLabel": "发放时间",
+        "putStart": "发放开始时间",
+        "putEnd": "发放结束时间",
+        "stockLabel": "发放张数",
+        "stockPlaceholder": "请输入1-1,000,000的正整数",
+        "limitLabel": "每人限领张数",
+        "limit1": "1张",
+        "limit2": "2张",
+        "limit3": "3张",
+        "unlimited": "不限",
+        "useTermLabel": "使用时间",
+        "claimAfter": "领取后",
+        "claimDaysAria": "领取后天数",
+        "daysUnit": "天",
+        "custom": "自定义",
+        "useStart": "使用开始日期",
+        "useEnd": "使用结束日期",
+        "thresholdLabel": "门槛及面额",
+        "full": "满",
+        "yuan": "元",
+        "minus": "减",
+        "thresholdPlaceholder": "请输入门槛",
+        "thresholdAria": "满减门槛",
+        "amountPlaceholder": "请输入面额",
+        "amountAria": "优惠面额",
+        "submit": "提交",
+        "createDate": "创建日期",
+        "updateSuccess": "更新优惠券成功",
+        "createSuccess": "创建优惠券成功"
+      }
+    }
+  },
+  "dashboard": {
+    "home": {
+      "title": "经营概览",
+      "description": "欢迎回到开源电商商家管理后台"
+    },
+    "units": {
+      "order": "单",
+      "person": "人",
+      "times": "次",
+      "yuan": "元",
+      "item": "件",
+      "record": "条",
+      "day": "天",
+      "points": "分"
+    },
+    "latestNews": {
+      "title": "最新动态",
+      "more": "更多",
+      "empty": "暂无最新动态"
+    },
+    "overview": {
+      "title": "订单概况",
+      "unpaid": "待付款",
+      "unfilled": "待发货",
+      "unfilledTip": "近90天内的所有待发货订单数",
+      "refund": "退款/售后",
+      "refundTip": "近90天所有处在售后和退款中的订单数",
+      "willDelay": "即将延迟发货",
+      "willDelayTip": "近90天数据即将会延迟发货的订单数",
+      "delayed": "已延期发货",
+      "delayedTip": "近90天已过承诺发货时间的订单数"
+    },
+    "realdata": {
+      "title": "实时数据",
+      "dataCenter": "数据中心",
+      "description": "数据计算可能会存在5-10分钟左右的延迟",
+      "improveConversion": "如何提高转化率",
+      "paidAmount": "支付金额",
+      "paidAmountTip": "该店铺支付订单的总金额，包含买家实际支付和使用平台优惠券的总金额，未剔除售后订单",
+      "paidOrderCount": "支付订单数",
+      "paidOrderCountTip": "店铺全部支付的订单数，一个支付订单对应唯一订单号，一个买家在统计时间内支付多个订单则记为多次",
+      "paidUserCount": "支付人数",
+      "paidUserCountTip": "该店铺所有支付买家的去重人数，即一个买家多次支付，仅记一人，未剔除售后订单",
+      "itemUniqueVisitor": "商品访客数",
+      "itemUniqueVisitorTip": "统计周期内，访问店铺所有商品的去重人数",
+      "itemPaveView": "商品浏览量",
+      "itemPaveViewTip": "统计周期内，该店铺内所有商品详情页的被访问累加人次",
+      "conversionRate": "支付转化率",
+      "conversionRateTip": "统计周期内，支付买家数/访客数，即访客用户数转化为支付买家的比例"
+    },
+    "growth": {
+      "title": "商家成长",
+      "defaultShopName": "商家经营",
+      "serviceScore": "服务评价分",
+      "serviceScoreTip": "平台从售后、物流、客服、纠纷四个维度对商家的整体服务分进行评估的数据指标。服务分达到4分及以上的商家为优秀商家。",
+      "replyRate": "近30天3分钟回复率",
+      "collectRate": "近30天发货及揽收准时率",
+      "overallScore": "综合评价分",
+      "overallScoreTip": "综合评价分为近30天店铺下所有主动评价的订单分数的平均值。有效评价数不足20个的店铺暂不统计评分，综合评价分为0；低于4.0分属于异常。",
+      "newReviews": "新增评价数",
+      "excellent": "已达到优秀商家",
+      "notExcellent": "未达到优秀商家",
+      "notCounted": "暂未统计",
+      "normal": "正常",
+      "warning": "预警",
+      "calculating": "（计算中...）",
+      "focusHint": "请重点关注以下数据:",
+      "taskPending": "有{count}个任务待完成",
+      "taskAward": "有{count}个奖励待查看",
+      "taskSeparator": "，",
+      "qrcode": "二维码",
+      "qrcodeTitle": "店铺二维码",
+      "qrcodeDesc": "扫码查看店铺详情"
+    },
+    "violations": {
+      "title": "违规情况",
+      "listLink": "违规列表",
+      "issueCount": "违规数量(当天)",
+      "appealCount": "违规待申诉数量",
+      "ticketAmount": "罚款金额(当月)"
+    },
+    "productManage": {
+      "title": "商品管理",
+      "selling": "在售中",
+      "create": "创建新商品"
+    },
+    "fund": {
+      "title": "资金管理",
+      "wallet": "我的钱包",
+      "statement": "对账单"
+    },
+    "gold": {
+      "title": "金牌商家",
+      "logo": "金",
+      "viewDetail": "查看详情",
+      "online": "线上展示中",
+      "hidden": "线上不展示",
+      "canceled": "因违规取消线上展示",
+      "cycleRange": "当前考核周期:{range}",
+      "assessing": "正在考核中",
+      "detailTitle": "当前考核详情",
+      "partialHint": "以下仅是部分指标",
+      "moreMetrics": "查看更多指标细节",
+      "columnName": "指标名称",
+      "columnStandard": "认证标准",
+      "columnStatus": "当前状态",
+      "columnQualified": "是否达标",
+      "qualified": "已达标",
+      "unqualified": "未达标"
+    },
+    "activity": {
+      "title": "营销活动",
+      "more": "查看更多",
+      "tabOngoing": "报名中的活动",
+      "tabMine": "我报名的活动",
+      "emptyOngoing": "暂无报名中的活动",
+      "emptyMine": "暂无我报名的活动",
+      "signupTime": "报名时间：{start} 至 {end}",
+      "signupNow": "立即报名",
+      "viewDetail": "查看详情",
+      "actionAria": "{action}：{name}"
+    },
+    "trending": {
+      "title": "经营趋势",
+      "noData": "暂无数据",
+      "range7": "近7天",
+      "range30": "近30天",
+      "lineTransaction": "商品成交件数",
+      "linePaymentAmount": "支付金额",
+      "lineReview": "评价数",
+      "lineServiceReplyRate": "3分钟客服回复率"
+    }
+  },
+  "opsCommon": {
+    "all": "全部",
+    "status": {
+      "active": "启用",
+      "disabled": "停用"
+    },
+    "enable": "启用",
+    "disable": "停用"
+  },
+  "opsDashboard": {
+    "title": "运营后台",
+    "description": "开源电商运营后台",
+    "connected": "核心服务已连接",
+    "disconnected": "核心服务未连接"
+  },
+  "catalog": {
+    "categories": {
+      "title": "类目管理",
+      "description": "维护类目层级、状态与属性定义。",
+      "create": "新建一级类目",
+      "columns": {
+        "name": "类目名称",
+        "level": "层级",
+        "sort": "排序",
+        "status": "状态",
+        "attributeCount": "属性数",
+        "actions": "操作"
+      },
+      "addChild": "添加子类",
+      "empty": "暂无类目",
+      "rootLevel": "一级类目",
+      "fields": {
+        "parent": "所属父类目",
+        "parentDescription": "所属父类目：{name}",
+        "name": "类目名称",
+        "namePlaceholder": "请输入类目名称",
+        "sort": "排序",
+        "status": "状态",
+        "attributes": "属性"
+      },
+      "dialog": {
+        "createRootTitle": "新建一级类目",
+        "createChildTitle": "新建子类目",
+        "editTitle": "编辑类目",
+        "deleteTitle": "删除类目",
+        "deleteConfirm": "确认删除类目「{name}」？",
+        "deleteHint": "删除后不可恢复，请确认该类目下没有子类目或商品。",
+        "confirmDelete": "确认删除"
+      },
+      "attribute": {
+        "empty": "暂无属性",
+        "name": "属性名称",
+        "namePlaceholder": "属性名称",
+        "nameAria": "属性名称 {index}",
+        "type": "属性类型",
+        "typeAria": "属性类型 {index}",
+        "required": "必填",
+        "requiredAria": "属性必填 {index}",
+        "optionsPlaceholder": "选项，用逗号分隔",
+        "optionsAria": "属性选项 {index}",
+        "remove": "移除",
+        "add": "添加属性",
+        "typeOptions": {
+          "TEXT": "文本",
+          "NUMBER": "数字",
+          "SELECT": "选项"
+        }
+      },
+      "toast": {
+        "created": "类目已创建",
+        "updated": "类目已更新",
+        "deleted": "类目已删除"
+      }
+    },
+    "brands": {
+      "title": "品牌管理",
+      "description": "维护品牌名称、Logo 与启用状态。",
+      "create": "新建品牌",
+      "columns": {
+        "logo": "Logo",
+        "name": "品牌名称",
+        "status": "状态",
+        "actions": "操作"
+      },
+      "empty": "暂无品牌",
+      "logoNone": "无",
+      "fields": {
+        "keyword": "关键字",
+        "keywordPlaceholder": "品牌名称",
+        "status": "状态",
+        "statusFilter": "品牌状态筛选",
+        "name": "品牌名称",
+        "namePlaceholder": "请输入品牌名称",
+        "logo": "Logo",
+        "logoHint": "支持 PNG、JPEG、WebP，最大 10MB"
+      },
+      "dialog": {
+        "createTitle": "新建品牌",
+        "createDescription": "创建后可在列表中编辑或启用停用。",
+        "editTitle": "编辑品牌",
+        "editDescription": "品牌：{name}"
+      },
+      "uploadFailed": "图片上传失败，请稍后重试",
+      "toast": {
+        "created": "品牌已创建",
+        "updated": "品牌已更新",
+        "statusUpdated": "品牌状态已更新"
+      }
+    },
+    "merchants": {
+      "title": "商家管理",
+      "description": "查看商家资料与店铺信息。",
+      "columns": {
+        "code": "编码",
+        "name": "名称",
+        "contactName": "联系人",
+        "contactPhone": "联系电话",
+        "status": "状态",
+        "actions": "操作"
+      },
+      "empty": "暂无商家",
+      "fields": {
+        "keyword": "关键字",
+        "keywordPlaceholder": "商家编码/名称",
+        "status": "状态",
+        "statusFilter": "商家状态筛选"
+      },
+      "detail": {
+        "title": "商家详情",
+        "description": "商家：{name}",
+        "code": "编码：{value}",
+        "name": "名称：{value}",
+        "status": "状态：",
+        "contactName": "联系人：{value}",
+        "contactPhone": "联系电话：{value}",
+        "shops": "店铺",
+        "emptyShops": "暂无店铺"
+      },
+      "shopColumns": {
+        "name": "店铺名称",
+        "address": "地址",
+        "status": "状态",
+        "contactPhone": "联系电话"
+      }
+    },
+    "products": {
+      "title": "商品管理",
+      "description": "查看商品资料、版本与 SKU 信息（只读）。",
+      "columns": {
+        "product": "商品",
+        "code": "编码",
+        "merchant": "商家",
+        "shop": "店铺",
+        "category": "类目",
+        "status": "状态",
+        "version": "版本",
+        "updatedAt": "更新时间",
+        "actions": "操作"
+      },
+      "empty": "暂无商品",
+      "fields": {
+        "keyword": "关键字",
+        "keywordPlaceholder": "商品标题或编码",
+        "status": "状态",
+        "statusFilter": "商品状态筛选",
+        "code": "商品编码",
+        "merchant": "商家",
+        "shop": "店铺",
+        "category": "类目",
+        "brand": "品牌",
+        "currentVersion": "当前版本",
+        "updatedAt": "更新时间"
+      },
+      "detail": {
+        "title": "商品详情",
+        "description": "商品：{name}",
+        "attributes": "属性",
+        "noDescription": "暂无描述",
+        "noAttributes": "暂无属性",
+        "sku": "SKU",
+        "noSku": "暂无 SKU",
+        "currentVersion": "当前版本",
+        "onlineVersion": "线上版本",
+        "noOnlineVersion": "暂无线上版本",
+        "versionHistory": "版本历史",
+        "noVersions": "暂无版本记录"
+      },
+      "versionColumns": {
+        "version": "版本",
+        "status": "状态",
+        "title": "标题",
+        "createdAt": "创建时间",
+        "submittedAt": "提交时间",
+        "reviewedAt": "审核时间",
+        "publishedAt": "发布时间"
+      },
+      "skuColumns": {
+        "code": "SKU 编码",
+        "specs": "规格",
+        "price": "价格",
+        "stock": "库存",
+        "status": "状态"
+      },
+      "status": {
+        "DRAFT": "草稿",
+        "SUBMITTED": "审核中",
+        "APPROVED": "已通过",
+        "REJECTED": "已驳回",
+        "PUBLISHED": "已发布",
+        "SUPERSEDED": "已被替换",
+        "OFFLINE": "已下线"
+      },
+      "specSeparator": "："
+    }
+  },
+  "audit": {
+    "title": "商品审核",
+    "description": "审核商家提交的商品版本，通过或驳回并记录意见。",
+    "columns": {
+      "product": "商品",
+      "code": "编码",
+      "merchant": "商家",
+      "shop": "店铺",
+      "category": "类目",
+      "version": "版本",
+      "submittedAt": "提交时间",
+      "status": "审核状态",
+      "actions": "操作"
+    },
+    "actionReview": "审核",
+    "actionView": "查看",
+    "status": {
+      "PENDING": "待审核",
+      "APPROVED": "已通过",
+      "REJECTED": "已驳回"
+    },
+    "fields": {
+      "keyword": "关键字",
+      "keywordPlaceholder": "商品标题或编码",
+      "status": "审核状态",
+      "statusFilter": "审核状态筛选",
+      "comment": "审核备注",
+      "commentHint": "通过时可选，驳回时必填（最多 500 字）"
+    },
+    "empty": "暂无审核记录",
+    "dialog": {
+      "title": "审核详情",
+      "description": "商品：{name}"
+    },
+    "buttons": {
+      "cancel": "取消",
+      "reject": "驳回",
+      "approve": "通过"
+    },
+    "info": {
+      "productCode": "商品编码",
+      "merchant": "商家",
+      "shop": "店铺",
+      "category": "类目",
+      "submittedVersion": "提交版本",
+      "submittedAt": "提交时间",
+      "status": "审核状态",
+      "reviewedAt": "审核时间",
+      "comment": "审核意见"
+    },
+    "section": {
+      "submittedVersion": "提交版本内容"
+    },
+    "snapshotUnavailable": "该审核版本的快照不可用",
+    "commentRequired": "请填写驳回原因",
+    "toast": {
+      "approved": "审核已通过",
+      "rejected": "商品已驳回"
+    },
+    "skuColumns": {
+      "code": "SKU 编码",
+      "specs": "规格",
+      "price": "价格",
+      "stock": "库存",
+      "status": "状态"
+    },
+    "version": {
+      "attributes": "属性",
+      "noDescription": "暂无描述",
+      "noAttributes": "暂无属性",
+      "sku": "SKU",
+      "noSku": "暂无 SKU"
+    },
+    "specSeparator": "："
+  }
+}

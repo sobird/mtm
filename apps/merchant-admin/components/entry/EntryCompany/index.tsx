@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -15,9 +16,6 @@ import styles from './EntryCompany.module.css';
 
 const FORM_ID = 'entry-company-form';
 
-const STEP_TITLES = ['填写主体信息', '填写公司概况', '填写资质信息', '填写店铺信息'];
-const PLACEHOLDERS = ['暂无内容', '填写资质信息', '填写店铺信息'];
-
 function companyMobile(company: Record<string, unknown> | undefined): string {
   const legalPerson = company?.legalPerson;
   const value =
@@ -29,9 +27,13 @@ function companyMobile(company: Record<string, unknown> | undefined): string {
 }
 
 export function EntryCompany() {
+  const t = useTranslations('entry.company');
   const router = useRouter();
   const [current, setCurrent] = useState(0);
   const [signOpen, setSignOpen] = useState(false);
+
+  const stepTitles = [t('steps.subject'), t('steps.overview'), t('steps.qualification'), t('steps.shop')];
+  const placeholders = [t('placeholders.none'), t('placeholders.qualification'), t('placeholders.shop')];
 
   const entryQuery = useQuery({
     queryKey: ['entryCompany'],
@@ -42,7 +44,7 @@ export function EntryCompany() {
     queryFn: () => apiFetch<MerchantOptions>('/api/merchant/options'),
   });
 
-  const steps = STEP_TITLES.map(title => ({ title }));
+  const steps = stepTitles.map(title => ({ title }));
 
   const prev = () => {
     if (current === 0) {
@@ -54,14 +56,14 @@ export function EntryCompany() {
   };
 
   const next = () => {
-    setCurrent(value => Math.min(value + 1, STEP_TITLES.length - 1));
+    setCurrent(value => Math.min(value + 1, stepTitles.length - 1));
   };
 
   if (entryQuery.isError || optionsQuery.isError) {
     return (
       <div className={styles.page}>
         <div className={styles.placeholder}>
-          <Empty description='加载失败' />
+          <Empty description={t('loadFailed')} />
         </div>
       </div>
     );
@@ -80,7 +82,7 @@ export function EntryCompany() {
   const entry = entryQuery.data;
   const company = entry.company ?? {};
   const defaults = buildCompanyDefaults(company);
-  const lastStep = current === STEP_TITLES.length - 1;
+  const lastStep = current === stepTitles.length - 1;
 
   return (
     <div className={styles.page}>
@@ -93,22 +95,22 @@ export function EntryCompany() {
 
         {current > 0 ? (
           <div className={styles.placeholder}>
-            <Empty description={PLACEHOLDERS[current - 1]} />
+            <Empty description={placeholders[current - 1]} />
           </div>
         ) : null}
       </div>
 
       <div className={styles.footer}>
         <Button variant='secondary' onClick={prev}>
-          上一步
+          {t('previous')}
         </Button>
         {current === 0 ? (
           <Button type='submit' form={FORM_ID}>
-            下一步
+            {t('next')}
           </Button>
         ) : null}
-        {current > 0 && !lastStep ? <Button onClick={next}>下一步</Button> : null}
-        {lastStep ? <Button onClick={() => setSignOpen(true)}>完成</Button> : null}
+        {current > 0 && !lastStep ? <Button onClick={next}>{t('next')}</Button> : null}
+        {lastStep ? <Button onClick={() => setSignOpen(true)}>{t('done')}</Button> : null}
       </div>
 
       <SignContract

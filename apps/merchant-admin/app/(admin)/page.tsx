@@ -1,3 +1,6 @@
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+
 import { DashboardGrid, DashboardGridItem } from '@/components/dashboard/DashboardGrid';
 import { PageContainer } from '@/components/layout/PageContainer';
 import FundManage from '@/components/market/remotes/FundManage';
@@ -17,9 +20,17 @@ const rightColumnStyle = {
   gap: 16,
 } as const;
 
-export default function AdminHomePage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const [t, app] = await Promise.all([getTranslations('dashboard.home'), getTranslations('common.appTitle')]);
+
+  return { title: `${t('title')} - ${app('merchant')}` };
+}
+
+export default async function AdminHomePage() {
+  const t = await getTranslations('dashboard.home');
+
   return (
-    <PageContainer title='经营概览' description='欢迎回到美团电商商家管理后台'>
+    <PageContainer title={t('title')} description={t('description')}>
       <DashboardGrid>
         <DashboardGridItem span={24}>
           <LatestNews />

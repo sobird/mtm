@@ -1,12 +1,13 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Checkbox, DatePicker } from '@/components/ui';
 
 import styles from './FieldTermPicker.module.css';
 
-/** `[长期有效, 开始日期, 结束日期]` — mirrors the legacy FieldTermPick contract. */
+/** `[long-term valid, start date, end date]` — mirrors the legacy FieldTermPick contract. */
 export type FieldTermPickerValue = [boolean?, string?, string?];
 
 export interface FieldTermPickerProps {
@@ -38,6 +39,7 @@ interface ViewProps extends Omit<FieldTermPickerProps, 'name' | 'value' | 'defau
 }
 
 function FieldTermPickerView({ value, onChange, rangePicker = false, disabled = false, error }: ViewProps) {
+  const t = useTranslations('entry.termPicker');
   const [checked = false, start, end] = value;
   const datesDisabled = disabled || checked;
 
@@ -48,17 +50,17 @@ function FieldTermPickerView({ value, onChange, rangePicker = false, disabled = 
           className={styles.date}
           value={start ?? ''}
           disabled={datesDisabled}
-          aria-label='开始日期'
+          aria-label={t('start')}
           onChange={next => onChange(rangePicker ? [checked, next, end] : [checked, next])}
         />
         {rangePicker ? (
           <>
-            <span className={styles.separator}>至</span>
+            <span className={styles.separator}>{t('to')}</span>
             <DatePicker
               className={styles.date}
               value={end ?? ''}
               disabled={datesDisabled}
-              aria-label='结束日期'
+              aria-label={t('end')}
               onChange={next => onChange([checked, start, next])}
             />
           </>
@@ -68,7 +70,7 @@ function FieldTermPickerView({ value, onChange, rangePicker = false, disabled = 
       <Checkbox
         checked={checked}
         disabled={disabled}
-        label='长期有效'
+        label={t('longTerm')}
         onChange={event => onChange([event.target.checked, start, end])}
       />
 

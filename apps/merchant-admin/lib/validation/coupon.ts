@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE, createTranslator, type Translate } from '@mtm/i18n';
 import { z } from 'zod';
 
 /** Fields shared by coupon create and update payloads. */
@@ -30,10 +31,12 @@ const optionalCouponFields = {
 };
 
 /** Attaches to `etime` when a supplied range is inverted. */
-function checkTimeRange(value: { stime?: number; etime?: number }, ctx: z.RefinementCtx): void {
-  if (value.stime !== undefined && value.etime !== undefined && value.etime <= value.stime) {
-    ctx.addIssue({ code: 'custom', message: '结束时间必须晚于开始时间', path: ['etime'] });
-  }
+function checkTimeRange(t: Translate) {
+  return (value: { stime?: number; etime?: number }, ctx: z.RefinementCtx): void => {
+    if (value.stime !== undefined && value.etime !== undefined && value.etime <= value.stime) {
+      ctx.addIssue({ code: 'custom', message: t('validation.couponTimeRange'), path: ['etime'] });
+    }
+  };
 }
 
 export const couponListQuerySchema = z.object({
@@ -47,23 +50,27 @@ export const couponListQuerySchema = z.object({
   order: z.enum(['asc', 'desc']).optional(),
 });
 
-export const couponUpsertSchema = z
-  .object({
-    name: z.string().trim().min(1),
-    stock: z.coerce.number().int().min(1),
-    limit: z.coerce.number().int().min(1),
-    ...optionalCouponFields,
-  })
-  .superRefine(checkTimeRange);
+export function createCouponUpsertSchema(t: Translate) {
+  return z
+    .object({
+      name: z.string().trim().min(1),
+      stock: z.coerce.number().int().min(1),
+      limit: z.coerce.number().int().min(1),
+      ...optionalCouponFields,
+    })
+    .superRefine(checkTimeRange(t));
+}
 
-export const couponUpdateSchema = z
-  .object({
-    name: z.string().trim().min(1).optional(),
-    stock: z.coerce.number().int().min(1).optional(),
-    limit: z.coerce.number().int().min(1).optional(),
-    ...optionalCouponFields,
-  })
-  .superRefine(checkTimeRange);
+export function createCouponUpdateSchema(t: Translate) {
+  return z
+    .object({
+      name: z.string().trim().min(1).optional(),
+      stock: z.coerce.number().int().min(1).optional(),
+      limit: z.coerce.number().int().min(1).optional(),
+      ...optionalCouponFields,
+    })
+    .superRefine(checkTimeRange(t));
+}
 
 /**
  * Client-side coupon form schema. Term values are epoch seconds and `useTerm`
@@ -76,25 +83,35 @@ const useTermSchema = z.union([
   z.tuple([z.coerce.number().int(), z.tuple([z.coerce.number().int(), z.coerce.number().int()])]),
 ]);
 
-export const couponFormSchema = z
-  .object({
-    name: z.string().trim().min(1, '请填写优惠券名称').max(10, '优惠券名称最多填写10个字'),
-    displayName: z.string().trim().min(1, '请填写优惠券文案'),
-    type: z.coerce.number().int(),
-    target: z.coerce.number().int(),
-    rule: z.tuple([z.coerce.number(), z.coerce.number()]),
-    stock: z.coerce.number().int().min(1, '发放张数必须大于 0'),
-    limit: z.coerce.number().int().min(1, '每人限领张数必须大于 0'),
-    putTerm: z.tuple([z.coerce.number().int(), z.coerce.number().int()]),
-    putCrowd: z.coerce.number().int(),
-    useTerm: useTermSchema,
-    useCrowd: z.coerce.number().int(),
-    position: z.coerce.number().int(),
-  })
-  .superRefine((value, ctx) => {
-    if (value.putTerm[0] >= value.putTerm[1]) {
-      ctx.addIssue({ code: 'custom', message: '结束时间必须晚于开始时间', path: ['putTerm'] });
-    }
-  });
+export function createCouponFormSchema(t: Translate) {
+  return z
+    .object({
+      name: z.string().trim().min(1, t('validation.couponNameRequired')).max(10, t('validation.couponNameMax')),
+      displayName: z.string().trim().min(1, t('validation.couponDisplayNameRequired')),
+      type: z.coerce.number().int(),
+      target: z.coerce.number().int(),
+      rule: z.tuple([z.coerce.number(), z.coerce.number()]),
+      stock: z.coerce.number().int().min(1, t('validation.couponStockInvalid')),
+      limit: z.coerce.number().int().min(1, t('validation.couponLimitInvalid')),
+      putTerm: z.tuple([z.coerce.number().int(), z.coerce.number().int()]),
+      putCrowd: z.coerce.number().int(),
+      useTerm: useTermSchema,
+      useCrowd: z.coerce.number().int(),
+      position: z.coerce.number().int(),
+    })
+    .superRefine((value, ctx) => {
+      if (value.putTerm[0] >= value.putTerm[1]) {
+        ctx.addIssue({ code: 'custom', message: t('validation.couponTimeRange'), path: ['putTerm'] });
+      }
+    });
+}
 
-export type CouponFormValues = z.infer<typeof couponFormSchema>;
+export type CouponFormValues = z.infer<ReturnType<typeof createCouponFormSchema>>;
+
+// Server-side defaults for route handlers that only validate payload shape.
+// User-facing forms build a schema from the active locale instead.
+const defaultTranslate = createTranslator(DEFAULT_LOCALE);
+
+export const couponUpsertSchema = createCouponUpsertSchema(defaultTranslate);
+
+export const couponUpdateSchema = createCouponUpdateSchema(defaultTranslate);

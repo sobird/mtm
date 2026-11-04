@@ -1,3 +1,4 @@
+import type { PageMeta } from '@mtm/contracts';
 import { NextResponse } from 'next/server';
 
 import { AppError } from './errors';
@@ -6,6 +7,10 @@ export interface ApiSuccess<T> {
   code: 0;
   message: 'ok';
   data: T;
+}
+
+export interface ApiPageSuccess<T> extends ApiSuccess<T> {
+  meta: PageMeta;
 }
 
 export interface ApiFailure {
@@ -34,6 +39,10 @@ function isErrorShape(error: unknown): error is ErrorShape {
 
 export function ok<T>(data: T): NextResponse<ApiSuccess<T>> {
   return NextResponse.json<ApiSuccess<T>>({ code: 0, message: 'ok', data });
+}
+
+export function okPage<T>(data: T, meta: PageMeta): NextResponse<ApiPageSuccess<T>> {
+  return NextResponse.json<ApiPageSuccess<T>>({ code: 0, message: 'ok', data, meta });
 }
 
 export function fail(error: unknown): NextResponse<ApiFailure> {

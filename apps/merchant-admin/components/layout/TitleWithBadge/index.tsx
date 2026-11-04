@@ -1,3 +1,7 @@
+'use client';
+
+import { translateUiKey } from '@mtm/i18n';
+import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
 import { Badge, Tag } from '@/components/ui';
@@ -14,17 +18,20 @@ export interface TitleWithBadgeProps {
  * Legacy notice styles: 10 = dot, 20 = numeric count, 30 = inline status text.
  */
 export function TitleWithBadge({ title, badge }: TitleWithBadgeProps) {
+  const t = useTranslations();
+
   if (!badge) {
     return <>{title}</>;
   }
 
   const { noticeStyle, noticeContent } = badge;
+  const content = noticeContent ? translateUiKey(noticeContent, t) : null;
 
   if (noticeStyle === 30) {
     return (
       <span>
         {title}
-        {noticeContent ? <Tag tone='success'>{noticeContent}</Tag> : null}
+        {content ? <Tag tone='success'>{content}</Tag> : null}
       </span>
     );
   }
@@ -33,7 +40,7 @@ export function TitleWithBadge({ title, badge }: TitleWithBadgeProps) {
     return (
       <span>
         {title}
-        {noticeContent ? <Badge tone='danger'>{noticeContent}</Badge> : null}
+        {content ? <Badge tone='danger'>{content}</Badge> : null}
       </span>
     );
   }

@@ -1,11 +1,29 @@
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+
 import { PageContainer } from '@/components/layout/PageContainer';
 import TrademarkButtonTab from '@/components/shop/trademark/TrademarkButtonTab';
 import { Empty } from '@/components/ui';
 
-export default function ShopTrademarkPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const [t, app] = await Promise.all([getTranslations('shop.trademark'), getTranslations('common.appTitle')]);
+
+  return { title: `${t('title')} - ${app('merchant')}` };
+}
+
+export default async function ShopTrademarkPage() {
+  const t = await getTranslations('shop');
+
   return (
-    <PageContainer title='商标管理' breadcrumbs={[{ label: '首页', href: '/' }, { label: '店铺' }, { label: '商标' }]}>
-      <Empty description='暂无商标信息' />
+    <PageContainer
+      title={t('trademark.title')}
+      breadcrumbs={[
+        { label: t('breadcrumb.home'), href: '/' },
+        { label: t('breadcrumb.shop') },
+        { label: t('breadcrumb.trademark') },
+      ]}
+    >
+      <Empty description={t('trademark.empty')} />
       <TrademarkButtonTab />
     </PageContainer>
   );

@@ -1,0 +1,29 @@
+{
+  "name": "@mtm/auth",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./password": "./src/password.ts",
+    "./rate-limit": "./src/rate-limit.ts",
+    "./service-token": "./src/service-token.ts",
+    "./menu-filter": "./src/menu-filter.ts",
+    "./cookies": "./src/cookies.ts"
+  },
+  "scripts": {
+    "format": "oxfmt --check --config ../../packages/config/oxfmt.jsonc",
+    "format:fix": "oxfmt --config ../../packages/config/oxfmt.jsonc",
+    "lint": "oxlint -c ../../packages/config/oxlint.jsonc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@node-rs/argon2": "^2.2.2",
+    "jose": "^4.14.4"
+  },
+  "devDependencies": {
+    "@mtm/config": "workspace:*",
+    "typescript": "^5.0.2",
+    "vitest": "^5.1.0"
+  }
+}

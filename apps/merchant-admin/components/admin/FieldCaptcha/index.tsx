@@ -1,10 +1,12 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Button, Input, useToast } from '@/components/ui';
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
+import { translateApiError } from '@/lib/translate-api-error';
 import { isMobilePhone } from '@/lib/validation/phone';
 
 import styles from './FieldCaptcha.module.css';
@@ -40,6 +42,8 @@ function FieldCaptchaView({
   disabled,
   error,
 }: ViewProps) {
+  const t = useTranslations('entry.captcha');
+  const tRoot = useTranslations();
   const toast = useToast();
   const [remaining, setRemaining] = useState(0);
   const [sending, setSending] = useState(false);
@@ -60,7 +64,7 @@ function FieldCaptchaView({
     }
 
     if (!isMobilePhone(mobile, '86')) {
-      toast.error('手机号格式不符合要求');
+      toast.error(t('invalidMobile'));
       return;
     }
 
@@ -74,14 +78,12 @@ function FieldCaptchaView({
           query: { mobile },
         });
 
-        toast.success(
-          `【美团】${captcha}（商户注册验证码）。工作人员不会向您索要，请勿向任何人泄露，以免造成账户或资金损失。`
-        );
+        toast.success(tRoot('auth.login.captchaSent', { captcha: String(captcha) }));
       }
 
       setRemaining(countDown);
     } catch (sendError) {
-      toast.error(sendError instanceof ApiError ? sendError.message : '获取验证码失败');
+      toast.error(translateApiError(sendError, tRoot, 'entry.captcha.failed'));
     } finally {
       setSending(false);
     }
@@ -93,8 +95,8 @@ function FieldCaptchaView({
         <Input
           className={styles.input}
           value={value}
-          placeholder={placeholder ?? '请输入验证码'}
-          aria-label='验证码'
+          placeholder={placeholder ?? t('placeholder')}
+          aria-label={t('label')}
           autoComplete='one-time-code'
           inputMode='numeric'
           disabled={disabled}
@@ -108,7 +110,7 @@ function FieldCaptchaView({
           disabled={disabled || remaining > 0 || sending}
           onClick={handleSend}
         >
-          {remaining > 0 ? `${remaining} 秒后重新获取` : '获取验证码'}
+          {remaining > 0 ? t('resendIn', { seconds: remaining }) : t('send')}
         </Button>
       </div>
       {error ? (

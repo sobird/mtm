@@ -7,14 +7,35 @@
     "CORE_DATABASE_URL",
     "OPS_DATABASE_URL",
     "MERCHANT_TEST_DATABASE_URL",
-    "CORE_TEST_DATABASE_URL"
+    "CORE_TEST_DATABASE_URL",
+    "OPS_TEST_DATABASE_URL",
+    "OPS_AUTH_SECRET",
+    "CORE_API_JWT_SECRET",
+    "CORE_API_URL",
+    "CORE_PUBLIC_URL",
+    "UPLOAD_DIR",
+    "UPLOAD_MAX_BYTES",
+    "AUTH_COOKIE_SECURE"
   ],
   "globalDependencies": ["packages/config/**"],
   "tasks": {
     "dev": {
       "cache": false,
       "persistent": true,
-      "env": ["NODE_ENV", "AUTH_SECRET", "MERCHANT_DATABASE_URL", "CORE_DATABASE_URL", "OPS_DATABASE_URL"]
+      "env": [
+        "NODE_ENV",
+        "AUTH_SECRET",
+        "MERCHANT_DATABASE_URL",
+        "CORE_DATABASE_URL",
+        "OPS_DATABASE_URL",
+        "OPS_TEST_DATABASE_URL",
+        "OPS_AUTH_SECRET",
+        "CORE_API_JWT_SECRET",
+        "CORE_API_URL",
+        "CORE_PUBLIC_URL",
+        "UPLOAD_DIR",
+        "UPLOAD_MAX_BYTES"
+      ]
     },
     "build": { "dependsOn": ["^build"], "outputs": [".next/**", "!.next/cache/**", "dist/**"] },
     "lint": {},

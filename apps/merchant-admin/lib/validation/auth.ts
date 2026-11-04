@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE, createTranslator, type Translate } from '@mtm/i18n';
 import { z } from 'zod';
 
 import { isMobilePhone } from './phone';
@@ -5,33 +6,65 @@ import { isMobilePhone } from './phone';
 /** Supported international calling codes, mirroring the legacy login form. */
 export const INTER_CODES = ['86', '65', '852', '853'] as const;
 
-/** Select options for the calling code picker (single source for both forms). */
-export const INTER_CODE_OPTIONS = [
-  { value: '86', label: '+86(中国)' },
-  { value: '65', label: '+65(新加坡)' },
-  { value: '852', label: '+852(中国香港)' },
-  { value: '853', label: '+853(中国澳门)' },
-];
+/**
+ * Select options for the calling code picker (single source for both forms).
+ * The labels are translated with the caller's translator.
+ */
+export function createInterCodeOptions(t: Translate) {
+  return [
+    { value: '86', label: t('auth.interCode.cn') },
+    { value: '65', label: t('auth.interCode.sg') },
+    { value: '852', label: t('auth.interCode.hk') },
+    { value: '853', label: t('auth.interCode.mo') },
+  ];
+}
 
-export const loginSchema = z
-  .object({
-    interCode: z.enum(INTER_CODES),
-    mobile: z.string().min(1, '手机号不能为空'),
-    captcha: z.string().min(1, '验证码不能为空'),
-  })
-  .superRefine((value, ctx) => {
-    if (value.mobile && !isMobilePhone(value.mobile, value.interCode)) {
-      ctx.addIssue({ code: 'custom', message: '手机号格式不符合要求', path: ['mobile'] });
-    }
+export function createLoginSchema(t: Translate) {
+  return z
+    .object({
+      interCode: z.enum(INTER_CODES),
+      mobile: z.string().min(1, t('validation.mobileRequired')),
+      captcha: z.string().min(1, t('validation.captchaRequired')),
+    })
+    .superRefine((value, ctx) => {
+      if (value.mobile && !isMobilePhone(value.mobile, value.interCode)) {
+        ctx.addIssue({ code: 'custom', message: t('validation.mobileFormat'), path: ['mobile'] });
+      }
+    });
+}
+
+/** Username-or-phone + password login (merchant portal). */
+export function createPasswordLoginSchema(t: Translate) {
+  return z.object({
+    identifier: z.string().trim().min(1, t('validation.identifierRequired')),
+    password: z.string().min(1, t('validation.passwordRequired')),
   });
+}
 
-export const registerSchema = loginSchema.extend({
-  policy: z.literal(true, { error: '请勾选隐私协议' }),
-});
+export function createRegisterSchema(t: Translate) {
+  return createLoginSchema(t).extend({
+    policy: z.literal(true, { error: t('validation.policyRequired') }),
+  });
+}
 
-export type LoginValues = z.output<typeof loginSchema>;
+// Server-side defaults for flows that do not render validation text (the
+// credentials `authorize` callback, for example). User-facing forms build a
+// schema from the active locale instead.
+const defaultTranslate = createTranslator(DEFAULT_LOCALE);
 
-export type RegisterValues = z.output<typeof registerSchema>;
+export const loginSchema = createLoginSchema(defaultTranslate);
+
+export const passwordLoginSchema = createPasswordLoginSchema(defaultTranslate);
+
+export const registerSchema = createRegisterSchema(defaultTranslate);
+
+export const INTER_CODE_OPTIONS = createInterCodeOptions(defaultTranslate);
+
+export type LoginValues = z.output<ReturnType<typeof createLoginSchema>>;
+
+export type PasswordLoginValues = z.output<ReturnType<typeof createPasswordLoginSchema>>;
+
+export type RegisterValues = z.output<ReturnType<typeof createRegisterSchema>>;
 
 /**
  * Returns an in-app path for post-login navigation, guarding against open

@@ -1,0 +1,17 @@
+{
+  "name": "@mtm/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "format": "oxfmt --check --config ../packages/config/oxfmt.jsonc",
+    "lint": "oxlint -c ../packages/config/oxlint.jsonc",
+    "test:e2e": "playwright test",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@mtm/config": "workspace:*",
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^22",
+    "typescript": "^5.0.2"
+  }
+}

@@ -7,6 +7,7 @@ export const queryKeys = {
   menu: ['menu'] as const,
   menuBadges: ['menuBadges'] as const,
   merchant: ['merchant'] as const,
+  myMerchant: ['merchant', 'me'] as const,
   merchantCategories: ['merchantCategories'] as const,
   licenses: ['licenses'] as const,
   coupons: (params?: Record<string, unknown>) => ['coupons', params ?? {}] as const,
@@ -16,6 +17,10 @@ export const queryKeys = {
   violationOverview: ['violationOverview'] as const,
   analysis: (key: string) => ['analysis', key] as const,
   productSelling: ['productSelling'] as const,
+  products: (params?: Record<string, unknown>) => ['products', params ?? {}] as const,
+  product: (id: string | number) => ['product', id] as const,
+  productCategories: ['productCategories'] as const,
+  productBrands: ['productBrands'] as const,
   gold: ['gold'] as const,
   merchantTasks: ['merchantTasks'] as const,
 };

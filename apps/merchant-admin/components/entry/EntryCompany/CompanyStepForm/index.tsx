@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+import { useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import FieldIdCard from '@/components/admin/FieldIdCard';
@@ -7,22 +9,16 @@ import FieldTermPicker from '@/components/admin/FieldTermPicker';
 import FieldUploadFile from '@/components/admin/FieldUploadFile';
 import OcrUpload from '@/components/admin/OcrUpload';
 import { Card, Checkbox, Field, Form, Input, Radio, Select, Textarea, useToast } from '@/components/ui';
-import { ApiError, apiFetch } from '@/lib/api-client';
+import { apiFetch } from '@/lib/api-client';
 import type { VenusOcrResult } from '@/lib/services/venus';
-import { companySchema } from '@/lib/validation/company';
+import { translateApiError } from '@/lib/translate-api-error';
+import { createCompanySchema } from '@/lib/validation/company';
 import type { CompanyFormValues } from '@/lib/validation/company';
 
 import IdUploadDemo from '../IdUploadDemo';
 import type { MerchantOptions } from '../types';
 
 import styles from './CompanyStepForm.module.css';
-
-const ID_TYPE_OPTIONS = [
-  { value: 1001, label: '中国大陆居民身份证' },
-  { value: 1002, label: '海外护照' },
-  { value: 1003, label: '港澳居民往来内地通行证' },
-  { value: 1004, label: '台湾居民往来大陆通行证' },
-];
 
 const IMAGE_ACCEPT = '.jpg,.jpeg,.png,.gif,.bmp';
 const FILE_ACCEPT = '.pdf,.ppt,.pptx,.doc,.docx,.jpg,.jpeg,.png,.gif,.bmp';
@@ -88,94 +84,99 @@ export interface CompanyStepFormProps {
 }
 
 export function CompanyStepForm({ id, defaults, options, onSubmit }: CompanyStepFormProps) {
+  const t = useTranslations('entry.company');
+  const tIdTypes = useTranslations('entry.idTypes');
+  const tRoot = useTranslations();
+  const schema = useMemo(() => createCompanySchema(tRoot), [tRoot]);
+
+  const idTypeOptions = [
+    { value: 1001, label: tIdTypes('mainland') },
+    { value: 1002, label: tIdTypes('passport') },
+    { value: 1003, label: tIdTypes('hkMacau') },
+    { value: 1004, label: tIdTypes('taiwan') },
+  ];
+
   return (
-    <Form id={id} schema={companySchema} defaultValues={defaults as never} onSubmit={onSubmit} className={styles.form}>
-      <Card title='企业主体信息'>
+    <Form id={id} schema={schema} defaultValues={defaults as never} onSubmit={onSubmit} className={styles.form}>
+      <Card title={t('subjectCardTitle')}>
         <div className={styles.section}>
           <CompanyTypeField options={options?.companyTypeList ?? []} />
           <DistChannelField options={options?.distChannelList ?? []} />
 
-          <Field label='营业执照' required>
+          <Field label={t('businessLicense')} required>
             <BusinessLicenseField />
             <ul className={styles.notes}>
-              <li>请上传清晰的多证合一营业执照（统一社会信用代码）</li>
-              <li>文件最多上传1张，大小不得超过20MB</li>
-              <li>文件格式支持：JPG/JPEG/PNG/GIF/BPM</li>
-              <li>
-                企业主体需满足{' '}
-                <a
-                  className={styles.link}
-                  target='_blank'
-                  href='https://rules-center.meituan.com/rules-detail/602?commonType=2'
-                  rel='noreferrer'
-                >
-                  美团电商平台入驻标准
-                </a>{' '}
-                要求
-              </li>
+              <li>{t('businessLicenseNote1')}</li>
+              <li>{t('businessLicenseNote2')}</li>
+              <li>{t('businessLicenseNote3')}</li>
+              <li>{t('businessLicenseNote4')}</li>
             </ul>
           </Field>
 
-          <Field label='一般纳税人资格证电子版'>
+          <Field label={t('taxpayer')}>
             <FieldUploadFile name='company.certificateTaxpayer' maxCount={1} accept={IMAGE_ACCEPT} maxSizeMB={20} />
             <ul className={styles.notes}>
-              <li>请上传清晰的一般纳税人资格证，复印件需加盖公司印章</li>
-              <li>文件最多上传1张，大小不得超过20MB</li>
-              <li>文件格式支持：JPG/JPEG/PNG/GIF/BPM</li>
+              <li>{t('taxpayerNote1')}</li>
+              <li>{t('taxpayerNote2')}</li>
+              <li>{t('taxpayerNote3')}</li>
             </ul>
           </Field>
 
-          <Field label='银行开户证明' required>
+          <Field label={t('bankOpen')} required>
             <FieldUploadFile name='company.certificateBankOpen' maxCount={1} accept={IMAGE_ACCEPT} maxSizeMB={20} />
             <ul className={styles.notes}>
-              <li>请上传清晰的证照，如果是复印件需加盖公司印章</li>
-              <li>文件最多上传1张，大小不得超过20MB</li>
-              <li>文件格式支持：JPG/JPEG/PNG/GIF/BPM</li>
-              <li>上传银行开户许可证或基本存款账户信息扫描件</li>
+              <li>{t('bankOpenNote1')}</li>
+              <li>{t('bankOpenNote2')}</li>
+              <li>{t('bankOpenNote3')}</li>
+              <li>{t('bankOpenNote4')}</li>
             </ul>
           </Field>
 
-          <Field label='办公地址' required>
-            <Input name='company.officeAddress' placeholder='请填写真实的办公地址' aria-label='办公地址' />
+          <Field label={t('officeAddress')} required>
+            <Input
+              name='company.officeAddress'
+              placeholder={t('officeAddressPlaceholder')}
+              aria-label={t('officeAddress')}
+            />
           </Field>
 
-          <Field label='公司简介' required>
+          <Field label={t('companyDesc')} required>
             <Textarea
               name='company.companyDesc'
               maxLength={1000}
               rows={5}
-              placeholder='可以从品牌定位、品牌产品线、市场占有率或年销量、品牌当下布局、品牌未来规划等方面介绍，最多不得超过1000字'
-              aria-label='公司简介'
+              placeholder={t('companyDescPlaceholder')}
+              aria-label={t('companyDesc')}
             />
             <FieldUploadFile name='company.companyFile' maxCount={10} accept={FILE_ACCEPT} maxSizeMB={20} />
             <ul className={styles.notes}>
-              <li>支持上传相关公司介绍等相关资料附件</li>
-              <li>文件最多上传10个，单个文件大小不得超过20MB</li>
-              <li>文件格式支持：PDF/PPT/DOC/JPG/JPEG/PNG/GIF/BPM</li>
+              <li>{t('companyFileNote1')}</li>
+              <li>{t('companyFileNote2')}</li>
+              <li>{t('companyFileNote3')}</li>
             </ul>
           </Field>
         </div>
       </Card>
 
-      <Card title='法人证件信息'>
+      <Card title={t('legalPersonCardTitle')}>
         <div className={styles.section}>
-          <Field label='证件类型' required>
-            <Select name='company.legalPerson.idType' options={ID_TYPE_OPTIONS} aria-label='证件类型' />
+          <Field label={t('idType')} required>
+            <Select name='company.legalPerson.idType' options={idTypeOptions} aria-label={t('idType')} />
           </Field>
 
-          <Field label='电子证件照' required>
+          <Field label={t('idPhotos')} required>
             <LegalPersonIdCard />
             <p className={styles.help}>
-              请上传手持证件正反面照，或身份证件的正反面彩色扫描照片，或正反面复印件加盖入驻主体鲜章，
-              <IdUploadDemo>查看示例</IdUploadDemo>
+              {t('idPhotosHelp')}
+              <IdUploadDemo>{t('viewExample')}</IdUploadDemo>
             </p>
           </Field>
 
-          <Field label='法人手机号' required>
+          <Field label={t('legalPersonMobile')} required>
             <Input
               name='company.legalPerson.mobile'
-              placeholder='请填写法人手机号'
-              aria-label='法人手机号'
+              placeholder={t('legalPersonMobilePlaceholder')}
+              aria-label={t('legalPersonMobile')}
               inputMode='numeric'
               maxLength={11}
             />
@@ -187,10 +188,11 @@ export function CompanyStepForm({ id, defaults, options, onSubmit }: CompanyStep
 }
 
 function CompanyTypeField({ options }: { options: MerchantOptions['companyTypeList'] }) {
+  const t = useTranslations('entry.company');
   const { control } = useFormContext<CompanyFormValues>();
 
   return (
-    <Field label='公司类型' required>
+    <Field label={t('companyType')} required>
       <Controller
         name='company.companyType'
         control={control}
@@ -218,10 +220,11 @@ function CompanyTypeField({ options }: { options: MerchantOptions['companyTypeLi
 }
 
 function DistChannelField({ options }: { options: MerchantOptions['distChannelList'] }) {
+  const t = useTranslations('entry.company');
   const { control } = useFormContext<CompanyFormValues>();
 
   return (
-    <Field label='销售渠道'>
+    <Field label={t('distChannel')}>
       <Controller
         name='company.distChannel'
         control={control}
@@ -253,6 +256,7 @@ function DistChannelField({ options }: { options: MerchantOptions['distChannelLi
 }
 
 function BusinessLicenseField() {
+  const t = useTranslations('entry.company');
   const { control, setValue } = useFormContext<CompanyFormValues>();
   const url = useWatch({ control, name: 'company.businessLicense.url' });
   const socialCreditCode = useWatch({ control, name: 'company.businessLicense.socialCreditCode' });
@@ -271,35 +275,39 @@ function BusinessLicenseField() {
 
       {url || socialCreditCode ? (
         <div className={styles.subCard}>
-          <h4 className={styles.subTitle}>请核对营业执照信息，若信息不符，请手动修改</h4>
-          <Field label='统一社会信用代码' required>
+          <h4 className={styles.subTitle}>{t('licenseVerifyTitle')}</h4>
+          <Field label={t('socialCreditCode')} required>
             <Input
               name='company.businessLicense.socialCreditCode'
-              placeholder='请填写营业执照上的注册号'
-              aria-label='统一社会信用代码'
+              placeholder={t('socialCreditCodePlaceholder')}
+              aria-label={t('socialCreditCode')}
             />
           </Field>
-          <Field label='公司名称' required>
+          <Field label={t('companyName')} required>
             <Input
               name='company.businessLicense.name'
-              placeholder='请按照营业执照，填写公司名称'
-              aria-label='公司名称'
+              placeholder={t('companyNamePlaceholder')}
+              aria-label={t('companyName')}
             />
           </Field>
-          <Field label='经营地址' required>
+          <Field label={t('businessAddress')} required>
             <Input
               name='company.businessLicense.address'
-              placeholder='请按照营业执照，填写公司地址'
-              aria-label='经营地址'
+              placeholder={t('businessAddressPlaceholder')}
+              aria-label={t('businessAddress')}
             />
           </Field>
-          <Field label='营业期限' required>
+          <Field label={t('businessTerm')} required>
             <FieldTermPicker name='company.businessLicense.term' rangePicker />
           </Field>
-          <Field label='注册资金' required hint='若注册资金币种不是人民币，可按照当前汇率换算成人民币后进行填写'>
+          <Field label={t('registeredCapital')} required hint={t('registeredCapitalHint')}>
             <div className={styles.inputRow}>
-              <Input name='company.businessLicense.capital' placeholder='请输入' aria-label='注册资金' />
-              <span className={styles.suffix}>万元</span>
+              <Input
+                name='company.businessLicense.capital'
+                placeholder={t('registeredCapitalPlaceholder')}
+                aria-label={t('registeredCapital')}
+              />
+              <span className={styles.suffix}>{t('registeredCapitalUnit')}</span>
             </div>
           </Field>
         </div>
@@ -309,6 +317,8 @@ function BusinessLicenseField() {
 }
 
 function LegalPersonIdCard() {
+  const t = useTranslations('entry.company');
+  const tRoot = useTranslations();
   const toast = useToast();
   const { setValue } = useFormContext<CompanyFormValues>();
 
@@ -318,7 +328,7 @@ function LegalPersonIdCard() {
     }
 
     try {
-      // 身份证人像面才识别
+      // Only recognize the portrait side of the ID card.
       const info = await apiFetch<VenusOcrResult>('/api/venus/ocr', {
         method: 'POST',
         body: { image: res.url, type: 0 },
@@ -328,7 +338,7 @@ function LegalPersonIdCard() {
       setValue('company.legalPerson.idNum', info.citizenId ?? '', { shouldValidate: true });
       setValue('company.legalPerson.term', normalizeTerm(info.validdate), { shouldValidate: true });
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : '证件识别失败，请手动填写');
+      toast.error(translateApiError(error, tRoot, 'entry.company.ocrFailed'));
     }
   };
 
@@ -336,18 +346,14 @@ function LegalPersonIdCard() {
     <>
       <FieldIdCard name='company.legalPerson.idPhotos' onUploadSuccess={handleUpload} />
       <div className={styles.subCard}>
-        <h4 className={styles.subTitle}>请核对身份信息，若信息不符合，可手动修改</h4>
-        <Field label='姓名' required>
-          <Input name='company.legalPerson.name' placeholder='请保持与身份证件上的姓名一致' aria-label='法人姓名' />
+        <h4 className={styles.subTitle}>{t('identityVerifyTitle')}</h4>
+        <Field label={t('legalName')} required>
+          <Input name='company.legalPerson.name' placeholder={t('legalNamePlaceholder')} aria-label={t('legalName')} />
         </Field>
-        <Field label='证件号码' required>
-          <Input
-            name='company.legalPerson.idNum'
-            placeholder='请保持与身份证件上的证件号一致'
-            aria-label='法人证件号码'
-          />
+        <Field label={t('idNumber')} required>
+          <Input name='company.legalPerson.idNum' placeholder={t('idNumberPlaceholder')} aria-label={t('idNumber')} />
         </Field>
-        <Field label='有效截止日' required>
+        <Field label={t('validUntil')} required>
           <FieldTermPicker name='company.legalPerson.term' />
         </Field>
       </div>

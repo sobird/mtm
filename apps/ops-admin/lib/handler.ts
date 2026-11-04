@@ -1,0 +1,140 @@
+import type { NextResponse } from 'next/server';
+import type { z } from 'zod';
+
+import { fail, ok } from './api-response';
+import { requireOpsAccount } from './auth-guard';
+import { initDatabase } from './db';
+import { AppError } from './errors';
+import { getAccountPermissions } from './services/permission';
+
+export interface HandlerContext {
+  accountId: string;
+  username: string;
+  name: string;
+  request: Request;
+  params: Record<string, string>;
+}
+
+/**
+ * Next 15 passes dynamic route params as a Promise; unit tests may pass a plain
+ * object or omit the context entirely.
+ */
+type RouteContext = { params?: Promise<Record<string, string>> | Record<string, string> };
+
+async function resolveParams(context?: RouteContext): Promise<Record<string, string>> {
+  if (!context?.params) {
+    return {};
+  }
+
+  return context.params;
+}
+
+const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
+
+/**
+ * Rejects cross-site state-changing requests.
+ *
+ * `sec-fetch-site` and `origin` are browser-controlled; absent headers are
+ * allowed so non-browser and test callers cannot ride a browser cookie.
+ */
+export function assertSameOrigin(request: Request): void {
+  if (SAFE_METHODS.has(request.method.toUpperCase())) {
+    return;
+  }
+
+  const fetchSite = request.headers.get('sec-fetch-site');
+
+  if (fetchSite !== null && fetchSite !== 'same-origin' && fetchSite !== 'none') {
+    throw new AppError('CSRF_FORBIDDEN', 403, '跨站请求被拒绝');
+  }
+
+  const origin = request.headers.get('origin');
+
+  if (origin !== null && origin !== new URL(request.url).origin) {
+    throw new AppError('CSRF_FORBIDDEN', 403, '跨站请求被拒绝');
+  }
+}
+
+/**
+ * Authenticated ops route wrapper: resolves the session, then normalizes the
+ * result envelope.
+ */
+export function withAuth<T>(handler: (ctx: HandlerContext) => Promise<T>) {
+  return async (request: Request, context?: RouteContext): Promise<NextResponse> => {
+    try {
+      await initDatabase();
+      const { accountId, username, name } = await requireOpsAccount();
+      const params = await resolveParams(context);
+      const data = await handler({ accountId, username, name, request, params });
+
+      return ok(data);
+    } catch (error) {
+      return fail(error);
+    }
+  };
+}
+
+/**
+ * Authenticated route wrapper that also enforces a single permission code from
+ * the account's resolved permission snapshot.
+ */
+export function withPermission<T>(permission: string, handler: (ctx: HandlerContext) => Promise<T>) {
+  return async (request: Request, context?: RouteContext): Promise<NextResponse> => {
+    try {
+      assertSameOrigin(request);
+      await initDatabase();
+      const { accountId, username, name } = await requireOpsAccount();
+      const snapshot = await getAccountPermissions(accountId);
+
+      if (!snapshot.set.has(permission)) {
+        throw new AppError('FORBIDDEN', 403, '无权访问');
+      }
+
+      const params = await resolveParams(context);
+      const data = await handler({ accountId, username, name, request, params });
+
+      return ok(data);
+    } catch (error) {
+      return fail(error);
+    }
+  };
+}
+
+/** Parses query string params, dropping empty values so optional numerics stay undefined. */
+export function parseQuery<T>(request: Request, schema: z.ZodType<T>): T {
+  const searchParams = new URL(request.url).searchParams;
+  const raw: Record<string, string> = {};
+
+  for (const [key, value] of searchParams.entries()) {
+    if (value !== '') {
+      raw[key] = value;
+    }
+  }
+
+  const result = schema.safeParse(raw);
+
+  if (!result.success) {
+    throw new AppError('INVALID_QUERY', 400, '查询参数不合法');
+  }
+
+  return result.data;
+}
+
+/** Parses a JSON body, mapping both JSON syntax errors and schema failures to INVALID_BODY. */
+export async function parseBody<T>(request: Request, schema: z.ZodType<T>): Promise<T> {
+  let body: unknown;
+
+  try {
+    body = await request.json();
+  } catch {
+    throw new AppError('INVALID_BODY', 400, '请求体不合法');
+  }
+
+  const result = schema.safeParse(body);
+
+  if (!result.success) {
+    throw new AppError('INVALID_BODY', 400, '请求体不合法');
+  }
+
+  return result.data;
+}

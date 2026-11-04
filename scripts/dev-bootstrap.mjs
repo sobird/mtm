@@ -5,7 +5,10 @@
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
+import { ensureDockerEnvFile } from './docker-env.mjs';
+
 const repoRoot = fileURLToPath(new URL('..', import.meta.url));
+const envFile = fileURLToPath(new URL('../.env.docker', import.meta.url));
 const PG_NOT_READY = 'PostgreSQL 未启动：请先安装并启动 Docker，然后重新执行 bun run dev。';
 const DATABASES = [
   'commerce_merchant',
@@ -13,8 +16,9 @@ const DATABASES = [
   'commerce_core',
   'commerce_merchant_test',
   'commerce_core_test',
+  'commerce_ops_test',
 ];
-const APPS = ['apps/merchant-admin', 'apps/core-api'];
+const APPS = ['apps/merchant-admin', 'apps/core-api', 'apps/ops-admin'];
 
 function run(command, args, options = {}) {
   return spawnSync(command, args, {
@@ -107,6 +111,9 @@ function runAppScripts(appDir) {
   }
 }
 
+// Compose reads `.env.docker` for every service, so create it before starting
+// Postgres; a fresh checkout has no file yet.
+ensureDockerEnvFile(envFile);
 startPostgres();
 waitForPostgres();
 DATABASES.forEach(ensureDatabase);

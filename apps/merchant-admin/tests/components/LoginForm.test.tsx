@@ -1,18 +1,20 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
 import { ToastProvider } from '@/components/ui/Toast';
 
+import { renderWithIntl } from '../i18n/render';
+
 const replace = vi.fn();
-const signIn = vi.fn();
+const signInWithCredentials = vi.fn();
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ replace, push: vi.fn() }),
 }));
 
-vi.mock('next-auth/react', () => ({
-  signIn: (...args: unknown[]) => signIn(...args),
+vi.mock('@/lib/auth-client', () => ({
+  signInWithCredentials: (...args: unknown[]) => signInWithCredentials(...args),
 }));
 
 import { LoginForm } from '@/components/auth/LoginForm';
@@ -21,12 +23,12 @@ afterEach(cleanup);
 
 beforeEach(() => {
   replace.mockReset();
-  signIn.mockReset();
-  signIn.mockResolvedValue({ error: undefined });
+  signInWithCredentials.mockReset();
+  signInWithCredentials.mockResolvedValue({ error: undefined });
 });
 
 function renderLoginForm() {
-  return render(
+  return renderWithIntl(
     <ToastProvider>
       <LoginForm />
     </ToastProvider>
@@ -38,10 +40,10 @@ test('does not sign in and shows the error for an invalid mobile', async () => {
 
   await userEvent.type(screen.getByPlaceholderText('请输入手机号'), '123');
   await userEvent.type(screen.getByPlaceholderText('请输入验证码'), '123456');
-  await userEvent.click(screen.getByRole('button', { name: '登录' }));
+  await userEvent.click(screen.getByTestId('login-submit'));
 
   expect(await screen.findByText('手机号格式不符合要求')).toBeInTheDocument();
-  expect(signIn).not.toHaveBeenCalled();
+  expect(signInWithCredentials).not.toHaveBeenCalled();
 });
 
 test('signs in with credentials and replaces the route on success', async () => {
@@ -49,15 +51,46 @@ test('signs in with credentials and replaces the route on success', async () => 
 
   await userEvent.type(screen.getByPlaceholderText('请输入手机号'), '13412345678');
   await userEvent.type(screen.getByPlaceholderText('请输入验证码'), '123456');
-  await userEvent.click(screen.getByRole('button', { name: '登录' }));
+  await userEvent.click(screen.getByTestId('login-submit'));
 
   await waitFor(() =>
-    expect(signIn).toHaveBeenCalledWith('credentials', {
-      interCode: '86',
-      mobile: '13412345678',
-      captcha: '123456',
-      redirect: false,
-    })
+    expect(signInWithCredentials).toHaveBeenCalledWith(
+      'credentials',
+      { interCode: '86', mobile: '13412345678', captcha: '123456' },
+      '/'
+    )
   );
   await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
+});
+
+test('signs in with the password provider from the account tab', async () => {
+  renderLoginForm();
+
+  await userEvent.click(screen.getByRole('tab', { name: '账号密码登录' }));
+  await userEvent.type(screen.getByPlaceholderText('请输入用户名或手机号'), 'merchant@example.com');
+  await userEvent.type(screen.getByPlaceholderText('请输入密码'), 'merchant123');
+  await userEvent.click(screen.getByTestId('login-submit'));
+
+  await waitFor(() =>
+    expect(signInWithCredentials).toHaveBeenCalledWith(
+      'password',
+      { identifier: 'merchant@example.com', password: 'merchant123' },
+      '/'
+    )
+  );
+  await waitFor(() => expect(replace).toHaveBeenCalledWith('/'));
+});
+
+test('renders in English', async () => {
+  renderWithIntl(
+    <ToastProvider>
+      <LoginForm />
+    </ToastProvider>,
+    'en-US'
+  );
+
+  expect(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('tab', { name: 'Sign in with password' }));
+  expect(screen.getByPlaceholderText('Username or phone')).toBeInTheDocument();
 });

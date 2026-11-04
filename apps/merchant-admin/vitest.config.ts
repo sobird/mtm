@@ -16,5 +16,9 @@ export default defineConfig({
     testTimeout: 30_000,
     // Styles are irrelevant in jsdom.
     css: false,
+    // Next 15 no longer ships an `exports` map, so Node's ESM resolver cannot
+    // resolve next-auth's extensionless `next/server` imports. Let Vite inline
+    // and resolve next-auth instead of externalising it.
+    server: { deps: { inline: ['next-auth'] } },
   },
 });

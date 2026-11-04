@@ -1,4 +1,7 @@
+import { useSecureCookies } from '@mtm/auth/cookies';
 import type { NextAuthConfig } from 'next-auth';
+
+const secureCookies = useSecureCookies();
 
 /**
  * Edge-safe Auth.js configuration.
@@ -12,13 +15,24 @@ export const authConfig = {
   // Self-hosted deployment: trust the incoming host instead of requiring
   // `AUTH_URL` to be configured (Auth.js throws `UntrustedHost` otherwise).
   trustHost: true,
-  useSecureCookies: process.env.NODE_ENV === 'production',
+  useSecureCookies: secureCookies,
   session: {
     strategy: 'jwt',
     maxAge: 2 * 60 * 60,
   },
   pages: {
     signIn: '/login',
+  },
+  cookies: {
+    sessionToken: {
+      name: secureCookies ? '__Secure-merchant.session' : 'merchant.session',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: secureCookies,
+      },
+    },
   },
   providers: [],
   callbacks: {
@@ -49,6 +63,7 @@ export const authConfig = {
         token.mobile = user.mobile;
         token.interCode = user.interCode;
         token.login = user.login;
+        token.name = user.name;
         token.sub = String(user.accountId);
       }
 
@@ -68,6 +83,7 @@ export const authConfig = {
         session.user.mobile = token.mobile as string;
         session.user.interCode = token.interCode as string;
         session.user.login = token.login as string;
+        session.user.name = token.name as string;
       }
 
       return session;

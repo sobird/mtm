@@ -26,12 +26,12 @@
         {
           "name": "关闭并跳转链接",
           "type": 10,
-          "direct": "https://sobird.me/"
+          "direct": "https://example.com/"
         },
         {
           "name": "关闭并跳转链接",
           "type": 10,
-          "direct": "https://sobird.me/"
+          "direct": "https://example.com/"
         }
       ]
     }

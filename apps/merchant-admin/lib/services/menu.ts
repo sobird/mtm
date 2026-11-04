@@ -1,8 +1,11 @@
+import { filterMenuTree } from '@mtm/auth/menu-filter';
+
 import { prisma } from '@/lib/db';
 import type { MenuItem } from '@/lib/generated/prisma';
 import { listToTree } from '@/lib/menu-tree';
 
 import { AppError } from '../errors';
+import { getAccountPermissions } from './permission';
 
 export interface MenuItemDTO {
   title: string;
@@ -16,6 +19,7 @@ export interface MenuItemDTO {
   level: number;
   sortId: number;
   toolMenu: boolean;
+  permissionCode: string | null;
   children?: MenuItemDTO[];
   last?: boolean;
 }
@@ -53,7 +57,39 @@ function toMenuItemDTO(item: MenuItem): MenuItemDTO {
     level: item.level,
     sortId: item.sortId,
     toolMenu: item.toolMenu,
+    permissionCode: item.permissionCode,
   };
+}
+
+function collectMenuIds(nodes: MenuItemDTO[], ids: Set<string>): void {
+  for (const node of nodes) {
+    ids.add(node.id);
+
+    if (node.children) {
+      collectMenuIds(node.children, ids);
+    }
+  }
+}
+
+function buildVisibleMenuTree(rows: MenuItem[], permissions: ReadonlySet<string>): MenuItemDTO[] {
+  const items: MenuItemDTO[] = [];
+  for (const row of rows) {
+    items.push(toMenuItemDTO(row));
+  }
+  items.sort((a, b) => a.index - b.index);
+
+  const tree = listToTree(items);
+
+  return filterMenuTree(tree, permissions);
+}
+
+/** Resolves the ids of every menu entry the account is allowed to see. */
+async function getVisibleMenuIds(accountId: string): Promise<Set<string>> {
+  const [rows, snapshot] = await Promise.all([prisma.menuItem.findMany(), getAccountPermissions(accountId)]);
+  const visibleIds = new Set<string>();
+  collectMenuIds(buildVisibleMenuTree(rows, snapshot.set), visibleIds);
+
+  return visibleIds;
 }
 
 async function findMenuItems(ids: string[]): Promise<Map<string, MenuItemDTO>> {
@@ -73,21 +109,19 @@ async function findMenuItems(ids: string[]): Promise<Map<string, MenuItemDTO>> {
 }
 
 export async function getMenu(accountId: string): Promise<MenuDTO> {
-  const rows = await prisma.menuItem.findMany();
+  const [rows, snapshot] = await Promise.all([prisma.menuItem.findMany(), getAccountPermissions(accountId)]);
 
-  const items: MenuItemDTO[] = [];
-  for (const row of rows) {
-    items.push(toMenuItemDTO(row));
-  }
-  items.sort((a, b) => a.index - b.index);
-
-  const menuItems = listToTree(items);
+  const menuItems = buildVisibleMenuTree(rows, snapshot.set);
   if (menuItems.length > 0) {
     menuItems[menuItems.length - 1].last = true;
   }
 
+  // Favorites may only point at menus the account can still reach.
+  const visibleIds = new Set<string>();
+  collectMenuIds(menuItems, visibleIds);
+
   const favoriteRows = await prisma.menuFavorite.findMany({
-    where: { accountId },
+    where: { accountId, menuId: { in: [...visibleIds] } },
     orderBy: { sortIndex: 'asc' },
   });
   const itemMap = await findMenuItems(favoriteRows.map(row => row.menuId));
@@ -117,13 +151,14 @@ export async function updateMenuFavorites(accountId: string, favorites: { id: st
     throw new AppError('MAX_FAVORITES', 400, '收藏数量不能超过 10 个');
   }
 
-  const itemMap = await findMenuItems(ids);
+  // Favorites may only point at menus the account can currently see.
+  const [itemMap, visibleIds] = await Promise.all([findMenuItems(ids), getVisibleMenuIds(accountId)]);
 
   const result: MenuItemDTO[] = [];
   const rows: { accountId: string; menuId: string; sortIndex: number }[] = [];
   for (const id of ids) {
     const item = itemMap.get(id);
-    if (item) {
+    if (item && visibleIds.has(id)) {
       result.push(item);
       rows.push({ accountId, menuId: id, sortIndex: rows.length });
     }

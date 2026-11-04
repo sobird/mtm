@@ -18,7 +18,7 @@ test('seeds the same counts twice', async () => {
   expect(await prisma.menuItem.count()).toBe(before.menu);
   expect(await prisma.merchantCategory.count()).toBe(before.categories);
   expect(await prisma.menuFavorite.count()).toBe(before.favorites);
-  expect(before).toEqual({ menu: 54, categories: 173, favorites: 10 });
+  expect(before).toEqual({ menu: 57, categories: 173, favorites: 10 });
 });
 
 test('round-trips the 117KB merchant options JSON', async () => {

@@ -25,7 +25,7 @@
 - 数据层：SQLite 单实例；`DATABASE_PATH` 默认 `./data/mtm.sqlite`；生产 `/data/mtm.sqlite`（volume）；`sequelize.sync()` + 幂等种子，不写迁移。
 - 接口响应统一 `{ code, message, data }`；成功 `code = 0`。
 - Server Components 直接调用 `lib/services`；Route Handlers 只做鉴权 + 校验 + 调 service。
-- `/mdx`、`/component` 删除；`/api/api/thh/task/gold/merchant` 并入 `/api/merchant/gold`。
+- `/mdx`、`/component` 删除；`/api/api/legacy/task/gold/merchant` 并入 `/api/merchant/gold`。
 - TypeScript 保持 `strict: false`；不借迁移扩大类型改造范围。
 - 测试策略：数据层、DTO、校验、状态逻辑用 Vitest；UI 以 `typecheck` + `build` + 路由 smoke 验证。
 - 每个任务一个提交；提交信息遵循 Conventional Commits；不跳过 hook。

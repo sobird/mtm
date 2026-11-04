@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 import styles from '../PageContainer/PageContainer.module.css';
@@ -12,12 +15,14 @@ export interface BreadcrumbsProps {
 }
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
+  const t = useTranslations('common');
+
   if (items.length === 0) {
     return null;
   }
 
   return (
-    <nav className={styles.breadcrumbs} aria-label='面包屑'>
+    <nav className={styles.breadcrumbs} aria-label={t('breadcrumbs')}>
       <ol className={styles.breadcrumbList}>
         {items.map((item, index) => {
           const isLast = index === items.length - 1;

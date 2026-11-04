@@ -1,5 +1,9 @@
 node_modules
+**/node_modules
 .next
+**/.next
+.turbo
+**/*.tsbuildinfo
 dist
 coverage
 data
@@ -13,6 +17,11 @@ docs
 .claude
 .vscode
 .playwright-mcp
+e2e/test-results
+e2e/playwright-report
 .DS_Store
 *.log
 .env*
+apps/core-api/var
+apps/*/lib/generated
+apps/*/src/generated

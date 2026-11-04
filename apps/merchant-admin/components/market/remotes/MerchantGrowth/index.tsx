@@ -1,6 +1,8 @@
 'use client';
 
+import type { Translate } from '@mtm/i18n';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { QRCodeSVG } from 'qrcode.react';
 import type { CSSProperties } from 'react';
 
@@ -23,34 +25,34 @@ export interface MerchantGrowthProps {
 type ScoreKey = 'serviceScore' | 'overallScore';
 
 interface SubMetric {
-  title: string;
+  titleKey: string;
   key: keyof OperationRateSetDTO;
-  unit: '%' | '条';
+  unit: '%' | 'record';
 }
 
 interface ScoreConfig {
-  title: string;
-  tips: string;
+  titleKey: string;
+  tipKey: string;
   subData: SubMetric[];
 }
 
 const scoreConfig: Record<ScoreKey, ScoreConfig> = {
   serviceScore: {
-    title: '服务评价分',
-    tips: '平台从售后、物流、客服、纠纷四个维度对商家的整体服务分进行评估的数据指标。服务分达到4分及以上的商家为优秀商家。',
+    titleKey: 'serviceScore',
+    tipKey: 'serviceScoreTip',
     subData: [
-      { title: '近30天3分钟回复率', key: 'customerReplyRate', unit: '%' },
-      { title: '近30天发货及揽收准时率', key: 'collectOnTimeRate', unit: '%' },
+      { titleKey: 'replyRate', key: 'customerReplyRate', unit: '%' },
+      { titleKey: 'collectRate', key: 'collectOnTimeRate', unit: '%' },
     ],
   },
   overallScore: {
-    title: '综合评价分',
-    tips: '综合评价分为近30天店铺下所有主动评价的订单分数的平均值。有效评价数不足20个的店铺暂不统计评分，综合评价分为0；低于4.0分属于异常。',
-    subData: [{ title: '新增评价数', key: 'newlyReviewCount', unit: '条' }],
+    titleKey: 'overallScore',
+    tipKey: 'overallScoreTip',
+    subData: [{ titleKey: 'newReviews', key: 'newlyReviewCount', unit: 'record' }],
   },
 };
 
-const SHOP_JUMP_URL = `${process.env.NEXT_PUBLIC_SHOP_JUMP_URL ?? 'https://mtm.meituan.com/datacenter/middle.html'}?env=prod&poiId=148568&g_source=682`;
+const SHOP_JUMP_URL = process.env.NEXT_PUBLIC_SHOP_JUMP_URL ?? '/';
 
 function formatScore(score: number | undefined): string {
   if (score === undefined || score === null) {
@@ -60,7 +62,7 @@ function formatScore(score: number | undefined): string {
   return score.toFixed(2);
 }
 
-function formatRate(value: number | undefined, unit: '%' | '条'): string {
+function formatRate(value: number | undefined, unit: '%' | 'record', t: Translate): string {
   if (value === undefined || value === null) {
     return '--';
   }
@@ -69,31 +71,32 @@ function formatRate(value: number | undefined, unit: '%' | '条'): string {
     return `${(value * 100).toFixed(2)}%`;
   }
 
-  return `${value}${unit}`;
+  return `${value}${t(`units.${unit}`)}`;
 }
 
 function getScoreTag(
   type: ScoreKey,
   score: number | undefined,
-  judge: number
+  judge: number,
+  t: Translate
 ): { label: string; tone: TagTone } | null {
   if (score === undefined || score === null) {
     return null;
   }
 
   if (type === 'serviceScore') {
-    return score >= judge ? { label: '已达到优秀商家', tone: 'success' } : { label: '未达到优秀商家', tone: 'danger' };
+    return score >= judge ? { label: t('excellent'), tone: 'success' } : { label: t('notExcellent'), tone: 'danger' };
   }
 
   if (score === 0) {
-    return { label: '暂未统计', tone: 'neutral' };
+    return { label: t('notCounted'), tone: 'neutral' };
   }
 
-  return score >= judge ? { label: '正常', tone: 'success' } : { label: '预警', tone: 'danger' };
+  return score >= judge ? { label: t('normal'), tone: 'success' } : { label: t('warning'), tone: 'danger' };
 }
 
-function renderShopName(name: string | undefined) {
-  const value = name || '商家经营';
+function renderShopName(name: string | undefined, fallback: string) {
+  const value = name || fallback;
 
   if (value.length > 10) {
     return (
@@ -107,6 +110,9 @@ function renderShopName(name: string | undefined) {
 }
 
 export function MerchantGrowth({ className, style, bodyStyle }: MerchantGrowthProps) {
+  const t = useTranslations('dashboard.growth');
+  const tDashboard = useTranslations('dashboard');
+  const tCommon = useTranslations('common');
   const {
     data: operation,
     isPending,
@@ -133,7 +139,7 @@ export function MerchantGrowth({ className, style, bodyStyle }: MerchantGrowthPr
   if (isPending) {
     content = <Skeleton rows={4} />;
   } else if (isError) {
-    content = <Empty description='加载失败' />;
+    content = <Empty description={tCommon('loadFailed')} />;
   } else {
     content = (
       <div className={styles.cards}>
@@ -144,28 +150,28 @@ export function MerchantGrowth({ className, style, bodyStyle }: MerchantGrowthPr
             type === 'serviceScore'
               ? operation?.scoreSet?.serviceScoreJudge || 4
               : operation?.scoreSet?.overallScoreJudge || 4;
-          const tag = getScoreTag(type, score, judge);
+          const tag = getScoreTag(type, score, judge, t);
 
           return (
             <div className={styles.card} key={type}>
               <div className={styles.cardTitle}>
-                <span className={styles.cardName}>{config.title}</span>
+                <span className={styles.cardName}>{t(config.titleKey)}</span>
                 {tag ? <Tag tone={tag.tone}>{tag.label}</Tag> : null}
               </div>
               <div className={styles.scoreWrap}>
-                <Tooltip content={config.tips}>
+                <Tooltip content={t(config.tipKey)}>
                   <div className={styles.score}>
                     {formatScore(score)}
-                    <span>分</span>
+                    <span>{tDashboard('units.points')}</span>
                   </div>
                 </Tooltip>
-                {typeof score !== 'number' ? <p className={styles.noData}>（计算中...）</p> : null}
+                {typeof score !== 'number' ? <p className={styles.noData}>{t('calculating')}</p> : null}
               </div>
               <div className={styles.notes}>
-                <div className={styles.tip}>请重点关注以下数据:</div>
+                <div className={styles.tip}>{t('focusHint')}</div>
                 {config.subData.map(item => (
                   <p className={styles.important} key={item.key}>
-                    {item.title}: {formatRate(operation?.rateSet?.[item.key], item.unit)}
+                    {t(item.titleKey)}: {formatRate(operation?.rateSet?.[item.key], item.unit, tDashboard)}
                   </p>
                 ))}
               </div>
@@ -181,33 +187,33 @@ export function MerchantGrowth({ className, style, bodyStyle }: MerchantGrowthPr
   if (taskCount > 0 || awardCount > 0) {
     taskText = (
       <span className={styles.taskLinks}>
-        {taskCount > 0 ? <span className={styles.linkText}>有{taskCount}个任务待完成</span> : null}
-        {taskCount > 0 && awardCount > 0 ? '，' : null}
-        {awardCount > 0 ? <span className={styles.linkText}>有{awardCount}个奖励待查看</span> : null}
+        {taskCount > 0 ? <span className={styles.linkText}>{t('taskPending', { count: taskCount })}</span> : null}
+        {taskCount > 0 && awardCount > 0 ? t('taskSeparator') : null}
+        {awardCount > 0 ? <span className={styles.linkText}>{t('taskAward', { count: awardCount })}</span> : null}
       </span>
     );
   } else {
-    taskText = <span className={styles.linkText}>商家成长</span>;
+    taskText = <span className={styles.linkText}>{t('title')}</span>;
   }
 
   return (
     <div style={style}>
       <Card
         className={className}
-        title={renderShopName(shopName)}
+        title={renderShopName(shopName, t('defaultShopName'))}
         extra={
           <div className={styles.extra}>
             {taskText}
             <Popover
               trigger={
                 <button type='button' className={styles.qrTrigger}>
-                  二维码
+                  {t('qrcode')}
                 </button>
               }
             >
               <div className={styles.qrcode}>
-                <p className={styles.qrcodeTitle}>{shopName || '店铺二维码'}</p>
-                <p className={styles.qrcodeDesc}>打开美团App扫码查看店铺详情</p>
+                <p className={styles.qrcodeTitle}>{shopName || t('qrcodeTitle')}</p>
+                <p className={styles.qrcodeDesc}>{t('qrcodeDesc')}</p>
                 <QRCodeSVG size={100} value={SHOP_JUMP_URL} />
               </div>
             </Popover>

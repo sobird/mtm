@@ -1,13 +1,15 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expect, test, vi } from 'vitest';
 
 import { DataTable } from '@/components/ui/DataTable';
 
+import { renderWithIntl } from '../i18n/render';
+
 const rows = Array.from({ length: 10 }, (_, i) => ({ id: String(i), name: `row-${i}` }));
 
 test('renders the current page and total', () => {
-  render(
+  renderWithIntl(
     <DataTable
       columns={[{ dataIndex: 'name', title: '名称' }]}
       data={rows}
@@ -27,7 +29,7 @@ test('reports pagination changes through onPageChange', async () => {
   const user = userEvent.setup();
   const onPageChange = vi.fn();
 
-  const { container } = render(
+  const { container } = renderWithIntl(
     <DataTable
       columns={[{ dataIndex: 'name', title: '名称' }]}
       data={rows}
@@ -52,7 +54,7 @@ test('reports server-side sort changes through onTableChange', async () => {
   const user = userEvent.setup();
   const onTableChange = vi.fn();
 
-  const { container } = render(
+  const { container } = renderWithIntl(
     <DataTable
       columns={[{ dataIndex: 'name', title: '名称', sorter: true }]}
       data={rows}

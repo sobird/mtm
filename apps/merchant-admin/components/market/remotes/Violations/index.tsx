@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import type { CSSProperties } from 'react';
 
 import { Card, Empty, Skeleton } from '@/components/ui';
@@ -16,19 +17,24 @@ export interface ViolationsProps {
   bodyStyle?: CSSProperties;
 }
 
+type UnitKey = 'record' | 'yuan';
+
 interface ViolationMetric {
-  title: string;
+  titleKey: string;
   key: keyof ViolationOverviewDTO;
-  unit: string;
+  unit: UnitKey;
 }
 
 const violationMetrics: ViolationMetric[] = [
-  { title: '违规数量(当天)', key: 'issueCount', unit: '条' },
-  { title: '违规待申诉数量', key: 'appealCount', unit: '条' },
-  { title: '罚款金额(当月)', key: 'ticketAmount', unit: '元' },
+  { titleKey: 'issueCount', key: 'issueCount', unit: 'record' },
+  { titleKey: 'appealCount', key: 'appealCount', unit: 'record' },
+  { titleKey: 'ticketAmount', key: 'ticketAmount', unit: 'yuan' },
 ];
 
 export function Violations({ className, style, bodyStyle }: ViolationsProps) {
+  const t = useTranslations('dashboard.violations');
+  const tDashboard = useTranslations('dashboard');
+  const tCommon = useTranslations('common');
   const { data, isPending, isError } = useQuery({
     queryKey: queryKeys.violationOverview,
     queryFn: () => apiFetch<ViolationOverviewDTO>('/api/violation/overview'),
@@ -39,16 +45,16 @@ export function Violations({ className, style, bodyStyle }: ViolationsProps) {
   if (isPending) {
     content = <Skeleton rows={2} />;
   } else if (isError) {
-    content = <Empty description='加载失败' />;
+    content = <Empty description={tCommon('loadFailed')} />;
   } else {
     content = (
       <div className={styles.metrics}>
         {violationMetrics.map(metric => (
           <div className={styles.tile} key={metric.key}>
-            <div className={styles.tileTitle}>{metric.title}</div>
+            <div className={styles.tileTitle}>{t(metric.titleKey)}</div>
             <div className={styles.tileValue}>
               <span className={styles.value}>{data?.[metric.key] ?? '--'}</span>
-              <span className={styles.unit}>{metric.unit}</span>
+              <span className={styles.unit}>{tDashboard(`units.${metric.unit}`)}</span>
             </div>
           </div>
         ))}
@@ -58,7 +64,7 @@ export function Violations({ className, style, bodyStyle }: ViolationsProps) {
 
   return (
     <div style={style}>
-      <Card className={className} title='违规情况' extra={<span className={styles.extraLink}>违规列表</span>}>
+      <Card className={className} title={t('title')} extra={<span className={styles.extraLink}>{t('listLink')}</span>}>
         <div style={bodyStyle}>{content}</div>
       </Card>
     </div>

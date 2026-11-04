@@ -1,6 +1,8 @@
 'use client';
 
+import { translateUiKey } from '@mtm/i18n';
 import { PanelLeftClose, PanelLeftOpen, Settings2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
@@ -9,6 +11,7 @@ import { Button, useToast } from '@/components/ui';
 import { apiFetch } from '@/lib/api-client';
 import { MAX_FAVORITES, toggleFavorite } from '@/lib/menu/favorites';
 import type { MenuBadgeDTO, MenuItemDTO } from '@/lib/services/menu';
+import { translateApiError } from '@/lib/translate-api-error';
 import { useUiStore } from '@/stores/ui';
 
 import { SidebarMenu } from '../SidebarMenu';
@@ -38,6 +41,7 @@ function collectLeaves(items: MenuItemDTO[]): MenuItemDTO[] {
 }
 
 export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
+  const t = useTranslations();
   const collapsed = useUiStore(state => state.sidebarCollapsed);
   const toggleSidebar = useUiStore(state => state.toggleSidebar);
   const editMode = useUiStore(state => state.sidebarEditMode);
@@ -70,7 +74,7 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
       // while re-rendering, which would take down the whole shell.
       setLocalFavorites(toggleFavorite(localFavorites, item, MAX_FAVORITES));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : '收藏数量不能超过 10 个');
+      toast.error(translateApiError(error, t, 'errors.MAX_FAVORITES'));
     }
   };
 
@@ -97,9 +101,9 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
       // The menu arrives as RSC props, so refresh the layout to re-run getMenu;
       // TanStack invalidation has nothing to invalidate here.
       router.refresh();
-      toast.success('常用功能已保存');
+      toast.success(t('common.favoritesSaved'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : '保存失败，请稍后重试');
+      toast.error(translateApiError(error, t, 'common.saveFailed'));
     } finally {
       setSaving(false);
     }
@@ -108,34 +112,34 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
   return (
     <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
       <div className={styles.brand}>
-        <Link href='/' className={styles.brandLink} title='美团电商商家管理后台'>
+        <Link href='/' className={styles.brandLink} title={t('common.appTitle.merchant')}>
           <span className={styles.brandMark} aria-hidden='true'>
-            美
+            {t('common.brandMark')}
           </span>
-          <span className={styles.brandText}>商家管理后台</span>
+          <span className={styles.brandText}>{t('common.brandShort')}</span>
         </Link>
       </div>
 
       <div className={styles.scroll}>
         <section className={styles.favorites}>
           <header className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>常用功能</h2>
+            <h2 className={styles.sectionTitle}>{t('common.favorites')}</h2>
             <button type='button' className={styles.manageButton} onClick={editMode ? cancelEdit : startEdit}>
               {editMode ? <Settings2 size={14} aria-hidden='true' /> : null}
-              <span>{editMode ? '取消' : '管理'}</span>
+              <span>{editMode ? t('common.cancel') : t('common.manage')}</span>
             </button>
           </header>
 
           {editMode ? (
             <div className={styles.editPanel}>
               <p className={styles.hint}>
-                已收藏 {localFavorites.length}/{MAX_FAVORITES}，点击下方功能入口添加或移除
+                {t('common.favoritesHint', { count: localFavorites.length, max: MAX_FAVORITES })}
               </p>
               <ul className={styles.favoriteList}>
                 {localFavorites.map(item => (
                   <li key={item.id}>
                     <button type='button' className={styles.favoriteEditItem} onClick={() => toggle(item)}>
-                      <span>{item.title}</span>
+                      <span>{translateUiKey(item.title, t)}</span>
                       <span aria-hidden='true'>−</span>
                     </button>
                   </li>
@@ -152,7 +156,7 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
                         className={`${styles.candidateItem} ${added ? styles.candidateAdded : ''}`}
                         onClick={() => toggle(item)}
                       >
-                        <span>{item.title}</span>
+                        <span>{translateUiKey(item.title, t)}</span>
                         <span aria-hidden='true'>{added ? '−' : '+'}</span>
                       </button>
                     </li>
@@ -160,7 +164,7 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
                 })}
               </ul>
               <Button size='sm' loading={saving} onClick={save}>
-                保存
+                {t('common.save')}
               </Button>
             </div>
           ) : (
@@ -170,19 +174,19 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
                   {localFavorites.map(item => (
                     <li key={item.id}>
                       <Link className={styles.favoriteLink} href={item.url || '/'}>
-                        {item.title}
+                        {translateUiKey(item.title, t)}
                       </Link>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className={styles.hint}>暂无收藏，点击右上角“管理”添加</p>
+                <p className={styles.hint}>{t('common.noFavorites')}</p>
               )}
             </>
           )}
         </section>
 
-        <nav className={styles.nav} aria-label='主菜单'>
+        <nav className={styles.nav} aria-label={t('common.mainMenu')}>
           <SidebarMenu items={menuItems} badges={badges} />
         </nav>
       </div>
@@ -191,7 +195,7 @@ export function Sidebar({ menuItems, favorites, badges }: SidebarProps) {
         type='button'
         className={styles.collapseButton}
         onClick={toggleSidebar}
-        aria-label={collapsed ? '展开侧边栏' : '收起侧边栏'}
+        aria-label={collapsed ? t('common.expandSidebar') : t('common.collapseSidebar')}
       >
         {collapsed ? <PanelLeftOpen size={16} aria-hidden='true' /> : <PanelLeftClose size={16} aria-hidden='true' />}
       </button>

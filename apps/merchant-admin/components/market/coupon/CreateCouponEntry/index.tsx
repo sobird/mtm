@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
@@ -16,35 +17,38 @@ interface CouponTarget {
   description: string;
 }
 
-const COUPON_TARGETS: CouponTarget[] = [
-  {
-    value: 1,
-    label: '店铺商品券',
-    image: '/assets/coupon/coupon_target_1.png',
-    description: '发放店铺商品促销优惠券，提升商品转化，带动商品销量，用户可在商详页、IM等渠道领券后使用',
-  },
-  {
-    value: 2,
-    label: '店铺通用券',
-    image: '/assets/coupon/coupon_target_2.png',
-    description: '发放店铺通用优惠券，提升店铺整体转化效果，用户可在商详页等渠道领取后使用',
-  },
-  {
-    value: 3,
-    label: '店铺客服体验券',
-    image: '/assets/coupon/coupon_target_3.png',
-    description: '发放用户安慰、赔付、奖励优惠券，提升用户服务体验，强化客户关系，用户可在IM客服渠道领券后使用',
-  },
-];
-
 export interface CreateCouponEntryProps {
   children?: ReactNode;
 }
 
 export function CreateCouponEntry({ children }: CreateCouponEntryProps) {
   const router = useRouter();
+  const t = useTranslations('marketing');
+  const tEntry = useTranslations('marketing.coupon.entry');
+  const tCommon = useTranslations('common');
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(0);
+
+  const couponTargets: CouponTarget[] = [
+    {
+      value: 1,
+      label: t('target.product'),
+      image: '/assets/coupon/coupon_target_1.png',
+      description: tEntry('productDescription'),
+    },
+    {
+      value: 2,
+      label: t('target.universal'),
+      image: '/assets/coupon/coupon_target_2.png',
+      description: tEntry('universalDescription'),
+    },
+    {
+      value: 3,
+      label: t('target.service'),
+      image: '/assets/coupon/coupon_target_3.png',
+      description: tEntry('serviceDescription'),
+    },
+  ];
 
   const handleConfirm = () => {
     if (!selected) {
@@ -57,25 +61,25 @@ export function CreateCouponEntry({ children }: CreateCouponEntryProps) {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>{children ?? '创建优惠券'}</Button>
+      <Button onClick={() => setOpen(true)}>{children ?? t('coupon.create')}</Button>
 
       <Dialog
         open={open}
         onOpenChange={setOpen}
-        title='请选择券类型'
+        title={tEntry('title')}
         footer={
           <div className={styles.footer}>
             <Button variant='secondary' onClick={() => setOpen(false)}>
-              取消
+              {tCommon('cancel')}
             </Button>
             <Button disabled={!selected} onClick={handleConfirm}>
-              下一步
+              {tEntry('next')}
             </Button>
           </div>
         }
       >
         <div className={styles.list}>
-          {COUPON_TARGETS.map(item => (
+          {couponTargets.map(item => (
             <button
               type='button'
               key={item.value}
